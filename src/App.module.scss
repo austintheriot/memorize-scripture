@@ -1,9 +1,37 @@
 .form {
 	width: 90%;
-	margin: 1rem auto;
+	margin: 50px auto;
 	display: flex;
 	flex: none;
 	flex-wrap: wrap;
 	align-items: flex-end;
 	justify-content: center;
+}
+
+.textArea {
+	white-space: pre-wrap;
+	width: 90%;
+	max-width: 600px;
+	margin: 50px auto;
+}
+
+.spacer {
+	height: 200px;
+}
+
+.copyright {
+	border-top: 1px solid var(--dark);
+	padding-top: 1rem;
+}
+
+.copyright,
+.smallText {
+	text-align: center;
+	width: 90%;
+	max-width: 600px;
+	margin: 1rem auto;
+}
+
+.smallText {
+	font-size: 0.75rem;
 }

@@ -10,7 +10,7 @@ import Select from '@material-ui/core/Select';
 import axios from 'axios';
 import { ESVApiKey } from './config';
 
-import booksArray, { bookChapters } from './booksArray';
+import { bookTitles, bookChapters } from './bibleBookInfo';
 
 import IconButton from '@material-ui/core/IconButton';
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
@@ -25,6 +25,14 @@ const useStyles = makeStyles((theme) => ({
 	},
 	iconButton: {
 		width: 'max-content',
+	},
+	label: {
+		color: 'var(--light)',
+	},
+	select: {
+		padding: '0.25rem 1rem',
+		backgroundColor: 'var(--dark)',
+		color: 'var(--light)',
 	},
 }));
 
@@ -65,14 +73,20 @@ export default function App() {
 	};
 
 	const handleSubmit = () => {
-		console.log('Info:', book, chapter);
+		const key = `${book} ${chapter}`;
+		console.log(`Searching storage for ${key}`);
+		let passage = window.localStorage.getItem(key);
+		if (passage) {
+			console.log('Retrieved passage from local storage');
+			return setText(passage);
+		}
+
+		console.log('Making an API call');
 		let url = `https://api.esv.org/v3/passage/text/?q=${book
 			.split(' ')
 			.join(
 				'+'
-			)}+${chapter}&include-passage-references=false&include-verse-numbers=false&include-first-verse-numbers=false&include-footnotes=false&include-footnote-body=false&include-headings=false&include-selahs=false`;
-		console.log('Url: ', url);
-		console.log(ESVApiKey);
+			)}+${chapter}&include-passage-references=false&include-verse-numbers=false&include-first-verse-numbers=false&include-footnotes=false&include-footnote-body=false&include-headings=false&include-selahs=false&indent-paragraphs=5&indent-poetry-lines=5`;
 		axios
 			.get(url, {
 				headers: {
@@ -80,12 +94,15 @@ export default function App() {
 				},
 			})
 			.then((response) => {
+				console.log('Passage received from ESV API');
 				console.log(response);
-				setText(response.data.passages[0]);
+				const passage = response.data.passages[0];
+				setText(passage);
+				console.log('Storing passage in local storage');
+				window.localStorage.setItem(key, passage);
 			})
 			.catch((error) => {
 				console.log(error);
-				setText('Sorry, an error occurred. Pleas try again later.');
 			});
 	};
 
@@ -105,13 +122,16 @@ export default function App() {
 			<h1>Scripture Memorization</h1>
 			<form className={styles.form}>
 				<FormControl className={classes.formControl}>
-					<InputLabel id='bible-book'>Book</InputLabel>
+					<InputLabel id='bible-book' className={classes.label}>
+						Book
+					</InputLabel>
 					<Select
+						className={classes.select}
 						labelId='bible-book'
 						id='bible-book'
 						value={book}
 						onChange={handleBookChange}>
-						{booksArray.map((bookString) => (
+						{bookTitles.map((bookString) => (
 							<MenuItem value={bookString} key={bookString}>
 								{bookString}
 							</MenuItem>
@@ -119,8 +139,11 @@ export default function App() {
 					</Select>
 				</FormControl>
 				<FormControl className={classes.formControl}>
-					<InputLabel id='bible-chapter'>Chapter</InputLabel>
+					<InputLabel id='bible-chapter' className={classes.label}>
+						Chapter
+					</InputLabel>
 					<Select
+						className={classes.select}
 						labelId='bible-chapter'
 						id='bible-chapter'
 						value={chapter}
@@ -132,12 +155,13 @@ export default function App() {
 					aria-label='search'
 					className={classes.iconButton}
 					onClick={handleSubmit}>
-					<SearchOutlinedIcon />
+					<SearchOutlinedIcon style={{ color: 'var(--light)' }} />
 				</IconButton>
 			</form>
-			<p>{text}</p>
-			<h2>Copyright Notice:</h2>
-			<p>
+			<div className={styles.textArea}>{text}</div>
+			<div className={styles.spacer}></div>
+			<p className={styles.copyright}>Copyright Notice:</p>
+			<p className={styles.smallText}>
 				Scripture quotations are from the ESV® Bible (The Holy Bible, English
 				Standard Version®), copyright © 2001 by Crossway, a publishing ministry
 				of Good News Publishers. Used by permission. All rights reserved. You

@@ -2,7 +2,7 @@ interface BookChapters {
 	[book: string]: number;
 }
 
-export default [
+export const bookTitles = [
 	'Genesis',
 	'Exodus',
 	'Leviticus',
