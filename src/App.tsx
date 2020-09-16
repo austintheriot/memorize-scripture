@@ -84,36 +84,39 @@ export default function App() {
 
 	return (
 		<div className='App'>
-			<img src={logo} alt='logo' className={styles.logo} />
 			<h1>Scripture Memorization</h1>
-			<FormControl className={classes.formControl}>
-				<InputLabel id='bible-book'>Book</InputLabel>
-				<Select
-					labelId='bible-book'
-					id='bible-book'
-					value={book}
-					onChange={handleBookChange}>
-					{booksArray.map((bookString) => (
-						<MenuItem value={bookString} key={bookString}>
-							{bookString}
-						</MenuItem>
-					))}
-				</Select>
-				<InputLabel id='bible-chapter'>Chapter</InputLabel>
-				<Select
-					labelId='bible-chapter'
-					id='bible-chapter'
-					value={chapter}
-					onChange={handleChapterChange}>
-					{chapterArray}
-				</Select>
+			<form className={styles.form}>
+				<FormControl className={classes.formControl}>
+					<InputLabel id='bible-book'>Book</InputLabel>
+					<Select
+						labelId='bible-book'
+						id='bible-book'
+						value={book}
+						onChange={handleBookChange}>
+						{booksArray.map((bookString) => (
+							<MenuItem value={bookString} key={bookString}>
+								{bookString}
+							</MenuItem>
+						))}
+					</Select>
+				</FormControl>
+				<FormControl className={classes.formControl}>
+					<InputLabel id='bible-chapter'>Chapter</InputLabel>
+					<Select
+						labelId='bible-chapter'
+						id='bible-chapter'
+						value={chapter}
+						onChange={handleChapterChange}>
+						{chapterArray}
+					</Select>
+				</FormControl>
 				<IconButton
 					aria-label='search'
 					className={classes.iconButton}
 					onClick={handleSubmit}>
 					<SearchOutlinedIcon />
 				</IconButton>
-			</FormControl>
+			</form>
 			<p>
 				P,aaoCJbtwoG, TtswaiE,aafiCJ: GtyapfGoFatLJC.
 				BbtGaFooLJC,whbuiCwesbithp. Fhcuihbtfotw,twsbhabbh.

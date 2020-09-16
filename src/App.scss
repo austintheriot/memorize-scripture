@@ -20,9 +20,13 @@ html {
 
 h1 {
 	font-size: var(--h1);
+	text-align: center;
+	width: 90%;
+	margin: 2rem auto;
 }
 h2 {
 	font-size: var(--h2);
+	text-align: center;
 }
 h3 {
 	font-size: var(--h3);
@@ -36,6 +40,9 @@ h5 {
 h6 {
 	font-size: var(--h6);
 }
-body {
+p {
 	font-size: var(--body);
+	width: 90%;
+	max-width: 600px;
+	margin: 2rem auto;
 }
