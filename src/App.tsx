@@ -15,6 +15,8 @@ import { bookTitles, bookChapters } from './bibleBookInfo';
 import IconButton from '@material-ui/core/IconButton';
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
 
+import condenseText from './condenseText';
+
 const useStyles = makeStyles((theme) => ({
 	formControl: {
 		margin: theme.spacing(1),
@@ -42,7 +44,7 @@ export default function App() {
 	const [chapter, setChapter] = useState('1');
 	const [numberOfChapters, setNumberOfChapters] = useState(28);
 	const [text, setText] = useState('');
-	const [reducedText, setReducedText] = useState('');
+	const [condensedText, setCondensedText] = useState('');
 
 	const handleBookChange = (
 		e: React.ChangeEvent<{
@@ -78,7 +80,8 @@ export default function App() {
 		let passage = window.localStorage.getItem(key);
 		if (passage) {
 			console.log('Retrieved passage from local storage');
-			return setText(passage);
+			setText(passage);
+			return setCondensedText(condenseText(passage));
 		}
 
 		console.log('Making an API call');
@@ -86,7 +89,7 @@ export default function App() {
 			.split(' ')
 			.join(
 				'+'
-			)}+${chapter}&include-passage-references=false&include-verse-numbers=false&include-first-verse-numbers=false&include-footnotes=false&include-footnote-body=false&include-headings=false&include-selahs=false&indent-paragraphs=5&indent-poetry-lines=5`;
+			)}+${chapter}&include-passage-references=false&include-verse-numbers=false&include-first-verse-numbers=false&include-footnotes=false&include-footnote-body=false&include-headings=false&include-selahs=false&indent-paragraphs=5&indent-poetry-lines=5&include-short-copyright=false`;
 		axios
 			.get(url, {
 				headers: {
@@ -98,6 +101,7 @@ export default function App() {
 				console.log(response);
 				const passage = response.data.passages[0];
 				setText(passage);
+				setCondensedText(condenseText(passage));
 				console.log('Storing passage in local storage');
 				window.localStorage.setItem(key, passage);
 			})
@@ -158,6 +162,7 @@ export default function App() {
 					<SearchOutlinedIcon style={{ color: 'var(--light)' }} />
 				</IconButton>
 			</form>
+			<div className={styles.textArea}>{condensedText}</div>
 			<div className={styles.textArea}>{text}</div>
 			<div className={styles.spacer}></div>
 			<p className={styles.copyright}>Copyright Notice:</p>
