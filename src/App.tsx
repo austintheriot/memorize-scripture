@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.scss';
 import styles from './App.module.scss';
 
-import logo from './images/chirho-light.svg';
 import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import axios from 'axios';
+import { ESVApiKey } from './config';
 
 import booksArray, { bookChapters } from './booksArray';
 
@@ -29,9 +30,11 @@ const useStyles = makeStyles((theme) => ({
 
 export default function App() {
 	const classes = useStyles();
-	const [book, setBook] = React.useState('Matthew');
-	const [chapter, setChapter] = React.useState('1');
-	const [numberOfChapters, setNumberOfChapters] = React.useState(28);
+	const [book, setBook] = useState('Matthew');
+	const [chapter, setChapter] = useState('1');
+	const [numberOfChapters, setNumberOfChapters] = useState(28);
+	const [text, setText] = useState('');
+	const [reducedText, setReducedText] = useState('');
 
 	const handleBookChange = (
 		e: React.ChangeEvent<{
@@ -69,6 +72,21 @@ export default function App() {
 				'+'
 			)}+${chapter}&include-passage-references=false&include-verse-numbers=false&include-first-verse-numbers=false&include-footnotes=false&include-footnote-body=false&include-headings=false&include-selahs=false`;
 		console.log('Url: ', url);
+		console.log(ESVApiKey);
+		axios
+			.get(url, {
+				headers: {
+					Authorization: ESVApiKey,
+				},
+			})
+			.then((response) => {
+				console.log(response);
+				setText(response.data.passages[0]);
+			})
+			.catch((error) => {
+				console.log(error);
+				setText('Sorry, an error occurred. Pleas try again later.');
+			});
 	};
 
 	//create chapter input options based on book of the bible
@@ -117,18 +135,7 @@ export default function App() {
 					<SearchOutlinedIcon />
 				</IconButton>
 			</form>
-			<p>
-				P,aaoCJbtwoG, TtswaiE,aafiCJ: GtyapfGoFatLJC.
-				BbtGaFooLJC,whbuiCwesbithp. Fhcuihbtfotw,twsbhabbh.
-				ilhpufathastJC,attpohw, ttpohgg,wwhhbuitB. ihwhrthb,tfoot,attrohg,whluu.
-				iawai,hmktutmohw,athp, whsfiCaapftfot, tuatih,tihatoe.
-				ihwhoai,hbpattpohwwatattcohw, stwwwtfthiCmbttpohg.
-				ihya,wyhtwot,tgoys,abih, wswtpHS--witgooiuwapoi--ttpohg.
-				Ftr,bihhoyfitLJayltats, idnctgtfy,ryimp, ttGooLJC,tFog,mgytSowaoritkoh.
-				iptteoyhmbe,tymkwithtwhhcy, watrohgiits,awitigohptuwb. TaiawtwohgmthwiC
-				whrhftdashahrhithp, faaraaapad,aaentin, noitabaitotc.
-				Ahpatuhfaghahoatttc, wihb,tfohwfaia.
-			</p>
+			<p>{text}</p>
 			<h2>Copyright Notice:</h2>
 			<p>
 				Scripture quotations are from the ESV® Bible (The Holy Bible, English
