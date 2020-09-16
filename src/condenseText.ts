@@ -16,22 +16,30 @@ export default (string: string) => {
 				//add symbol (non-letter character) to word
 				if (ch.match(/[^A-Za-z_]/)) {
 					newWord += ch;
+
+					//ensuring sensible line breaks:
 					if (
-						characterCount < MAX_LINE_LENGTH &&
-						(ch === '.' || ch === '”') &&
-						word[i + 1] !== '”'
+						characterCount < MAX_LINE_LENGTH && //short line
+						(ch === '.' || ch === '!' || ch === '?' || ch === '”') && //break on . or ”
+						word[i + 1] !== '”' //the following character is not a ”
 					) {
 						newWord += '\n';
 						characterCount = 0;
 					} else if (
-						characterCount > MAX_LINE_LENGTH &&
-						(ch === '.' || ch === ',' || ch === '”')
+						characterCount > MAX_LINE_LENGTH && //long line
+						(ch === '.' ||
+							ch === ',' ||
+							ch === '”' ||
+							ch === '!' ||
+							ch === '?') && //break on . , or ”
+						word[i + 1] !== '”' //the following character is not a ”
 					) {
 						newWord += '\n';
 						characterCount = 0;
 					}
 					continue;
 				}
+
 				//only add the first letter found in the word
 				if (letterNotYetFound) {
 					newWord += ch;
