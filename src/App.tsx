@@ -11,6 +11,9 @@ import Select from '@material-ui/core/Select';
 
 import booksArray, { bookChapters } from './booksArray';
 
+import IconButton from '@material-ui/core/IconButton';
+import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
+
 const useStyles = makeStyles((theme) => ({
 	formControl: {
 		margin: theme.spacing(1),
@@ -18,6 +21,9 @@ const useStyles = makeStyles((theme) => ({
 	},
 	selectEmpty: {
 		marginTop: theme.spacing(2),
+	},
+	iconButton: {
+		width: 'max-content',
 	},
 }));
 
@@ -33,12 +39,15 @@ export default function App() {
 			value: unknown;
 		}>
 	) => {
+		let newNumberOfChapters = 1;
 		const bookString = e.target.value;
 		if (typeof bookString === 'string') {
 			setBook(bookString); //set selected option
-			let newNumberOfChapters = bookChapters[bookString]; //get chapter numbers
+			newNumberOfChapters = bookChapters[bookString]; //get chapter numbers
 			setNumberOfChapters(newNumberOfChapters); //set chapter numbers
 		}
+		if (Number(chapter) <= newNumberOfChapters) return;
+		setChapter('1');
 	};
 
 	const handleChapterChange = (
@@ -50,6 +59,16 @@ export default function App() {
 		if (typeof e.target.value === 'string') {
 			setChapter(e.target.value);
 		}
+	};
+
+	const handleSubmit = () => {
+		console.log('Info:', book, chapter);
+		let url = `https://api.esv.org/v3/passage/text/?q=${book
+			.split(' ')
+			.join(
+				'+'
+			)}+${chapter}&include-passage-references=false&include-verse-numbers=false&include-first-verse-numbers=false&include-footnotes=false&include-footnote-body=false&include-headings=false&include-selahs=false`;
+		console.log('Url: ', url);
 	};
 
 	//create chapter input options based on book of the bible
@@ -80,8 +99,6 @@ export default function App() {
 						</MenuItem>
 					))}
 				</Select>
-			</FormControl>
-			<FormControl className={classes.formControl}>
 				<InputLabel id='bible-chapter'>Chapter</InputLabel>
 				<Select
 					labelId='bible-chapter'
@@ -90,6 +107,12 @@ export default function App() {
 					onChange={handleChapterChange}>
 					{chapterArray}
 				</Select>
+				<IconButton
+					aria-label='search'
+					className={classes.iconButton}
+					onClick={handleSubmit}>
+					<SearchOutlinedIcon />
+				</IconButton>
 			</FormControl>
 			<p>
 				P,aaoCJbtwoG, TtswaiE,aafiCJ: GtyapfGoFatLJC.
