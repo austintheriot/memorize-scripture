@@ -1,0 +1,41 @@
+*,
+*:before,
+*:after,
+html {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+
+	--dark: #242423;
+	--background: #333533;
+	--light: #d9d9d9;
+
+	--h1: 2rem;
+	--h2: 1.8rem;
+	--h3: 1.6rem;
+	--h5: 1.4rem;
+	--h6: 1.2rem;
+	--body: 1rem;
+}
+
+h1 {
+	font-size: var(--h1);
+}
+h2 {
+	font-size: var(--h2);
+}
+h3 {
+	font-size: var(--h3);
+}
+h4 {
+	font-size: var(--h4);
+}
+h5 {
+	font-size: var(--h5);
+}
+h6 {
+	font-size: var(--h6);
+}
+body {
+	font-size: var(--body);
+}
