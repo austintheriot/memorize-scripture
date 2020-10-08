@@ -20,8 +20,13 @@ export default (string: string) => {
 					//ensuring sensible line breaks:
 					if (
 						characterCount < MAX_LINE_LENGTH && //short line
-						(ch === '.' || ch === '!' || ch === '?' || ch === '”') && //break on . or ”
-						word[i + 1] !== '”' //the following character is not a ”
+						(ch === '.' ||
+							ch === '!' ||
+							ch === '?' ||
+							ch === '”' ||
+							ch === '’') && //break on . or ”
+						word[i + 1] !== '”' && //the following character is not a ”
+						word[i + 1] !== '’' //the following character is not a ’
 					) {
 						newWord += '\n';
 						characterCount = 0;
@@ -30,10 +35,12 @@ export default (string: string) => {
 						(ch === '.' ||
 							ch === ',' ||
 							ch === '”' ||
+							ch === '’' ||
 							ch === '!' ||
 							ch === '—' ||
 							ch === '?') && //break on . , or ”
-						word[i + 1] !== '”' //the following character is not a ”
+						word[i + 1] !== '”' && //the following character is not a ”
+						word[i + 1] !== '’' //the following character is not a ’
 					) {
 						newWord += '\n';
 						characterCount = 0;
