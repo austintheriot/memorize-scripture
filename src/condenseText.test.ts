@@ -291,12 +291,18 @@ describe('Condense Text Function', () => {
 		).toBe(`Hsttw,“DGas,‘Ysneoatitg’?”\n`);
 	});
 
-	test('Should delete intraword apostrophes hyphens', () => {
+	test('Should delete intraword apostrophes, hyphens, and commas (in numbers)', () => {
 		expect(
 			condenseText(
 				`If Cain’s revenge is sevenfold, then Lamech’s is seventy-sevenfold.”`
 			)
 		).toBe(`iCris,tLis.”\n`);
+
+		expect(
+			condenseText(
+				`And I heard the number of the sealed, 144,000, sealed from every tribe of the sons of Israel:`
+			)
+		).toBe(`Aihtnots,1,sfetotsoi:`);
 	});
 
 	test('Should only keep first number of longer number', () => {

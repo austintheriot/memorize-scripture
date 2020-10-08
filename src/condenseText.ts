@@ -15,9 +15,9 @@ export default (string: string) => {
 
 				//matches non-letter characters and numbers
 				if (ch.match(/[^A-Za-z0-9_]/)) {
-					//skip over intra-word apostrophes and hypens
+					//skip over intra-word apostrophes, hyphens, and commas (important for longer numbers)
 					if (
-						(ch === '’' || ch === '-') &&
+						(ch === '’' || ch === '-' || ch === ',') &&
 						word[i + 1] && //make sure word[i + 1] is defined before testing to see if it's a letter
 						word[i + 1].match(/\w/) //matches for english letters
 					) {
