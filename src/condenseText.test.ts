@@ -51,7 +51,7 @@ describe('Condense Text Function', () => {
 
 		expect(condenseText('”””””')).toBe('”””””\n');
 
-		expect(condenseText('......”””””')).toBe('.\n.\n.\n.\n..”””””\n');
+		expect(condenseText('......”””””')).toBe('.\n.\n.\n...”””””\n');
 	});
 
 	test('Should break a line of more than 75 characters on , . ” ’ ? — or ! ', () => {
@@ -290,4 +290,20 @@ describe('Condense Text Function', () => {
 			)
 		).toBe(`Hsttw,“DGas,‘Ysneoatitg’?”\n`);
 	});
+
+	// test('Should NOT break a line for a minor character if a . or ” occurs up to 5 characters later', () => {
+	// 	expect(
+	// 		condenseText(
+	// 			'Now the serpent was more crafty than any other beast of the field that the LORD God had made. ' +
+	// 				'He said to the woman, “Did God actually say, ‘You shall not eat of any tree in the garden’?” ' +
+	// 				'And the woman said to the serpent, “We may eat of the fruit of the trees in the garden, but God said, ' +
+	// 				'‘You shall not eat of the fruit of the tree that is in the midst of the garden, neither shall you touch it, lest you die.’” '
+	// 		)
+	// 	).toBe(
+	// 		'NtswmctaobotfttLGhm.Hsttw,\n' +
+	// 			'“DGas,‘Ysneoatitg’?”\n' +
+	// 			'Atwstts,“Wmeotfottitg,bGs,\n' +
+	// 			'‘Ysneotfotttiitmotg,nsyti,lyd.’”\n'
+	// 	);
+	// });
 });

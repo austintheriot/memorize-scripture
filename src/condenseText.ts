@@ -18,6 +18,7 @@ export default (string: string) => {
 					newWord += ch;
 
 					//ensuring sensible line breaks:
+					//SHORTER LINES ONLY BREAK FOR . ! ? ” ’
 					if (
 						characterCount < MAX_LINE_LENGTH && //short line
 						(ch === '.' ||
@@ -25,13 +26,17 @@ export default (string: string) => {
 							ch === '?' ||
 							ch === '”' ||
 							ch === '’') && //break on . or ”
-						word[i + 1] !== '”' && //the following character is not a ”
 						word[i + 1] !== '’' && //the following character is not a ’
-						word[i + 2] !== '”' //the NEXT NEXT character is not a ”
+						word[i + 1] !== '”' && //the following characters are not ”
+						word[i + 2] !== '”' &&
+						word[i + 3] !== '”'
 					) {
 						newWord += '\n';
 						characterCount = 0;
-					} else if (
+					}
+
+					//LONGER LINES BREAK FOR MORE MINOR PUNCTUATION
+					else if (
 						characterCount > MAX_LINE_LENGTH && //long line
 						(ch === '.' ||
 							ch === ',' ||
@@ -40,9 +45,10 @@ export default (string: string) => {
 							ch === '!' ||
 							ch === '—' ||
 							ch === '?') && //break on . , or ”
-						word[i + 1] !== '”' && //the following character is not a ”
 						word[i + 1] !== '’' && //the following character is not a ’
-						word[i + 2] !== '”' //the NEXT NEXT character is not a ”
+						word[i + 1] !== '”' && //the following characters are not ”
+						word[i + 2] !== '”' &&
+						word[i + 3] !== '”'
 					) {
 						newWord += '\n';
 						characterCount = 0;
