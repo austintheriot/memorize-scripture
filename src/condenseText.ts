@@ -15,17 +15,22 @@ export default (string: string) => {
 
 				//add symbol (non-letter character) to word
 				if (ch.match(/[^A-Za-z_]/)) {
+					//delete intra-word apostrophes and hypens
+					if (
+						(ch === '’' || ch === '-') &&
+						word[i + 1] && //make sure word[i + 1] is defined before testing to see if it's a letter
+						word[i + 1].match(/\w/) //matches for english letters
+					) {
+						continue;
+					}
+
 					newWord += ch;
 
 					//ensuring sensible line breaks:
 					//SHORTER LINES ONLY BREAK FOR . ! ? ” ’
 					if (
 						characterCount < MAX_LINE_LENGTH && //short line
-						(ch === '.' ||
-							ch === '!' ||
-							ch === '?' ||
-							ch === '”' ||
-							ch === '’') && //break on . or ”
+						(ch === '.' || ch === '!' || ch === '?' || ch === '”') &&
 						word[i + 1] !== '’' && //the following character is not a ’
 						word[i + 1] !== '”' && //the following characters are not ”
 						word[i + 2] !== '”' &&

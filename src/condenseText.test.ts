@@ -291,6 +291,14 @@ describe('Condense Text Function', () => {
 		).toBe(`Hsttw,“DGas,‘Ysneoatitg’?”\n`);
 	});
 
+	test('Should delete intraword apostrophes and hyphens', () => {
+		expect(
+			condenseText(
+				`If Cain’s revenge is sevenfold, then Lamech’s is seventy-sevenfold.”`
+			)
+		).toBe(`iCris,tLis.”\n`);
+	});
+
 	// test('Should NOT break a line for a minor character if a . or ” occurs up to 5 characters later', () => {
 	// 	expect(
 	// 		condenseText(
