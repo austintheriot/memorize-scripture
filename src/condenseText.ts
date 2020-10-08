@@ -8,14 +8,14 @@ export default (string: string) => {
 		for (let i = 0; i < words.length; i++) {
 			let word = words[i];
 			let newWord = '';
-			let letterNotYetFound = true;
+			let validCharacterNotYetFound = true;
 			for (let i = 0; i < word.length; i++) {
 				const ch = word[i];
 				characterCount++;
 
-				//add symbol (non-letter character) to word
-				if (ch.match(/[^A-Za-z_]/)) {
-					//delete intra-word apostrophes and hypens
+				//matches non-letter characters and numbers
+				if (ch.match(/[^A-Za-z0-9_]/)) {
+					//skip over intra-word apostrophes and hypens
 					if (
 						(ch === '’' || ch === '-') &&
 						word[i + 1] && //make sure word[i + 1] is defined before testing to see if it's a letter
@@ -24,6 +24,7 @@ export default (string: string) => {
 						continue;
 					}
 
+					//adds symbol to word
 					newWord += ch;
 
 					//ensuring sensible line breaks:
@@ -62,9 +63,9 @@ export default (string: string) => {
 				}
 
 				//only add the first letter found in the word
-				if (letterNotYetFound) {
+				if (validCharacterNotYetFound) {
 					newWord += ch;
-					letterNotYetFound = false;
+					validCharacterNotYetFound = false;
 				}
 			}
 			words[i] = newWord;

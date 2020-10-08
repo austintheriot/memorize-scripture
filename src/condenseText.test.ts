@@ -291,12 +291,16 @@ describe('Condense Text Function', () => {
 		).toBe(`Hsttw,“DGas,‘Ysneoatitg’?”\n`);
 	});
 
-	test('Should delete intraword apostrophes and hyphens', () => {
+	test('Should delete intraword apostrophes hyphens', () => {
 		expect(
 			condenseText(
 				`If Cain’s revenge is sevenfold, then Lamech’s is seventy-sevenfold.”`
 			)
 		).toBe(`iCris,tLis.”\n`);
+	});
+
+	test('Should only keep first number of longer number', () => {
+		expect(condenseText(`When Adam had lived 130 years`)).toBe(`WAhl1y`);
 	});
 
 	// test('Should NOT break a line for a minor character if a . or ” occurs up to 5 characters later', () => {
