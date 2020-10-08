@@ -26,7 +26,8 @@ export default (string: string) => {
 							ch === '”' ||
 							ch === '’') && //break on . or ”
 						word[i + 1] !== '”' && //the following character is not a ”
-						word[i + 1] !== '’' //the following character is not a ’
+						word[i + 1] !== '’' && //the following character is not a ’
+						word[i + 2] !== '”' //the NEXT NEXT character is not a ”
 					) {
 						newWord += '\n';
 						characterCount = 0;
@@ -40,7 +41,8 @@ export default (string: string) => {
 							ch === '—' ||
 							ch === '?') && //break on . , or ”
 						word[i + 1] !== '”' && //the following character is not a ”
-						word[i + 1] !== '’' //the following character is not a ’
+						word[i + 1] !== '’' && //the following character is not a ’
+						word[i + 2] !== '”' //the NEXT NEXT character is not a ”
 					) {
 						newWord += '\n';
 						characterCount = 0;

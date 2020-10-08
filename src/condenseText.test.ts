@@ -51,7 +51,7 @@ describe('Condense Text Function', () => {
 
 		expect(condenseText('”””””')).toBe('”””””\n');
 
-		expect(condenseText('......”””””')).toBe('.\n.\n.\n.\n.\n.”””””\n');
+		expect(condenseText('......”””””')).toBe('.\n.\n.\n.\n..”””””\n');
 	});
 
 	test('Should break a line of more than 75 characters on , . ” ’ ? — or ! ', () => {
@@ -281,5 +281,13 @@ describe('Condense Text Function', () => {
 				'TthiBoJ.”\n' +
 				'fsiiwbtp'
 		);
+	});
+
+	test('Should NOT break a line of more than 75 characters on , . ” ’ ? or ! when the NEXT NEXT character is ”', () => {
+		expect(
+			condenseText(
+				`He said to the woman, “Did God actually say, ‘You shall not eat of any tree in the garden’?”`
+			)
+		).toBe(`Hsttw,“DGas,‘Ysneoatitg’?”\n`);
 	});
 });
