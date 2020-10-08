@@ -31,6 +31,7 @@ export default (string: string) => {
 							ch === ',' ||
 							ch === '”' ||
 							ch === '!' ||
+							ch === '—' ||
 							ch === '?') && //break on . , or ”
 						word[i + 1] !== '”' //the following character is not a ”
 					) {

@@ -54,24 +54,159 @@ describe('Condense Text Function', () => {
 		expect(condenseText('......”””””')).toBe('.\n.\n.\n.\n.\n.”””””\n');
 	});
 
-	test('Should break a line of more than 75 characters on , . ” ? or !', () => {
+	test('Should break a line of more than 75 characters on , . ” ? — or ! ', () => {
+		//testing ,
 		expect(
 			condenseText(
-				'Now after Jesus was born in Bethlehem of Judea in the days of Herod the king, ' +
-					'behold, wise men from the east came to Jerusalem saying, ' +
-					'“Where is he who has been born king of the Jews? ' +
-					'For we saw his star when it rose and have come to worship him.” ' +
-					'When Herod the king heard this he was troubled and all Jerusalem with him'
+				'Now after Jesus was born in Bethlehem of Judea in the days of Herod the king ' +
+					'behold wise men from the east came to Jerusalem saying ' +
+					'Where is he who has been born king of the Jews ' +
+					'For we saw his star when it rose and have come to worship him ' +
+					'When Herod the king heard this he was troubled and all Jerusalem with him ' +
+					'and assembling all the chief priests and scribes of the people ' +
+					'he inquired of them where the Christ was to be born, ' +
+					'They told him In Bethlehem of Judea ' +
+					'for so it is written by the prophet'
 			)
 		).toBe(
-			'NaJwbiBoJitdoHtk,b,wmftectJs,\n' +
-				'“WihwhbbkotJ?\n' +
-				'Fwshswirahctwh.”\n' +
-				'WHtkhthwtaaJwh'
+			'NaJwbiBoJitdoHtk' +
+				'bwmftectJs' +
+				'WihwhbbkotJ' +
+				'Fwshswirahctwh' +
+				'WHtkhthwtaaJwh' +
+				'aaatcpasotp' +
+				'hiotwtCwtbb,\n' +
+				'TthiBoJ' +
+				'fsiiwbtp'
+		);
+
+		//testing .
+		expect(
+			condenseText(
+				'Now after Jesus was born in Bethlehem of Judea in the days of Herod the king ' +
+					'behold wise men from the east came to Jerusalem saying ' +
+					'Where is he who has been born king of the Jews ' +
+					'For we saw his star when it rose and have come to worship him ' +
+					'When Herod the king heard this he was troubled and all Jerusalem with him ' +
+					'and assembling all the chief priests and scribes of the people ' +
+					'he inquired of them where the Christ was to be born. ' +
+					'They told him In Bethlehem of Judea ' +
+					'for so it is written by the prophet'
+			)
+		).toBe(
+			'NaJwbiBoJitdoHtk' +
+				'bwmftectJs' +
+				'WihwhbbkotJ' +
+				'Fwshswirahctwh' +
+				'WHtkhthwtaaJwh' +
+				'aaatcpasotp' +
+				'hiotwtCwtbb.\n' +
+				'TthiBoJ' +
+				'fsiiwbtp'
+		);
+
+		//testing ”
+		expect(
+			condenseText(
+				'Now after Jesus was born in Bethlehem of Judea in the days of Herod the king ' +
+					'behold wise men from the east came to Jerusalem saying ' +
+					'Where is he who has been born king of the Jews ' +
+					'For we saw his star when it rose and have come to worship him ' +
+					'When Herod the king heard this he was troubled and all Jerusalem with him ' +
+					'and assembling all the chief priests and scribes of the people ' +
+					'he inquired of them where the Christ was to be born” ' +
+					'They told him In Bethlehem of Judea ' +
+					'for so it is written by the prophet'
+			)
+		).toBe(
+			'NaJwbiBoJitdoHtk' +
+				'bwmftectJs' +
+				'WihwhbbkotJ' +
+				'Fwshswirahctwh' +
+				'WHtkhthwtaaJwh' +
+				'aaatcpasotp' +
+				'hiotwtCwtbb”\n' +
+				'TthiBoJ' +
+				'fsiiwbtp'
+		);
+
+		//testing ?
+		expect(
+			condenseText(
+				'Now after Jesus was born in Bethlehem of Judea in the days of Herod the king ' +
+					'behold wise men from the east came to Jerusalem saying ' +
+					'Where is he who has been born king of the Jews ' +
+					'For we saw his star when it rose and have come to worship him ' +
+					'When Herod the king heard this he was troubled and all Jerusalem with him ' +
+					'and assembling all the chief priests and scribes of the people ' +
+					'he inquired of them where the Christ was to be born? ' +
+					'They told him In Bethlehem of Judea ' +
+					'for so it is written by the prophet'
+			)
+		).toBe(
+			'NaJwbiBoJitdoHtk' +
+				'bwmftectJs' +
+				'WihwhbbkotJ' +
+				'Fwshswirahctwh' +
+				'WHtkhthwtaaJwh' +
+				'aaatcpasotp' +
+				'hiotwtCwtbb?\n' +
+				'TthiBoJ' +
+				'fsiiwbtp'
+		);
+
+		//testing —
+		expect(
+			condenseText(
+				'Now after Jesus was born in Bethlehem of Judea in the days of Herod the king ' +
+					'behold wise men from the east came to Jerusalem saying ' +
+					'Where is he who has been born king of the Jews ' +
+					'For we saw his star when it rose and have come to worship him ' +
+					'When Herod the king heard this he was troubled and all Jerusalem with him ' +
+					'and assembling all the chief priests and scribes of the people ' +
+					'he inquired of them where the Christ was to be born— ' +
+					'They told him In Bethlehem of Judea ' +
+					'for so it is written by the prophet'
+			)
+		).toBe(
+			'NaJwbiBoJitdoHtk' +
+				'bwmftectJs' +
+				'WihwhbbkotJ' +
+				'Fwshswirahctwh' +
+				'WHtkhthwtaaJwh' +
+				'aaatcpasotp' +
+				'hiotwtCwtbb—\n' +
+				'TthiBoJ' +
+				'fsiiwbtp'
+		);
+
+		//testing !
+		expect(
+			condenseText(
+				'Now after Jesus was born in Bethlehem of Judea in the days of Herod the king ' +
+					'behold wise men from the east came to Jerusalem saying ' +
+					'Where is he who has been born king of the Jews ' +
+					'For we saw his star when it rose and have come to worship him ' +
+					'When Herod the king heard this he was troubled and all Jerusalem with him ' +
+					'and assembling all the chief priests and scribes of the people ' +
+					'he inquired of them where the Christ was to be born! ' +
+					'They told him In Bethlehem of Judea ' +
+					'for so it is written by the prophet'
+			)
+		).toBe(
+			'NaJwbiBoJitdoHtk' +
+				'bwmftectJs' +
+				'WihwhbbkotJ' +
+				'Fwshswirahctwh' +
+				'WHtkhthwtaaJwh' +
+				'aaatcpasotp' +
+				'hiotwtCwtbb!\n' +
+				'TthiBoJ' +
+				'fsiiwbtp'
 		);
 	});
 
-	test('Should NOT break a line of more than 75 characters that does not contain , . ” ? !', () => {
+	test('Should NOT break a line of more than 75 characters that does not contain , . ” ? — or !', () => {
 		expect(
 			condenseText(
 				'Now after Jesus was born in Bethlehem of Judea in the days of Herod the king ' +
