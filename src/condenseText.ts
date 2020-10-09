@@ -62,6 +62,7 @@ export default (string: string) => {
 					continue;
 				}
 
+				//if not a symbol and the character is not skipped over already:
 				//only add the first letter found in the word
 				if (validCharacterNotYetFound) {
 					newWord += ch;
@@ -74,5 +75,6 @@ export default (string: string) => {
 	}
 	let finalText = lines.join('\n'); //join back into a single string
 	finalText = finalText.split('I').join('i'); //get rid of capital I's
+	finalText = finalText.replace(/\n\n/g, '\n'); //replace double line breaks with single line breaks
 	return finalText;
 };

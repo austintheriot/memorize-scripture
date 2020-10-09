@@ -309,6 +309,45 @@ describe('Condense Text Function', () => {
 		expect(condenseText(`When Adam had lived 130 years`)).toBe(`WAhl1y`);
 	});
 
+	test('Should replace double line breaks with single line breaks', () => {
+		expect(
+			condenseText(`When Adam\n\n had lived \n\n\n130 \n\n\n\nyears`)
+		).toBe(`WA\nhl\n\n1\n\ny`);
+	});
+
+	//See Habbakuk 1 for issue here:
+	// test('Should not add line breaks to final character in the line', () => {
+	// 	expect(
+	// 		condenseText(
+	// 			'O LORD, how long shall I cry for help,\n' +
+	// 				'and you will not hear?\n' +
+	// 				'Or cry to you “Violence!”\n' +
+	// 				'and you will not save?\n' +
+	// 				'Why do you make me see iniquity,\n' +
+	// 				'and why do you idly look at wrong?\n' +
+	// 				'Destruction and violence are before me;\n' +
+	// 				'strife and contention arise.\n' +
+	// 				'So the law is paralyzed,\n' +
+	// 				'and justice never goes forth.\n' +
+	// 				'For the wicked surround the righteous;\n' +
+	// 				'so justice goes forth perverted.\n\n\n'
+	// 		)
+	// 	).toBe(
+	// 		'OL,hlsicfh,\n' +
+	// 			'aywnh?\n' +
+	// 			'Octy“V!”\n' +
+	// 			'aywns?\n' +
+	// 			'Wdymmsi,\n' +
+	// 			'awdyilaw?\n' +
+	// 			'Davabm;\n' +
+	// 			'saca.\n' +
+	// 			'Stlip,\n' +
+	// 			'ajngf.\n' +
+	// 			'Ftwstr;\n' +
+	// 			'sjgfp.\n\n\n'
+	// 	);
+	// });
+
 	// test('Should NOT break a line for a minor character if a . or ” occurs up to 5 characters later', () => {
 	// 	expect(
 	// 		condenseText(
