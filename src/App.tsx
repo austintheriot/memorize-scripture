@@ -68,17 +68,26 @@ export default function App() {
 	const [resultTitle, setResultTitle] = useState('');
 	const [resultBody, setResultBody] = useState('');
 	const [resultCondensedBody, setResultCondensedBody] = useState('');
+	const [message, setMessage] = useState('');
 
 	const updateSearchTerms = (book: string, chapter: string) => {
 		setBook(book);
 		setChapter(chapter);
+		const newNumberOfChapters = bookChapters[book]; //get chapter numbers
+		setNumberOfChapters(newNumberOfChapters); //set chapter numbers
 		return;
 	};
 
-	const updateResults = (book: string, chapter: string, body: string) => {
+	const updateResults = (
+		book: string,
+		chapter: string,
+		body: string,
+		error?: string | undefined
+	) => {
 		setResultTitle(`${book} ${chapter}`);
 		setResultBody(body);
 		setResultCondensedBody(condenseText(body));
+		setMessage(error || '');
 		return;
 	};
 
@@ -94,19 +103,21 @@ export default function App() {
 	};
 
 	const storeMostRecentInLocalStorage = (title: string) => {
-		console.log('Storing most recent book and chapter in local storage');
+		console.log(
+			`Storing ${title} as most the most recently accessed chapter in local storage`
+		);
 		window.localStorage.setItem('recent', title);
 	};
 
 	const storePassageInLocalStorage = (title: string, body: string) => {
-		console.log('Checking if passage already exists in local storage');
+		console.log(`Checking if ${title} already exists in local storage`);
 		let passageIsInLocalStorage = !!getTextBodyFromLocalStorage(title);
 		if (passageIsInLocalStorage) {
-			console.log('Passage exists in local storage');
+			console.log(`${title} exists in local storage`);
 			return;
 		} else {
-			console.log('Passage does not exist in local storage');
-			console.log('Adding Passage to local storage');
+			console.log(`${title} does not exist in local storage`);
+			console.log(`Adding ${title} to local storage`);
 			let textArray = retrieveTextArrayFromLocalStorage(title);
 			//store no more than 5 passages at a time
 			if (textArray.length === 5) textArray.pop();
@@ -122,7 +133,7 @@ export default function App() {
 		console.log('Checking for most recent book and chapter.');
 		const recent = window.localStorage.getItem('recent');
 		if (recent) {
-			console.log('A most recent book and chapter exist in local storage.');
+			console.log(`${recent} is the most recent chapter accessed.`);
 			const book = recent.split('+')[0];
 			const chapter = recent.split('+')[1];
 			updateSearchTerms(book, chapter);
@@ -132,10 +143,10 @@ export default function App() {
 			console.log(`Searching storage for ${title}`);
 			let body = getTextBodyFromLocalStorage(title);
 			if (body) {
-				console.log('Retrieved text body from local storage');
+				console.log(`Retrieved text body of ${title} from local storage`);
 				updateResults(book, chapter, body);
 			} else {
-				console.log('Most recent body not found in local storage.');
+				console.log(`${title} not found in local storage.`);
 			}
 		} else {
 			console.log(
@@ -147,7 +158,6 @@ export default function App() {
 
 	const handleViewChange = () => {
 		setShowCondensed((prevState) => !prevState);
-		console.log('view flipped!');
 	};
 
 	const handleBookChange = (
@@ -184,12 +194,14 @@ export default function App() {
 		console.log(`Checking local storage for ${title}`);
 		let body = getTextBodyFromLocalStorage(title);
 		if (body) {
-			console.log('Retrieved body from local storage');
+			console.log(`Retrieved body of ${title} from local storage`);
 			updateResults(book, chapter, body);
 			storeMostRecentInLocalStorage(title);
 		} else {
 			//If it does not exist in local storage, make API call and store it
-			console.log('Making an API call');
+			console.log(`${title} not found in local storage`);
+			console.log('Making a call to the ESV API');
+			updateResults(book, chapter, '', 'Loading...'); //show loading indicator
 			let url = `https://api.esv.org/v3/passage/text/?q=${book
 				.split(' ')
 				.join(
@@ -202,7 +214,7 @@ export default function App() {
 					},
 				})
 				.then((response) => {
-					console.log('Passage received from ESV API');
+					console.log(`Text body of ${title} received from ESV API`);
 					const body = response.data.passages[0];
 					updateResults(book, chapter, body);
 					storeMostRecentInLocalStorage(title);
@@ -210,6 +222,7 @@ export default function App() {
 				})
 				.catch((error) => {
 					console.log(error);
+					updateResults('', '', '', 'Sorry, an error occurred.');
 				});
 		}
 	};
@@ -266,6 +279,7 @@ export default function App() {
 					<SearchOutlinedIcon style={{ color: 'var(--light)' }} />
 				</IconButton>
 			</form>
+			<p>{message}</p>
 			{resultCondensedBody && resultBody ? (
 				<>
 					<h2>{resultTitle}</h2>
