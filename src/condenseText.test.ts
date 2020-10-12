@@ -283,6 +283,21 @@ describe('Condense Text Function', () => {
 		);
 	});
 
+	test('Should NOT break a line of more than 75 characters on , . ” ’ ? or ! when the next character is )', () => {
+		expect(
+			condenseText(
+				'(In saying, “He ascended,” what does it mean but that he had also descended into the lower regions, the earth? ' +
+					'He who descended is the one who also ascended far above all the heavens, that he might fill all things.) ' +
+					'And he gave the apostles, the prophets, the evangelists, the shepherds and teachers, to equip the saints for the work of ministry,'
+			)
+		).toBe(
+			'(is,“Ha,”\n' +
+				'wdimbthhaditlr,te?\n' +
+				'Hwditowaafaath,thmfat.)\n' +
+				'Ahgta,tp,te,tsat,tetsftwom,\n'
+		);
+	});
+
 	test('Should NOT break a line of more than 75 characters on , . ” ’ ? or ! when the NEXT NEXT character is ”', () => {
 		expect(
 			condenseText(
