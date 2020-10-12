@@ -162,15 +162,20 @@ export default function App() {
 					<SearchOutlinedIcon style={{ color: 'var(--light)' }} />
 				</IconButton>
 			</form>
+			{condensedText || text ? (
+				<h2>
+					{book} {chapter}
+				</h2>
+			) : null}
 			{condensedText ? (
 				<>
-					<h2>Condensed Text</h2>
+					<h3>Condensed Text</h3>
 					<div className={styles.textArea}>{condensedText}</div>
 				</>
 			) : null}
 			{text ? (
 				<>
-					<h2>Full Text</h2>
+					<h3>Full Text</h3>
 					<div className={styles.textArea}>{text}</div>
 				</>
 			) : null}
