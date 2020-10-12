@@ -3,13 +3,16 @@ export default (string: string) => {
 
 	let lines = string.split('\n');
 	for (let i = 0; i < lines.length; i++) {
+		//iterate through text broken by /n
 		let characterCount = 0;
 		let words = lines[i].split(' ');
 		for (let i = 0; i < words.length; i++) {
+			//iterate through every word in each line (replace word with new, single-letter only version)
 			let word = words[i];
 			let newWord = '';
 			let validCharacterNotYetFound = true;
 			for (let i = 0; i < word.length; i++) {
+				//iterate through every letter in the word
 				const ch = word[i];
 				characterCount++;
 
@@ -58,6 +61,10 @@ export default (string: string) => {
 					) {
 						newWord += '\n';
 						characterCount = 0;
+						if (ch === '—' && word[i + 1]) {
+							//special case for word—word (add in the first letter of the next word)
+							newWord += word[i + 1];
+						}
 					}
 					continue;
 				}
