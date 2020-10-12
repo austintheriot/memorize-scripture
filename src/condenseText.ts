@@ -62,7 +62,8 @@ export default (string: string) => {
 							ch === '?') && //break on . , or ”
 						word[i + 1] !== '’' && //the following character is not a ’
 						word[i + 1] !== '”' && //the following characters are not ”
-						word[i + 1] !== ')' && //the following characters are not )
+						word[i + 1] !== ')' && //the following character is not )
+						word[i + 1] !== ',' && //the following character is not ,
 						word[i + 2] !== '”' &&
 						word[i + 3] !== '”'
 					) {
