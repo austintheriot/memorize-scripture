@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 //App
 import './App.scss';
@@ -25,6 +25,13 @@ import { LargeSpacer } from './Spacers/Spacers';
 import condenseText from './condenseText';
 import { bookTitles, bookChapters } from './bibleBookInfo';
 
+interface TextObject {
+	title: string;
+	body: string;
+}
+
+type TextArray = TextObject[];
+
 const useStyles = makeStyles((theme) => ({
 	formControl: {
 		margin: theme.spacing(1),
@@ -48,12 +55,95 @@ const useStyles = makeStyles((theme) => ({
 
 export default function App() {
 	const classes = useStyles();
+
+	//state
+	const [showCondensed, setShowCondensed] = useState(true);
+
+	//search terms
 	const [book, setBook] = useState('Matthew');
 	const [chapter, setChapter] = useState('1');
-	const [showCondensed, setShowCondensed] = useState(true);
 	const [numberOfChapters, setNumberOfChapters] = useState(28);
-	const [text, setText] = useState('');
-	const [condensedText, setCondensedText] = useState('');
+
+	//search results
+	const [resultTitle, setResultTitle] = useState('');
+	const [resultBody, setResultBody] = useState('');
+	const [resultCondensedBody, setResultCondensedBody] = useState('');
+
+	const updateSearchTerms = (book: string, chapter: string) => {
+		setBook(book);
+		setChapter(chapter);
+		return;
+	};
+
+	const updateResults = (book: string, chapter: string, body: string) => {
+		setResultTitle(`${book} ${chapter}`);
+		setResultBody(body);
+		setResultCondensedBody(condenseText(body));
+		return;
+	};
+
+	const retrieveTextArrayFromLocalStorage = (title: string) => {
+		const textsString = window.localStorage.getItem('texts');
+		return textsString ? (JSON.parse(textsString) as TextArray) : [];
+	};
+
+	const getTextBodyFromLocalStorage = (title: string) => {
+		const textArray = retrieveTextArrayFromLocalStorage(title);
+		const text = textArray.find((el) => el.title === title);
+		return text?.body;
+	};
+
+	const storeMostRecentInLocalStorage = (title: string) => {
+		console.log('Storing most recent book and chapter in local storage');
+		window.localStorage.setItem('recent', title);
+	};
+
+	const storePassageInLocalStorage = (title: string, body: string) => {
+		console.log('Checking if passage already exists in local storage');
+		let passageIsInLocalStorage = !!getTextBodyFromLocalStorage(title);
+		if (passageIsInLocalStorage) {
+			console.log('Passage exists in local storage');
+			return;
+		} else {
+			console.log('Passage does not exist in local storage');
+			console.log('Adding Passage to local storage');
+			let textArray = retrieveTextArrayFromLocalStorage(title);
+			//store no more than 5 passages at a time
+			if (textArray.length === 5) textArray.pop();
+			textArray.unshift({
+				title,
+				body,
+			});
+			window.localStorage.setItem('texts', JSON.stringify(textArray));
+		}
+	};
+
+	useEffect(() => {
+		console.log('Checking for most recent book and chapter.');
+		const recent = window.localStorage.getItem('recent');
+		if (recent) {
+			console.log('A most recent book and chapter exist in local storage.');
+			const book = recent.split('+')[0];
+			const chapter = recent.split('+')[1];
+			updateSearchTerms(book, chapter);
+
+			//retrieve text body from local storage using title of most recent book and chapter
+			const title = `${book}+${chapter}`;
+			console.log(`Searching storage for ${title}`);
+			let body = getTextBodyFromLocalStorage(title);
+			if (body) {
+				console.log('Retrieved text body from local storage');
+				updateResults(book, chapter, body);
+			} else {
+				console.log('Most recent body not found in local storage.');
+			}
+		} else {
+			console.log(
+				'A most recent book and chapter do not exist in local storage.'
+			);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const handleViewChange = () => {
 		setShowCondensed((prevState) => !prevState);
@@ -89,39 +179,39 @@ export default function App() {
 	};
 
 	const handleSubmit = () => {
-		const key = `${book} ${chapter}`;
-		console.log(`Searching storage for ${key}`);
-		let passage = window.localStorage.getItem(key);
-		if (passage) {
-			console.log('Retrieved passage from local storage');
-			setText(passage);
-			return setCondensedText(condenseText(passage));
+		//Check local storage
+		const title = `${book}+${chapter}`;
+		console.log(`Checking local storage for ${title}`);
+		let body = getTextBodyFromLocalStorage(title);
+		if (body) {
+			console.log('Retrieved body from local storage');
+			updateResults(book, chapter, body);
+			storeMostRecentInLocalStorage(title);
+		} else {
+			//If it does not exist in local storage, make API call and store it
+			console.log('Making an API call');
+			let url = `https://api.esv.org/v3/passage/text/?q=${book
+				.split(' ')
+				.join(
+					'+'
+				)}+${chapter}&include-passage-references=false&include-verse-numbers=false&include-first-verse-numbers=false&include-footnotes=false&include-footnote-body=false&include-headings=false&include-selahs=false&indent-paragraphs=5&indent-poetry-lines=5&include-short-copyright=false`;
+			axios
+				.get(url, {
+					headers: {
+						Authorization: ESVApiKey,
+					},
+				})
+				.then((response) => {
+					console.log('Passage received from ESV API');
+					const body = response.data.passages[0];
+					updateResults(book, chapter, body);
+					storeMostRecentInLocalStorage(title);
+					storePassageInLocalStorage(title, body);
+				})
+				.catch((error) => {
+					console.log(error);
+				});
 		}
-
-		console.log('Making an API call');
-		let url = `https://api.esv.org/v3/passage/text/?q=${book
-			.split(' ')
-			.join(
-				'+'
-			)}+${chapter}&include-passage-references=false&include-verse-numbers=false&include-first-verse-numbers=false&include-footnotes=false&include-footnote-body=false&include-headings=false&include-selahs=false&indent-paragraphs=5&indent-poetry-lines=5&include-short-copyright=false`;
-		axios
-			.get(url, {
-				headers: {
-					Authorization: ESVApiKey,
-				},
-			})
-			.then((response) => {
-				console.log('Passage received from ESV API');
-				console.log(response);
-				const passage = response.data.passages[0];
-				setText(passage);
-				setCondensedText(condenseText(passage));
-				console.log('Storing passage in local storage');
-				window.localStorage.setItem(key, passage);
-			})
-			.catch((error) => {
-				console.log(error);
-			});
 	};
 
 	//create chapter input options based on book of the bible
@@ -176,20 +266,16 @@ export default function App() {
 					<SearchOutlinedIcon style={{ color: 'var(--light)' }} />
 				</IconButton>
 			</form>
-			{condensedText && text ? (
-				<h2>
-					{book} {chapter}
-				</h2>
-			) : null}
-			{condensedText && text ? (
+			{resultCondensedBody && resultBody ? (
 				<>
+					<h2>{resultTitle}</h2>
 					{showCondensed ? (
 						<>
-							<div className={styles.textArea}>{condensedText}</div>
+							<div className={styles.textArea}>{resultCondensedBody}</div>
 						</>
 					) : (
 						<>
-							<div className={styles.textArea}>{text}</div>
+							<div className={styles.textArea}>{resultBody}</div>
 						</>
 					)}
 				</>
