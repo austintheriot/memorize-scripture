@@ -14,4 +14,19 @@
 
 .buttons {
 	display: block;
+	border: none;
+	outline: none;
+	margin: 0;
+	text-decoration: none;
+	background-color: transparent;
+	color: var(--light);
+	cursor: pointer;
+	text-align: center;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	box-shadow: none;
+	padding: 0.5rem 3rem;
+	border-radius: 5px;
+	margin: 2rem auto;
+	font-size: 1rem;
 }
