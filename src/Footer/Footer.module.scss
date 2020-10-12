@@ -1,0 +1,17 @@
+.Footer {
+	position: fixed;
+	bottom: 0;
+	height: 50px;
+	width: 100%;
+	background-color: var(--background);
+	border-top: 1px solid var(--light);
+
+	display: flex;
+	flex: none;
+	justify-content: center;
+	align-items: center;
+}
+
+.buttons {
+	display: block;
+}
