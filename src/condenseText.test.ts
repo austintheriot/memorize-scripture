@@ -298,6 +298,15 @@ describe('Condense Text Function', () => {
 		);
 	});
 
+	test('Should NOT break a line of more than 75 characters on , . ” ’ ? or ! when the next character is ,', () => {
+		expect(
+			condenseText(
+				'Walk as children of light (for the fruit of light is found in all that is good and right and true), ' +
+					'and try to discern what is pleasing to the Lord.'
+			)
+		).toBe('Wacol(ftfolifiatigarat),\nattdwipttL.\n');
+	});
+
 	test('Should NOT break a line of more than 75 characters on , . ” ’ ? or ! when the NEXT NEXT character is ”', () => {
 		expect(
 			condenseText(
