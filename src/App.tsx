@@ -188,42 +188,57 @@ export default function App() {
 		}
 	};
 
+	const fetchTextFromESV = (book: string, chapter: string) => {
+		const title = `${book}+${chapter}`;
+		let url =
+			'https://api.esv.org/v3/passage/text/?' +
+			`q=${book.split(' ').join('+')}+${chapter}` +
+			'&include-passage-references=false' +
+			'&include-verse-numbers=false' +
+			'&include-first-verse-numbers=false' +
+			'&include-footnotes=false' +
+			'&include-footnote-body=false' +
+			'&include-headings=false' +
+			'&include-selahs=false' +
+			'&indent-paragraphs=5' +
+			'&indent-poetry-lines=5' +
+			'&include-short-copyright=false';
+
+		axios
+			.get(url, {
+				headers: {
+					Authorization: ESVApiKey,
+				},
+			})
+			.then((response) => {
+				console.log(`Text body of ${title} received from ESV API`);
+				const body = response.data.passages[0];
+				updateResults(book, chapter, body);
+				storeMostRecentInLocalStorage(title);
+				storePassageInLocalStorage(title, body);
+			})
+			.catch((error) => {
+				console.log(error);
+				updateResults('', '', '', 'Sorry, an error occurred.');
+			});
+	};
+
 	const handleSubmit = () => {
 		//Check local storage
 		const title = `${book}+${chapter}`;
 		console.log(`Checking local storage for ${title}`);
+		//try to retrieve text body from local storage
 		let body = getTextBodyFromLocalStorage(title);
 		if (body) {
 			console.log(`Retrieved body of ${title} from local storage`);
 			updateResults(book, chapter, body);
 			storeMostRecentInLocalStorage(title);
 		} else {
-			//If it does not exist in local storage, make API call and store it
+			//If it does not exist in local storage, make an API call, and store the returned text
 			console.log(`${title} not found in local storage`);
 			console.log('Making a call to the ESV API');
 			updateResults(book, chapter, '', 'Loading...'); //show loading indicator
-			let url = `https://api.esv.org/v3/passage/text/?q=${book
-				.split(' ')
-				.join(
-					'+'
-				)}+${chapter}&include-passage-references=false&include-verse-numbers=false&include-first-verse-numbers=false&include-footnotes=false&include-footnote-body=false&include-headings=false&include-selahs=false&indent-paragraphs=5&indent-poetry-lines=5&include-short-copyright=false`;
-			axios
-				.get(url, {
-					headers: {
-						Authorization: ESVApiKey,
-					},
-				})
-				.then((response) => {
-					console.log(`Text body of ${title} received from ESV API`);
-					const body = response.data.passages[0];
-					updateResults(book, chapter, body);
-					storeMostRecentInLocalStorage(title);
-					storePassageInLocalStorage(title, body);
-				})
-				.catch((error) => {
-					console.log(error);
-					updateResults('', '', '', 'Sorry, an error occurred.');
-				});
+			fetchTextFromESV(book, chapter);
 		}
 	};
 
