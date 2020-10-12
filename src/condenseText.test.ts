@@ -314,4 +314,22 @@ describe('Condense Text Function', () => {
 			condenseText(`When Adam\n\n had lived \n\n\n130 \n\n\n\nyears`)
 		).toBe(`WA\nhl\n\n1\n\ny`);
 	});
+
+	test('Should treat word—word as two separate words', () => {
+		expect(
+			condenseText(
+				'And you were dead in the trespasses and sins in which you once walked, ' +
+					'following the course of this world, following the prince of the power of the air, ' +
+					'the spirit that is now at work in the sons of disobedience—' +
+					'among whom we all once lived in the passions of our flesh, ' +
+					'carrying out the desires of the body and the mind, ' +
+					'and were by nature children of wrath, like the rest of mankind.'
+			)
+		).toBe(
+			'Aywdittasiwyow,ftcotw,\n' +
+				'ftpotpota,tstinawitsod—\n' +
+				'awwaolitpoof,cotdotbatm,\n' +
+				'awbncow,ltrom.\n'
+		);
+	});
 });
