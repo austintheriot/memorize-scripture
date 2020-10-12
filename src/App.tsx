@@ -49,9 +49,15 @@ export default function App() {
 	const classes = useStyles();
 	const [book, setBook] = useState('Matthew');
 	const [chapter, setChapter] = useState('1');
+	const [showCondensed, setShowCondensed] = useState(true);
 	const [numberOfChapters, setNumberOfChapters] = useState(28);
 	const [text, setText] = useState('');
 	const [condensedText, setCondensedText] = useState('');
+
+	const handleViewChange = () => {
+		setShowCondensed((prevState) => !prevState);
+		console.log('view flipped!');
+	};
 
 	const handleBookChange = (
 		e: React.ChangeEvent<{
@@ -169,24 +175,26 @@ export default function App() {
 					<SearchOutlinedIcon style={{ color: 'var(--light)' }} />
 				</IconButton>
 			</form>
-			{condensedText || text ? (
+			{condensedText && text ? (
 				<h2>
 					{book} {chapter}
 				</h2>
 			) : null}
-			{condensedText ? (
+			{condensedText && text ? (
 				<>
-					<h3>Condensed Text</h3>
-					<div className={styles.textArea}>{condensedText}</div>
+					{showCondensed ? (
+						<>
+							<h3>Condensed Text</h3>
+							<div className={styles.textArea}>{condensedText}</div>
+						</>
+					) : (
+						<>
+							<h3>Full Text</h3>
+							<div className={styles.textArea}>{text}</div>
+						</>
+					)}
 				</>
 			) : null}
-			{text ? (
-				<>
-					<h3>Full Text</h3>
-					<div className={styles.textArea}>{text}</div>
-				</>
-			) : null}
-			<div className={styles.textArea}>{text}</div>
 			<div className={styles.spacer}></div>
 			<p className={styles.copyright}>Copyright Notice:</p>
 			<p className={styles.smallText}>
@@ -196,7 +204,7 @@ export default function App() {
 				may not copy or download more than 500 consecutive verses of the ESV
 				Bible or more than one half of any book of the ESV Bible.
 			</p>
-			<Footer />
+			<Footer flipView={handleViewChange} />
 		</div>
 	);
 }
