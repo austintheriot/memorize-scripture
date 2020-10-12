@@ -19,6 +19,7 @@ import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
 
 //Custom components
 import { Footer } from './Footer/Footer';
+import { LargeSpacer } from './Spacers/Spacers';
 
 //Custom functions
 import condenseText from './condenseText';
@@ -184,12 +185,10 @@ export default function App() {
 				<>
 					{showCondensed ? (
 						<>
-							<h3>Condensed Text</h3>
 							<div className={styles.textArea}>{condensedText}</div>
 						</>
 					) : (
 						<>
-							<h3>Full Text</h3>
 							<div className={styles.textArea}>{text}</div>
 						</>
 					)}
@@ -204,6 +203,7 @@ export default function App() {
 				may not copy or download more than 500 consecutive verses of the ESV
 				Bible or more than one half of any book of the ESV Bible.
 			</p>
+			<LargeSpacer />
 			<Footer flipView={handleViewChange} />
 		</div>
 	);
