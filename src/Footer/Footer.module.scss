@@ -1,10 +1,9 @@
 .Footer {
 	position: fixed;
 	bottom: 0;
-	height: 50px;
+	height: 75px;
 	width: 100%;
 	background-color: var(--background);
-	border-top: 1px solid var(--light);
 
 	display: flex;
 	flex: none;
@@ -25,8 +24,18 @@
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	box-shadow: none;
-	padding: 0.5rem 3rem;
+	padding: 1rem;
 	border-radius: 5px;
 	margin: 2rem auto;
 	font-size: 1rem;
+	border: 1px solid var(--light);
+
+	&:hover {
+		background-color: var(--dark);
+	}
+
+	display: flex;
+	flex: none;
+	justify-content: center;
+	align-items: center;
 }
