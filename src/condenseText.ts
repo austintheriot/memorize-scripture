@@ -30,6 +30,11 @@ export default (string: string) => {
 					//adds symbol to word
 					newWord += ch;
 
+					if (characterCount < MAX_LINE_LENGTH && ch === '—' && word[i + 1]) {
+						//special case for word—word (add in the first letter of the next word--SHORT LINES)
+						newWord += word[i + 1];
+					}
+
 					//ensuring sensible line breaks:
 					//SHORTER LINES ONLY BREAK FOR . ! ? ” ’
 					if (
@@ -62,7 +67,7 @@ export default (string: string) => {
 						newWord += '\n';
 						characterCount = 0;
 						if (ch === '—' && word[i + 1]) {
-							//special case for word—word (add in the first letter of the next word)
+							//special case for word—word (add in the first letter of the next word--LONG LINES)
 							newWord += word[i + 1];
 						}
 					}
