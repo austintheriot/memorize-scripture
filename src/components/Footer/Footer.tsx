@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './Footer.module.scss';
 
 //Custom icons
-import flipIcon from '../icons/flip.svg';
+import flipIcon from '../../icons/flip.svg';
 
 export const Footer = (props: any) => {
 	return (
