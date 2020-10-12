@@ -1,21 +1,28 @@
 import React, { useState } from 'react';
+
+//App
 import './App.scss';
 import styles from './App.module.scss';
 
+//Config
+import axios from 'axios';
+import { ESVApiKey } from './config';
+
+//Material UI Components
 import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import axios from 'axios';
-import { ESVApiKey } from './config';
-
-import { bookTitles, bookChapters } from './bibleBookInfo';
-
 import IconButton from '@material-ui/core/IconButton';
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
 
+//Custom components
+import { Footer } from './Footer/Footer';
+
+//Custom functions
 import condenseText from './condenseText';
+import { bookTitles, bookChapters } from './bibleBookInfo';
 
 const useStyles = makeStyles((theme) => ({
 	formControl: {
@@ -189,6 +196,7 @@ export default function App() {
 				may not copy or download more than 500 consecutive verses of the ESV
 				Bible or more than one half of any book of the ESV Bible.
 			</p>
+			<Footer />
 		</div>
 	);
 }
