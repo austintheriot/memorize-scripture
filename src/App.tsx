@@ -6,7 +6,7 @@ import styles from './App.module.scss';
 
 //Config
 import axios from 'axios';
-import { ESVApiKey } from './config';
+import { ESVApiKey } from './utilities/config';
 
 //Material UI Components
 import { makeStyles } from '@material-ui/core/styles';
@@ -18,12 +18,12 @@ import IconButton from '@material-ui/core/IconButton';
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
 
 //Custom components
-import { Footer } from './Footer/Footer';
-import { LargeSpacer } from './Spacers/Spacers';
+import { Footer } from './components/Footer/Footer';
+import { LargeSpacer } from './components/Spacers/Spacers';
 
 //Custom functions
-import condenseText from './condenseText';
-import { bookTitles, bookChapters } from './bibleBookInfo';
+import condenseText from './utilities/condenseText';
+import { bookTitles, bookChapters } from './utilities/bibleBookInfo';
 
 interface TextObject {
 	title: string;
