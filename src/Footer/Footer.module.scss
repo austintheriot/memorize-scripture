@@ -1,9 +1,14 @@
 .Footer {
 	position: fixed;
 	bottom: 0;
-	height: 75px;
+	height: 90px;
 	width: 100%;
 	background-color: var(--background);
+}
+
+.ButtonContainer {
+	height: 75px;
+	width: 100%;
 
 	display: flex;
 	flex: none;
@@ -28,7 +33,6 @@
 	border-radius: 5px;
 	margin: 2rem auto;
 	font-size: 1rem;
-	border: 1px solid var(--light);
 
 	&:hover {
 		background-color: var(--dark);
