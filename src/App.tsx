@@ -240,7 +240,7 @@ export default function App() {
 
 	return (
 		<div className='App'>
-			<h1>Scripture Memorization</h1>
+			<h1>Memorize Scripture</h1>
 			<form className={styles.form}>
 				<FormControl className={classes.formControl}>
 					<InputLabel id='bible-book' className={classes.label}>
@@ -279,7 +279,7 @@ export default function App() {
 					<SearchOutlinedIcon style={{ color: 'var(--light)' }} />
 				</IconButton>
 			</form>
-			<p>{message}</p>
+			<p className={styles.message}>{message}</p>
 			{resultCondensedBody && resultBody ? (
 				<>
 					<h2>{resultTitle}</h2>
