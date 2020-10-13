@@ -69,9 +69,10 @@ export default function App() {
 	const [resultBody, setResultBody] = useState('');
 	const [resultCondensedBody, setResultCondensedBody] = useState('');
 	const [message, setMessage] = useState('');
-	const [resultAudio, setResultAudio] = useState(new Audio());
-	const [resultAudioIsPlaying, setResultAudioIsPlaying] = useState(false);
-	const [resultAudioIsReady, setResultAudioIsReady] = useState(false);
+	const [audio, setAudio] = useState(new Audio());
+	const [audioHasError, setAudioHasError] = useState(false);
+	const [audioIsReady, setAudioIsReady] = useState(false);
+	const [audioIsPlaying, setAudioIsPlaying] = useState(false);
 
 	const updateSearchTerms = (book: string, chapter: string) => {
 		setBook(book);
@@ -87,28 +88,16 @@ export default function App() {
 		body: string,
 		error?: string | undefined
 	) => {
-		setResultAudio(
-			new Audio(`https://audio.esv.org/hw/mq/${book} ${chapter}.mp3`)
-		);
+		audio.pause();
+		setAudioHasError(false);
+		setAudioIsReady(false);
+		setAudio(new Audio(`https://audio.esv.org/hw/mq/${book} ${chapter}.mp3`));
 		setResultTitle(`${book} ${chapter}`);
 		setResultBody(body);
 		setResultCondensedBody(condenseText(body));
 		setMessage(error || '');
 		return;
 	};
-
-	useEffect(() => {
-		setResultAudioIsReady(false);
-		resultAudio.addEventListener('pause', () => {
-			setResultAudioIsPlaying(false);
-		});
-		resultAudio.addEventListener('play', () => {
-			setResultAudioIsPlaying(true);
-		});
-		resultAudio.addEventListener('canplay', () => {
-			setResultAudioIsReady(true);
-		});
-	}, [resultAudio]);
 
 	const retrieveTextArrayFromLocalStorage = (title: string) => {
 		const textsString = window.localStorage.getItem('texts');
@@ -148,6 +137,7 @@ export default function App() {
 		}
 	};
 
+	/* Initialize text on load */
 	useEffect(() => {
 		console.log('Checking for most recent book and chapter.');
 		const recent = window.localStorage.getItem('recent');
@@ -175,14 +165,54 @@ export default function App() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	/* Audio event listeners */
+	useEffect(() => {
+		//loaded enough to play
+		audio.addEventListener('canplay', () => {
+			setAudioIsReady(true);
+		});
+		audio.addEventListener('pause', () => {
+			setAudioIsPlaying(false);
+		});
+		audio.addEventListener('play', () => {
+			setAudioIsPlaying(true);
+		});
+		audio.addEventListener('error', () => {
+			setAudioHasError(true);
+		});
+		//not enough data
+		audio.addEventListener('waiting', () => {
+			setAudioIsReady(false);
+		});
+		//ready to play after waiting
+		audio.addEventListener('playing', () => {
+			setAudioIsReady(true);
+		});
+		//audio is over
+		audio.addEventListener('ended', () => {
+			audio.pause();
+			audio.currentTime = 0;
+		});
+	}, [audio]);
+
 	const handlePlay = () => {
-		if (resultAudio.readyState !== 4) return;
-		resultAudio.play();
+		if (audio.readyState !== 4) return;
+		audio.play();
 	};
 
 	const handlePause = () => {
-		if (resultAudio.readyState !== 4) return;
-		resultAudio.pause();
+		if (audio.readyState !== 4) return;
+		audio.pause();
+	};
+
+	const handleRewind = () => {
+		if (audio.readyState !== 4) return;
+		audio.currentTime = Math.max(audio.currentTime - 5, 0);
+	};
+
+	const handleBeginning = () => {
+		if (audio.readyState !== 4) return;
+		audio.currentTime = 0;
 	};
 
 	const handleViewChange = () => {
@@ -353,8 +383,11 @@ export default function App() {
 				flipView={handleViewChange}
 				play={handlePlay}
 				pause={handlePause}
-				isPlaying={resultAudioIsPlaying}
-				isReady={resultAudioIsReady}
+				rewind={handleRewind}
+				beginning={handleBeginning}
+				hasError={audioHasError}
+				isReady={audioIsReady}
+				isPlaying={audioIsPlaying}
 			/>
 		</div>
 	);
