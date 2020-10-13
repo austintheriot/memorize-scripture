@@ -6,14 +6,14 @@ export default (string: string) => {
 		//iterate through text broken by /n
 		let characterCount = 0;
 		let words = lines[i].split(' ');
-		for (let i = 0; i < words.length; i++) {
+		for (let j = 0; j < words.length; j++) {
 			//iterate through every word in each line (replace word with new, single-letter only version)
-			let word = words[i];
+			let word = words[j];
 			let newWord = '';
 			let validCharacterNotYetFound = true;
-			for (let i = 0; i < word.length; i++) {
+			for (let k = 0; k < word.length; k++) {
 				//iterate through every letter in the word
-				const ch = word[i];
+				const ch = word[k];
 				characterCount++;
 
 				//matches non-letter characters and numbers
@@ -21,8 +21,8 @@ export default (string: string) => {
 					//skip over intra-word apostrophes, hyphens, and commas (important for longer numbers)
 					if (
 						(ch === '’' || ch === '-' || ch === ',') &&
-						word[i + 1] && //make sure word[i + 1] is defined before testing to see if it's a letter
-						word[i + 1].match(/\w/) //matches for english letters
+						word[k + 1] && //make sure word[k + 1] is defined before testing to see if it's a letter
+						word[k + 1].match(/\w/) //matches for english letters
 					) {
 						continue;
 					}
@@ -30,9 +30,9 @@ export default (string: string) => {
 					//adds symbol to word
 					newWord += ch;
 
-					if (characterCount < MAX_LINE_LENGTH && ch === '—' && word[i + 1]) {
+					if (characterCount < MAX_LINE_LENGTH && ch === '—' && word[k + 1]) {
 						//special case for word—word (add in the first letter of the next word--SHORT LINES)
-						newWord += word[i + 1];
+						newWord += word[k + 1];
 					}
 
 					//ensuring sensible line breaks:
@@ -40,10 +40,10 @@ export default (string: string) => {
 					if (
 						characterCount < MAX_LINE_LENGTH && //short line
 						(ch === '.' || ch === '!' || ch === '?' || ch === '”') &&
-						word[i + 1] !== '’' && //the following character is not a ’
-						word[i + 1] !== '”' && //the following characters are not ”
-						word[i + 2] !== '”' &&
-						word[i + 3] !== '”'
+						word[k + 1] !== '’' && //the following character is not a ’
+						word[k + 1] !== '”' && //the following characters are not ”
+						word[k + 2] !== '”' &&
+						word[k + 3] !== '”'
 					) {
 						newWord += '\n';
 						characterCount = 0;
@@ -60,18 +60,18 @@ export default (string: string) => {
 							ch === '—' ||
 							ch === ')' ||
 							ch === '?') && //break on . , or ”
-						word[i + 1] !== '’' && //the following character is not a ’
-						word[i + 1] !== '”' && //the following characters are not ”
-						word[i + 1] !== ')' && //the following character is not )
-						word[i + 1] !== ',' && //the following character is not ,
-						word[i + 2] !== '”' &&
-						word[i + 3] !== '”'
+						word[k + 1] !== '’' && //the following character is not a ’
+						word[k + 1] !== '”' && //the following characters are not ”
+						word[k + 1] !== ')' && //the following character is not )
+						word[k + 1] !== ',' && //the following character is not ,
+						word[k + 2] !== '”' &&
+						word[k + 3] !== '”'
 					) {
 						newWord += '\n';
 						characterCount = 0;
-						if (ch === '—' && word[i + 1]) {
+						if (ch === '—' && word[k + 1]) {
 							//special case for word—word (add in the first letter of the next word--LONG LINES)
-							newWord += word[i + 1];
+							newWord += word[k + 1];
 						}
 					}
 					continue;
@@ -84,7 +84,7 @@ export default (string: string) => {
 					validCharacterNotYetFound = false;
 				}
 			}
-			words[i] = newWord;
+			words[j] = newWord;
 		}
 		lines[i] = words.join('');
 	}
