@@ -7,13 +7,24 @@ import beginningIcon from '../../icons/beginning.svg';
 import rewindIcon from '../../icons/rewind.svg';
 import pauseIcon from '../../icons/pause.svg';
 import playIcon from '../../icons/play.svg';
+import forwardIcon from '../../icons/forward.svg';
 import loadingIcon from '../../icons/loading.svg';
 import errorIcon from '../../icons/error.svg';
 
 export const Footer = (props: any) => {
 	return (
 		<footer className={styles.Footer}>
-			<div className={styles.ButtonContainer}>
+			{/* PROGRESS BAR */}
+			<div
+				className={styles.progressBarOuter}
+				onMouseDown={props.progressClick}>
+				<div
+					className={styles.progressBarInner}
+					style={{ width: `${props.currentTime * 100}%` }}></div>
+			</div>
+
+			{/* BUTTON CONTAINER */}
+			<div className={styles.buttonContainer}>
 				<button className={styles.buttons} onMouseDown={props.flipView}>
 					<img src={flipIcon} alt={'change view'} className={styles.icon} />
 				</button>
@@ -27,7 +38,11 @@ export const Footer = (props: any) => {
 				</button>
 
 				<button className={styles.buttons} onMouseDown={props.rewind}>
-					<img src={rewindIcon} alt={'rewind'} className={styles.icon} />
+					<img
+						src={rewindIcon}
+						alt={'jump back 5 seconds'}
+						className={styles.icon}
+					/>
 				</button>
 
 				{/* PLAY BUTTON */}
@@ -54,6 +69,13 @@ export const Footer = (props: any) => {
 						<img src={loadingIcon} alt={'loading'} className={styles.loading} />
 					</button>
 				)}
+				<button className={styles.buttons} onMouseDown={props.forward}>
+					<img
+						src={forwardIcon}
+						alt={'jump forward 5 seconds'}
+						className={styles.icon}
+					/>
+				</button>
 			</div>
 		</footer>
 	);

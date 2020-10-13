@@ -73,6 +73,7 @@ export default function App() {
 	const [audioHasError, setAudioHasError] = useState(false);
 	const [audioIsReady, setAudioIsReady] = useState(false);
 	const [audioIsPlaying, setAudioIsPlaying] = useState(false);
+	const [audioCurrentTime, setAudioCurrentTime] = useState(0);
 
 	const updateSearchTerms = (book: string, chapter: string) => {
 		setBook(book);
@@ -91,6 +92,7 @@ export default function App() {
 		audio.pause();
 		setAudioHasError(false);
 		setAudioIsReady(false);
+		setAudioCurrentTime(0);
 		setAudio(new Audio(`https://audio.esv.org/hw/mq/${book} ${chapter}.mp3`));
 		setResultTitle(`${book} ${chapter}`);
 		setResultBody(body);
@@ -193,6 +195,11 @@ export default function App() {
 			audio.pause();
 			audio.currentTime = 0;
 		});
+		//as time is updated
+		audio.addEventListener('timeupdate', () => {
+			setAudioCurrentTime(audio.currentTime / audio.duration);
+		});
+		//load the resource (necessary on mobile)
 		audio.load();
 	}, [audio]);
 
@@ -211,6 +218,11 @@ export default function App() {
 		audio.currentTime = Math.max(audio.currentTime - 5, 0);
 	};
 
+	const handleForward = () => {
+		if (audio.readyState !== 4) return;
+		audio.currentTime = Math.min(audio.currentTime + 5, audio.duration - 0.01);
+	};
+
 	const handleBeginning = () => {
 		if (audio.readyState !== 4) return;
 		audio.currentTime = 0;
@@ -218,6 +230,11 @@ export default function App() {
 
 	const handleViewChange = () => {
 		setShowCondensed((prevState) => !prevState);
+	};
+
+	const handleProgressClick = (e: MouseEvent) => {
+		const targetTime = e.clientX / document.documentElement.offsetWidth;
+		audio.currentTime = audio.duration * targetTime;
 	};
 
 	const handleBookChange = (
@@ -385,10 +402,13 @@ export default function App() {
 				play={handlePlay}
 				pause={handlePause}
 				rewind={handleRewind}
+				forward={handleForward}
 				beginning={handleBeginning}
+				currentTime={audioCurrentTime}
 				hasError={audioHasError}
 				isReady={audioIsReady}
 				isPlaying={audioIsPlaying}
+				progressClick={handleProgressClick}
 			/>
 		</div>
 	);
