@@ -14,11 +14,11 @@ export const Footer = (props: any) => {
 	return (
 		<footer className={styles.Footer}>
 			<div className={styles.ButtonContainer}>
-				<button className={styles.buttons} onClick={props.flipView}>
+				<button className={styles.buttons} onMouseDown={props.flipView}>
 					<img src={flipIcon} alt={'change view'} className={styles.icon} />
 				</button>
 
-				<button className={styles.buttons} onClick={props.beginning}>
+				<button className={styles.buttons} onMouseDown={props.beginning}>
 					<img
 						src={beginningIcon}
 						alt={'go to beginning'}
@@ -26,7 +26,7 @@ export const Footer = (props: any) => {
 					/>
 				</button>
 
-				<button className={styles.buttons} onClick={props.rewind}>
+				<button className={styles.buttons} onMouseDown={props.rewind}>
 					<img src={rewindIcon} alt={'rewind'} className={styles.icon} />
 				</button>
 
@@ -39,12 +39,12 @@ export const Footer = (props: any) => {
 				) : props.isReady ? (
 					props.isPlaying ? (
 						/* NO ERROR, IS READY AND PLAYING */
-						<button className={styles.buttons} onClick={props.pause}>
+						<button className={styles.buttons} onMouseDown={props.pause}>
 							<img src={pauseIcon} alt={'pause'} className={styles.icon} />
 						</button>
 					) : (
 						/* NO ERROR, IS READY AND PAUSED */
-						<button className={styles.buttons} onClick={props.play}>
+						<button className={styles.buttons} onMouseDown={props.play}>
 							<img src={playIcon} alt={'play'} className={styles.icon} />
 						</button>
 					)
