@@ -19,6 +19,7 @@
 }
 
 .buttons {
+	width: 3rem;
 	display: block;
 	border: none;
 	outline: none;
@@ -52,14 +53,16 @@
 
 .loading {
 	composes: icon;
-	animation: rotate 2s ease-in-out 0s infinite;
+	animation-name: rotateLoad;
+	animation-duration: 2s;
+	animation-iteration-count: infinite;
 }
 
-@keyframes rotate {
-	0% {
+@keyframes rotateLoad {
+	from {
 		transform: rotate(0deg);
 	}
-	100% {
+	to {
 		transform: rotate(360deg);
 	}
 }
