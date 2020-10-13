@@ -69,6 +69,7 @@ export default function App() {
 	const [resultBody, setResultBody] = useState('');
 	const [resultCondensedBody, setResultCondensedBody] = useState('');
 	const [message, setMessage] = useState('');
+	const [resultAudio, setResultAudio] = useState(new Audio());
 
 	const updateSearchTerms = (book: string, chapter: string) => {
 		setBook(book);
@@ -84,6 +85,9 @@ export default function App() {
 		body: string,
 		error?: string | undefined
 	) => {
+		setResultAudio(
+			new Audio(`https://audio.esv.org/hw/mq/${book} ${chapter}.mp3`)
+		);
 		setResultTitle(`${book} ${chapter}`);
 		setResultBody(body);
 		setResultCondensedBody(condenseText(body));
@@ -188,9 +192,10 @@ export default function App() {
 		}
 	};
 
-	const fetchTextFromESV = (book: string, chapter: string) => {
+	const fetchTextFromESVAPI = (book: string, chapter: string) => {
 		const title = `${book}+${chapter}`;
-		let url =
+		console.log(`Fetching text body file of ${title} from ESV API`);
+		const textURL =
 			'https://api.esv.org/v3/passage/text/?' +
 			`q=${book.split(' ').join('+')}+${chapter}` +
 			'&include-passage-references=false' +
@@ -205,7 +210,7 @@ export default function App() {
 			'&include-short-copyright=false';
 
 		axios
-			.get(url, {
+			.get(textURL, {
 				headers: {
 					Authorization: ESVApiKey,
 				},
@@ -238,7 +243,7 @@ export default function App() {
 			console.log(`${title} not found in local storage`);
 			console.log('Making a call to the ESV API');
 			updateResults(book, chapter, '', 'Loading...'); //show loading indicator
-			fetchTextFromESV(book, chapter);
+			fetchTextFromESVAPI(book, chapter);
 		}
 	};
 
@@ -298,6 +303,9 @@ export default function App() {
 			{resultCondensedBody && resultBody ? (
 				<>
 					<h2>{resultTitle}</h2>
+					<audio
+						src={`https://audio.esv.org/hw/mq/${resultTitle}.mp3`}
+						controls={true}></audio>
 					{showCondensed ? (
 						<>
 							<div className={styles.textArea}>{resultCondensedBody}</div>
