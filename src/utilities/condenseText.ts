@@ -30,7 +30,7 @@ export default (string: string) => {
 					//adds symbol to word
 					newWord += ch;
 
-					if (characterCount < MAX_LINE_LENGTH && ch === '—' && word[k + 1]) {
+					if (characterCount <= MAX_LINE_LENGTH && ch === '—' && word[k + 1]) {
 						//special case for word—word (add in the first letter of the next word--SHORT LINES)
 						newWord += word[k + 1];
 					}
