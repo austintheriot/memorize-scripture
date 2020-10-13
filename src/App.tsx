@@ -193,6 +193,7 @@ export default function App() {
 			audio.pause();
 			audio.currentTime = 0;
 		});
+		audio.load();
 	}, [audio]);
 
 	const handlePlay = () => {
