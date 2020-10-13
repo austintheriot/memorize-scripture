@@ -206,21 +206,27 @@ export default function App() {
 	const handlePlay = () => {
 		if (audio.readyState !== 4) return;
 		audio.play();
+		setAudioIsPlaying(true);
 	};
 
 	const handlePause = () => {
 		if (audio.readyState !== 4) return;
 		audio.pause();
+		setAudioIsPlaying(false);
 	};
 
 	const handleRewind = () => {
 		if (audio.readyState !== 4) return;
-		audio.currentTime = Math.max(audio.currentTime - 5, 0);
+		const targetTime = Math.max(audio.currentTime - 5, 0);
+		setAudioCurrentTime(targetTime / audio.duration);
+		audio.currentTime = targetTime;
 	};
 
 	const handleForward = () => {
 		if (audio.readyState !== 4) return;
-		audio.currentTime = Math.min(audio.currentTime + 5, audio.duration - 0.01);
+		const targetTime = Math.min(audio.currentTime + 5, audio.duration - 0.01);
+		setAudioCurrentTime(targetTime / audio.duration);
+		audio.currentTime = targetTime;
 	};
 
 	const handleBeginning = () => {
@@ -234,6 +240,7 @@ export default function App() {
 
 	const handleProgressClick = (e: MouseEvent) => {
 		const targetTime = e.clientX / document.documentElement.offsetWidth;
+		setAudioCurrentTime(targetTime);
 		audio.currentTime = audio.duration * targetTime;
 	};
 
