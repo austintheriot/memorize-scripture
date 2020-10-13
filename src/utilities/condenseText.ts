@@ -45,7 +45,7 @@ export default (string: string) => {
 						word[k + 2] !== '”' &&
 						word[k + 3] !== '”'
 					) {
-						newWord += '\n';
+						if (words[j + 1]) newWord += '\n'; //only add line break not the last word in the line
 						characterCount = 0;
 					}
 
@@ -67,7 +67,7 @@ export default (string: string) => {
 						word[k + 2] !== '”' &&
 						word[k + 3] !== '”'
 					) {
-						newWord += '\n';
+						if (words[j + 1]) newWord += '\n'; //only add line break not the last word in the line
 						characterCount = 0;
 						if (ch === '—' && word[k + 1]) {
 							//special case for word—word (add in the first letter of the next word--LONG LINES)
@@ -89,7 +89,6 @@ export default (string: string) => {
 		lines[i] = words.join('');
 	}
 	let finalText = lines.join('\n'); //join back into a single string
-	finalText = finalText.split('I').join('i'); //get rid of capital I's
-	finalText = finalText.replace(/\n\n/g, '\n'); //replace double line breaks with single line breaks
+	finalText = finalText.split('I').join('i'); //get rid of capital 'I's
 	return finalText;
 };
