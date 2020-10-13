@@ -416,6 +416,13 @@ describe('Condense Text Function', () => {
 				'mhstcwatswitbalahad,\n' +
 				'atktloCtsk,tymbfwatfoG.'
 		);
+
+		expect(
+			condenseText(
+				'When no bush of the field was yet in the land and no small plant of the field had yet sprung up—' +
+					'for the LORD God had not caused it to rain on the land, '
+			)
+		).toBe('Wnbotfwyitlanspotfhysu—ftLGhncitrotl,');
 	});
 
 	expect(
