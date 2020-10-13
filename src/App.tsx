@@ -70,6 +70,8 @@ export default function App() {
 	const [resultCondensedBody, setResultCondensedBody] = useState('');
 	const [message, setMessage] = useState('');
 	const [resultAudio, setResultAudio] = useState(new Audio());
+	const [resultAudioIsPlaying, setResultAudioIsPlaying] = useState(false);
+	const [resultAudioIsReady, setResultAudioIsReady] = useState(false);
 
 	const updateSearchTerms = (book: string, chapter: string) => {
 		setBook(book);
@@ -94,6 +96,19 @@ export default function App() {
 		setMessage(error || '');
 		return;
 	};
+
+	useEffect(() => {
+		setResultAudioIsReady(false);
+		resultAudio.addEventListener('pause', () => {
+			setResultAudioIsPlaying(false);
+		});
+		resultAudio.addEventListener('play', () => {
+			setResultAudioIsPlaying(true);
+		});
+		resultAudio.addEventListener('canplay', () => {
+			setResultAudioIsReady(true);
+		});
+	}, [resultAudio]);
 
 	const retrieveTextArrayFromLocalStorage = (title: string) => {
 		const textsString = window.localStorage.getItem('texts');
@@ -159,6 +174,16 @@ export default function App() {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	const handlePlay = () => {
+		if (resultAudio.readyState !== 4) return;
+		resultAudio.play();
+	};
+
+	const handlePause = () => {
+		if (resultAudio.readyState !== 4) return;
+		resultAudio.pause();
+	};
 
 	const handleViewChange = () => {
 		setShowCondensed((prevState) => !prevState);
@@ -303,9 +328,6 @@ export default function App() {
 			{resultCondensedBody && resultBody ? (
 				<>
 					<h2>{resultTitle}</h2>
-					<audio
-						src={`https://audio.esv.org/hw/mq/${resultTitle}.mp3`}
-						controls={true}></audio>
 					{showCondensed ? (
 						<>
 							<div className={styles.textArea}>{resultCondensedBody}</div>
@@ -327,7 +349,13 @@ export default function App() {
 				Bible or more than one half of any book of the ESV Bible.
 			</p>
 			<LargeSpacer />
-			<Footer flipView={handleViewChange} />
+			<Footer
+				flipView={handleViewChange}
+				play={handlePlay}
+				pause={handlePause}
+				isPlaying={resultAudioIsPlaying}
+				isReady={resultAudioIsReady}
+			/>
 		</div>
 	);
 }
