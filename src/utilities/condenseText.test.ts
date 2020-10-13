@@ -18,7 +18,7 @@ describe('Condense Text Function', () => {
 
 	test('Should preserve non-letter characters', () => {
 		expect(condenseText('Seeing the crowds, he went up on the mountain.')).toBe(
-			'Stc,hwuotm.\n'
+			'Stc,hwuotm.'
 		);
 
 		expect(condenseText('(This test is in parentheses)')).toBe('(Ttiip)');
@@ -31,27 +31,27 @@ describe('Condense Text Function', () => {
 			condenseText(
 				'This was to fulfill what was spoken by the prophet Isaiah: “He took our illnesses and bore our diseases.”'
 			)
-		).toBe('Twtfwwsbtpi:“Htoiabod.”\n');
+		).toBe('Twtfwwsbtpi:“Htoiabod.”');
 	});
 
 	test('Should break any length line after . or ”', () => {
 		expect(condenseText('This is an example. This is another example.')).toBe(
-			'Tiae.\nTiae.\n'
+			'Tiae.\nTiae.'
 		);
 
 		expect(condenseText('“This” is an example. This is another example.')).toBe(
-			'“T”\niae.\nTiae.\n'
+			'“T”\niae.\nTiae.'
 		);
 	});
 
 	test('Should NOT add a line break when the following character is a ”', () => {
 		expect(condenseText('“This is an example. This is another example.”')).toBe(
-			'“Tiae.\nTiae.”\n'
+			'“Tiae.\nTiae.”'
 		);
 
-		expect(condenseText('”””””')).toBe('”””””\n');
+		expect(condenseText('”””””')).toBe('”””””');
 
-		expect(condenseText('......”””””')).toBe('.\n.\n.\n...”””””\n');
+		expect(condenseText('......”””””')).toBe('......”””””');
 	});
 
 	test('Should break a line of more than 75 characters on , . ” ’ ? — or ! ', () => {
@@ -294,7 +294,7 @@ describe('Condense Text Function', () => {
 			'(is,“Ha,”\n' +
 				'wdimbthhaditlr,te?\n' +
 				'Hwditowaafaath,thmfat.)\n' +
-				'Ahgta,tp,te,tsat,tetsftwom,\n'
+				'Ahgta,tp,te,tsat,tetsftwom,'
 		);
 	});
 
@@ -304,7 +304,7 @@ describe('Condense Text Function', () => {
 				'Walk as children of light (for the fruit of light is found in all that is good and right and true), ' +
 					'and try to discern what is pleasing to the Lord.'
 			)
-		).toBe('Wacol(ftfolifiatigarat),\nattdwipttL.\n');
+		).toBe('Wacol(ftfolifiatigarat),\nattdwipttL.');
 	});
 
 	test('Should NOT break a line of more than 75 characters on , . ” ’ ? or ! when the NEXT NEXT character is ”', () => {
@@ -312,7 +312,7 @@ describe('Condense Text Function', () => {
 			condenseText(
 				`He said to the woman, “Did God actually say, ‘You shall not eat of any tree in the garden’?”`
 			)
-		).toBe(`Hsttw,“DGas,‘Ysneoatitg’?”\n`);
+		).toBe(`Hsttw,“DGas,‘Ysneoatitg’?”`);
 	});
 
 	test('Should delete intraword apostrophes, hyphens, and commas (in numbers)', () => {
@@ -320,7 +320,7 @@ describe('Condense Text Function', () => {
 			condenseText(
 				`If Cain’s revenge is sevenfold, then Lamech’s is seventy-sevenfold.”`
 			)
-		).toBe(`iCris,tLis.”\n`);
+		).toBe(`iCris,tLis.”`);
 
 		expect(
 			condenseText(
@@ -333,10 +333,70 @@ describe('Condense Text Function', () => {
 		expect(condenseText(`When Adam had lived 130 years`)).toBe(`WAhl1y`);
 	});
 
-	test('Should replace double line breaks with single line breaks', () => {
+	test('Should preserve existing line breaks', () => {
+		expect(
+			condenseText(
+				'The oracle that Habakkuk the prophet saw.\n\n' +
+					'O LORD, how long shall I cry for help,\n' +
+					'and you will not hear?\n' +
+					'Or cry to you “Violence!”\n' +
+					'and you will not save?\n' +
+					'Why do you make me see iniquity,\n' +
+					'and why do you idly look at wrong?\n' +
+					'Destruction and violence are before me;\n' +
+					'strife and contention arise.\n' +
+					'So the law is paralyzed,\n' +
+					' and justice never goes forth.\n' +
+					'For the wicked surround the righteous;\n' +
+					'so justice goes forth perverted.\n\n\n'
+			)
+		).toBe(
+			'TotHtps.\n\n' +
+				'OL,hlsicfh,\n' +
+				'aywnh?\n' +
+				'Octy“V!”\n' +
+				'aywns?\n' +
+				'Wdymmsi,\n' +
+				'awdyilaw?\n' +
+				'Davabm;\n' +
+				'saca.\n' +
+				'Stlip,\n' +
+				'ajngf.\n' +
+				'Ftwstr;\n' +
+				'sjgfp.\n\n\n'
+		);
+
 		expect(
 			condenseText(`When Adam\n\n had lived \n\n\n130 \n\n\n\nyears`)
-		).toBe(`WA\nhl\n\n1\n\ny`);
+		).toBe(`WA\n\nhl\n\n\n1\n\n\n\ny`);
+	});
+
+	test('Should only add line break when not already the end of a line', () => {
+		expect(
+			condenseText(
+				'Blessed be the God and Father of our Lord Jesus Christ, ' +
+					'who has blessed us in Christ with every spiritual blessing in the heavenly places, ' +
+					'even as he chose us in him before the foundation of the world, ' +
+					'that we should be holy and blameless before him. ' +
+					'In love he predestined us for adoption to himself as sons through Jesus Christ, ' +
+					'according to the purpose of his will, to the praise of his glorious grace, ' +
+					'with which he has blessed us in the Beloved. ' +
+					'In him we have redemption through his blood, the forgiveness of our trespasses, ' +
+					'according to the riches of his grace, which he lavished upon us, ' +
+					'in all wisdom and insight making known to us the mystery of his will, ' +
+					'according to his purpose, which he set forth in Christ as a plan for the fullness of time, ' +
+					'to unite all things in him, things in heaven and things on earth.\n\n'
+			)
+		).toBe(
+			'BbtGaFooLJC,whbuiCwesbithp,\n' +
+				'eahcuihbtfotw,twsbhabbh.\n' +
+				'ilhpufathastJC,attpohw,\n' +
+				'ttpohgg,wwhhbuitB.\n' +
+				'ihwhrthb,tfoot,attrohg,\n' +
+				'whluu,iawaimktutmohw,\n' +
+				'athp,whsfiCaapftfot,tuatih,\n' +
+				'tihatoe.\n\n'
+		);
 	});
 
 	test('Should treat word—word as two separate words within a line', () => {
@@ -354,7 +414,7 @@ describe('Condense Text Function', () => {
 				'tattrohghmgytbswpthSiyib,\n' +
 				'stCmdiyhtf—ty,bragil,\n' +
 				'mhstcwatswitbalahad,\n' +
-				'atktloCtsk,tymbfwatfoG.\n'
+				'atktloCtsk,tymbfwatfoG.'
 		);
 	});
 
@@ -363,13 +423,13 @@ describe('Condense Text Function', () => {
 			'For this reason I, Paul, a prisoner of Christ Jesus on behalf of you Gentiles—' +
 				'assuming that you have heard of the stewardship of God’s grace that was given to me for you,'
 		)
-	).toBe('Ftri,P,apoCJoboyG—atyhhotsoGgtwgtmfy,\n');
+	).toBe('Ftri,P,apoCJoboyG—atyhhotsoGgtwgtmfy,');
 
 	expect(
 		condenseText(
 			'so that Christ may dwell in your hearts through faith—that you, being rooted and grounded in love,'
 		)
-	).toBe('stCmdiyhtf—ty,bragil,\n');
+	).toBe('stCmdiyhtf—ty,bragil,');
 });
 
 test('Should treat word—word as two separate words across line breaks', () => {
@@ -386,6 +446,6 @@ test('Should treat word—word as two separate words across line breaks', () => 
 		'Aywdittasiwyow,ftcotw,\n' +
 			'ftpotpota,tstinawitsod—\n' +
 			'awwaolitpoof,cotdotbatm,\n' +
-			'awbncow,ltrom.\n'
+			'awbncow,ltrom.'
 	);
 });
