@@ -9,6 +9,8 @@
 .ButtonContainer {
 	height: 50px;
 	width: 100%;
+	max-width: 400px;
+	margin: auto;
 
 	display: flex;
 	flex: none;
@@ -42,4 +44,8 @@
 	flex: none;
 	justify-content: center;
 	align-items: center;
+
+	img {
+		height: 1rem;
+	}
 }
