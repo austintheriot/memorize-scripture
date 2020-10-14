@@ -25,7 +25,9 @@ export const Footer = (props: any) => {
 
 			{/* BUTTON CONTAINER */}
 			<div className={styles.buttonContainer}>
-				<button className={styles.buttons} onMouseDown={props.speedChange}>
+				<button
+					className={styles.playSpeedButton}
+					onMouseDown={props.speedChange}>
 					<p className={styles.icon}>x{props.speed}</p>
 				</button>
 				<button className={styles.buttons} onMouseDown={props.beginning}>

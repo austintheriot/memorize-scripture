@@ -75,6 +75,17 @@
 	animation-iteration-count: infinite;
 }
 
+.playSpeedButton {
+	composes: buttons;
+	width: 3.75rem;
+
+	p {
+		text-align: center;
+		width: 100%;
+		margin: auto;
+	}
+}
+
 @keyframes rotateLoad {
 	from {
 		transform: rotate(0deg);
