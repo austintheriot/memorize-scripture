@@ -24,7 +24,6 @@ import { LargeSpacer } from './components/Spacers/Spacers';
 //Custom functions
 import condenseText from './utilities/condenseText';
 import { bookTitles, bookChapters } from './utilities/bibleBookInfo';
-import John1 from './utilities/John1';
 
 interface TextObject {
 	title: string;
