@@ -1,9 +1,15 @@
 .Footer {
 	position: fixed;
 	bottom: 0;
-	height: 75px;
+	height: 88px;
 	width: 100%;
 	background-color: var(--dark);
+}
+
+@media (min-width: 800px) {
+	.Footer {
+		height: 65px;
+	}
 }
 
 .progressBarOuter {

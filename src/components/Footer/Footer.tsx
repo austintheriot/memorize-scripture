@@ -20,7 +20,7 @@ export const Footer = (props: any) => {
 				onMouseDown={props.progressClick}>
 				<div
 					className={styles.progressBarInner}
-					style={{ width: `${props.currentTime * 100}%` }}></div>
+					style={{ width: `${props.audioPosition * 100}%` }}></div>
 			</div>
 
 			{/* BUTTON CONTAINER */}
