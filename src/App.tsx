@@ -188,9 +188,10 @@ export default function App() {
 
 	/* Audio event listeners */
 	useEffect(() => {
+		audio.playbackRate = audioSpeed; //make sure audio plays at selected rate
+
 		//loaded enough to play
 		audio.addEventListener('canplay', () => {
-			audio.playbackRate = audioSpeed; //make sure audio plays at selected rate
 			setAudioIsReady(true);
 		});
 		audio.addEventListener('pause', () => {
@@ -271,8 +272,8 @@ export default function App() {
 
 	const handleSpeedChange = () => {
 		const targetSpeed = Math.max((audioSpeed + 0.25) % 2.25, 0.5);
-		setAudioSpeed(targetSpeed);
 		audio.playbackRate = targetSpeed;
+		setAudioSpeed(targetSpeed);
 		storePlaySpeedInLocalStorage(targetSpeed);
 	};
 
