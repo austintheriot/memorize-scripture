@@ -158,27 +158,21 @@ export default function App() {
 	};
 
 	const handlePlay = () => {
-		analytics.logEvent('button_pressed', {
-			name: 'play_button',
-		});
+		analytics.logEvent('play_button_pressed');
 		if (audio.readyState !== 4) return;
 		audio.play();
 		setAudioIsPlaying(true);
 	};
 
 	const handlePause = () => {
-		analytics.logEvent('button_pressed', {
-			name: 'pause_buton',
-		});
+		analytics.logEvent('pause_buton_pressed');
 		if (audio.readyState !== 4) return;
 		audio.pause();
 		setAudioIsPlaying(false);
 	};
 
 	const handleRewind = () => {
-		analytics.logEvent('button_pressed', {
-			name: 'back_button',
-		});
+		analytics.logEvent('back_button_pressed');
 		if (audio.readyState !== 4) return;
 		const targetTime = Math.max(audio.currentTime - 5, 0);
 		setAudioPosition(targetTime / audio.duration);
@@ -186,9 +180,7 @@ export default function App() {
 	};
 
 	const handleForward = () => {
-		analytics.logEvent('button_pressed', {
-			name: 'forward_button',
-		});
+		analytics.logEvent('forward_button_pressed');
 		if (audio.readyState !== 4) return;
 		const targetTime = Math.min(audio.currentTime + 5, audio.duration - 0.01);
 		setAudioPosition(targetTime / audio.duration);
@@ -196,16 +188,14 @@ export default function App() {
 	};
 
 	const handleBeginning = () => {
-		analytics.logEvent('button_pressed', {
-			name: 'beginning_button',
-		});
+		analytics.logEvent('beginning_button_pressed');
 		if (audio.readyState !== 4) return;
 		audio.currentTime = 0;
 	};
 
 	const handleViewChange = () => {
-		analytics.logEvent('button_pressed', {
-			name: 'flip_view_button',
+		analytics.logEvent('flip_view_button_pressed', {
+			showCondensed,
 		});
 		setShowCondensed((prevState) => !prevState);
 	};
@@ -221,8 +211,7 @@ export default function App() {
 
 	const handleSpeedChange = () => {
 		const targetSpeed = Math.max((audioSpeed + 0.25) % 2.25, 0.5);
-		analytics.logEvent('button_pressed', {
-			name: 'speed_button',
+		analytics.logEvent('speed_button_pressed', {
 			targetSpeed,
 		});
 		audio.playbackRate = targetSpeed;
