@@ -75,7 +75,8 @@
 		color: var(--dark);
 		position: absolute;
 		z-index: 1;
-		top: -100%;
+		top: 0%;
+		transform: translateY(-100%);
 		border-radius: 5px;
 		padding: 0.5rem;
 		opacity: 0;

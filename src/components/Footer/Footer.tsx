@@ -43,12 +43,12 @@ export const Footer = (props: any) => {
 				</button>
 
 				<button
-					data-info='go back 5 seconds'
+					data-info='back 5 seconds'
 					className={styles.buttons}
 					onMouseDown={props.rewind}>
 					<img
 						src={rewindIcon}
-						alt={'go back 5 seconds'}
+						alt={'back 5 seconds'}
 						className={styles.icon}
 					/>
 				</button>
@@ -87,17 +87,13 @@ export const Footer = (props: any) => {
 					</button>
 				)}
 				<button
-					data-info='skip forward 5s'
+					data-info='forward 5s'
 					className={styles.buttons}
 					onMouseDown={props.forward}>
-					<img
-						src={forwardIcon}
-						alt={'skip forward 5s'}
-						className={styles.icon}
-					/>
+					<img src={forwardIcon} alt={'forward 5s'} className={styles.icon} />
 				</button>
 				<button
-					data-info='flip text view'
+					data-info='change view'
 					className={styles.buttons}
 					onMouseDown={props.flipView}>
 					<img src={flipIcon} alt={'change view'} className={styles.icon} />
