@@ -106,7 +106,10 @@ export default function App() {
 	};
 
 	const getPlaySpeedFromLocalStorage = () => {
-		return parseFloat(window.localStorage.getItem('speed') || '1');
+		console.log('Retrieving playback speed from local storage');
+		const speed = window.localStorage.getItem('speed') || '1';
+		console.log(`Playback speed from local storage is ${speed}`);
+		return parseFloat(speed);
 	};
 
 	const getTextArrayFromLocalStorage = (title: string) => {
@@ -311,20 +314,18 @@ export default function App() {
 
 	/* Initialize app on load */
 	useEffect(() => {
-		//Hydrating audio playback rate
+		//Loading audio playback rate
 		console.log(`Initializing playspeed with user's previous settings`);
-		setAudioSpeed(getPlaySpeedFromLocalStorage());
+		const targetSpeed = getPlaySpeedFromLocalStorage();
+		setAudioSpeed(targetSpeed);
 
-		//Hydrating last-viewed book and chapter
+		//Loading last-viewed book and chapter
 		initializeMostRecentPassage();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	/* Audio event listeners */
 	useEffect(() => {
-		audio.currentTime = 0;
-		audio.playbackRate = audioSpeed; //make sure audio plays at selected rate
-
 		//loaded enough to play
 		audio.addEventListener('canplay', () => {
 			setAudioIsReady(true);
@@ -359,8 +360,11 @@ export default function App() {
 		audio.addEventListener('ratechange', () => {
 			setAudioSpeed(audio.playbackRate);
 		});
+
 		//load the resource (necessary on mobile)
 		audio.load();
+		audio.currentTime = 0;
+		audio.playbackRate = audioSpeed; //load audio settings
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [audio]);
 
