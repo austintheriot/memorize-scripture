@@ -6,7 +6,11 @@ import styles from './App.module.scss';
 
 //Config
 import axios from 'axios';
-import { ESVApiKey } from './utilities/config';
+import { ESVApiKey, firebaseConfig } from './utilities/config';
+
+//Firebase Config
+import * as firebase from 'firebase/app';
+import 'firebase/analytics';
 
 //Material UI Components
 import { makeStyles } from '@material-ui/core/styles';
@@ -23,6 +27,9 @@ import searchIcon from './icons/search.svg';
 //Custom functions
 import condenseText from './utilities/condenseText';
 import { bookTitles, bookChapters } from './utilities/bibleBookInfo';
+
+const app = firebase.initializeApp(firebaseConfig);
+const analytics = firebase.analytics(app);
 
 interface TextObject {
 	title: string;
@@ -151,18 +158,27 @@ export default function App() {
 	};
 
 	const handlePlay = () => {
+		analytics.logEvent('button_pressed', {
+			name: 'play_button',
+		});
 		if (audio.readyState !== 4) return;
 		audio.play();
 		setAudioIsPlaying(true);
 	};
 
 	const handlePause = () => {
+		analytics.logEvent('button_pressed', {
+			name: 'pause_buton',
+		});
 		if (audio.readyState !== 4) return;
 		audio.pause();
 		setAudioIsPlaying(false);
 	};
 
 	const handleRewind = () => {
+		analytics.logEvent('button_pressed', {
+			name: 'back_button',
+		});
 		if (audio.readyState !== 4) return;
 		const targetTime = Math.max(audio.currentTime - 5, 0);
 		setAudioPosition(targetTime / audio.duration);
@@ -170,6 +186,9 @@ export default function App() {
 	};
 
 	const handleForward = () => {
+		analytics.logEvent('button_pressed', {
+			name: 'forward_button',
+		});
 		if (audio.readyState !== 4) return;
 		const targetTime = Math.min(audio.currentTime + 5, audio.duration - 0.01);
 		setAudioPosition(targetTime / audio.duration);
@@ -177,22 +196,35 @@ export default function App() {
 	};
 
 	const handleBeginning = () => {
+		analytics.logEvent('button_pressed', {
+			name: 'beginning_button',
+		});
 		if (audio.readyState !== 4) return;
 		audio.currentTime = 0;
 	};
 
 	const handleViewChange = () => {
+		analytics.logEvent('button_pressed', {
+			name: 'flip_view_button',
+		});
 		setShowCondensed((prevState) => !prevState);
 	};
 
 	const handleProgressClick = (e: MouseEvent) => {
 		const targetTime = e.clientX / document.documentElement.offsetWidth;
+		analytics.logEvent('progress_bar_pressed', {
+			targetTime,
+		});
 		setAudioPosition(targetTime);
 		audio.currentTime = audio.duration * targetTime;
 	};
 
 	const handleSpeedChange = () => {
 		const targetSpeed = Math.max((audioSpeed + 0.25) % 2.25, 0.5);
+		analytics.logEvent('button_pressed', {
+			name: 'speed_button',
+			targetSpeed,
+		});
 		audio.playbackRate = targetSpeed;
 		setAudioSpeed(targetSpeed);
 		storePlaySpeedInLocalStorage(targetSpeed);
@@ -229,6 +261,13 @@ export default function App() {
 	const fetchTextFromESVAPI = (book: string, chapter: string) => {
 		const title = `${book}+${chapter}`;
 		console.log(`Fetching text body file of ${title} from ESV API`);
+
+		analytics.logEvent('fetched_text_from_ESV_API', {
+			book,
+			chapter,
+			title: `${book} ${chapter}`,
+		});
+
 		const textURL =
 			'https://api.esv.org/v3/passage/text/?' +
 			`q=${book.split(' ').join('+')}+${chapter}` +
@@ -278,6 +317,11 @@ export default function App() {
 			if (body) {
 				console.log(`Retrieved text body of ${title} from local storage`);
 				updateResults(book, chapter, body);
+				analytics.logEvent('fetched_text_from_local_storage', {
+					book,
+					chapter,
+					title: `${book} ${chapter}`,
+				});
 			} else {
 				console.log(`${title} not found in local storage`);
 				console.log(`Initializing results with John 1 instead`);
@@ -303,6 +347,11 @@ export default function App() {
 			console.log(`Retrieved body of ${title} from local storage`);
 			updateResults(book, chapter, body);
 			storeMostRecentInLocalStorage(title);
+			analytics.logEvent('fetched_text_from_local_storage', {
+				book,
+				chapter,
+				title: `${book} ${chapter}`,
+			});
 		} else {
 			//If it does not exist in local storage, make an API call, and store the returned text
 			console.log(`${title} not found in local storage`);
