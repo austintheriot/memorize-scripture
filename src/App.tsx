@@ -359,6 +359,28 @@ export default function App() {
 
 		//Loading last-viewed book and chapter
 		initializeMostRecentPassage();
+
+		//start listening for keyboard shortvut events
+
+		// KEYBOARD SHORTCUTS
+		// const addKeyListeners = () =>
+		// 	window.addEventListener('keydown', (e) => {
+		// 		console.log(e.key);
+		// 		if (e.key === ' ' && audioIsPlaying) {
+		// 			console.log('pause');
+		// 			e.preventDefault();
+		// 			handlePause();
+		// 		} else if (e.key === ' ' && !audioIsPlaying) {
+		// 			console.log('play');
+		// 			e.preventDefault();
+		// 			handlePlay();
+		// 			return;
+		// 		}
+		// 	});
+		// addKeyListeners();
+
+		// // this will clean up the event every time the component is re-rendered
+		// return addKeyListeners;
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
