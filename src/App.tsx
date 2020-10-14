@@ -102,13 +102,22 @@ export default function App() {
 		return;
 	};
 
-	const retrieveTextArrayFromLocalStorage = (title: string) => {
+	const storePlaySpeedInLocalStorage = (speed: number) => {
+		console.log(`Storing ${speed} as default playback speed`);
+		window.localStorage.setItem('speed', speed.toString());
+	};
+
+	const getPlaySpeedFromLocalStorage = () => {
+		return parseFloat(window.localStorage.getItem('speed') || '1');
+	};
+
+	const getTextArrayFromLocalStorage = (title: string) => {
 		const textsString = window.localStorage.getItem('texts');
 		return textsString ? (JSON.parse(textsString) as TextArray) : [];
 	};
 
 	const getTextBodyFromLocalStorage = (title: string) => {
-		const textArray = retrieveTextArrayFromLocalStorage(title);
+		const textArray = getTextArrayFromLocalStorage(title);
 		const text = textArray.find((el) => el.title === title);
 		return text?.body;
 	};
@@ -129,7 +138,7 @@ export default function App() {
 		} else {
 			console.log(`${title} does not exist in local storage`);
 			console.log(`Adding ${title} to local storage`);
-			let textArray = retrieveTextArrayFromLocalStorage(title);
+			let textArray = getTextArrayFromLocalStorage(title);
 			//store no more than 5 passages at a time
 			if (textArray.length === 5) textArray.pop();
 			textArray.unshift({
@@ -140,8 +149,10 @@ export default function App() {
 		}
 	};
 
-	/* Initialize text on load */
+	/* Initialize app on load */
 	useEffect(() => {
+		console.log(`Initializing playspeed with user's previous settings`);
+		setAudioSpeed(getPlaySpeedFromLocalStorage());
 		console.log('Checking for most recent book and chapter.');
 		const recent = window.localStorage.getItem('recent');
 		if (recent) {
@@ -172,6 +183,7 @@ export default function App() {
 	useEffect(() => {
 		//loaded enough to play
 		audio.addEventListener('canplay', () => {
+			audio.playbackRate = audioSpeed; //make sure audio plays at selected rate
 			setAudioIsReady(true);
 		});
 		audio.addEventListener('pause', () => {
@@ -185,7 +197,7 @@ export default function App() {
 		});
 		//not enough data
 		audio.addEventListener('waiting', () => {
-			setAudioIsReady(false);
+			//No action currently selected for this event
 		});
 		//ready to play after waiting
 		audio.addEventListener('playing', () => {
@@ -206,6 +218,7 @@ export default function App() {
 		});
 		//load the resource (necessary on mobile)
 		audio.load();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [audio]);
 
 	const handlePlay = () => {
@@ -253,6 +266,7 @@ export default function App() {
 		const targetSpeed = Math.max((audioSpeed + 0.25) % 2.25, 0.5);
 		setAudioSpeed(targetSpeed);
 		audio.playbackRate = targetSpeed;
+		storePlaySpeedInLocalStorage(targetSpeed);
 	};
 
 	const handleBookChange = (
