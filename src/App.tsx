@@ -326,6 +326,11 @@ export default function App() {
 
 	/* Audio event listeners */
 	useEffect(() => {
+		//load the resource (necessary on mobile)
+		audio.load();
+		audio.currentTime = 0;
+		audio.playbackRate = audioSpeed; //load audio settings
+
 		//loaded enough to play
 		audio.addEventListener('canplay', () => {
 			setAudioIsReady(true);
@@ -361,10 +366,6 @@ export default function App() {
 			setAudioSpeed(audio.playbackRate);
 		});
 
-		//load the resource (necessary on mobile)
-		audio.load();
-		audio.currentTime = 0;
-		audio.playbackRate = audioSpeed; //load audio settings
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [audio]);
 
