@@ -19,7 +19,7 @@ import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
 
 //Custom components
 import { Footer } from './components/Footer/Footer';
-import { LargeSpacer } from './components/Spacers/Spacers';
+import { SmallSpacer, LargeSpacer } from './components/Spacers/Spacers';
 
 //Custom functions
 import condenseText from './utilities/condenseText';
@@ -149,86 +149,6 @@ export default function App() {
 		}
 	};
 
-	/* Initialize app on load */
-	useEffect(() => {
-		//Hydrating audio playback rate
-		console.log(`Initializing playspeed with user's previous settings`);
-		setAudioSpeed(getPlaySpeedFromLocalStorage());
-
-		//Hydrating last-viewed book and chapter
-		console.log('Checking for most recent book and chapter.');
-		const recent = window.localStorage.getItem('recent');
-		if (recent) {
-			console.log(`${recent} is the most recent chapter accessed.`);
-			const book = recent.split('+')[0];
-			const chapter = recent.split('+')[1];
-			updateSearchTerms(book, chapter);
-
-			//retrieve text body from local storage using title of most recent book and chapter
-			const title = `${book}+${chapter}`;
-			console.log(`Searching storage for ${title}`);
-			let body = getTextBodyFromLocalStorage(title);
-			if (body) {
-				console.log(`Retrieved text body of ${title} from local storage`);
-				updateResults(book, chapter, body);
-			} else {
-				console.log(`${title} not found in local storage`);
-				console.log(`Initializing results with John 1 instead`);
-				fetchTextFromESVAPI('John', '1');
-			}
-		} else {
-			console.log(
-				'A most recent book and chapter do not exist in local storage.'
-			);
-			console.log(`Initializing results with John 1 instead`);
-			fetchTextFromESVAPI('John', '1');
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	/* Audio event listeners */
-	useEffect(() => {
-		audio.playbackRate = audioSpeed; //make sure audio plays at selected rate
-
-		//loaded enough to play
-		audio.addEventListener('canplay', () => {
-			setAudioIsReady(true);
-		});
-		audio.addEventListener('pause', () => {
-			setAudioIsPlaying(false);
-		});
-		audio.addEventListener('play', () => {
-			setAudioIsPlaying(true);
-		});
-		audio.addEventListener('error', () => {
-			setAudioHasError(true);
-		});
-		//not enough data
-		audio.addEventListener('waiting', () => {
-			//No action currently selected for this event
-		});
-		//ready to play after waiting
-		audio.addEventListener('playing', () => {
-			setAudioIsReady(true);
-		});
-		//audio is over
-		audio.addEventListener('ended', () => {
-			audio.pause();
-			audio.currentTime = 0;
-		});
-		//as time is updated
-		audio.addEventListener('timeupdate', () => {
-			setAudioPosition(audio.currentTime / audio.duration);
-		});
-		//when speed is changed
-		audio.addEventListener('ratechange', () => {
-			setAudioSpeed(audio.playbackRate);
-		});
-		//load the resource (necessary on mobile)
-		audio.load();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [audio]);
-
 	const handlePlay = () => {
 		if (audio.readyState !== 4) return;
 		audio.play();
@@ -341,6 +261,36 @@ export default function App() {
 			});
 	};
 
+	const initializeMostRecentPassage = () => {
+		console.log('Checking for most recent book and chapter.');
+		const recent = window.localStorage.getItem('recent');
+		if (recent) {
+			console.log(`${recent} is the most recent chapter accessed.`);
+			const book = recent.split('+')[0];
+			const chapter = recent.split('+')[1];
+			updateSearchTerms(book, chapter);
+
+			//retrieve text body from local storage using title of most recent book and chapter
+			const title = `${book}+${chapter}`;
+			console.log(`Searching storage for ${title}`);
+			let body = getTextBodyFromLocalStorage(title);
+			if (body) {
+				console.log(`Retrieved text body of ${title} from local storage`);
+				updateResults(book, chapter, body);
+			} else {
+				console.log(`${title} not found in local storage`);
+				console.log(`Initializing results with John 1 instead`);
+				fetchTextFromESVAPI('John', '1');
+			}
+		} else {
+			console.log(
+				'A most recent book and chapter do not exist in local storage.'
+			);
+			console.log(`Initializing results with John 1 instead`);
+			fetchTextFromESVAPI('John', '1');
+		}
+	};
+
 	const handleSubmit = () => {
 		//Check local storage
 		const title = `${book}+${chapter}`;
@@ -359,6 +309,61 @@ export default function App() {
 			fetchTextFromESVAPI(book, chapter);
 		}
 	};
+
+	/* Initialize app on load */
+	useEffect(() => {
+		//Hydrating audio playback rate
+		console.log(`Initializing playspeed with user's previous settings`);
+		setAudioSpeed(getPlaySpeedFromLocalStorage());
+
+		//Hydrating last-viewed book and chapter
+		initializeMostRecentPassage();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	/* Audio event listeners */
+	useEffect(() => {
+		audio.currentTime = 0;
+		audio.playbackRate = audioSpeed; //make sure audio plays at selected rate
+
+		//loaded enough to play
+		audio.addEventListener('canplay', () => {
+			setAudioIsReady(true);
+		});
+		audio.addEventListener('pause', () => {
+			setAudioIsPlaying(false);
+		});
+		audio.addEventListener('play', () => {
+			setAudioIsPlaying(true);
+		});
+		audio.addEventListener('error', () => {
+			setAudioHasError(true);
+		});
+		//not enough data
+		audio.addEventListener('waiting', () => {
+			//No action currently selected for this event
+		});
+		//ready to play after waiting
+		audio.addEventListener('playing', () => {
+			setAudioIsReady(true);
+		});
+		//audio is over
+		audio.addEventListener('ended', () => {
+			audio.pause();
+			audio.currentTime = 0;
+		});
+		//as time is updated
+		audio.addEventListener('timeupdate', () => {
+			setAudioPosition(audio.currentTime / audio.duration);
+		});
+		//when speed is changed
+		audio.addEventListener('ratechange', () => {
+			setAudioSpeed(audio.playbackRate);
+		});
+		//load the resource (necessary on mobile)
+		audio.load();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [audio]);
 
 	//create chapter input options based on book of the bible
 	let chapterArray = [];
@@ -412,22 +417,20 @@ export default function App() {
 					<SearchOutlinedIcon style={{ color: 'var(--light)' }} />
 				</IconButton>
 			</form>
-			<p className={styles.message}>{message}</p>
-			{resultCondensedBody && resultBody ? (
+
+			<h2>{resultTitle}</h2>
+			{showCondensed ? (
 				<>
-					<h2>{resultTitle}</h2>
-					{showCondensed ? (
-						<>
-							<div className={styles.textArea}>{resultCondensedBody}</div>
-						</>
-					) : (
-						<>
-							<div className={styles.textArea}>{resultBody}</div>
-						</>
-					)}
+					<div className={styles.textArea}>{resultCondensedBody}</div>
 				</>
-			) : null}
-			<div className={styles.spacer}></div>
+			) : (
+				<>
+					<div className={styles.textArea}>{resultBody}</div>
+				</>
+			)}
+
+			<p className={styles.message}>{message}</p>
+			<SmallSpacer />
 			<p className={styles.copyright}>Copyright Notice:</p>
 			<p className={styles.smallText}>
 				Scripture quotations are from the ESV® Bible (The Holy Bible, English
