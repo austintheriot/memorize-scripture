@@ -14,12 +14,11 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import IconButton from '@material-ui/core/IconButton';
-import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
 
 //Custom components
 import { Footer } from './components/Footer/Footer';
 import { SmallSpacer, LargeSpacer } from './components/Spacers/Spacers';
+import searchIcon from './icons/search.svg';
 
 //Custom functions
 import condenseText from './utilities/condenseText';
@@ -34,8 +33,7 @@ type TextArray = TextObject[];
 
 const useStyles = makeStyles((theme) => ({
 	formControl: {
-		margin: theme.spacing(1),
-		minWidth: 120,
+		margin: theme.spacing(0.25),
 	},
 	selectEmpty: {
 		marginTop: theme.spacing(2),
@@ -291,7 +289,8 @@ export default function App() {
 		}
 	};
 
-	const handleSubmit = () => {
+	const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+		e.preventDefault();
 		//Check local storage
 		const title = `${book}+${chapter}`;
 		console.log(`Checking local storage for ${title}`);
@@ -410,12 +409,9 @@ export default function App() {
 						{chapterArray}
 					</Select>
 				</FormControl>
-				<IconButton
-					aria-label='search'
-					className={classes.iconButton}
-					onClick={handleSubmit}>
-					<SearchOutlinedIcon style={{ color: 'var(--light)' }} />
-				</IconButton>
+				<button className={styles.search} onClick={handleSubmit}>
+					<img src={searchIcon} alt='search' />
+				</button>
 			</form>
 
 			<h2>{resultTitle}</h2>

@@ -8,6 +8,45 @@
 	justify-content: center;
 }
 
+.search {
+	height: 40px;
+	position: relative;
+	width: 3rem;
+	display: block;
+	border: none;
+	outline: none;
+	margin: 0;
+	text-decoration: none;
+	background-color: var(--dark);
+	color: var(--light);
+	cursor: pointer;
+	text-align: center;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	box-shadow: none;
+	padding: 0.75rem;
+	border-radius: 1px;
+	margin: 2px;
+	font-size: 1rem;
+	border-bottom: 1px solid #111111;
+
+	&:active {
+		background-color: var(--background);
+	}
+
+	display: flex;
+	flex: none;
+	justify-content: center;
+	align-items: center;
+
+	img {
+		margin: 0;
+		padding: 0;
+		height: 1.25rem;
+		z-index: 1; /* preventing icon overlap */
+	}
+}
+
 .message {
 	text-align: center;
 }
