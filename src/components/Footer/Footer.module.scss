@@ -74,18 +74,19 @@
 		background-color: var(--light);
 		color: var(--dark);
 		position: absolute;
-		z-index: 1;
 		top: 0%;
 		transform: translateY(-100%);
 		border-radius: 5px;
 		padding: 0.5rem;
 		opacity: 0;
 		transition: opacity 0.2s 0s;
+		z-index: -1;
 	}
 
 	.buttons:hover:after {
 		opacity: 1;
 		transition: opacity 0.2s 0.75s;
+		z-index: 1;
 	}
 }
 
