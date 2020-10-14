@@ -24,6 +24,7 @@ import { LargeSpacer } from './components/Spacers/Spacers';
 //Custom functions
 import condenseText from './utilities/condenseText';
 import { bookTitles, bookChapters } from './utilities/bibleBookInfo';
+import John1 from './utilities/John1';
 
 interface TextObject {
 	title: string;
@@ -60,9 +61,9 @@ export default function App() {
 	const [showCondensed, setShowCondensed] = useState(true);
 
 	//search terms
-	const [book, setBook] = useState('Matthew');
+	const [book, setBook] = useState('John');
 	const [chapter, setChapter] = useState('1');
-	const [numberOfChapters, setNumberOfChapters] = useState(28);
+	const [numberOfChapters, setNumberOfChapters] = useState(21);
 
 	//search results
 	const [resultTitle, setResultTitle] = useState('');
@@ -151,8 +152,11 @@ export default function App() {
 
 	/* Initialize app on load */
 	useEffect(() => {
+		//Hydrating audio playback rate
 		console.log(`Initializing playspeed with user's previous settings`);
 		setAudioSpeed(getPlaySpeedFromLocalStorage());
+
+		//Hydrating last-viewed book and chapter
 		console.log('Checking for most recent book and chapter.');
 		const recent = window.localStorage.getItem('recent');
 		if (recent) {
@@ -169,12 +173,16 @@ export default function App() {
 				console.log(`Retrieved text body of ${title} from local storage`);
 				updateResults(book, chapter, body);
 			} else {
-				console.log(`${title} not found in local storage.`);
+				console.log(`${title} not found in local storage`);
+				console.log(`Initializing results with John 1 instead`);
+				fetchTextFromESVAPI('John', '1');
 			}
 		} else {
 			console.log(
 				'A most recent book and chapter do not exist in local storage.'
 			);
+			console.log(`Initializing results with John 1 instead`);
+			fetchTextFromESVAPI('John', '1');
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
