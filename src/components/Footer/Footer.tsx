@@ -43,7 +43,7 @@ export const Footer = (props: any) => {
 				</button>
 
 				<button
-					data-info='back 5 seconds'
+					data-info='back 5s'
 					className={styles.buttons}
 					onMouseDown={props.rewind}>
 					<img
