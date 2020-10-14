@@ -25,10 +25,9 @@ export const Footer = (props: any) => {
 
 			{/* BUTTON CONTAINER */}
 			<div className={styles.buttonContainer}>
-				<button className={styles.buttons} onMouseDown={props.flipView}>
-					<img src={flipIcon} alt={'change view'} className={styles.icon} />
+				<button className={styles.buttons} onMouseDown={props.speedChange}>
+					<p className={styles.icon}>x{props.speed}</p>
 				</button>
-
 				<button className={styles.buttons} onMouseDown={props.beginning}>
 					<img
 						src={beginningIcon}
@@ -75,6 +74,9 @@ export const Footer = (props: any) => {
 						alt={'jump forward 5 seconds'}
 						className={styles.icon}
 					/>
+				</button>
+				<button className={styles.buttons} onMouseDown={props.flipView}>
+					<img src={flipIcon} alt={'change view'} className={styles.icon} />
 				</button>
 			</div>
 		</footer>

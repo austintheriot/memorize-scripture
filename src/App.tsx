@@ -74,6 +74,7 @@ export default function App() {
 	const [audioIsReady, setAudioIsReady] = useState(false);
 	const [audioIsPlaying, setAudioIsPlaying] = useState(false);
 	const [audioCurrentTime, setAudioCurrentTime] = useState(0);
+	const [audioSpeed, setAudioSpeed] = useState(1);
 
 	const updateSearchTerms = (book: string, chapter: string) => {
 		setBook(book);
@@ -199,6 +200,10 @@ export default function App() {
 		audio.addEventListener('timeupdate', () => {
 			setAudioCurrentTime(audio.currentTime / audio.duration);
 		});
+		//when speed is changed
+		audio.addEventListener('ratechange', () => {
+			setAudioSpeed(audio.playbackRate);
+		});
 		//load the resource (necessary on mobile)
 		audio.load();
 	}, [audio]);
@@ -242,6 +247,12 @@ export default function App() {
 		const targetTime = e.clientX / document.documentElement.offsetWidth;
 		setAudioCurrentTime(targetTime);
 		audio.currentTime = audio.duration * targetTime;
+	};
+
+	const handleSpeedChange = () => {
+		const targetSpeed = Math.max((audioSpeed + 0.25) % 2.25, 0.5);
+		setAudioSpeed(targetSpeed);
+		audio.playbackRate = targetSpeed;
 	};
 
 	const handleBookChange = (
@@ -416,6 +427,8 @@ export default function App() {
 				isReady={audioIsReady}
 				isPlaying={audioIsPlaying}
 				progressClick={handleProgressClick}
+				speed={audioSpeed}
+				speedChange={handleSpeedChange}
 			/>
 		</div>
 	);
