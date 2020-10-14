@@ -377,7 +377,8 @@ export default function App() {
 
 	return (
 		<div className='App'>
-			<h1>Memorize Scripture</h1>
+			<h1>{resultTitle}</h1>
+
 			<form className={styles.form}>
 				<FormControl className={classes.formControl}>
 					<InputLabel id='bible-book' className={classes.label}>
@@ -413,16 +414,14 @@ export default function App() {
 					<img src={searchIcon} alt='search' />
 				</button>
 			</form>
-
-			<h2>{resultTitle}</h2>
 			{showCondensed ? (
-				<>
+				<div className={styles.textAreaContainer}>
 					<div className={styles.textArea}>{resultCondensedBody}</div>
-				</>
+				</div>
 			) : (
-				<>
+				<div className={styles.textAreaContainer}>
 					<div className={styles.textArea}>{resultBody}</div>
-				</>
+				</div>
 			)}
 
 			<p className={styles.message}>{message}</p>

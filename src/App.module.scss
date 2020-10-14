@@ -51,11 +51,18 @@
 	text-align: center;
 }
 
-.textArea {
-	white-space: pre-wrap;
+.textAreaContainer {
+	/* Allows clamping width between max-content and 600px */
 	width: 90%;
 	max-width: 600px;
 	margin: 50px auto;
+}
+
+.textArea {
+	white-space: pre-wrap;
+	width: 100%;
+	max-width: max-content;
+	margin: 0 auto;
 }
 
 .copyright {
