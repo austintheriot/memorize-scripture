@@ -73,7 +73,7 @@ export default function App() {
 	const [audioHasError, setAudioHasError] = useState(false);
 	const [audioIsReady, setAudioIsReady] = useState(false);
 	const [audioIsPlaying, setAudioIsPlaying] = useState(false);
-	const [audioCurrentTime, setAudioCurrentTime] = useState(0);
+	const [audioPosition, setAudioPosition] = useState(0);
 	const [audioSpeed, setAudioSpeed] = useState(1);
 
 	const updateSearchTerms = (book: string, chapter: string) => {
@@ -93,7 +93,7 @@ export default function App() {
 		audio.pause();
 		setAudioHasError(false);
 		setAudioIsReady(false);
-		setAudioCurrentTime(0);
+		setAudioPosition(0);
 		setAudio(new Audio(`https://audio.esv.org/hw/mq/${book} ${chapter}.mp3`));
 		setResultTitle(`${book} ${chapter}`);
 		setResultBody(body);
@@ -217,7 +217,7 @@ export default function App() {
 		});
 		//as time is updated
 		audio.addEventListener('timeupdate', () => {
-			setAudioCurrentTime(audio.currentTime / audio.duration);
+			setAudioPosition(audio.currentTime / audio.duration);
 		});
 		//when speed is changed
 		audio.addEventListener('ratechange', () => {
@@ -243,14 +243,14 @@ export default function App() {
 	const handleRewind = () => {
 		if (audio.readyState !== 4) return;
 		const targetTime = Math.max(audio.currentTime - 5, 0);
-		setAudioCurrentTime(targetTime / audio.duration);
+		setAudioPosition(targetTime / audio.duration);
 		audio.currentTime = targetTime;
 	};
 
 	const handleForward = () => {
 		if (audio.readyState !== 4) return;
 		const targetTime = Math.min(audio.currentTime + 5, audio.duration - 0.01);
-		setAudioCurrentTime(targetTime / audio.duration);
+		setAudioPosition(targetTime / audio.duration);
 		audio.currentTime = targetTime;
 	};
 
@@ -265,7 +265,7 @@ export default function App() {
 
 	const handleProgressClick = (e: MouseEvent) => {
 		const targetTime = e.clientX / document.documentElement.offsetWidth;
-		setAudioCurrentTime(targetTime);
+		setAudioPosition(targetTime);
 		audio.currentTime = audio.duration * targetTime;
 	};
 
@@ -443,7 +443,7 @@ export default function App() {
 				rewind={handleRewind}
 				forward={handleForward}
 				beginning={handleBeginning}
-				currentTime={audioCurrentTime}
+				audioPosition={audioPosition}
 				hasError={audioHasError}
 				isReady={audioIsReady}
 				isPlaying={audioIsPlaying}
