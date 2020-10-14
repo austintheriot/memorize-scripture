@@ -26,11 +26,15 @@ export const Footer = (props: any) => {
 			{/* BUTTON CONTAINER */}
 			<div className={styles.buttonContainer}>
 				<button
+					data-info='playback speed'
 					className={styles.playSpeedButton}
 					onMouseDown={props.speedChange}>
 					<p className={styles.icon}>x{props.speed}</p>
 				</button>
-				<button className={styles.buttons} onMouseDown={props.beginning}>
+				<button
+					data-info='skip to beginning'
+					className={styles.buttons}
+					onMouseDown={props.beginning}>
 					<img
 						src={beginningIcon}
 						alt={'go to beginning'}
@@ -38,10 +42,13 @@ export const Footer = (props: any) => {
 					/>
 				</button>
 
-				<button className={styles.buttons} onMouseDown={props.rewind}>
+				<button
+					data-info='go back 5 seconds'
+					className={styles.buttons}
+					onMouseDown={props.rewind}>
 					<img
 						src={rewindIcon}
-						alt={'jump back 5 seconds'}
+						alt={'go back 5 seconds'}
 						className={styles.icon}
 					/>
 				</button>
@@ -49,35 +56,50 @@ export const Footer = (props: any) => {
 				{/* PLAY BUTTON */}
 				{props.hasError ? (
 					/* HAS ERROR */
-					<button className={styles.buttons} disabled={true}>
+					<button data-info='error' className={styles.buttons} disabled={true}>
 						<img src={errorIcon} alt={'loading'} className={styles.loading} />
 					</button>
 				) : props.isReady ? (
 					props.isPlaying ? (
 						/* NO ERROR, IS READY AND PLAYING */
-						<button className={styles.buttons} onMouseDown={props.pause}>
+						<button
+							data-info='pause'
+							className={styles.buttons}
+							onMouseDown={props.pause}>
 							<img src={pauseIcon} alt={'pause'} className={styles.icon} />
 						</button>
 					) : (
 						/* NO ERROR, IS READY AND PAUSED */
-						<button className={styles.buttons} onMouseDown={props.play}>
+						<button
+							data-info='play'
+							className={styles.buttons}
+							onMouseDown={props.play}>
 							<img src={playIcon} alt={'play'} className={styles.icon} />
 						</button>
 					)
 				) : (
 					/* NO ERROR, IS NOT READY (LOADING) */
-					<button className={styles.buttons} disabled={true}>
+					<button
+						data-info='loading'
+						className={styles.buttons}
+						disabled={true}>
 						<img src={loadingIcon} alt={'loading'} className={styles.loading} />
 					</button>
 				)}
-				<button className={styles.buttons} onMouseDown={props.forward}>
+				<button
+					data-info='skip forward 5s'
+					className={styles.buttons}
+					onMouseDown={props.forward}>
 					<img
 						src={forwardIcon}
-						alt={'jump forward 5 seconds'}
+						alt={'skip forward 5s'}
 						className={styles.icon}
 					/>
 				</button>
-				<button className={styles.buttons} onMouseDown={props.flipView}>
+				<button
+					data-info='flip text view'
+					className={styles.buttons}
+					onMouseDown={props.flipView}>
 					<img src={flipIcon} alt={'change view'} className={styles.icon} />
 				</button>
 			</div>
