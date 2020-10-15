@@ -73,7 +73,7 @@ export default function App() {
 	//search results
 	const [resultTitle, setResultTitle] = useState('');
 	const [resultBody, setResultBody] = useState('');
-	const [resultCondensedBody, setResultCondensedBody] = useState('');
+	const [resultCondensedBody, setResultCondensedBody] = useState<string[]>([]);
 	const [message, setMessage] = useState('');
 	const [audio, setAudio] = useState(new Audio());
 	const [audioHasError, setAudioHasError] = useState(false);
@@ -246,6 +246,14 @@ export default function App() {
 		if (typeof e.target.value === 'string') {
 			setChapter(e.target.value);
 		}
+	};
+
+	///////////////////////////////
+	const handleCondensedClick = (
+		e: React.MouseEvent<HTMLParagraphElement, MouseEvent>,
+		i: number
+	) => {
+		console.log(i);
 	};
 
 	const fetchTextFromESVAPI = (book: string, chapter: string) => {
@@ -480,7 +488,18 @@ export default function App() {
 			</form>
 			{showCondensed ? (
 				<div className={styles.textAreaContainer}>
-					<div className={styles.textArea}>{resultCondensedBody}</div>
+					{resultCondensedBody.map((line, i) => {
+						return (
+							<p
+								key={line + i.toString()}
+								className={styles.condensedLine}
+								onClick={(
+									e: React.MouseEvent<HTMLParagraphElement, MouseEvent>
+								) => handleCondensedClick(e, i)}>
+								{line}
+							</p>
+						);
+					})}
 				</div>
 			) : (
 				<div className={styles.textAreaContainer}>

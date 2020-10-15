@@ -1,5 +1,6 @@
 export default (string: string) => {
 	const MAX_LINE_LENGTH = 75;
+	let newLines: string[] = [];
 
 	let lines = string.split('\n');
 	for (let i = 0; i < lines.length; i++) {
@@ -90,8 +91,13 @@ export default (string: string) => {
 			}
 			words[j] = newWord;
 		}
+		//this yields an array where each element is separate by line breaks,
+		//but the element itself also contains the newly added line breaks
 		lines[i] = words.join('');
+		let newLineArray = lines[i].split('\n');
+		newLineArray.forEach((line) => newLines.push(line));
+		//creates a new array in which the array is "flattened"
+		//so that each array element is separated by line breaks
 	}
-	let finalText = lines.join('\n'); //join back into a single string
-	return finalText;
+	return newLines;
 };
