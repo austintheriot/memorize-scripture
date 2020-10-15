@@ -80,7 +80,11 @@ export default (string: string) => {
 				//if not a symbol and the character is not skipped over already:
 				//only add the first letter found in the word
 				if (validCharacterNotYetFound) {
-					newWord += ch;
+					if (ch === 'I') {
+						newWord += 'i'; //replace capital I with i
+					} else {
+						newWord += ch;
+					}
 					validCharacterNotYetFound = false;
 				}
 			}
@@ -89,6 +93,5 @@ export default (string: string) => {
 		lines[i] = words.join('');
 	}
 	let finalText = lines.join('\n'); //join back into a single string
-	finalText = finalText.split('I').join('i'); //get rid of capital 'I's
 	return finalText;
 };
