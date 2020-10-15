@@ -16,7 +16,7 @@ html {
 	--h4: 1.75rem;
 	--h5: 1.5rem;
 	--h6: 1.25rem;
-	--body: 1rem;
+	--body: 1.1rem;
 
 	font-family: 'Open Sans', sans-serif;
 }
@@ -50,6 +50,9 @@ h5 {
 }
 h6 {
 	font-size: var(--h6);
+}
+div {
+	font-size: var(--body);
 }
 p {
 	font-size: var(--body);

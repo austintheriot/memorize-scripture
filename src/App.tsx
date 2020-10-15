@@ -55,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
 		padding: '0.25rem 1rem',
 		backgroundColor: 'var(--dark)',
 		color: 'var(--light)',
+		fontSize: '1.1rem',
 	},
 }));
 
