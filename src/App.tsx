@@ -360,6 +360,25 @@ export default function App() {
 		//Loading last-viewed book and chapter
 		initializeMostRecentPassage();
 
+		//Prevent pinch zoom in Safari
+		document.addEventListener('gesturestart', function (e) {
+			e.preventDefault();
+			// special hack to prevent zoom-to-tabs gesture in safari
+			document.body.style.zoom = '0.99';
+		});
+
+		document.addEventListener('gesturechange', function (e) {
+			e.preventDefault();
+			// special hack to prevent zoom-to-tabs gesture in safari
+			document.body.style.zoom = '0.99';
+		});
+
+		document.addEventListener('gestureend', function (e) {
+			e.preventDefault();
+			// special hack to prevent zoom-to-tabs gesture in safari
+			document.body.style.zoom = '0.99';
+		});
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
