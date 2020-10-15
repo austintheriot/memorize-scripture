@@ -63,6 +63,8 @@
 	width: 100%;
 	max-width: max-content;
 	margin: 0 auto;
+	-ms-word-break: break-all;
+	word-break: break-all;
 }
 
 .copyright {
