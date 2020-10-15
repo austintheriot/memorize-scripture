@@ -58,6 +58,22 @@
 	margin: 50px auto;
 }
 
+.condensedLine {
+	display: block;
+	-ms-word-break: break-all;
+	word-break: break-all;
+	min-height: 2rem;
+	height: max-content;
+	cursor: pointer;
+	margin: 0.25rem auto;
+	padding: 0.5rem;
+	border-radius: 3px;
+
+	&:active {
+		background-color: #404040;
+	}
+}
+
 .textArea {
 	white-space: pre-wrap;
 	width: 100%;
