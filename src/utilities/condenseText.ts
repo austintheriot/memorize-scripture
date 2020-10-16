@@ -1,3 +1,6 @@
+//ADD line breaks to existing string
+//Original string should be able to be broken up
+
 export default (string: string) => {
 	const MAX_LINE_LENGTH = 75;
 	let newLines: string[] = [];
