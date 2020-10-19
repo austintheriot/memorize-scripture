@@ -29,23 +29,72 @@ import {
 // 	breakFullTextIntoLines(Revelation7).join('\n')
 // );
 
-describe('Break Full Text Into Lines Function', () => {
+describe('Break Full Text Into Lines:', () => {
 	test('Should return an array', () => {
 		expect(Array.isArray(breakFullTextIntoLines('example'))).toBe(true);
 	});
 
 	test('Should return an array of strings', () => {
-		expect(typeof breakFullTextIntoLines(Habakkuk1)[0]).toBe('string');
+		breakFullTextIntoLines(Habakkuk1).forEach((line) => {
+			expect(typeof line).toBe('string');
+		});
+	});
+
+	test('Should not return an element with more characters than the given maximum', () => {
+		let chapter = Genesis3;
+		let maxLineLength = 200;
+		let lineBrokenText = breakFullTextIntoLines(chapter, maxLineLength);
+		lineBrokenText.forEach((line) => {
+			expect(line.length).toBeLessThan(maxLineLength);
+		});
+
+		chapter = Matthew8;
+		maxLineLength = 125;
+		lineBrokenText = breakFullTextIntoLines(chapter, maxLineLength);
+		lineBrokenText.forEach((line) => {
+			expect(line.length).toBeLessThan(maxLineLength);
+		});
+
+		chapter = Revelation7;
+		maxLineLength = 100;
+		lineBrokenText = breakFullTextIntoLines(chapter, maxLineLength);
+		lineBrokenText.forEach((line) => {
+			expect(line.length).toBeLessThan(maxLineLength);
+		});
 	});
 });
 
-describe('Condense Text Function', () => {
+describe('Condense Text:', () => {
+	const lineBrokenGenesis3 = breakFullTextIntoLines(Genesis3);
+	const lineBrokenHabakkuk1 = breakFullTextIntoLines(Habakkuk1);
+	const lineBrokenMatthew8 = breakFullTextIntoLines(Matthew8);
+	const lineBrokenEphesians3 = breakFullTextIntoLines(Ephesians3);
+	const lineBrokenRevelation7 = breakFullTextIntoLines(Revelation7);
+
 	test('Should return an array', () => {
-		expect(Array.isArray(condenseText('example'))).toBe(true);
+		expect(Array.isArray(lineBrokenGenesis3)).toBe(true);
+		expect(Array.isArray(lineBrokenHabakkuk1)).toBe(true);
+		expect(Array.isArray(lineBrokenMatthew8)).toBe(true);
+		expect(Array.isArray(lineBrokenEphesians3)).toBe(true);
+		expect(Array.isArray(lineBrokenRevelation7)).toBe(true);
 	});
 
 	test('Should return an array of strings', () => {
-		expect(typeof condenseText('example')[0]).toBe('string');
+		condenseText(lineBrokenGenesis3).forEach((line) => {
+			expect(typeof line).toBe('string');
+		});
+		condenseText(lineBrokenHabakkuk1).forEach((line) => {
+			expect(typeof line).toBe('string');
+		});
+		condenseText(lineBrokenMatthew8).forEach((line) => {
+			expect(typeof line).toBe('string');
+		});
+		condenseText(lineBrokenEphesians3).forEach((line) => {
+			expect(typeof line).toBe('string');
+		});
+		condenseText(lineBrokenRevelation7).forEach((line) => {
+			expect(typeof line).toBe('string');
+		});
 	});
 
 	test('Should condense words to their first letter', () => {});
