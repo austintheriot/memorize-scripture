@@ -25,8 +25,15 @@ import { SmallSpacer, LargeSpacer } from './components/Spacers/Spacers';
 import searchIcon from './icons/search.svg';
 
 //Custom functions
-import condenseText from './utilities/condenseText';
+import { condenseText, breakFullTextIntoLines } from './utilities/condenseText';
 import { bookTitles, bookChapters } from './utilities/bibleBookInfo';
+import {
+	Genesis3,
+	Habakkuk1,
+	Matthew8,
+	Ephesians3,
+	Revelation7,
+} from './utilities/testChapters';
 
 const app = firebase.initializeApp(firebaseConfig);
 const analytics = firebase.analytics(app);
@@ -73,7 +80,6 @@ export default function App() {
 	//search results
 	const [resultTitle, setResultTitle] = useState('');
 	const [resultBody, setResultBody] = useState('');
-	const [resultCondensedBody, setResultCondensedBody] = useState<string[]>([]);
 	const [message, setMessage] = useState('');
 	const [audio, setAudio] = useState(new Audio());
 	const [audioHasError, setAudioHasError] = useState(false);
@@ -103,7 +109,6 @@ export default function App() {
 		setAudio(new Audio(`https://audio.esv.org/hw/mq/${book} ${chapter}.mp3`));
 		setResultTitle(`${book} ${chapter}`);
 		setResultBody(body);
-		setResultCondensedBody(condenseText(body));
 		setMessage(error || '');
 		return;
 	};
@@ -249,11 +254,11 @@ export default function App() {
 	};
 
 	///////////////////////////////
-	const handleCondensedClick = (
+	const handleLineBrokenText = (
 		e: React.MouseEvent<HTMLParagraphElement, MouseEvent>,
 		i: number
 	) => {
-		console.log(i);
+		console.log(i, breakFullTextIntoLines(resultBody)[i]);
 	};
 
 	const fetchTextFromESVAPI = (book: string, chapter: string) => {
@@ -488,14 +493,14 @@ export default function App() {
 			</form>
 			{showCondensed ? (
 				<div className={styles.textAreaContainer}>
-					{resultCondensedBody.map((line, i) => {
+					{condenseText(breakFullTextIntoLines(resultBody)).map((line, i) => {
 						return (
 							<p
 								key={line + i.toString()}
-								className={styles.condensedLine}
+								className={styles.lineBrokenText}
 								onClick={(
 									e: React.MouseEvent<HTMLParagraphElement, MouseEvent>
-								) => handleCondensedClick(e, i)}>
+								) => handleLineBrokenText(e, i)}>
 								{line}
 							</p>
 						);
@@ -503,7 +508,7 @@ export default function App() {
 				</div>
 			) : (
 				<div className={styles.textAreaContainer}>
-					<div className={styles.textArea}>{resultBody}</div>
+					<div className={styles.fullText}>{resultBody}</div>
 				</div>
 			)}
 
