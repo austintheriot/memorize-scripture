@@ -1,7 +1,9 @@
 //DEFAULTS
-const MAX_LINE_LENGTH = 115;
+const MAX_LINE_LENGTH = 125;
 const PRIMARY_PUNCTUATION_DISTANCE = 50;
 const SECONDARY_PUNCTUATION_DISTANCE = 50;
+const PRIMARY_PUNCTUATION = /[.!?”—]/;
+const SECONDARY_PUNCTUATION = /[^A-Za-z0-9 .!?”’\-_]/;
 
 //account for instances of combined punctuation
 
@@ -9,19 +11,39 @@ const findItemIndexes = (
 	s: string,
 	regex: any,
 	i: number,
-	characterCount: number
+	characterCount: number,
+	findingSpaces: boolean = false
 ) => {
 	//create substring to analyze
+	const itemIndexes: number[] = [];
 	const startingIndex = i + 1 - characterCount;
 	const substring = s.substr(startingIndex, characterCount);
-	const itemIndexes: number[] = [];
-	for (let j = 0; j < substring.length; j++) {
-		const ch = substring[j];
-		//search first for punctuation only
+
+	//search substring for given regex & add location to array
+	for (
+		let subStringIndex = 0;
+		subStringIndex < substring.length;
+		subStringIndex++
+	) {
+		const ch = substring[subStringIndex];
 		if (ch.match(regex)) {
-			const tinystring = substring.substr(j);
-			const indexOfNextSpace = tinystring.indexOf(' ');
-			itemIndexes.push(startingIndex + j + indexOfNextSpace);
+			//if finding closest spaces, simply add location to array
+			if (findingSpaces) {
+				itemIndexes.push(startingIndex + subStringIndex);
+			}
+
+			//if finding punctuation, search for nearest next space
+			else {
+				//don't look for a space when an em dash is found
+				if (ch === '—') {
+					itemIndexes.push(startingIndex + subStringIndex);
+					continue;
+				}
+				//if the item is found, search for the nearest next space
+				const tinystring = substring.substr(subStringIndex);
+				const indexOfNextSpace = tinystring.indexOf(' ');
+				itemIndexes.push(startingIndex + subStringIndex + indexOfNextSpace);
+			}
 		}
 	}
 	return itemIndexes;
@@ -32,7 +54,7 @@ const findPrimaryPunctuationIndexes = (
 	i: number,
 	characterCount: number
 ) => {
-	const regex = new RegExp(/[.!?”]/);
+	const regex = new RegExp(PRIMARY_PUNCTUATION);
 	return findItemIndexes(s, regex, i, characterCount);
 };
 
@@ -41,13 +63,13 @@ const findSecondaryPunctuationIndexes = (
 	i: number,
 	characterCount: number
 ) => {
-	const regex = new RegExp(/[^A-Za-z0-9 .!?”’\-_]/);
+	const regex = new RegExp(SECONDARY_PUNCTUATION);
 	return findItemIndexes(s, regex, i, characterCount);
 };
 
 const findSpaceIndexes = (s: string, i: number, characterCount: number) => {
 	const regex = new RegExp(' ');
-	return findItemIndexes(s, regex, i, characterCount);
+	return findItemIndexes(s, regex, i, characterCount, true);
 };
 
 const findClosest = (
@@ -109,10 +131,6 @@ const findClosestSpaces = (
 	i: number,
 	characterCount: number
 ) => {
-	//analyze whole string by default
-	i = i ?? string.length - 1;
-	characterCount = characterCount ?? string.length;
-
 	return findClosest(string, findSpaceIndexes, i, characterCount);
 };
 
@@ -121,22 +139,15 @@ const findBestBreakPoint = (
 	primaryPunctuationDistance: number,
 	secondaryPunctuationDistance: number
 ) => {
+	//prioritize primary puncutation, then secondary punctuation, and then spaces
 	const i: number = string.length - 1;
 	const characterCount: number = string.length;
+	let searchParams: [string, number, number] = [string, i, characterCount];
 
-	let primaryPunctuation = findClosestPrimaryPunctuation(
-		string,
-		i,
-		characterCount
-	);
-	let secondaryPunctuation = findClosestSecondayPunctuation(
-		string,
-		i,
-		characterCount
-	);
-	let spaces = findClosestSpaces(string, i, characterCount);
+	let primaryPunctuation = findClosestPrimaryPunctuation(...searchParams);
+	let secondaryPunctuation = findClosestSecondayPunctuation(...searchParams);
+	let spaces = findClosestSpaces(...searchParams);
 
-	//prioritize primary puncutation, then secondary punctuation, and then spacesw
 	return primaryPunctuation.smallestDistanceFromCenter <
 		primaryPunctuationDistance
 		? primaryPunctuation.stringIndexOfClosestItem
