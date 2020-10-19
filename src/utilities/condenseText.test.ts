@@ -71,6 +71,8 @@ describe('Condense Text:', () => {
 	const lineBrokenEphesians3 = breakFullTextIntoLines(Ephesians3);
 	const lineBrokenRevelation7 = breakFullTextIntoLines(Revelation7);
 
+	console.log('Genesis 3: ', condenseText(lineBrokenGenesis3).join('\n'));
+
 	test('Should return an array', () => {
 		expect(Array.isArray(lineBrokenGenesis3)).toBe(true);
 		expect(Array.isArray(lineBrokenHabakkuk1)).toBe(true);
