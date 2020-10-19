@@ -40,7 +40,7 @@ describe('Break Full Text Into Lines:', () => {
 		});
 	});
 
-	test('Should not return an element with more characters than the given maximum', () => {
+	test('Should not return a line with more characters than the given maximum', () => {
 		let chapter = Genesis3;
 		let maxLineLength = 200;
 		let lineBrokenText = breakFullTextIntoLines(chapter, maxLineLength);

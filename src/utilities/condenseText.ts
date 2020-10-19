@@ -206,7 +206,6 @@ export const breakFullTextIntoLines = (
 	);
 };
 
-export const condenseText = (string: string[]) => {
-	const array: string[] = [''];
-	return array;
+export const condenseText = (stringArray: string[]) => {
+	return stringArray;
 };
