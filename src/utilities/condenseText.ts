@@ -20,6 +20,17 @@
 
 //THEN condense the text
 
+////////////////////////////////////// PUNCTUATION PRIORITY
+//When breaking a text:
+//Search for PRIMARY PUNCTUATION first . " ? ! etc. (search a long distance away)
+//Search for SECONDARY PUNCTAION NEXT , (search a shorter distance away)
+
+////////////////////////////////////// ORDER OF LINE SPLITTING
+//Split an entire text "in half"
+//Split texts more and more until each line fits under the MAX_LINE_LENGTH LIMIT?
+
+//Split text linearly as the counter progresses through each line, counting max line length etc.
+
 const insertBreak = (string: string, i: number) => {
 	return string.slice(0, i + 1) + '\n' + string.slice(i + 1);
 };
@@ -27,29 +38,39 @@ const insertBreak = (string: string, i: number) => {
 const findItemIndexes = (
 	s: string,
 	regex: any,
-	i?: number,
-	currentCharacterCount?: number
+	i: number = s.length - 1, //analyze whole string by default
+	currentCharacterCount: number = s.length
 ) => {
-	if (i === undefined) i = 0; //analyze from beginning of string by default
-	if (currentCharacterCount === undefined) currentCharacterCount = s.length; //analyze rest of the string by default
-	const string = s.substr(i, i + currentCharacterCount);
+	//create substring to analyze
+	const startingIndex = i + 1 - currentCharacterCount;
+	const string = s.substr(startingIndex, currentCharacterCount);
+	console.log(string);
 	const itemIndexes: number[] = [];
 	for (let j = 0; j < string.length; j++) {
 		const ch = string[j];
 		//search first for punctuation only
 		if (ch.match(regex)) {
-			itemIndexes.push(i + j);
+			itemIndexes.push(startingIndex + j);
 		}
 	}
 	return itemIndexes;
 };
 
-const findPunctuationIndexes = (
+const findPrimaryPunctuationIndexes = (
 	s: string,
 	i?: number,
 	currentCharacterCount?: number
 ) => {
-	const regex = new RegExp(/[^A-Za-z0-9 _]/);
+	const regex = new RegExp(/[.!?”’]/);
+	return findItemIndexes(s, regex, i, currentCharacterCount);
+};
+
+const findSecondaryPunctuationIndexes = (
+	s: string,
+	i?: number,
+	currentCharacterCount?: number
+) => {
+	const regex = new RegExp(/[^A-Za-z0-9 .!?”’_]/);
 	return findItemIndexes(s, regex, i, currentCharacterCount);
 };
 
@@ -65,13 +86,10 @@ const findSpaceIndexes = (
 const findClosest = (
 	string: string,
 	callback: Function,
-	i?: number,
-	currentCharacterCount?: number
+	i: number = string.length - 1, //analyze whole string by default
+	currentCharacterCount: number = string.length
 ) => {
-	if (i === undefined) i = 0; //analyze from beginning of string by default
-	if (currentCharacterCount === undefined)
-		currentCharacterCount = string.length; //analyze rest of the string by default
-	const center = i + Math.floor(currentCharacterCount / 2);
+	const center = i - Math.floor(currentCharacterCount / 2);
 	const indexesInString: number[] = callback(string, i, currentCharacterCount);
 
 	const distancesFromCenter = indexesInString.map(
@@ -98,15 +116,38 @@ const findClosest = (
 	};
 };
 
-const findClosestPunctuation = (
+const findClosestPrimaryPunctuation = (
 	string: string,
 	i?: number,
 	currentCharacterCount?: number
 ) => {
-	if (i === undefined) i = 0; //analyze from beginning of string by default
-	if (currentCharacterCount === undefined)
-		currentCharacterCount = string.length; //analyze rest of the string by default
-	return findClosest(string, findPunctuationIndexes, i, currentCharacterCount);
+	//analyze whole string by default
+	i = i ?? string.length - 1;
+	currentCharacterCount = currentCharacterCount ?? string.length;
+
+	return findClosest(
+		string,
+		findPrimaryPunctuationIndexes,
+		i,
+		currentCharacterCount
+	);
+};
+
+const findClosestSecondayPunctuation = (
+	string: string,
+	i?: number,
+	currentCharacterCount?: number
+) => {
+	//analyze whole string by default
+	i = i ?? string.length - 1;
+	currentCharacterCount = currentCharacterCount ?? string.length;
+
+	return findClosest(
+		string,
+		findSecondaryPunctuationIndexes,
+		i,
+		currentCharacterCount
+	);
 };
 
 const findClosestSpaces = (
@@ -114,71 +155,69 @@ const findClosestSpaces = (
 	i?: number,
 	currentCharacterCount?: number
 ) => {
-	if (i === undefined) i = 0; //analyze from beginning of string by default
-	if (currentCharacterCount === undefined)
-		currentCharacterCount = string.length; //analyze rest of the string by default
+	//analyze whole string by default
+	i = i ?? string.length - 1;
+	currentCharacterCount = currentCharacterCount ?? string.length;
+
 	return findClosest(string, findSpaceIndexes, i, currentCharacterCount);
 };
 
 const findBestBreakPoint = (
 	string: string,
-	i?: number,
-	currentCharacterCount?: number
+	i: number = string.length - 1,
+	currentCharacterCount: number = string.length,
+	primaryPunctuationDistance: number = 20,
+	secondaryPunctuationDistance: number = 10
 ) => {
-	if (i === undefined) i = 0; //analyze from beginning of string by default
-	if (currentCharacterCount === undefined)
-		currentCharacterCount = string.length; //analyze rest of the string by default
-
-	let punctuation = findClosestPunctuation(string, i, currentCharacterCount);
+	let primaryPunctuation = findClosestPrimaryPunctuation(
+		string,
+		i,
+		currentCharacterCount
+	);
+	let secondaryPunctuation = findClosestSecondayPunctuation(
+		string,
+		i,
+		currentCharacterCount
+	);
 	let spaces = findClosestSpaces(string, i, currentCharacterCount);
 
-	//if there is no punctuation with 10 characters of the middle, break the line on a space
-	return punctuation.smallestDistanceFromCenter < 10
-		? punctuation.stringIndexOfClosestItem
+	console.log({
+		primaryPunctuation,
+		secondaryPunctuation,
+		spaces,
+	});
+
+	//prioritize primary puncutation, then secondary punctuation, and then spacesw
+	return primaryPunctuation.smallestDistanceFromCenter <
+		primaryPunctuationDistance
+		? primaryPunctuation.stringIndexOfClosestItem
+		: secondaryPunctuation.smallestDistanceFromCenter <
+		  secondaryPunctuationDistance
+		? secondaryPunctuation.stringIndexOfClosestItem
 		: spaces.stringIndexOfClosestItem;
 };
 
 export const breakLines = (
-	s: string,
+	string: string,
 	minLineLength?: number,
 	maxLineLength?: number
 ) => {
-	let string = s;
 	if (minLineLength === undefined) minLineLength = 85;
 	if (maxLineLength === undefined) maxLineLength = 115;
 
-	let currentCharacterCount = 0;
+	if (string.length < maxLineLength) return string;
+	let breakPoint = findBestBreakPoint(string);
+	let breakPointCharacter = string[breakPoint];
+	let newString = insertBreak(
+		string,
+		findBestBreakPoint(string, undefined, undefined, 50, 25)
+	);
 
-	for (let i = string.length - 1; i >= 0; i--) {
-		const ch = string[i];
-		currentCharacterCount++;
-
-		//TRUE for punctuation (not spaces)
-		if (ch.match(/[^A-Za-z0-9 _]/)) {
-			if (currentCharacterCount > minLineLength) {
-				//long enough, not too long: break on the punctuation
-				if (currentCharacterCount < maxLineLength) {
-					string = insertBreak(string, i);
-					currentCharacterCount = 0;
-				}
-
-				//too long: break on mid-point of the line, either on a space or on punctuation
-				else {
-					//Break in the middle
-					string = insertBreak(
-						string,
-						findBestBreakPoint(string, i, currentCharacterCount)
-					);
-					//Break at the long point
-					string = insertBreak(string, i);
-					currentCharacterCount = 0;
-				}
-
-				//if not long enough
-			}
-		}
-	}
-	console.log(string);
+	console.log({
+		breakPoint,
+		breakPointCharacter,
+		newString,
+	});
 	return string;
 };
 
@@ -196,7 +235,7 @@ const Ephesians1 =
 	'according to his purpose, which he set forth in Christ as a plan for the fullness of time, ' +
 	'to unite all things in him, things in heaven and things on earth.\n\n';
 
-breakLines(Ephesians1, 100, 150);
+breakLines(Ephesians1, 85, 100);
 breakLines('This is a dumb example');
 
 export const condenseText = (string: string) => {
