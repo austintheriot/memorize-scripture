@@ -207,5 +207,59 @@ export const breakFullTextIntoLines = (
 };
 
 export const condenseText = (stringArray: string[]) => {
+	//Iterate through each line of the text
+	for (let i = 0; i < stringArray.length; i++) {
+		let words = stringArray[i].split(' ');
+
+		//Iterate through every word
+		//Replace full word with condensed version of the word
+		//Combine condensed words with no spaces
+		for (let j = 0; j < words.length; j++) {
+			let word = words[j];
+			let condensedWord = '';
+			let validCharacterNotYetFound = true;
+
+			//Iterate through every letter in the word, adding characters to the new, condensedWord
+			for (let k = 0; k < word.length; k++) {
+				const ch = word[k];
+				const nextCh = word[k + 1];
+
+				//SYMBOLS:
+				//Add in any characters that aren't a letter or number
+				if (ch.match(/[^A-Za-z0-9_]/)) {
+					//skip over intra-word apostrophes, hyphens, and commas (important for longer numbers)
+					if (
+						(ch === '’' || ch === '-' || ch === ',') &&
+						nextCh && //make sure nextCh is defined before testing to see if it's a letter
+						nextCh.match(/\w/) //matches for english letters
+					) {
+						continue;
+					}
+
+					//Adds symbol to word
+					condensedWord += ch;
+
+					//In the situation of word—word, add in the first letter of the next word
+					if (ch === '—' && nextCh) {
+						condensedWord += nextCh;
+					}
+					continue;
+				}
+
+				//LETTERS:
+				//If character is not a symbol, only add the first letter found in the word
+				if (validCharacterNotYetFound) {
+					if (ch === 'I') {
+						condensedWord += 'i'; //replace capital I with i
+					} else {
+						condensedWord += ch;
+					}
+					validCharacterNotYetFound = false;
+				}
+			}
+			words[j] = condensedWord;
+		}
+		stringArray[i] = words.join('');
+	}
 	return stringArray;
 };
