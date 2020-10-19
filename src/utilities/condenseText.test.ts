@@ -1,6 +1,24 @@
-import condenseText from './condenseText';
+import { breakLines, condenseText } from './condenseText';
+
+describe('Break Lines Function', () => {
+	test('Should return a string', () => {
+		expect(typeof breakLines('example')).toBe('string');
+	});
+
+	test('Should return a string', () => {
+		expect(typeof breakLines('example')).toBe('string');
+	});
+});
 
 describe('Condense Text Function', () => {
+	test('Should return an array', () => {
+		expect(Array.isArray(condenseText('example'))).toBe(true);
+	});
+
+	test('Should return an array of strings', () => {
+		expect(typeof condenseText('example')[0]).toBe('string');
+	});
+
 	test('Should condense words to their first letter', () => {});
 
 	test('Should delete all spaces', () => {});
