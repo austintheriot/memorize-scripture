@@ -1,10 +1,33 @@
 import { breakFullTextIntoLines, condenseText } from './condenseText';
-import { Ephesians3, Habakkuk1, Matthew8, Revelation7 } from './testChapters';
 
-console.log('Ephesians 1: ', breakFullTextIntoLines(Ephesians3).join('\n'));
-console.log('Habbakuk 1: ', breakFullTextIntoLines(Habakkuk1).join('\n'));
-console.log('Matthew 8: ', breakFullTextIntoLines(Matthew8).join('\n'));
-console.log('Revelation 7: ', breakFullTextIntoLines(Revelation7).join('\n'));
+import {
+	Genesis3,
+	Habakkuk1,
+	Matthew8,
+	Ephesians3,
+	Revelation7,
+} from './testChapters';
+
+// console.log(
+// 	'Genesis 3: /////////////////////////////////\n ',
+// 	breakFullTextIntoLines(Genesis3).join('\n')
+// );
+// console.log(
+// 	'Habakkuk 1: /////////////////////////////////\n',
+// 	breakFullTextIntoLines(Habakkuk1).join('\n')
+// );
+// console.log(
+// 	'Matthew 8: /////////////////////////////////\n',
+// 	breakFullTextIntoLines(Matthew8).join('\n')
+// );
+// console.log(
+// 	'Ephesians 3: /////////////////////////////////\n',
+// 	breakFullTextIntoLines(Ephesians3).join('\n')
+// );
+// console.log(
+// 	'Revelation 7: /////////////////////////////////\n',
+// 	breakFullTextIntoLines(Revelation7).join('\n')
+// );
 
 describe('Break Full Text Into Lines Function', () => {
 	test('Should return an array', () => {
