@@ -1,12 +1,20 @@
-import { breakLines, condenseText } from './condenseText';
+import { breakFullTextIntoLines, condenseText } from './condenseText';
+import { Ephesians3, Habakkuk1, Matthew8 } from './testChapters';
 
-describe('Break Lines Function', () => {
-	test('Should return a string', () => {
-		expect(typeof breakLines('example')).toBe('string');
+console.log(
+	'Ephesians 1: ',
+	breakFullTextIntoLines(Ephesians3, 125).join('\n')
+);
+console.log('Habbakuk 1: ', breakFullTextIntoLines(Habakkuk1, 125).join('\n'));
+console.log('Matthew 8: ', breakFullTextIntoLines(Matthew8, 125).join('\n'));
+
+describe('Break Full Text Into Lines Function', () => {
+	test('Should return an array', () => {
+		expect(Array.isArray(breakFullTextIntoLines('example'))).toBe(true);
 	});
 
-	test('Should return a string', () => {
-		expect(typeof breakLines('example')).toBe('string');
+	test('Should return an array of strings', () => {
+		expect(typeof breakFullTextIntoLines(Habakkuk1)[0]).toBe('string');
 	});
 });
 
