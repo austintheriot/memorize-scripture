@@ -8,26 +8,26 @@ import {
 	Revelation7,
 } from './testChapters';
 
-// console.log(
-// 	'Genesis 3: /////////////////////////////////\n ',
-// 	breakFullTextIntoLines(Genesis3).join('\n')
-// );
-// console.log(
-// 	'Habakkuk 1: /////////////////////////////////\n',
-// 	breakFullTextIntoLines(Habakkuk1).join('\n')
-// );
-// console.log(
-// 	'Matthew 8: /////////////////////////////////\n',
-// 	breakFullTextIntoLines(Matthew8).join('\n')
-// );
-// console.log(
-// 	'Ephesians 3: /////////////////////////////////\n',
-// 	breakFullTextIntoLines(Ephesians3).join('\n')
-// );
-// console.log(
-// 	'Revelation 7: /////////////////////////////////\n',
-// 	breakFullTextIntoLines(Revelation7).join('\n')
-// );
+console.log(
+	'Genesis 3: /////////////////////////////////\n ',
+	breakFullTextIntoLines(Genesis3).join('\n')
+);
+console.log(
+	'Habakkuk 1: /////////////////////////////////\n',
+	breakFullTextIntoLines(Habakkuk1).join('\n')
+);
+console.log(
+	'Matthew 8: /////////////////////////////////\n',
+	breakFullTextIntoLines(Matthew8).join('\n')
+);
+console.log(
+	'Ephesians 3: /////////////////////////////////\n',
+	breakFullTextIntoLines(Ephesians3).join('\n')
+);
+console.log(
+	'Revelation 7: /////////////////////////////////\n',
+	breakFullTextIntoLines(Revelation7).join('\n')
+);
 
 describe('Break Full Text Into Lines:', () => {
 	test('Should return an array', () => {
