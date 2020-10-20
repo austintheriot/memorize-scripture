@@ -34,10 +34,10 @@ export default function App() {
 
 	return (
 		<div className='App'>
-			<MenuButton handleClick={handleMenuOpen} menuOpen={menuOpen} />
-			<Menu menuOpen={menuOpen} />
 			<Transition menuOpen={menuOpen}>
 				<Router>
+					<MenuButton handleClick={handleMenuOpen} menuOpen={menuOpen} />
+					<Menu menuOpen={menuOpen} />
 					<Route path='/'>
 						<Home menuOpen={menuOpen} analytics={analytics} />
 					</Route>
