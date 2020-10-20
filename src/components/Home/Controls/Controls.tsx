@@ -2,21 +2,18 @@ import React from 'react';
 import styles from './Controls.module.scss';
 
 //Custom icons
-import flipIcon from '../../icons/flip.svg';
-import beginningIcon from '../../icons/beginning.svg';
-import rewindIcon from '../../icons/rewind.svg';
-import pauseIcon from '../../icons/pause.svg';
-import playIcon from '../../icons/play.svg';
-import forwardIcon from '../../icons/forward.svg';
-import loadingIcon from '../../icons/loading.svg';
-import errorIcon from '../../icons/error.svg';
+import flipIcon from '../../../icons/flip.svg';
+import beginningIcon from '../../../icons/beginning.svg';
+import rewindIcon from '../../../icons/rewind.svg';
+import pauseIcon from '../../../icons/pause.svg';
+import playIcon from '../../../icons/play.svg';
+import forwardIcon from '../../../icons/forward.svg';
+import loadingIcon from '../../../icons/loading.svg';
+import errorIcon from '../../../icons/error.svg';
 
 export const Controls = (props: any) => {
 	return (
-		<div
-			className={[styles.Controls, props.menuOpen ? styles.menuOpen : ''].join(
-				' '
-			)}>
+		<div className={styles.Controls}>
 			{/* PROGRESS BAR */}
 			<div
 				className={styles.progressBarOuter}

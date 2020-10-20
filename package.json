@@ -12,6 +12,7 @@
     "@types/node": "^12.12.59",
     "@types/react": "^16.9.49",
     "@types/react-dom": "^16.9.8",
+    "@types/react-router-dom": "^5.1.6",
     "axios": "^0.20.0",
     "firebase": "^7.23.0",
     "node-sass": "^4.14.1",

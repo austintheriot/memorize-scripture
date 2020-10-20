@@ -4,12 +4,10 @@
 	height: 88px;
 	width: 100%;
 	background-color: var(--dark);
-
-	transition: 0.1s ease-out;
 }
 
 @media (min-width: 800px) {
-	.Footer {
+	.Controls {
 		height: 65px;
 	}
 }
@@ -124,10 +122,4 @@
 	to {
 		transform: rotate(360deg);
 	}
-}
-
-.menuOpen {
-	transform: translateX(-300px);
-	pointer-events: none;
-	cursor: auto;
 }
