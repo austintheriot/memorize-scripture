@@ -1,10 +1,9 @@
 .button {
-	display: block;
 	position: fixed;
+	display: block;
 	z-index: 100;
 	border: none;
 	outline: none;
-	margin: 0;
 	text-decoration: none;
 	background-color: var(--dark);
 	color: var(--light);
@@ -13,13 +12,12 @@
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	box-shadow: none;
-	padding: 0.75rem;
 	border-radius: 1px;
-	margin: 2px;
 	font-size: 1rem;
+	border-radius: 3px;
 
 	top: 10px;
-	left: calc(100% - 45px);
+	right: 10px;
 	width: 35px;
 	height: 35px;
 
@@ -31,5 +29,45 @@
 }
 
 .menuOpen {
-	transform: translateX(calc(100% - 345px));
+	transform: translateX(-300px);
+}
+
+.span {
+	position: absolute;
+	display: block;
+	height: 1.5px;
+	width: 75%;
+	left: 12.5%;
+	border-radius: 5px;
+	background-color: var(--light);
+
+	transition: transform 0.75s;
+	transition: opacity 1s;
+}
+
+.span1 {
+	composes: span;
+	top: 30%;
+}
+
+.span1Open {
+	transform: translateY(7px) rotate(45deg);
+}
+
+.span2 {
+	composes: span;
+	top: 50%;
+}
+
+.span2Open {
+	opacity: 0;
+}
+
+.span3 {
+	composes: span;
+	top: 70%;
+}
+
+.span3Open {
+	transform: translateY(-7px) rotate(-45deg);
 }

@@ -3,8 +3,11 @@
 	top: 0;
 	left: 0;
 	transition: 0.1s left ease-out;
+	width: 100%;
 }
 
 .menuOpen {
 	left: -300px;
+	pointer-events: none;
+	overflow-y: hidden;
 }

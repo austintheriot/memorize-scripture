@@ -7,6 +7,19 @@ export const MenuButton = (props: any) => {
 			className={[styles.button, props.menuOpen ? styles.menuOpen : ''].join(
 				' '
 			)}
-			onClick={props.handleClick}></button>
+			onClick={props.handleClick}>
+			<span
+				className={[styles.span1, props.menuOpen ? styles.span1Open : ''].join(
+					' '
+				)}></span>
+			<span
+				className={[styles.span2, props.menuOpen ? styles.span2Open : ''].join(
+					' '
+				)}></span>
+			<span
+				className={[styles.span3, props.menuOpen ? styles.span3Open : ''].join(
+					' '
+				)}></span>
+		</button>
 	);
 };
