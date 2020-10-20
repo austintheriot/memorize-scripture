@@ -206,10 +206,15 @@ export const breakFullTextIntoLines = (
 	);
 };
 
-export const condenseText = (stringArray: string[]) => {
+export const condenseText = (
+	uncondensedArray: string[],
+	clickedLine: number
+) => {
+	const uncondensedArrayCopy = [...uncondensedArray];
+
 	//Iterate through each line of the text
-	for (let i = 0; i < stringArray.length; i++) {
-		let words = stringArray[i].split(' ');
+	for (let i = 0; i < uncondensedArray.length; i++) {
+		let words = uncondensedArray[i].split(' ');
 
 		//Iterate through every word
 		//Replace full word with condensed version of the word
@@ -259,7 +264,11 @@ export const condenseText = (stringArray: string[]) => {
 			}
 			words[j] = condensedWord;
 		}
-		stringArray[i] = words.join('');
+		uncondensedArray[i] = words.join('');
 	}
-	return stringArray;
+	//reveal single line when clicked
+	if (clickedLine !== -1) {
+		uncondensedArray[clickedLine] = uncondensedArrayCopy[clickedLine];
+	}
+	return uncondensedArray;
 };

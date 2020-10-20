@@ -27,13 +27,6 @@ import searchIcon from './icons/search.svg';
 //Custom functions
 import { condenseText, breakFullTextIntoLines } from './utilities/condenseText';
 import { bookTitles, bookChapters } from './utilities/bibleBookInfo';
-import {
-	Genesis3,
-	Habakkuk1,
-	Matthew8,
-	Ephesians3,
-	Revelation7,
-} from './utilities/testChapters';
 
 const app = firebase.initializeApp(firebaseConfig);
 const analytics = firebase.analytics(app);
@@ -87,6 +80,7 @@ export default function App() {
 	const [audioIsPlaying, setAudioIsPlaying] = useState(false);
 	const [audioPosition, setAudioPosition] = useState(0);
 	const [audioSpeed, setAudioSpeed] = useState(1);
+	const [clickedLine, setClickedLine] = useState(-1);
 
 	const updateSearchTerms = (book: string, chapter: string) => {
 		setBook(book);
@@ -253,12 +247,12 @@ export default function App() {
 		}
 	};
 
-	///////////////////////////////
 	const handleLineBrokenText = (
 		e: React.MouseEvent<HTMLParagraphElement, MouseEvent>,
 		i: number
 	) => {
-		console.log(i, breakFullTextIntoLines(resultBody)[i]);
+		if (clickedLine === i) return setClickedLine(-1);
+		setClickedLine(i);
 	};
 
 	const fetchTextFromESVAPI = (book: string, chapter: string) => {
@@ -493,18 +487,20 @@ export default function App() {
 			</form>
 			{showCondensed ? (
 				<div className={styles.textAreaContainer}>
-					{condenseText(breakFullTextIntoLines(resultBody)).map((line, i) => {
-						return (
-							<p
-								key={line + i.toString()}
-								className={styles.lineBrokenText}
-								onClick={(
-									e: React.MouseEvent<HTMLParagraphElement, MouseEvent>
-								) => handleLineBrokenText(e, i)}>
-								{line}
-							</p>
-						);
-					})}
+					{condenseText(breakFullTextIntoLines(resultBody), clickedLine).map(
+						(line, i) => {
+							return (
+								<p
+									key={line + i.toString()}
+									className={styles.lineBrokenText}
+									onClick={(
+										e: React.MouseEvent<HTMLParagraphElement, MouseEvent>
+									) => handleLineBrokenText(e, i)}>
+									{line}
+								</p>
+							);
+						}
+					)}
 				</div>
 			) : (
 				<div className={styles.textAreaContainer}>
