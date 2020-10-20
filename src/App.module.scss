@@ -70,11 +70,12 @@
 .lineBrokenText {
 	text-align: left;
 	width: 100%;
+	max-width: 400px;
 	display: block;
 	min-height: 2rem;
 	height: max-content;
 	cursor: pointer;
-	margin: 0.1rem 0;
+	margin: 0.1rem auto;
 	padding: 0.25rem 1rem;
 	border-radius: 3px;
 
