@@ -69,16 +69,12 @@
 	text-align: left;
 	width: 100%;
 	display: block;
-	-ms-word-break: break-all;
-	word-break: break-all;
 	min-height: 2rem;
 	height: max-content;
 	cursor: pointer;
 	margin: 0.25rem 0;
 	padding: 0.5rem;
 	border-radius: 3px;
-
-	background-color: red;
 
 	&:active {
 		background-color: #404040;
