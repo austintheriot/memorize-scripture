@@ -59,64 +59,160 @@ describe('Condense Text:', () => {
 	});
 
 	test('Should return an array of strings', () => {
-		condenseText(lineBrokenGenesis3, -1).forEach((line) => {
+		condenseText(lineBrokenGenesis3).forEach((line) => {
 			expect(typeof line).toBe('string');
 		});
-		condenseText(lineBrokenHabakkuk1, -1).forEach((line) => {
+		condenseText(lineBrokenHabakkuk1).forEach((line) => {
 			expect(typeof line).toBe('string');
 		});
-		condenseText(lineBrokenMatthew8, -1).forEach((line) => {
+		condenseText(lineBrokenMatthew8).forEach((line) => {
 			expect(typeof line).toBe('string');
 		});
-		condenseText(lineBrokenEphesians3, -1).forEach((line) => {
+		condenseText(lineBrokenEphesians3).forEach((line) => {
 			expect(typeof line).toBe('string');
 		});
-		condenseText(lineBrokenRevelation7, -1).forEach((line) => {
+		condenseText(lineBrokenRevelation7).forEach((line) => {
 			expect(typeof line).toBe('string');
 		});
 	});
 
-	test('Should condense words to their first letter', () => {});
+	test('Should condense words to their first letter', () => {
+		expect(
+			condenseText([
+				'When he came down from the mountain, great crowds followed him.',
+			])
+		).toEqual(['Whcdftm,gcfh.']);
+	});
 
-	test('Should delete all spaces', () => {});
+	test('Should delete all spaces', () => {
+		expect(
+			condenseText([
+				'    For this     reason   I,    Paul, a    prisoner of    Christ    Jesus on behalf of you Gentiles—           ',
+			])
+		).toEqual(['Ftri,P,apoCJoboyG—']);
+	});
 
-	test('Should preserve non-letter characters', () => {});
+	test('Should preserve non-letter characters', () => {
+		expect(
+			condenseText([
+				'?!After this I... saw four (angels), standing-- “at” the four corners— of the—earth, ',
+			])
+		).toEqual(['?!Ati...sf(a),s--“a”tfc—ot—e,']);
+	});
 
-	test('Should replace I with i', () => {});
+	test('Should replace I with i', () => {
+		expect(condenseText(['Isaiah Is Incredibly Illuminating'])).toEqual([
+			'iiii',
+		]);
+	});
 
-	test('Should break any length line after . or ”', () => {});
+	test('Should delete intraword apostrophes, hyphens, and commas (in numbers)', () => {
+		//testing '
+		expect(condenseText(['If Cain’s revenge is sevenfold,'])).toEqual([
+			'iCris,',
+		]);
 
-	test('Should NOT add a line break when the following character is a ”', () => {});
+		//testing -
+		expect(condenseText(['then Lamech’s is seventy-sevenfold.”'])).toEqual([
+			'tLis.”',
+		]);
 
-	test('Should break a line of more than 75 characters on , . ” ’ ? — or ! ', () => {
 		//testing ,
-		//testing .
-		//testing ”
-		//testing ?
-		//testing —
-		//testing !
-		//testing ’
+		expect(
+			condenseText(['12,000 from the tribe of Judah were sealed,'])
+		).toEqual(['1fttoJws,']);
 	});
 
-	test('Should NOT break a line of more than 75 characters that does not contain , . ” ’ ? — or !', () => {});
+	test('Should only keep first number of longer number', () => {
+		expect(condenseText(['123,456,789'])).toEqual(['1']);
+	});
 
-	test('Should NOT break a line of more than 75 characters on , . ” ’ ? or ! when the next character is ” or ’', () => {});
+	test('Should treat word—word as two separate words within a line', () => {
+		expect(
+			condenseText([
+				'the greater light to rule the day and the lesser light to rule the night—and the stars. ',
+			])
+		).toEqual(['tgltrtdatlltrtn—ats.']);
+	});
 
-	test('Should NOT break a line of more than 75 characters on , . ” ’ ? or ! when the next character is )', () => {});
+	test('Should not reveal any lines when not given an array index', () => {
+		expect(
+			condenseText([
+				'I thank my God in all my remembrance of you, always in every prayer of mine for you all making my prayer with joy, ',
+				'because of your partnership in the gospel from the first day until now. ',
+				'And I am sure of this, that he who began a good work in you will bring it to completion at the day of Jesus Christ. ',
+			])
+		).toEqual([
+			'itmGiamroy,aiepomfyammpwj,',
+			'boypitgftfdun.',
+			'Aiasot,thwbagwiywbitcatdoJC.',
+		]);
+	});
 
-	test('Should NOT break a line of more than 75 characters on , . ” ’ ? or ! when the next character is ,', () => {});
+	test('Should not reveal any lines when given an array index of -1', () => {
+		expect(
+			condenseText(
+				[
+					'I thank my God in all my remembrance of you, always in every prayer of mine for you all making my prayer with joy, ',
+					'because of your partnership in the gospel from the first day until now. ',
+					'And I am sure of this, that he who began a good work in you will bring it to completion at the day of Jesus Christ. ',
+				],
+				-1
+			)
+		).toEqual([
+			'itmGiamroy,aiepomfyammpwj,',
+			'boypitgftfdun.',
+			'Aiasot,thwbagwiywbitcatdoJC.',
+		]);
+	});
 
-	test('Should NOT break a line of more than 75 characters on , . ” ’ ? or ! when the NEXT NEXT character is ”', () => {});
+	test('Should reveal an uncondensed line, given an array index', () => {
+		//index 0
+		expect(
+			condenseText(
+				[
+					'I thank my God in all my remembrance of you, always in every prayer of mine for you all making my prayer with joy, ',
+					'because of your partnership in the gospel from the first day until now. ',
+					'And I am sure of this, that he who began a good work in you will bring it to completion at the day of Jesus Christ. ',
+				],
+				0
+			)
+		).toEqual([
+			'I thank my God in all my remembrance of you, always in every prayer of mine for you all making my prayer with joy, ',
+			'boypitgftfdun.',
+			'Aiasot,thwbagwiywbitcatdoJC.',
+		]);
 
-	test('Should delete intraword apostrophes, hyphens, and commas (in numbers)', () => {});
+		//index 1
+		expect(
+			condenseText(
+				[
+					'I thank my God in all my remembrance of you, always in every prayer of mine for you all making my prayer with joy, ',
+					'because of your partnership in the gospel from the first day until now. ',
+					'And I am sure of this, that he who began a good work in you will bring it to completion at the day of Jesus Christ. ',
+				],
+				1
+			)
+		).toEqual([
+			'itmGiamroy,aiepomfyammpwj,',
+			'because of your partnership in the gospel from the first day until now. ',
+			'Aiasot,thwbagwiywbitcatdoJC.',
+		]);
 
-	test('Should only keep first number of longer number', () => {});
-
-	test('Should preserve existing line breaks', () => {});
-
-	test('Should only add line break when not already the end of a line', () => {});
-
-	test('Should treat word—word as two separate words within a line', () => {});
-
-	test('Should treat word—word as two separate words across line breaks', () => {});
+		//index 2
+		expect(
+			condenseText(
+				[
+					'I thank my God in all my remembrance of you, always in every prayer of mine for you all making my prayer with joy, ',
+					'because of your partnership in the gospel from the first day until now. ',
+					'And I am sure of this, that he who began a good work in you will bring it to completion at the day of Jesus Christ. ',
+				],
+				2
+			)
+		).toEqual([
+			'itmGiamroy,aiepomfyammpwj,',
+			'boypitgftfdun.',
+			'And I am sure of this, that he who began a good work in you will bring it to completion at the day of Jesus Christ. ',
+		]);
+	});
 });
