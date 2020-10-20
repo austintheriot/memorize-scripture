@@ -9,7 +9,7 @@ See the live web app here: [https://memorizescripture.org/](https://memorizescri
   - [About](#about)
     - [Intro](#intro)
     - [Instructions](#instructions)
-    - [Why It Works](#why-it-works)
+    - [How It Works](#how-it-works)
     - [Review](#review)
   - [Contact](#contact)
 
@@ -61,9 +61,9 @@ Here is how to memorize it (and really any chapter from the Bible):
 
 You will find that once you can speak the entire passage by looking only at the condensed text, you already have most of the passage memorized. All that's left to do is practice speaking the text without looking at the letters at all. (Hint: you can then memorize the text without looking by following the same pyramid pattern of repetition).
 
-### Why It Works
+### How It Works
 
-This process works because of a psychological principle called ["chunking" ](https://en.wikipedia.org/wiki/Chunking_(psychology)), in which individual pieces of information are grouped together into a collected whole. Chunking helps us remember more than we normally would be able to if we were trying to remember the same information as individual pieces. This is why we tend to group long numbers into 3 groups of 3 or 4, such as phone numbers: "(012) 345-6789" rather than "0123456789." The principle also applies when memorizing a text: reducing a passage down to its first letters allows us to "chunk" a text in groups of phrases, sentences, and verses rather than as individual words. 
+This process works well for most people because of a psychological principle called ["chunking" ](https://en.wikipedia.org/wiki/Chunking_(psychology)), in which individual pieces of information are grouped together into a collected whole. Chunking helps us remember more than we normally would be able to if we were trying to remember the same information as individual pieces. This is why we tend to group long numbers into 3 groups of 3 or 4, such as phone numbers: "(012) 345-6789" rather than "0123456789." The principle also applies when memorizing a text: reducing a passage down to its first letters allows us to "chunk" a text in groups of phrases, sentences, and verses rather than as individual words. 
 
 ### Review
 
