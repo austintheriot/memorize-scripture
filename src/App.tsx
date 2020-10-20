@@ -66,8 +66,8 @@ export default function App() {
 	const [showCondensed, setShowCondensed] = useState(true);
 
 	//search terms
-	const [book, setBook] = useState('John');
-	const [chapter, setChapter] = useState('1');
+	const [book, setBook] = useState('Psalms');
+	const [chapter, setChapter] = useState('23');
 	const [numberOfChapters, setNumberOfChapters] = useState(21);
 
 	//search results
@@ -333,15 +333,17 @@ export default function App() {
 				});
 			} else {
 				console.log(`${title} not found in local storage`);
-				console.log(`Initializing results with John 1 instead`);
-				fetchTextFromESVAPI('John', '1');
+				console.log(`Initializing results with Psalm 23 instead`);
+				updateSearchTerms('Psalms', '23');
+				fetchTextFromESVAPI('Psalms', '23');
 			}
 		} else {
 			console.log(
 				'A most recent book and chapter do not exist in local storage.'
 			);
-			console.log(`Initializing results with John 1 instead`);
-			fetchTextFromESVAPI('John', '1');
+			console.log(`Initializing results with Psalm 23 instead`);
+			updateSearchTerms('Psalms', '23');
+			fetchTextFromESVAPI('Psalms', '23');
 		}
 	};
 
