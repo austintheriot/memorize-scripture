@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './Footer.module.scss';
+import styles from './Controls.module.scss';
 
 //Custom icons
 import flipIcon from '../../icons/flip.svg';
@@ -11,9 +11,12 @@ import forwardIcon from '../../icons/forward.svg';
 import loadingIcon from '../../icons/loading.svg';
 import errorIcon from '../../icons/error.svg';
 
-export const Footer = (props: any) => {
+export const Controls = (props: any) => {
 	return (
-		<footer className={styles.Footer}>
+		<div
+			className={[styles.Controls, props.menuOpen ? styles.menuOpen : ''].join(
+				' '
+			)}>
 			{/* PROGRESS BAR */}
 			<div
 				className={styles.progressBarOuter}
@@ -99,6 +102,6 @@ export const Footer = (props: any) => {
 					<img src={flipIcon} alt={'change view'} className={styles.icon} />
 				</button>
 			</div>
-		</footer>
+		</div>
 	);
 };

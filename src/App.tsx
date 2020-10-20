@@ -20,7 +20,10 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
 //Custom components
-import { Footer } from './components/Footer/Footer';
+import { Menu } from './components/Menu/Menu';
+import { MenuButton } from './components/MenuButton/MenuButton';
+import { Transition } from './components/Transition/Transition';
+import { Controls } from './components/Controls/Controls';
 import { SmallSpacer, LargeSpacer } from './components/Spacers/Spacers';
 import searchIcon from './icons/search.svg';
 
@@ -63,6 +66,7 @@ export default function App() {
 	const classes = useStyles();
 
 	//state
+	const [menuOpen, setMenuOpen] = useState(false);
 	const [showCondensed, setShowCondensed] = useState(true);
 
 	//search terms
@@ -167,6 +171,11 @@ export default function App() {
 			});
 			window.localStorage.setItem('texts', JSON.stringify(textArray));
 		}
+	};
+
+	const handleMenuOpen = () => {
+		console.log('Menu clicked');
+		setMenuOpen((prevState) => !prevState);
 	};
 
 	const handlePlay = () => {
@@ -462,80 +471,87 @@ export default function App() {
 
 	return (
 		<div className='App'>
-			<h1>{resultTitle}</h1>
+			<MenuButton handleClick={handleMenuOpen} menuOpen={menuOpen} />
+			<Menu menuOpen={menuOpen} />
+			<Transition menuOpen={menuOpen}>
+				<h1>{resultTitle}</h1>
 
-			<form className={styles.form}>
-				<FormControl className={classes.formControl}>
-					<InputLabel id='bible-book' className={classes.label}>
-						Book
-					</InputLabel>
-					<Select
-						className={classes.select}
-						labelId='bible-book'
-						id='bible-book'
-						value={book}
-						onChange={handleBookChange}>
-						{bookTitles.map((bookString) => (
-							<MenuItem value={bookString} key={bookString}>
-								{bookString}
-							</MenuItem>
-						))}
-					</Select>
-				</FormControl>
-				<FormControl className={classes.formControl}>
-					<InputLabel id='bible-chapter' className={classes.label}>
-						Chapter
-					</InputLabel>
-					<Select
-						className={classes.select}
-						labelId='bible-chapter'
-						id='bible-chapter'
-						value={chapter}
-						onChange={handleChapterChange}>
-						{chapterArray}
-					</Select>
-				</FormControl>
-				<button className={styles.search} onClick={handleSubmit}>
-					<img src={searchIcon} alt='search' />
-				</button>
-			</form>
-			{showCondensed ? (
-				<div className={styles.textAreaContainer}>
-					{condenseText(breakFullTextIntoLines(resultBody)).map((line, i) => {
-						return (
-							<p
-								key={line + i.toString()}
-								className={
-									clickedLine === i
-										? styles.lineBrokenText
-										: styles.condensedLine
-								}
-								onClick={(
-									e: React.MouseEvent<HTMLParagraphElement, MouseEvent>
-								) => handleLineBrokenText(e, i)}>
-								{clickedLine === i ? resultBroken[i] : resultCondensed[i]}
-							</p>
-						);
-					})}
-				</div>
-			) : (
-				<div className={styles.textAreaContainer}>
-					<div className={styles.fullText}>{resultBody}</div>
-				</div>
-			)}
+				<form className={styles.form}>
+					<FormControl className={classes.formControl}>
+						<InputLabel id='bible-book' className={classes.label}>
+							Book
+						</InputLabel>
+						<Select
+							className={classes.select}
+							labelId='bible-book'
+							id='bible-book'
+							value={book}
+							onChange={handleBookChange}>
+							{bookTitles.map((bookString) => (
+								<MenuItem value={bookString} key={bookString}>
+									{bookString}
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
+					<FormControl className={classes.formControl}>
+						<InputLabel id='bible-chapter' className={classes.label}>
+							Chapter
+						</InputLabel>
+						<Select
+							className={classes.select}
+							labelId='bible-chapter'
+							id='bible-chapter'
+							value={chapter}
+							onChange={handleChapterChange}>
+							{chapterArray}
+						</Select>
+					</FormControl>
+					<button className={styles.search} onClick={handleSubmit}>
+						<img src={searchIcon} alt='search' />
+					</button>
+				</form>
+				{showCondensed ? (
+					<div className={styles.textAreaContainer}>
+						{condenseText(breakFullTextIntoLines(resultBody)).map((line, i) => {
+							return (
+								<p
+									key={line + i.toString()}
+									className={
+										clickedLine === i
+											? styles.lineBrokenText
+											: styles.condensedLine
+									}
+									onClick={(
+										e: React.MouseEvent<HTMLParagraphElement, MouseEvent>
+									) => handleLineBrokenText(e, i)}>
+									{clickedLine === i ? resultBroken[i] : resultCondensed[i]}
+								</p>
+							);
+						})}
+					</div>
+				) : (
+					<div className={styles.textAreaContainer}>
+						<div className={styles.fullText}>{resultBody}</div>
+					</div>
+				)}
 
-			<p className={styles.message}>{message}</p>
-			<SmallSpacer />
-			<p className={styles.copyright}>Copyright Notice:</p>
-			<p className={styles.smallText}>
-				Scripture quotations are from the ESV® Bible (The Holy Bible, English
-				Standard Version®), copyright © 2001 by Crossway, a publishing ministry
-				of Good News Publishers. Used by permission. All rights reserved. You
-				may not copy or download more than 500 consecutive verses of the ESV
-				Bible or more than one half of any book of the ESV Bible.
-			</p>
-			<LargeSpacer />
-			<Footer
+				<p className={styles.message}>{message}</p>
+				<SmallSpacer />
+				<p className={styles.copyright}>Copyright Notice:</p>
+				<p className={styles.smallText}>
+					Scripture quotations are from the ESV® Bible (The Holy Bible, English
+					Standard Version®), copyright © 2001 by Crossway, a publishing
+					ministry of Good News Publishers. Used by permission. All rights
+					reserved. You may not copy or download more than 500 consecutive
+					verses of the ESV Bible or more than one half of any book of the ESV
+					Bible.
+				</p>
+				<LargeSpacer />
+			</Transition>
+
+			<Controls
+				menuOpen={menuOpen}
 				flipView={handleViewChange}
 				play={handlePlay}
 				pause={handlePause}

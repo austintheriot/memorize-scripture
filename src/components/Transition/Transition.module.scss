@@ -1,0 +1,7 @@
+.Transition {
+	transition: 0.1s transform ease-out;
+}
+
+.menuOpen {
+	transform: translateX(-300px);
+}
