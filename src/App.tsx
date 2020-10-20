@@ -287,7 +287,7 @@ export default function App() {
 			'&include-footnote-body=false' +
 			'&include-headings=false' +
 			'&include-selahs=false' +
-			'&indent-paragraphs=5' +
+			'&indent-paragraphs=10' +
 			'&indent-poetry-lines=5' +
 			'&include-short-copyright=false';
 
