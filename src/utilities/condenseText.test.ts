@@ -8,27 +8,6 @@ import {
 	Revelation7,
 } from './testChapters';
 
-console.log(
-	'Genesis 3: /////////////////////////////////\n ',
-	breakFullTextIntoLines(Genesis3).join('\n')
-);
-console.log(
-	'Habakkuk 1: /////////////////////////////////\n',
-	breakFullTextIntoLines(Habakkuk1).join('\n')
-);
-console.log(
-	'Matthew 8: /////////////////////////////////\n',
-	breakFullTextIntoLines(Matthew8).join('\n')
-);
-console.log(
-	'Ephesians 3: /////////////////////////////////\n',
-	breakFullTextIntoLines(Ephesians3).join('\n')
-);
-console.log(
-	'Revelation 7: /////////////////////////////////\n',
-	breakFullTextIntoLines(Revelation7).join('\n')
-);
-
 describe('Break Full Text Into Lines:', () => {
 	test('Should return an array', () => {
 		expect(Array.isArray(breakFullTextIntoLines('example'))).toBe(true);
@@ -71,8 +50,6 @@ describe('Condense Text:', () => {
 	const lineBrokenEphesians3 = breakFullTextIntoLines(Ephesians3);
 	const lineBrokenRevelation7 = breakFullTextIntoLines(Revelation7);
 
-	// console.log('Genesis 3: ', condenseText(lineBrokenGenesis3).join('\n'));
-
 	test('Should return an array', () => {
 		expect(Array.isArray(lineBrokenGenesis3)).toBe(true);
 		expect(Array.isArray(lineBrokenHabakkuk1)).toBe(true);
@@ -82,19 +59,19 @@ describe('Condense Text:', () => {
 	});
 
 	test('Should return an array of strings', () => {
-		condenseText(lineBrokenGenesis3).forEach((line) => {
+		condenseText(lineBrokenGenesis3, -1).forEach((line) => {
 			expect(typeof line).toBe('string');
 		});
-		condenseText(lineBrokenHabakkuk1).forEach((line) => {
+		condenseText(lineBrokenHabakkuk1, -1).forEach((line) => {
 			expect(typeof line).toBe('string');
 		});
-		condenseText(lineBrokenMatthew8).forEach((line) => {
+		condenseText(lineBrokenMatthew8, -1).forEach((line) => {
 			expect(typeof line).toBe('string');
 		});
-		condenseText(lineBrokenEphesians3).forEach((line) => {
+		condenseText(lineBrokenEphesians3, -1).forEach((line) => {
 			expect(typeof line).toBe('string');
 		});
-		condenseText(lineBrokenRevelation7).forEach((line) => {
+		condenseText(lineBrokenRevelation7, -1).forEach((line) => {
 			expect(typeof line).toBe('string');
 		});
 	});
