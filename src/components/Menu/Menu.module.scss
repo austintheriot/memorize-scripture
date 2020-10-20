@@ -1,4 +1,5 @@
 .header {
+	pointer-events: auto;
 	position: fixed;
 	display: block;
 	z-index: 100;
@@ -10,6 +11,25 @@
 	height: 100vh;
 	background-color: var(--dark);
 	transition: transform 0.1s ease-out;
+}
+
+.ul {
+	list-style: none;
+	width: 90%;
+	margin: 1rem auto;
+}
+
+.li {
+	margin: 1rem 0;
+}
+
+.link {
+	color: var(--light);
+	text-decoration: none;
+
+	&:hover {
+		text-decoration: underline;
+	}
 }
 
 .menuOpen {
