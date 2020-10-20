@@ -1,0 +1,35 @@
+.button {
+	display: block;
+	position: fixed;
+	z-index: 100;
+	border: none;
+	outline: none;
+	margin: 0;
+	text-decoration: none;
+	background-color: var(--dark);
+	color: var(--light);
+	cursor: pointer;
+	text-align: center;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	box-shadow: none;
+	padding: 0.75rem;
+	border-radius: 1px;
+	margin: 2px;
+	font-size: 1rem;
+
+	top: 10px;
+	left: calc(100% - 45px);
+	width: 35px;
+	height: 35px;
+
+	&:active {
+		background-color: var(--toggleLight);
+	}
+
+	transition: transform 0.1s ease-out;
+}
+
+.menuOpen {
+	transform: translateX(calc(100% - 345px));
+}

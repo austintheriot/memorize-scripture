@@ -1,0 +1,17 @@
+.header {
+	position: fixed;
+	display: block;
+	z-index: 100;
+	top: 0px;
+	margin: 0;
+	padding: 0;
+	left: 100%;
+	width: 300px;
+	height: 100vh;
+	background-color: var(--dark);
+	transition: transform 0.1s ease-out;
+}
+
+.menuOpen {
+	transform: translateX(-300px);
+}
