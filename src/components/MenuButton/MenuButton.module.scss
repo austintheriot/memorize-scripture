@@ -36,13 +36,12 @@
 	position: absolute;
 	display: block;
 	height: 1.5px;
-	width: 75%;
-	left: 12.5%;
+	width: 70%;
+	left: 15%;
 	border-radius: 5px;
 	background-color: var(--light);
 
-	transition: transform 0.75s;
-	transition: opacity 1s;
+	transition: transform 0.5s;
 }
 
 .span1 {
