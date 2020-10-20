@@ -206,7 +206,10 @@ export const breakFullTextIntoLines = (
 	);
 };
 
-export const condenseText = (uncondensedArray: string[]) => {
+export const condenseText = (uncondensedArrayOriginal: string[]) => {
+	//make a copy of the original array (so as not to modify it)
+	const uncondensedArray = [...uncondensedArrayOriginal];
+
 	//Iterate through each line of the text
 	for (let i = 0; i < uncondensedArray.length; i++) {
 		let words = uncondensedArray[i].split(' ');

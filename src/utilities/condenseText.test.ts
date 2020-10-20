@@ -76,6 +76,14 @@ describe('Condense Text:', () => {
 		});
 	});
 
+	test('Should not modify original array', () => {
+		const body = Genesis3;
+		const bodyBrokenArray = breakFullTextIntoLines(body);
+		const bodyBrokenArrayCopy = [...bodyBrokenArray];
+		condenseText(bodyBrokenArray);
+		expect(bodyBrokenArray).toEqual(bodyBrokenArrayCopy);
+	});
+
 	test('Should condense words to their first letter', () => {
 		expect(
 			condenseText([
