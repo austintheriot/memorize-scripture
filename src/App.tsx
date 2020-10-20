@@ -73,6 +73,8 @@ export default function App() {
 	//search results
 	const [resultTitle, setResultTitle] = useState('');
 	const [resultBody, setResultBody] = useState('');
+	const [resultBroken, setResultBroken] = useState<string[]>([]);
+	const [resultCondensed, setResultCondensed] = useState<string[]>([]);
 	const [message, setMessage] = useState('');
 	const [audio, setAudio] = useState(new Audio());
 	const [audioHasError, setAudioHasError] = useState(false);
@@ -96,13 +98,23 @@ export default function App() {
 		body: string,
 		error?: string | undefined
 	) => {
+		//Auio Settings:
 		audio.pause();
 		setAudioHasError(false);
 		setAudioIsReady(false);
 		setAudioPosition(0);
 		setAudio(new Audio(`https://audio.esv.org/hw/mq/${book} ${chapter}.mp3`));
+
+		//Text Title:
 		setResultTitle(`${book} ${chapter}`);
+
+		//Text Body:
 		setResultBody(body);
+		const lineBrokenText = breakFullTextIntoLines(body);
+		setResultBroken(lineBrokenText);
+		setResultCondensed(condenseText(lineBrokenText));
+
+		//Set loading/error message:
 		setMessage(error || '');
 		return;
 	};
@@ -488,23 +500,18 @@ export default function App() {
 			{showCondensed ? (
 				<div className={styles.textAreaContainer}>
 					{condenseText(breakFullTextIntoLines(resultBody)).map((line, i) => {
-						return clickedLine === i ? (
+						return (
 							<p
 								key={line + i.toString()}
-								className={styles.lineBrokenText}
+								className={
+									clickedLine === i
+										? styles.lineBrokenText
+										: styles.condensedLine
+								}
 								onClick={(
 									e: React.MouseEvent<HTMLParagraphElement, MouseEvent>
 								) => handleLineBrokenText(e, i)}>
-								{breakFullTextIntoLines(resultBody)[i]}
-							</p>
-						) : (
-							<p
-								key={line + i.toString()}
-								className={styles.condensedLine}
-								onClick={(
-									e: React.MouseEvent<HTMLParagraphElement, MouseEvent>
-								) => handleLineBrokenText(e, i)}>
-								{line}
+								{clickedLine === i ? resultBroken[i] : resultCondensed[i]}
 							</p>
 						);
 					})}
