@@ -487,20 +487,27 @@ export default function App() {
 			</form>
 			{showCondensed ? (
 				<div className={styles.textAreaContainer}>
-					{condenseText(breakFullTextIntoLines(resultBody), clickedLine).map(
-						(line, i) => {
-							return (
-								<p
-									key={line + i.toString()}
-									className={styles.lineBrokenText}
-									onClick={(
-										e: React.MouseEvent<HTMLParagraphElement, MouseEvent>
-									) => handleLineBrokenText(e, i)}>
-									{line}
-								</p>
-							);
-						}
-					)}
+					{condenseText(breakFullTextIntoLines(resultBody)).map((line, i) => {
+						return clickedLine === i ? (
+							<p
+								key={line + i.toString()}
+								className={styles.lineBrokenText}
+								onClick={(
+									e: React.MouseEvent<HTMLParagraphElement, MouseEvent>
+								) => handleLineBrokenText(e, i)}>
+								{breakFullTextIntoLines(resultBody)[i]}
+							</p>
+						) : (
+							<p
+								key={line + i.toString()}
+								className={styles.condensedLine}
+								onClick={(
+									e: React.MouseEvent<HTMLParagraphElement, MouseEvent>
+								) => handleLineBrokenText(e, i)}>
+								{line}
+							</p>
+						);
+					})}
 				</div>
 			) : (
 				<div className={styles.textAreaContainer}>
