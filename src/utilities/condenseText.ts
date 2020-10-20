@@ -208,7 +208,7 @@ export const breakFullTextIntoLines = (
 
 export const condenseText = (
 	uncondensedArray: string[],
-	clickedLine: number
+	clickedLine: number = -1
 ) => {
 	const uncondensedArrayCopy = [...uncondensedArray];
 
