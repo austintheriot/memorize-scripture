@@ -159,14 +159,11 @@ describe('Condense Text:', () => {
 
 	test('Should not reveal any lines when given an array index of -1', () => {
 		expect(
-			condenseText(
-				[
-					'I thank my God in all my remembrance of you, always in every prayer of mine for you all making my prayer with joy, ',
-					'because of your partnership in the gospel from the first day until now. ',
-					'And I am sure of this, that he who began a good work in you will bring it to completion at the day of Jesus Christ. ',
-				],
-				-1
-			)
+			condenseText([
+				'I thank my God in all my remembrance of you, always in every prayer of mine for you all making my prayer with joy, ',
+				'because of your partnership in the gospel from the first day until now. ',
+				'And I am sure of this, that he who began a good work in you will bring it to completion at the day of Jesus Christ. ',
+			])
 		).toEqual([
 			'itmGiamroy,aiepomfyammpwj,',
 			'boypitgftfdun.',
