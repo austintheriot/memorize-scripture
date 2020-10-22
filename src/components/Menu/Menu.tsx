@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 import chiRho from '../../images/chirho-light.svg';
 
-export const Menu = (props: any) => {
+export const Menu = (props: { menuOpen: boolean; closeMenu: () => void }) => {
 	return (
 		<header
 			className={[styles.header, props.menuOpen ? styles.menuOpen : ''].join(
@@ -14,17 +14,17 @@ export const Menu = (props: any) => {
 			<img src={chiRho} alt='Memorize Scripture Logo: Chi Rho' />
 			<ul className={styles.ul}>
 				<li className={styles.li}>
-					<Link to='/' className={styles.link}>
+					<Link to='/' className={styles.link} onClick={props.closeMenu}>
 						Home
 					</Link>
 				</li>
 				<li className={styles.li}>
-					<Link to='/about' className={styles.link}>
+					<Link to='/about' className={styles.link} onClick={props.closeMenu}>
 						About
 					</Link>
 				</li>
 				<li className={styles.li}>
-					<Link to='/contact' className={styles.link}>
+					<Link to='/contact' className={styles.link} onClick={props.closeMenu}>
 						Contact
 					</Link>
 				</li>
