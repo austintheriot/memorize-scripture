@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './About.module.scss';
+import { Link } from 'react-router-dom';
 
 //animated scroll library
 import { animateScroll as scroll } from 'react-scroll';
@@ -360,9 +361,11 @@ export const About = () => {
 				<h2>Contact</h2>
 				<Paragraph>
 					I hope you find this app to be a blessing to your faith life. If you
-					are interested in contact to this project, have questions, comments,
-					suggestions, bug reports, or if you're just interested in chatting,
-					please don't hesitate to contact me via my{' '}
+					are interested in contributing to this project, have questions,
+					comments, suggestions, bug reports, or if you're just interested in
+					chatting, please don't hesitate to contact me via the{' '}
+					<Link to='/contact'>Contact</Link> page on this website, and I'll get
+					back to you shortly. Additionally, I can be reached via my{' '}
 					<a href='https://austintheriot.com/contact'>website</a>,{' '}
 					<a href='https://www.linkedin.com/in/austinmtheriot/'>LinkedIn</a>, or
 					by{' '}
