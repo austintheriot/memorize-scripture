@@ -1,13 +1,13 @@
 .h1 {
 	margin: 75px auto;
 	border-bottom: 1px solid var(--dark);
-	width: 90%;
+	width: 80%;
 	max-width: 400px;
 }
 
 .form {
-	width: 90%;
-	margin: 50px auto;
+	width: 95%;
+	margin: 50px auto 75px;
 	display: flex;
 	flex: none;
 	flex-wrap: wrap;
@@ -60,7 +60,7 @@
 
 .textAreaContainer {
 	/* Allows clamping width between max-content and 600px */
-	width: 90%;
+	width: 80%;
 	max-width: 600px;
 	margin: 50px auto;
 }
@@ -105,7 +105,7 @@
 .copyright,
 .smallText {
 	text-align: center;
-	width: 90%;
+	width: 80%;
 	max-width: 600px;
 	margin: 1rem auto;
 }
