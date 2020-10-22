@@ -531,7 +531,6 @@ export const Home = (props: { menuOpen: boolean; analytics: any }) => {
 				may not copy or download more than 500 consecutive verses of the ESV
 				Bible or more than one half of any book of the ESV Bible.
 			</p>
-			<LargeSpacer />
 			<Controls
 				menuOpen={props.menuOpen}
 				flipView={handleViewChange}
