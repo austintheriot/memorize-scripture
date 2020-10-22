@@ -109,10 +109,15 @@
 	flex: none;
 	justify-content: center;
 	align-items: center;
+	cursor: auto;
 
 	img {
 		height: 1rem;
 		width: 1rem;
+	}
+
+	&:active {
+		background-color: var(--dark);
 	}
 }
 
