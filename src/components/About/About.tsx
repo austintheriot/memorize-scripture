@@ -3,7 +3,11 @@ import styles from './About.module.scss';
 
 import { ScrollLink } from './ScrollLink';
 
+import { animateScroll as scroll } from 'react-scroll';
+
 export const About = () => {
+	const scrollToTop = () => scroll.scrollToTop();
+
 	return (
 		<article className={styles.About}>
 			<h1>Memorize Scripture</h1>
@@ -54,6 +58,7 @@ export const About = () => {
 				<h2 id='contributing'>Contributing</h2>
 				<p>Content...</p>
 			</section>
+			<button onClick={scrollToTop}>Back to Top</button>
 		</article>
 	);
 };
