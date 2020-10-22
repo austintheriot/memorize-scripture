@@ -16,10 +16,10 @@
 	font-size: 1rem;
 	border-radius: 3px;
 
-	top: 10px;
-	right: 10px;
-	width: 35px;
-	height: 35px;
+	top: 20px;
+	right: 20px;
+	width: 45px;
+	height: 45px;
 
 	&:active {
 		background-color: var(--toggleLight);
@@ -50,7 +50,7 @@
 }
 
 .span1Open {
-	transform: translateY(7px) rotate(45deg);
+	transform: translateY(9px) rotate(45deg);
 }
 
 .span2 {
@@ -68,5 +68,5 @@
 }
 
 .span3Open {
-	transform: translateY(-7px) rotate(-45deg);
+	transform: translateY(-10px) rotate(-45deg);
 }
