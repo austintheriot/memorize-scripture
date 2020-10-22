@@ -65,7 +65,8 @@ export const Home = (props: { menuOpen: boolean; analytics: any }) => {
 	const [numberOfChapters, setNumberOfChapters] = useState(21);
 
 	//search results
-	const [resultTitle, setResultTitle] = useState('');
+	const [resultBook, setResultBook] = useState('');
+	const [resultChapter, setResultChapter] = useState('');
 	const [resultBody, setResultBody] = useState('');
 	const [resultBroken, setResultBroken] = useState<string[]>([]);
 	const [resultCondensed, setResultCondensed] = useState<string[]>([]);
@@ -100,7 +101,8 @@ export const Home = (props: { menuOpen: boolean; analytics: any }) => {
 		setAudio(new Audio(`https://audio.esv.org/hw/mq/${book} ${chapter}.mp3`));
 
 		//Text Title:
-		setResultTitle(`${book} ${chapter}`);
+		setResultBook(book === 'Psalms' ? 'Psalm' : book);
+		setResultChapter(chapter);
 
 		//Text Body:
 		setResultBody(body);
@@ -456,7 +458,9 @@ export const Home = (props: { menuOpen: boolean; analytics: any }) => {
 
 	return (
 		<>
-			<h1>{resultTitle}</h1>
+			<h1>
+				{resultBook} {resultChapter}
+			</h1>
 			<form className={styles.form}>
 				<FormControl className={classes.formControl}>
 					<InputLabel id='bible-book' className={classes.label}>
