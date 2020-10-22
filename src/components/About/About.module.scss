@@ -123,4 +123,7 @@
 
 .button {
 	margin: 4rem auto;
+	position: -webkit-sticky; /* Safari */
+	position: sticky;
+	top: 15px;
 }
