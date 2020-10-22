@@ -38,6 +38,8 @@ export default function App() {
 				<Router>
 					<MenuButton handleClick={handleMenuOpen} menuOpen={menuOpen} />
 					<Menu menuOpen={menuOpen} />
+					<Route exact path='/contact'></Route>
+					<Route exact path='/about'></Route>
 					<Route path='/'>
 						<Home menuOpen={menuOpen} analytics={analytics} />
 					</Route>
