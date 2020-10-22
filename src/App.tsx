@@ -16,6 +16,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { Menu } from './components/Menu/Menu';
 import { MenuButton } from './components/MenuButton/MenuButton';
 import { Transition } from './components/Transition/Transition';
+import { Footer } from './components/Footer/Footer';
 
 //Pages
 import { Home } from './components/Home/Home';
@@ -44,6 +45,7 @@ export default function App() {
 						<Home menuOpen={menuOpen} analytics={analytics} />
 					</Route>
 				</Router>
+				<Footer />
 			</Transition>
 		</div>
 	);
