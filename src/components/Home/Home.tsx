@@ -16,7 +16,7 @@ import Select from '@material-ui/core/Select';
 
 //Custom components
 import { Controls } from './Controls/Controls';
-import { SmallSpacer, LargeSpacer } from '../Spacers/Spacers';
+import { SmallSpacer } from '../Spacers/Spacers';
 import searchIcon from '../../icons/search.svg';
 
 //Custom functions
