@@ -32,17 +32,20 @@ export default function App() {
 		setMenuOpen(false);
 	};
 
-	const handleMenuOpen = () => {
-		console.log('Menu clicked');
+	const handleMenuToggle = () => {
 		setMenuOpen((prevState) => !prevState);
+	};
+
+	const handleMenuClose = () => {
+		setMenuOpen(false);
 	};
 
 	return (
 		<div className='App'>
 			<Transition menuOpen={menuOpen}>
 				<Router>
-					<MenuButton handleClick={handleMenuOpen} menuOpen={menuOpen} />
-					<Menu menuOpen={menuOpen} />
+					<MenuButton handleClick={handleMenuToggle} menuOpen={menuOpen} />
+					<Menu menuOpen={menuOpen} closeMenu={handleMenuClose} />
 					<div onClick={nonMenuClickHandler}>
 						<Switch>
 							<Route exact path='/contact'></Route>
