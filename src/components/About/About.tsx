@@ -20,7 +20,7 @@ import errorIcon from '../../icons/error.svg';
 import flipIcon from '../../icons/flip.svg';
 
 export const About = () => {
-	const scrollToTop = () => scroll.scrollToTop();
+	const scrollToTop = () => scroll.scrollToTop({ smooth: true, duration: 500 });
 
 	return (
 		<article className={styles.About}>
