@@ -458,7 +458,7 @@ export const Home = (props: { menuOpen: boolean; analytics: any }) => {
 
 	return (
 		<>
-			<h1>
+			<h1 className={styles.h1}>
 				{resultBook} {resultChapter}
 			</h1>
 			<form className={styles.form}>
