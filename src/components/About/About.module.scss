@@ -1,24 +1,110 @@
 .About {
-	ol {
-		list-style: none;
-		padding: 2rem;
+	h1 {
+		text-align: left;
+		margin: 75px auto 0 auto;
+		border-bottom: 1px solid var(--darker);
 	}
+
+	h2 {
+		border-bottom: 1px solid var(--darker);
+		text-align: left;
+		width: 90%;
+		max-width: 600px;
+		margin: 2rem auto;
+	}
+
+	p {
+		margin: 2rem auto;
+	}
+
 	a {
-		text-decoration: none;
+		text-decoration: underline;
 		color: var(--light);
 		cursor: pointer;
+	}
+
+	blockquote {
+		margin: 2rem auto;
+		width: 60%;
+		min-width: 250px;
+		min-width: min-content;
+		background-color: var(--darker);
+		padding: 1rem;
+
+		p {
+			margin: 0;
+		}
+	}
+
+	ul {
+		padding: 2rem 2rem 2rem 3rem;
+		width: 90%;
+		max-width: 600px;
+		margin: auto;
+	}
+
+	.olWrapper {
+		width: 90%;
+		max-width: 600px;
+		margin: auto;
+	}
+
+	ol {
+		list-style: auto;
+		margin-left: 2rem;
+
+		li {
+			margin: 1rem auto;
+		}
+
+		ul {
+			padding: 0;
+			margin: 0;
+
+			li {
+				margin: 1rem auto;
+				margin-left: 2rem;
+			}
+		}
+	}
+}
+
+.tableOfContents {
+	a {
+		text-decoration: none;
 
 		&:hover {
 			text-decoration: underline;
 		}
 	}
+}
 
-	h2 {
-		text-align: left;
-		width: max-content;
-		margin: 2rem;
-	}
+.copyright {
+	border-top: 1px solid var(--darker);
+	width: 90%;
+	max-width: 600px;
+	margin: 4rem auto;
+
 	p {
-		margin: 2rem;
+		margin: 0.5rem 0;
 	}
+}
+
+.appControls {
+	width: 2rem;
+	height: 2rem;
+	padding: 0.25rem;
+	display: inline-flex;
+	flex: none;
+	justify-content: center;
+	align-items: center;
+
+	img {
+		height: 1rem;
+		width: 1rem;
+	}
+}
+
+.button {
+	margin: 4rem auto;
 }

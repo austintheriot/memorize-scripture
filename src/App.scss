@@ -6,10 +6,12 @@ html {
 	margin: 0;
 	box-sizing: border-box;
 
-	--dark: #242423;
-	--background: #333533;
 	--light: #d9d9d9;
-	--toggleLight: var(--toggleLight);
+	--toggleLight: #404040;
+	--background: #333533;
+	--dark: #242423;
+	--darker: #202020;
+	--pop: #2f42bc;
 
 	--h1: 2rem;
 	--h2: 1.75rem;
