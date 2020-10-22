@@ -47,13 +47,9 @@
 .span1 {
 	composes: span;
 	top: 27%;
-	width: 60%;
-	left: 25%;
 }
 
 .span1Open {
-	width: 70%;
-	left: 15%;
 	transform: translate(1px, 9px) rotate(45deg);
 }
 
@@ -69,10 +65,8 @@
 .span3 {
 	composes: span;
 	top: 70%;
-	width: 60%;
 }
 
 .span3Open {
 	transform: translate(1px, -10px) rotate(-45deg);
-	width: 70%;
 }
