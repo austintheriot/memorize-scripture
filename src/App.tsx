@@ -20,6 +20,7 @@ import { Footer } from './components/Footer/Footer';
 
 //Pages
 import { Home } from './components/Home/Home';
+import { About } from './components/About/About';
 
 const app = firebase.initializeApp(firebaseConfig);
 const analytics = firebase.analytics(app);
@@ -45,7 +46,9 @@ export default function App() {
 					<div onClick={nonMenuClickHandler}>
 						<Switch>
 							<Route exact path='/contact'></Route>
-							<Route exact path='/about'></Route>
+							<Route exact path='/about'>
+								<About />
+							</Route>
 							<Route path='/'>
 								<Home menuOpen={menuOpen} analytics={analytics} />
 							</Route>
