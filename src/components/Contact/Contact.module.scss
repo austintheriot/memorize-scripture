@@ -23,7 +23,15 @@ input {
 	color: var(--light);
 }
 
+.userMessage {
+	text-align: center;
+	color: var(--dark);
+}
+
 .submit {
 	border-radius: 3px;
 	margin: 2rem auto;
+}
+.submit:focus {
+	background-color: var(--toggleLight);
 }
