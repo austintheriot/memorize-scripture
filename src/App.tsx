@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 //App
 import './App.scss';
@@ -25,8 +25,11 @@ const app = firebase.initializeApp(firebaseConfig);
 const analytics = firebase.analytics(app);
 
 export default function App() {
-	//state
 	const [menuOpen, setMenuOpen] = useState(false);
+
+	const nonMenuClickHandler = (e: React.MouseEvent) => {
+		setMenuOpen(false);
+	};
 
 	const handleMenuOpen = () => {
 		console.log('Menu clicked');
@@ -39,13 +42,15 @@ export default function App() {
 				<Router>
 					<MenuButton handleClick={handleMenuOpen} menuOpen={menuOpen} />
 					<Menu menuOpen={menuOpen} />
-					<Switch>
-						<Route exact path='/contact'></Route>
-						<Route exact path='/about'></Route>
-						<Route path='/'>
-							<Home menuOpen={menuOpen} analytics={analytics} />
-						</Route>
-					</Switch>
+					<div onClick={nonMenuClickHandler}>
+						<Switch>
+							<Route exact path='/contact'></Route>
+							<Route exact path='/about'></Route>
+							<Route path='/'>
+								<Home menuOpen={menuOpen} analytics={analytics} />
+							</Route>
+						</Switch>
+					</div>
 				</Router>
 				<Footer />
 			</Transition>
