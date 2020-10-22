@@ -51,6 +51,12 @@ export const About = () => {
 				</ul>
 			</nav>
 
+			<button
+				onClick={scrollToTop}
+				className={['button', styles.button].join(' ')}>
+				Back to Top
+			</button>
+
 			<section id='intro'>
 				<h2>Intro</h2>
 				<Paragraph>
@@ -392,11 +398,6 @@ export const About = () => {
 				</p>
 				<p>All rights reserved.</p>
 			</div>
-			<button
-				onClick={scrollToTop}
-				className={['button', styles.button].join(' ')}>
-				Back to Top
-			</button>
 		</article>
 	);
 };
