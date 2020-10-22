@@ -10,7 +10,7 @@ import { firebaseConfig } from './utilities/config';
 import * as firebase from 'firebase/app';
 import 'firebase/analytics';
 
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 //Custom components
 import { Menu } from './components/Menu/Menu';
@@ -39,11 +39,13 @@ export default function App() {
 				<Router>
 					<MenuButton handleClick={handleMenuOpen} menuOpen={menuOpen} />
 					<Menu menuOpen={menuOpen} />
-					<Route exact path='/contact'></Route>
-					<Route exact path='/about'></Route>
-					<Route path='/'>
-						<Home menuOpen={menuOpen} analytics={analytics} />
-					</Route>
+					<Switch>
+						<Route exact path='/contact'></Route>
+						<Route exact path='/about'></Route>
+						<Route path='/'>
+							<Home menuOpen={menuOpen} analytics={analytics} />
+						</Route>
+					</Switch>
 				</Router>
 				<Footer />
 			</Transition>
