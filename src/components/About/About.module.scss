@@ -1,0 +1,14 @@
+.About {
+	ol {
+		list-style: none;
+		padding: 2rem;
+	}
+	a {
+		text-decoration: none;
+		color: var(--light);
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+}
