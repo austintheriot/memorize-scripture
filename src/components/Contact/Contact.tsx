@@ -1,10 +1,39 @@
 import React, { useState } from 'react';
 import styles from './Contact.module.scss';
 import TextField from '@material-ui/core/TextField';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import { FormHelperText } from '@material-ui/core';
 
 import { emailAPIKey } from '../../utilities/config';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+	formControl: {
+		margin: theme.spacing(0.25),
+	},
+	selectEmpty: {
+		marginTop: theme.spacing(2),
+	},
+	iconButton: {
+		width: 'max-content',
+	},
+	label: {
+		color: 'var(--light)',
+		zIndex: 1,
+		left: '0.6rem',
+	},
+	input: {
+		padding: '1rem 1rem',
+		backgroundColor: 'var(--dark)',
+		color: 'var(--light)',
+		fontSize: '1.1rem',
+	},
+}));
 
 export const Contact = () => {
+	const classes = useStyles();
 	const [email, setEmail] = useState('');
 	const [emailHasErrors, setEmailHasErrors] = useState(false);
 	const [emailError, setEmailError] = useState('');
@@ -119,43 +148,55 @@ export const Contact = () => {
 				className={styles.root}
 				onSubmit={handleSubmit}>
 				<h1>Contact</h1>
-				<div className={styles.inputWrapper}>
-					<TextField
-						className={styles.input}
+
+				<FormControl className={classes.formControl}>
+					<InputLabel
+						id='email'
+						className={classes.label}
+						error={emailHasErrors}>
+						Email*
+					</InputLabel>
+					<Input
+						className={classes.input}
 						fullWidth={true}
-						id='outlined-basic'
-						label='Email *'
-						variant='outlined'
+						id='outlined-multiline-static'
 						disabled={emailDisabled}
 						value={email}
 						error={emailHasErrors}
-						helperText={emailError}
 						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
 							handleChange(e, 'email')
 						}
 						onBlur={handleBlur}
 					/>
-				</div>
-				<div className={styles.inputWrapper}>
-					<TextField
-						className={styles.input}
+					<FormHelperText error={emailHasErrors}>{emailError}</FormHelperText>
+				</FormControl>
+
+				<FormControl className={classes.formControl}>
+					<InputLabel id='bible-chapter' className={classes.label}>
+						Message
+					</InputLabel>
+					<Input
+						multiline={true}
+						rows={4}
+						className={classes.input}
 						fullWidth={true}
 						id='outlined-multiline-static'
-						label='Message'
-						multiline
-						rows={4}
-						variant='outlined'
 						disabled={messageDisabled}
 						value={message}
 						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
 							handleChange(e, 'message')
 						}
 					/>
-				</div>
+				</FormControl>
+
 				<p className={styles.userMessage}>{userMessage}</p>
 				<button
 					disabled={buttonDisabled}
-					className={['button', styles.submit].join(' ')}>
+					className={[
+						'button',
+						styles.submit,
+						buttonDisabled ? styles.disabled : '',
+					].join(' ')}>
 					Submit
 				</button>
 			</form>

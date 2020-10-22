@@ -1,16 +1,15 @@
 .root {
-	background-color: var(--light);
 	padding: 2rem;
 	border-radius: 3px;
 	width: 90%;
-	max-width: 600px;
+	max-width: 400px;
 	margin: 2rem auto;
-	margin-top: 75px;
-
-	h1 {
-		color: var(--dark);
-	}
+	margin-top: 15px;
+	display: flex;
+	flex: none;
+	flex-direction: column;
 }
+
 .inputWrapper {
 	width: 90%;
 	max-width: 400px;
@@ -18,20 +17,26 @@
 	margin: auto;
 }
 
-input {
-	font-size: 1.1rem;
-	color: var(--light);
-}
-
 .userMessage {
 	text-align: center;
-	color: var(--dark);
+	color: var(--light);
 }
 
 .submit {
 	border-radius: 3px;
 	margin: 2rem auto;
+
+	&:focus {
+		outline: 1px solid var(--light);
+		outline-offset: 5px;
+	}
 }
-.submit:focus {
-	background-color: var(--toggleLight);
+
+.disabled {
+	pointer-events: none;
+	color: black;
+
+	&:focus {
+		background-color: var(--darker);
+	}
 }
