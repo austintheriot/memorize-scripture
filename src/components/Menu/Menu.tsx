@@ -11,7 +11,9 @@ export const Menu = (props: { menuOpen: boolean; closeMenu: () => void }) => {
 			className={[styles.header, props.menuOpen ? styles.menuOpen : ''].join(
 				' '
 			)}>
-			<img src={chiRho} alt='Memorize Scripture Logo: Chi Rho' />
+			<a href='https://memorizescripture.org'>
+				<img src={chiRho} alt='Memorize Scripture Logo: Chi Rho' />
+			</a>
 			<ul className={styles.ul}>
 				<li className={styles.li}>
 					<Link to='/' className={styles.link} onClick={props.closeMenu}>

@@ -6,7 +6,9 @@ import chiRho from '../../images/chirho-light.svg';
 export const Footer = () => {
 	return (
 		<footer className={styles.Footer}>
-			<img src={chiRho} alt='Memorize Scripture Logo: Chi Rho' />
+			<a href='https://memorizescripture.org'>
+				<img src={chiRho} alt='Memorize Scripture Logo: Chi Rho' />
+			</a>
 		</footer>
 	);
 };
