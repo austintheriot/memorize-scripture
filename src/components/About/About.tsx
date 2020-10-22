@@ -45,7 +45,7 @@ export const About = () => {
 						<ScrollLink to='more-resources'>More Resources</ScrollLink>
 					</li>
 					<li>
-						<ScrollLink to='contributing'>Contributing</ScrollLink>
+						<ScrollLink to='contact'>Contact</ScrollLink>
 					</li>
 				</ul>
 			</nav>
@@ -356,13 +356,13 @@ export const About = () => {
 				<h2>More Resources</h2>
 				<Paragraph>Coming Soon...</Paragraph>
 			</section>
-			<section id='contributing'>
-				<h2>Contributing</h2>
+			<section id='contact'>
+				<h2>Contact</h2>
 				<Paragraph>
 					I hope you find this app to be a blessing to your faith life. If you
-					are interested in contributing to this project, have questions,
-					comments, suggestions, bug reports, or if you're just interested in
-					chatting, please don't hesitate to contact me via my{' '}
+					are interested in contact to this project, have questions, comments,
+					suggestions, bug reports, or if you're just interested in chatting,
+					please don't hesitate to contact me via my{' '}
 					<a href='https://austintheriot.com/contact'>website</a>,{' '}
 					<a href='https://www.linkedin.com/in/austinmtheriot/'>LinkedIn</a>, or
 					by{' '}
