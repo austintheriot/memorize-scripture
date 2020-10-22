@@ -498,7 +498,7 @@ export const Home = (props: { menuOpen: boolean; analytics: any }) => {
 			</form>
 			{showCondensed ? (
 				<div className={styles.textAreaContainer}>
-					{condenseText(breakFullTextIntoLines(resultBody)).map((line, i) => {
+					{resultCondensed.map((line, i) => {
 						return (
 							<p
 								key={line + i.toString()}
