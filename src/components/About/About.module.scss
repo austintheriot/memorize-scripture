@@ -6,9 +6,19 @@
 	a {
 		text-decoration: none;
 		color: var(--light);
+		cursor: pointer;
 
 		&:hover {
 			text-decoration: underline;
 		}
+	}
+
+	h2 {
+		text-align: left;
+		width: max-content;
+		margin: 2rem;
+	}
+	p {
+		margin: 2rem;
 	}
 }
