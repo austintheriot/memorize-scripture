@@ -143,13 +143,13 @@ export const Contact = () => {
 
 	return (
 		<main>
+			<h1 className={styles.h1}>Contact</h1>
 			<form
 				noValidate
 				autoComplete='off'
 				className={styles.root}
 				onSubmit={handleSubmit}>
-				<h1>Contact</h1>
-
+				{/* EMAIL */}
 				<FormControl className={classes.formControl}>
 					<InputLabel
 						id='email'
@@ -172,6 +172,7 @@ export const Contact = () => {
 					<FormHelperText error={emailHasErrors}>{emailError}</FormHelperText>
 				</FormControl>
 
+				{/* MESSAGE */}
 				<FormControl className={classes.formControl}>
 					<InputLabel id='bible-chapter' className={classes.label}>
 						Message
