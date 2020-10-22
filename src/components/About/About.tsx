@@ -54,17 +54,15 @@ export const About = () => {
 				<h2>Intro</h2>
 				<Paragraph>
 					The art of memory has been a fascination of mine for a long time. Over
-					the years, I've practiced memorizing poems, numbers, quotes, words,
-					names, songs, trivia, hymns, and texts from the Bible. Out of all the
-					things I've memorized, however, extended memorization of the Bible in
-					particular has proven to me to be one of the greatest personal
-					treasures. To carry God's Word in my heart and to have it on my mind
-					at any hour of the day or night is an incredible blessing.
-					Additionally, I firmly believe it's of enormous benefit to the
-					Christian to memorize large portions of Scripture{' '}
-					<em>in its context</em>, without the distraction of verse numbers and
-					footnotes, appreciating the ebb and flow of the book and its
-					arguments.
+					the years, I've practiced memorizing many different kinds of
+					information, but extended memorization of the Bible in particular has
+					proven to me to be one of the greatest personal treasures. To carry
+					God's Word in my heart and to have it on my mind at any hour of the
+					day or night is an incredible blessing. Additionally, I firmly believe
+					it's of enormous benefit to the Christian to memorize large portions
+					of Scripture a time, <em>in its context</em>, without the distraction
+					of verse numbers and footnotes, appreciating the ebb and flow of a
+					psalm or book and its contents.
 				</Paragraph>
 
 				<Paragraph>
@@ -83,13 +81,14 @@ export const About = () => {
 					</a>{' '}
 					by Mark Shead. After finding the article, I began implementing the
 					process in my own Bible memorization, and I have personally found the
-					process to be so much more quick and painless ever since. And that's
-					my end goal for this app: to facilitate the extended memorization of
-					God's Word. This same technique is also used by a few other scripture
-					memory softwares (<a href='https://www.memverse.com/'>memverse.com</a>{' '}
-					for example), but I hope to offer a more mobile-friendly, streamlined
-					app here, one that is focused on extended memorization, rather than
-					collections of shorter verses.
+					process to be so much more quick and painless ever since then. And
+					that's my end goal for this app: to facilitate the extended
+					memorization of God's Word. This same technique is also used by a few
+					other scripture memory softwares (
+					<a href='https://www.memverse.com/'>memverse.com</a> for example), but
+					I hope to offer a more mobile-friendly, streamlined app here, one that
+					is focused on extended memorization, rather than collections of
+					shorter verses.
 				</Paragraph>
 
 				<Paragraph>
@@ -101,9 +100,15 @@ export const About = () => {
 			<section id='app-controls'>
 				<h2>App Controls</h2>
 				<p>
-					Tip: You may click on any condensed line in the app to quickly reveal
-					the full text.
+					Here's quick rundown of the various buttons you can find on the Home
+					screen of the app.
 				</p>
+				<div className={styles.tipWrapper}>
+					<p>
+						Tip: You may click on any condensed line in the app to quickly
+						reveal the full text.
+					</p>
+				</div>
 				<p>
 					<button
 						disabled={true}
@@ -126,7 +131,7 @@ export const About = () => {
 							className={styles.icon}
 						/>
 					</button>{' '}
-					Skip to beggining in audio.
+					Skip to beginning in audio.
 				</p>
 				<p>
 					<button
@@ -138,7 +143,7 @@ export const About = () => {
 							className={styles.icon}
 						/>
 					</button>{' '}
-					Rewind 5 seconds.
+					Rewind audio 5 seconds.
 				</p>
 				<p>
 					<button
@@ -200,6 +205,11 @@ export const About = () => {
 					</button>{' '}
 					Fast-forward audio 5 seconds.
 				</p>
+				<p>
+					Lastly, you can tap any location at the top of the control bar (where
+					the blue audio indicator is) to skip to a particular location in the
+					audio.
+				</p>
 			</section>
 			<section id='how-to-memorize'>
 				<h2>How to Memorize</h2>
@@ -209,8 +219,8 @@ export const About = () => {
 					with a short Psalm that you like.
 				</p>
 				<p>
-					In this example, we'll practice by suing using Psalm 117, but feel
-					free to use whatever text you prefer:
+					In this example, we'll practice by using Psalm 117, but feel free to
+					use whatever text you prefer:
 				</p>
 				<blockquote>
 					<p>Praise the LORD, all nations!</p>
@@ -247,7 +257,7 @@ export const About = () => {
 						<li>
 							Look up any unfamiliar words or the meaning of particular verses
 							that you don't understand. It's vital to understand what you
-							memorize and not simply mindlessly cram it into your brain!
+							memorize and not just mindlessly cram it into your brain!
 						</li>
 						<li>Start with the first line. There are two primary methods:</li>
 						<ul>
@@ -318,20 +328,28 @@ export const About = () => {
 			<section id='how-to-review'>
 				<h2>How To Review</h2>
 				<Paragraph>
-					Once the text is memorized, it's important to regularly review what we
-					have learned. I always begin my study sessions with review before
+					Once the text is memorized, it's important to regularly review what
+					you have learned. I always begin my study sessions with review before
 					learning any new material. If pressed for time, it's far better to
 					retain the words you've already worked so hard to learn than to learn
-					new passages. One of the most efficient ways that I have found to
-					review passages is by reviewing individual chapters of a book at a{' '}
-					time. I recommend using a spaced repetition flash card system, such as
-					<a href='https://apps.ankiweb.net/'>Anki</a>, although it's also
-					possible implement this type of system with pen-and-paper flashcards
-					instead. A spaced repetition flash card system allows us to review a
-					text right before we might normally forget it. Over time, the review
-					intervals become longer and longer, allowing us to solidify a text in
-					our long term memory while minimizing the burden of review time
-					(because let's face it: there's only so much time in the day!).
+					new passages. I typically review individual chapters of a book at a
+					time with flashcards, which takes around 10-15 minutes per day at
+					most. While I'm driving, I practice reciting an entire book (without
+					looking at the app) or I recite along with audio to ensure I'm not
+					making any mistakes.
+				</Paragraph>
+				<Paragraph>
+					One of the most efficient ways that I have found to review passages is
+					by using a spaced repetition flash card system, such as{' '}
+					<a href='https://apps.ankiweb.net/'>Anki</a>. Although it's possible
+					to implement this type of system with pen-and-paper flashcards, Anki
+					saves <em>a lot</em> of time in the long run, especially when creating
+					flashcards is as simple as copying and pasting from the internet. A
+					spaced repetition flash card system allows us to review a text right
+					before we might normally forget it. Over time, the review intervals
+					become longer and longer, allowing us to solidify a text in our long
+					term memory while minimizing the burden of review time (because let's
+					face it: there's only so much time in the day!).
 				</Paragraph>
 			</section>
 			<section id='more-resources'>
@@ -341,8 +359,8 @@ export const About = () => {
 			<section id='contributing'>
 				<h2>Contributing</h2>
 				<Paragraph>
-					I hope you find this app to be of benefit in your own faith walk. If
-					you are interested in contributing to this project, have questions,
+					I hope you find this app to be a blessing to your faith life. If you
+					are interested in contributing to this project, have questions,
 					comments, suggestions, bug reports, or if you're just interested in
 					chatting, please don't hesitate to contact me via my{' '}
 					<a href='https://austintheriot.com/contact'>website</a>,{' '}
