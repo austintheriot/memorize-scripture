@@ -6,23 +6,32 @@
 	margin: 0;
 	padding: 0;
 	left: 100%;
-	width: 300px;
+	width: 150px;
 	height: 100vh;
 	background-color: var(--dark);
 	transition: transform 0.1s ease-out;
+
+	img {
+		display: block;
+		height: 75px;
+		width: 75px;
+		margin: 25px auto;
+	}
 }
 
 .ul {
 	list-style: none;
 	width: 90%;
-	margin: 1rem auto;
+	margin: auto;
 }
 
 .li {
-	margin: 1rem 0;
+	width: max-content;
+	margin: 1rem auto;
 }
 
 .link {
+	margin: 0;
 	color: var(--light);
 	text-decoration: none;
 
