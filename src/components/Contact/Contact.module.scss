@@ -1,0 +1,29 @@
+.root {
+	background-color: var(--light);
+	padding: 2rem;
+	border-radius: 3px;
+	width: 90%;
+	max-width: 600px;
+	margin: 2rem auto;
+	margin-top: 75px;
+
+	h1 {
+		color: var(--dark);
+	}
+}
+.inputWrapper {
+	width: 90%;
+	max-width: 400px;
+	padding: 2rem;
+	margin: auto;
+}
+
+input {
+	font-size: 1.1rem;
+	color: var(--light);
+}
+
+.submit {
+	border-radius: 3px;
+	margin: 2rem auto;
+}
