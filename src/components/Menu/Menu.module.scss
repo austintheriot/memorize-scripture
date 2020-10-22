@@ -27,10 +27,11 @@
 
 .li {
 	width: max-content;
-	margin: 1rem auto;
+	margin: 2rem auto;
 }
 
 .link {
+	font-size: var(--body);
 	margin: 0;
 	color: var(--light);
 	text-decoration: none;
