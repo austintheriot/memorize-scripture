@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './Contact.module.scss';
 
 //Material UI
@@ -45,6 +45,10 @@ export const Contact = () => {
 
 	const [buttonDisabled, setButtonDisabled] = useState(false);
 	const [userMessage, setUserMessage] = useState('');
+
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, []);
 
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement>,
