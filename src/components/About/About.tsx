@@ -67,9 +67,9 @@ export const About = () => {
 					God's Word in my heart and to have it on my mind at any hour of the
 					day or night is an incredible blessing. Additionally, I firmly believe
 					it's of enormous benefit to the Christian to memorize large portions
-					of Scripture a time, <em>in its context</em>, without the distraction
-					of verse numbers and footnotes, appreciating the ebb and flow of a
-					psalm or book and its contents.
+					of Scripture at a time, <em>in its context</em>, without the
+					distraction of verse numbers and footnotes, appreciating the ebb and
+					flow of a psalm or book and its contents.
 				</Paragraph>
 
 				<Paragraph>
@@ -78,7 +78,7 @@ export const About = () => {
 					with frustration and failure rather than success. For this reason,
 					many people give up when trying to memorize Bible verses or stop after
 					they've learned only a verse or two. But I don't think it has to be
-					this way. Most people have just never learned how to learn.
+					this way. Most people have just never learned <em>how</em> to learn.
 				</Paragraph>
 
 				<Paragraph>
