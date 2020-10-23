@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './About.module.scss';
 import { Link } from 'react-router-dom';
 
@@ -21,6 +21,10 @@ import flipIcon from '../../icons/flip.svg';
 
 export const About = () => {
 	const scrollToTop = () => scroll.scrollToTop({ smooth: true, duration: 500 });
+
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, []);
 
 	return (
 		<article className={styles.About}>
