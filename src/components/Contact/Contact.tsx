@@ -148,6 +148,10 @@ export const Contact = () => {
 	return (
 		<main>
 			<h1 className={styles.h1}>Contact</h1>
+			<p className={styles.note}>
+				If you are submitting a bug report or a feature request, please be as
+				detailed as possible. Thank you!
+			</p>
 			<form
 				noValidate
 				autoComplete='off'
