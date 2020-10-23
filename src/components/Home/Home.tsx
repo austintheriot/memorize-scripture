@@ -55,6 +55,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const Home = (props: { menuOpen: boolean; analytics: any }) => {
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, []);
+
 	const classes = useStyles();
 
 	const [showCondensed, setShowCondensed] = useState(true);
