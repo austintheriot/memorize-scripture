@@ -38,10 +38,15 @@ export const About = () => {
 						<ScrollLink to='app-controls'>App Controls</ScrollLink>
 					</li>
 					<li>
+						<ScrollLink to='app-installation'>App Installation</ScrollLink>
+					</li>
+					<li>
 						<ScrollLink to='how-to-memorize'>How to Memorize</ScrollLink>
 					</li>
 					<li>
-						<ScrollLink to='how-it-works'>How It Works</ScrollLink>
+						<ScrollLink to='how-this-technique-works'>
+							How This Technique Works
+						</ScrollLink>
 					</li>
 					<li>
 						<ScrollLink to='how-to-review'>How To Review</ScrollLink>
@@ -108,6 +113,7 @@ export const About = () => {
 					which all Bible quotes are drawn, unless otherwise indicated.
 				</Paragraph>
 			</section>
+
 			<section id='app-controls'>
 				<h2>App Controls</h2>
 				<p>
@@ -222,6 +228,42 @@ export const About = () => {
 					audio.
 				</p>
 			</section>
+
+			<section id='app-installation'>
+				<h2>App Installation</h2>
+				<Paragraph>
+					This app is perfectly accessible as a regular webpage (no installation
+					required), but for a more app-like experience on mobile devices, you
+					can add this website to your homescreen. This creates an icon for the
+					website, and when you open the webpage by tapping on it, the app will
+					open in standalone mode (no address bar or navigation menu getting in
+					the way), like a native mobile app. See below for instructions.
+				</Paragraph>
+				<p className={styles.miniHeading}>Android Users:</p>
+				<p>
+					Launch Chrome for Android and open{' '}
+					<a href='https://memorizescripture.org/'>
+						https://memorizescripture.org/
+					</a>
+					. Tap the menu button and tap Add to Homescreen. You’ll be able to
+					enter a name for the shortcut and then Chrome will add it to your home
+					screen.
+				</p>
+				<p className={styles.miniHeading}>iPhone, iPad, &amp; iPod Users:</p>
+				<p>
+					Launch Safari and go to{' '}
+					<a href='https://memorizescripture.org/'>
+						https://memorizescripture.org/
+					</a>
+					. Tap the Share button on the browser’s toolbar (the rectangle with
+					upward-pointing arrow). This can be found on the bar at the top of the
+					screen on an iPad, and on the bar at the bottom of the screen on an
+					iPhone or iPod Touch. Tap "Add to Home Screen". You'll be able to name
+					the shortcut, and then Safari will add the shortcut to your home
+					screen.
+				</p>
+			</section>
+
 			<section id='how-to-memorize'>
 				<h2>How to Memorize</h2>
 				<p>
@@ -317,8 +359,8 @@ export const About = () => {
 					without looking by following the same pyramid pattern of repetition).
 				</Paragraph>
 			</section>
-			<section id='how-it-works'>
-				<h2>How It Works</h2>
+			<section id='how-this-technique-works'>
+				<h2>How This Technique Works</h2>
 				<Paragraph>
 					This process works well for most people because of a psychological
 					principle called{' '}
