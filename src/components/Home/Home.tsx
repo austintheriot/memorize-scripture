@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from 'react';
 
+//Redux
+import { useSelector, useDispatch } from 'react-redux';
+import {
+	setBody,
+	setLineBrokenBody,
+	setCondensedBody,
+	selectBody,
+	selectLineBrokenBody,
+	selectCondensedBody,
+} from '../../state/textSlice';
+
 //Styles
 import styles from './Home.module.scss';
 
@@ -72,6 +83,11 @@ export const Home = (props: {
 	audioSpeed: number;
 	setAudioSpeed: any;
 }) => {
+	const dispatch = useDispatch();
+	const body = useSelector(selectBody);
+	const lineBrokenBody = useSelector(selectLineBrokenBody);
+	const condensedBody = useSelector(selectCondensedBody);
+
 	//destructuring state props to behave like normal state (by name)
 	const {
 		audio,
@@ -100,9 +116,6 @@ export const Home = (props: {
 	//search results
 	const [resultBook, setResultBook] = useState('');
 	const [resultChapter, setResultChapter] = useState('');
-	const [resultBody, setResultBody] = useState('');
-	const [resultBroken, setResultBroken] = useState<string[]>([]);
-	const [resultCondensed, setResultCondensed] = useState<string[]>([]);
 	const [message, setMessage] = useState('');
 
 	const [clickedLine, setClickedLine] = useState(-1);
@@ -137,10 +150,10 @@ export const Home = (props: {
 		setResultChapter(chapter);
 
 		//Text Body:
-		setResultBody(body);
+		dispatch(setBody(body));
 		const lineBrokenText = breakFullTextIntoLines(body);
-		setResultBroken(lineBrokenText);
-		setResultCondensed(condenseText(lineBrokenText));
+		dispatch(setLineBrokenBody(lineBrokenText));
+		dispatch(setCondensedBody(condenseText(lineBrokenText)));
 
 		//Set loading/error message:
 		setMessage(error || '');
@@ -538,7 +551,7 @@ export const Home = (props: {
 			</form>
 			{showCondensed ? (
 				<div className={styles.textAreaContainer}>
-					{resultCondensed.map((line, i) => {
+					{condensedBody.map((line, i) => {
 						return (
 							<p
 								key={line + i.toString()}
@@ -550,14 +563,14 @@ export const Home = (props: {
 								onClick={(
 									e: React.MouseEvent<HTMLParagraphElement, MouseEvent>
 								) => handleLineBrokenText(e, i)}>
-								{clickedLine === i ? resultBroken[i] : resultCondensed[i]}
+								{clickedLine === i ? lineBrokenBody[i] : condensedBody[i]}
 							</p>
 						);
 					})}
 				</div>
 			) : (
 				<div className={styles.textAreaContainer}>
-					<div className={styles.fullText}>{resultBody}</div>
+					<div className={styles.fullText}>{body}</div>
 				</div>
 			)}
 
