@@ -29,6 +29,13 @@ const analytics = firebase.analytics(app);
 export default function App() {
 	const [menuOpen, setMenuOpen] = useState(false);
 
+	const [audio, setAudio] = useState(new Audio());
+	const [audioHasError, setAudioHasError] = useState(false);
+	const [audioIsReady, setAudioIsReady] = useState(false);
+	const [audioIsPlaying, setAudioIsPlaying] = useState(false);
+	const [audioPosition, setAudioPosition] = useState(0);
+	const [audioSpeed, setAudioSpeed] = useState(1);
+
 	const nonMenuClickHandler = (e: React.MouseEvent) => {
 		setMenuOpen(false);
 	};
@@ -52,7 +59,22 @@ export default function App() {
 							<Route exact path='/contact' component={Contact} />
 							<Route exact path='/about' component={About} />
 							<Route path='/'>
-								<Home menuOpen={menuOpen} analytics={analytics} />
+								<Home
+									menuOpen={menuOpen}
+									analytics={analytics}
+									audio={audio}
+									setAudio={setAudio}
+									audioHasError={audioHasError}
+									setAudioHasError={setAudioHasError}
+									audioIsReady={audioIsReady}
+									setAudioIsReady={setAudioIsReady}
+									audioIsPlaying={audioIsPlaying}
+									setAudioIsPlaying={setAudioIsPlaying}
+									audioPosition={audioPosition}
+									setAudioPosition={setAudioPosition}
+									audioSpeed={audioSpeed}
+									setAudioSpeed={setAudioSpeed}
+								/>
 							</Route>
 						</Switch>
 					</div>

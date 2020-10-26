@@ -54,10 +54,37 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export const Home = (props: { menuOpen: boolean; analytics: any }) => {
-	useEffect(() => {
-		window.scrollTo(0, 0);
-	}, []);
+export const Home = (props: {
+	menuOpen: boolean;
+	analytics: any;
+	audio: HTMLMediaElement;
+	setAudio: any;
+	audioHasError: boolean;
+	setAudioHasError: any;
+	audioIsReady: boolean;
+	setAudioIsReady: any;
+	audioIsPlaying: boolean;
+	setAudioIsPlaying: any;
+	audioPosition: number;
+	setAudioPosition: any;
+	audioSpeed: number;
+	setAudioSpeed: any;
+}) => {
+	//destructuring state props to behave like normal state (by name)
+	const {
+		audio,
+		setAudio,
+		audioHasError,
+		setAudioHasError,
+		audioIsReady,
+		setAudioIsReady,
+		audioIsPlaying,
+		setAudioIsPlaying,
+		audioPosition,
+		setAudioPosition,
+		audioSpeed,
+		setAudioSpeed,
+	} = props;
 
 	const classes = useStyles();
 
@@ -75,13 +102,12 @@ export const Home = (props: { menuOpen: boolean; analytics: any }) => {
 	const [resultBroken, setResultBroken] = useState<string[]>([]);
 	const [resultCondensed, setResultCondensed] = useState<string[]>([]);
 	const [message, setMessage] = useState('');
-	const [audio, setAudio] = useState(new Audio());
-	const [audioHasError, setAudioHasError] = useState(false);
-	const [audioIsReady, setAudioIsReady] = useState(false);
-	const [audioIsPlaying, setAudioIsPlaying] = useState(false);
-	const [audioPosition, setAudioPosition] = useState(0);
-	const [audioSpeed, setAudioSpeed] = useState(1);
+
 	const [clickedLine, setClickedLine] = useState(-1);
+
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, []);
 
 	const updateSearchTerms = (book: string, chapter: string) => {
 		setBook(book);
