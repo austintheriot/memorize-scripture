@@ -2,6 +2,15 @@ import React, { useState, useEffect } from 'react';
 
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
+//SearchSlice
+import {
+	setSearchBook,
+	setSearchChapter,
+	setSearchNumberOfChapters,
+	selectSearchBook,
+	selectSearchChapter,
+	selectSearchNumberOfChapters,
+} from '../../state/searchSlice';
 //TextSlice
 import {
 	setBodyBook,
@@ -15,15 +24,15 @@ import {
 	selectLineBrokenBody,
 	selectCondensedBody,
 } from '../../state/textSlice';
-//SearchSlice
+//AudioSlice
 import {
-	setSearchBook,
-	setSearchChapter,
-	setSearchNumberOfChapters,
-	selectSearchBook,
-	selectSearchChapter,
-	selectSearchNumberOfChapters,
-} from '../../state/searchSlice';
+	setAudioHasError,
+	setAudioIsReady,
+	setAudioIsPlaying,
+	setAudioPosition,
+	setAudioSpeed,
+	selectAudioSettings,
+} from '../../state/audioSlice';
 
 //Styles
 import styles from './Home.module.scss';
@@ -35,7 +44,8 @@ import { ESVApiKey } from '../../utilities/config';
 import { Prompt } from 'react-router';
 
 //Material UI Components
-import { useStyles } from './useStyles';
+import { makeStyles } from '@material-ui/core/styles';
+
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
@@ -60,21 +70,32 @@ interface TextObject {
 
 type TextArray = TextObject[];
 
+const useStyles = makeStyles((theme) => ({
+	formControl: {
+		margin: theme.spacing(0.25),
+	},
+	selectEmpty: {
+		marginTop: theme.spacing(2),
+	},
+	iconButton: {
+		width: 'max-content',
+	},
+	label: {
+		color: 'var(--light)',
+	},
+	select: {
+		padding: '0.25rem 1rem',
+		backgroundColor: 'var(--dark)',
+		color: 'var(--light)',
+		fontSize: '1.1rem',
+	},
+}));
+
 export const Home = (props: {
 	menuOpen: boolean;
 	analytics: any;
 	audio: HTMLMediaElement;
 	setAudio: any;
-	audioHasError: boolean;
-	setAudioHasError: any;
-	audioIsReady: boolean;
-	setAudioIsReady: any;
-	audioIsPlaying: boolean;
-	setAudioIsPlaying: any;
-	audioPosition: number;
-	setAudioPosition: any;
-	audioSpeed: number;
-	setAudioSpeed: any;
 }) => {
 	const dispatch = useDispatch();
 	//Material UI Styling:
@@ -86,6 +107,7 @@ export const Home = (props: {
 	const body = useSelector(selectBody);
 	const lineBrokenBody = useSelector(selectLineBrokenBody);
 	const condensedBody = useSelector(selectCondensedBody);
+	const audioSettings = useSelector(selectAudioSettings);
 
 	//Search Terms:
 	const searchBook = useSelector(selectSearchBook);
@@ -97,21 +119,7 @@ export const Home = (props: {
 	const [message, setMessage] = useState('');
 	const [clickedLine, setClickedLine] = useState(-1);
 
-	//destructuring state props to behave like normal state (by name)
-	const {
-		audio,
-		setAudio,
-		audioHasError,
-		setAudioHasError,
-		audioIsReady,
-		setAudioIsReady,
-		audioIsPlaying,
-		setAudioIsPlaying,
-		audioPosition,
-		setAudioPosition,
-		audioSpeed,
-		setAudioSpeed,
-	} = props;
+	const { audio, setAudio } = props;
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
@@ -133,9 +141,9 @@ export const Home = (props: {
 	) => {
 		//Auio Settings:
 		audio.pause();
-		setAudioHasError(false);
-		setAudioIsReady(false);
-		setAudioPosition(0);
+		dispatch(setAudioHasError(false));
+		dispatch(setAudioIsReady(false));
+		dispatch(setAudioPosition(0));
 		setAudio(new Audio(`https://audio.esv.org/hw/mq/${book} ${chapter}.mp3`));
 
 		//Search
@@ -207,21 +215,21 @@ export const Home = (props: {
 		props.analytics.logEvent('play_button_pressed');
 		if (audio.readyState !== 4) return;
 		audio.play();
-		setAudioIsPlaying(true);
+		dispatch(setAudioIsPlaying(true));
 	};
 
 	const handlePause = () => {
 		props.analytics.logEvent('pause_buton_pressed');
 		if (audio.readyState !== 4) return;
 		audio.pause();
-		setAudioIsPlaying(false);
+		dispatch(setAudioIsPlaying(false));
 	};
 
 	const handleRewind = () => {
 		props.analytics.logEvent('back_button_pressed');
 		if (audio.readyState !== 4) return;
 		const targetTime = Math.max(audio.currentTime - 5, 0);
-		setAudioPosition(targetTime / audio.duration);
+		dispatch(setAudioPosition(targetTime / audio.duration));
 		audio.currentTime = targetTime;
 	};
 
@@ -229,7 +237,7 @@ export const Home = (props: {
 		props.analytics.logEvent('forward_button_pressed');
 		if (audio.readyState !== 4) return;
 		const targetTime = Math.min(audio.currentTime + 5, audio.duration - 0.01);
-		setAudioPosition(targetTime / audio.duration);
+		dispatch(setAudioPosition(targetTime / audio.duration));
 		audio.currentTime = targetTime;
 	};
 
@@ -246,22 +254,24 @@ export const Home = (props: {
 		setShowCondensed((prevState) => !prevState);
 	};
 
-	const handleProgressClick = (e: MouseEvent) => {
+	const handleProgressClick = (
+		e: React.MouseEvent<HTMLDivElement, MouseEvent>
+	) => {
 		const targetTime = e.clientX / document.documentElement.offsetWidth;
 		props.analytics.logEvent('progress_bar_pressed', {
 			targetTime,
 		});
-		setAudioPosition(targetTime);
+		dispatch(setAudioPosition(targetTime));
 		audio.currentTime = audio.duration * targetTime;
 	};
 
 	const handleSpeedChange = () => {
-		const targetSpeed = Math.max((audioSpeed + 0.25) % 2.25, 0.5);
+		const targetSpeed = Math.max((audioSettings.speed + 0.25) % 2.25, 0.5);
 		props.analytics.logEvent('speed_button_pressed', {
 			targetSpeed,
 		});
 		audio.playbackRate = targetSpeed;
-		setAudioSpeed(targetSpeed);
+		dispatch(setAudioSpeed(targetSpeed));
 		storePlaySpeedInLocalStorage(targetSpeed);
 	};
 
@@ -411,7 +421,7 @@ export const Home = (props: {
 		//Loading audio playback rate
 		console.log(`Initializing playspeed with user's previous settings`);
 		const targetSpeed = getPlaySpeedFromLocalStorage();
-		setAudioSpeed(targetSpeed);
+		dispatch(setAudioSpeed(targetSpeed));
 
 		//Loading last-viewed book and chapter
 		initializeMostRecentPassage();
@@ -443,20 +453,20 @@ export const Home = (props: {
 		//load the resource (necessary on mobile)
 		audio.load();
 		audio.currentTime = 0;
-		audio.playbackRate = audioSpeed; //load audio settings
+		audio.playbackRate = audioSettings.speed; //load audio settings
 
 		//loaded enough to play
 		audio.addEventListener('canplay', () => {
-			setAudioIsReady(true);
+			dispatch(setAudioIsReady(true));
 		});
 		audio.addEventListener('pause', () => {
-			setAudioIsPlaying(false);
+			dispatch(setAudioIsPlaying(false));
 		});
 		audio.addEventListener('play', () => {
-			setAudioIsPlaying(true);
+			dispatch(setAudioIsPlaying(true));
 		});
 		audio.addEventListener('error', () => {
-			setAudioHasError(true);
+			dispatch(setAudioHasError(true));
 		});
 		//not enough data
 		audio.addEventListener('waiting', () => {
@@ -464,7 +474,7 @@ export const Home = (props: {
 		});
 		//ready to play after waiting
 		audio.addEventListener('playing', () => {
-			setAudioIsReady(true);
+			dispatch(setAudioIsReady(true));
 		});
 		//audio is over
 		audio.addEventListener('ended', () => {
@@ -473,11 +483,11 @@ export const Home = (props: {
 		});
 		//as time is updated
 		audio.addEventListener('timeupdate', () => {
-			setAudioPosition(audio.currentTime / audio.duration);
+			dispatch(setAudioPosition(audio.currentTime / audio.duration));
 		});
 		//when speed is changed
 		audio.addEventListener('ratechange', () => {
-			setAudioSpeed(audio.playbackRate);
+			dispatch(setAudioSpeed(audio.playbackRate));
 		});
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -578,19 +588,13 @@ export const Home = (props: {
 				Bible or more than one half of any book of the ESV Bible.
 			</p>
 			<Controls
-				menuOpen={props.menuOpen}
 				flipView={handleViewChange}
 				play={handlePlay}
 				pause={handlePause}
 				rewind={handleRewind}
 				forward={handleForward}
 				beginning={handleBeginning}
-				audioPosition={audioPosition}
-				hasError={audioHasError}
-				isReady={audioIsReady}
-				isPlaying={audioIsPlaying}
 				progressClick={handleProgressClick}
-				speed={audioSpeed}
 				speedChange={handleSpeedChange}
 			/>
 		</>
