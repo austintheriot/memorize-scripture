@@ -35,7 +35,7 @@ import { ESVApiKey } from '../../utilities/config';
 import { Prompt } from 'react-router';
 
 //Material UI Components
-import { makeStyles } from '@material-ui/core/styles';
+import { useStyles } from './useStyles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
@@ -59,27 +59,6 @@ interface TextObject {
 }
 
 type TextArray = TextObject[];
-
-const useStyles = makeStyles((theme) => ({
-	formControl: {
-		margin: theme.spacing(0.25),
-	},
-	selectEmpty: {
-		marginTop: theme.spacing(2),
-	},
-	iconButton: {
-		width: 'max-content',
-	},
-	label: {
-		color: 'var(--light)',
-	},
-	select: {
-		padding: '0.25rem 1rem',
-		backgroundColor: 'var(--dark)',
-		color: 'var(--light)',
-		fontSize: '1.1rem',
-	},
-}));
 
 export const Home = (props: {
 	menuOpen: boolean;
