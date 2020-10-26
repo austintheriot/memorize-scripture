@@ -1,6 +1,10 @@
 import React from 'react';
 import styles from './Controls.module.scss';
 
+//Redux
+import { useSelector, useDispatch } from 'react-redux';
+import { selectAudioSettings } from '../../../state/audioSlice';
+
 //Custom icons
 import flipIcon from '../../../icons/flip.svg';
 import beginningIcon from '../../../icons/beginning.svg';
@@ -11,7 +15,18 @@ import forwardIcon from '../../../icons/forward.svg';
 import loadingIcon from '../../../icons/loading.svg';
 import errorIcon from '../../../icons/error.svg';
 
-export const Controls = (props: any) => {
+export const Controls = (props: {
+	progressClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+	speedChange: () => void;
+	beginning: () => void;
+	rewind: () => void;
+	pause: () => void;
+	play: () => void;
+	forward: () => void;
+	flipView: () => void;
+}) => {
+	const audioSettings = useSelector(selectAudioSettings);
+
 	return (
 		<div className={styles.Controls}>
 			{/* PROGRESS BAR */}
@@ -20,7 +35,7 @@ export const Controls = (props: any) => {
 				onMouseDown={props.progressClick}>
 				<div
 					className={styles.progressBarInner}
-					style={{ width: `${props.audioPosition * 100}%` }}></div>
+					style={{ width: `${audioSettings.position * 100}%` }}></div>
 			</div>
 
 			{/* BUTTON CONTAINER */}
@@ -29,7 +44,7 @@ export const Controls = (props: any) => {
 					data-info='playback speed'
 					className={styles.playSpeedButton}
 					onMouseDown={props.speedChange}>
-					<p className={styles.icon}>x{props.speed}</p>
+					<p className={styles.icon}>x{audioSettings.speed}</p>
 				</button>
 				<button
 					data-info='skip to beginning'
@@ -54,13 +69,13 @@ export const Controls = (props: any) => {
 				</button>
 
 				{/* PLAY BUTTON */}
-				{props.hasError ? (
+				{audioSettings.hasError ? (
 					/* HAS ERROR */
 					<button data-info='error' className={styles.buttons} disabled={true}>
 						<img src={errorIcon} alt={'loading'} className={styles.loading} />
 					</button>
-				) : props.isReady ? (
-					props.isPlaying ? (
+				) : audioSettings.isReady ? (
+					audioSettings.isPlaying ? (
 						/* NO ERROR, IS READY AND PLAYING */
 						<button
 							data-info='pause'
