@@ -7,6 +7,8 @@ import styles from './Home.module.scss';
 import axios from 'axios';
 import { ESVApiKey } from '../../utilities/config';
 
+import { Prompt } from 'react-router';
+
 //Material UI Components
 import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -488,6 +490,14 @@ export const Home = (props: {
 
 	return (
 		<>
+			<Prompt
+				message={() => {
+					//Pause audio when navigating away from Home
+					console.log('Leaving Home page. Pausing audio.');
+					audio.pause();
+					return true;
+				}}
+			/>
 			<h1 className={styles.h1}>
 				{resultBook} {resultChapter}
 			</h1>
