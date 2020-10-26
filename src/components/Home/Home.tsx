@@ -2,14 +2,28 @@ import React, { useState, useEffect } from 'react';
 
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
+//TextSlice
 import {
+	setBodyBook,
+	setBodyChapter,
 	setBody,
 	setLineBrokenBody,
 	setCondensedBody,
+	selectBodyBook,
+	selectBodyChapter,
 	selectBody,
 	selectLineBrokenBody,
 	selectCondensedBody,
 } from '../../state/textSlice';
+//SearchSlice
+import {
+	setSearchBook,
+	setSearchChapter,
+	setSearchNumberOfChapters,
+	selectSearchBook,
+	selectSearchChapter,
+	selectSearchNumberOfChapters,
+} from '../../state/searchSlice';
 
 //Styles
 import styles from './Home.module.scss';
@@ -84,9 +98,25 @@ export const Home = (props: {
 	setAudioSpeed: any;
 }) => {
 	const dispatch = useDispatch();
+	//Material UI Styling:
+	const classes = useStyles();
+
+	//Text Body:
+	const bodyBook = useSelector(selectBodyBook);
+	const bodyChapter = useSelector(selectBodyChapter);
 	const body = useSelector(selectBody);
 	const lineBrokenBody = useSelector(selectLineBrokenBody);
 	const condensedBody = useSelector(selectCondensedBody);
+
+	//Search Terms:
+	const searchBook = useSelector(selectSearchBook);
+	const searchChapter = useSelector(selectSearchChapter);
+	const searchNumberOfChapters = useSelector(selectSearchNumberOfChapters);
+
+	//Home Specific State:
+	const [showCondensed, setShowCondensed] = useState(true);
+	const [message, setMessage] = useState('');
+	const [clickedLine, setClickedLine] = useState(-1);
 
 	//destructuring state props to behave like normal state (by name)
 	const {
@@ -104,31 +134,15 @@ export const Home = (props: {
 		setAudioSpeed,
 	} = props;
 
-	const classes = useStyles();
-
-	const [showCondensed, setShowCondensed] = useState(true);
-
-	//search terms
-	const [book, setBook] = useState('Psalms');
-	const [chapter, setChapter] = useState('23');
-	const [numberOfChapters, setNumberOfChapters] = useState(21);
-
-	//search results
-	const [resultBook, setResultBook] = useState('');
-	const [resultChapter, setResultChapter] = useState('');
-	const [message, setMessage] = useState('');
-
-	const [clickedLine, setClickedLine] = useState(-1);
-
 	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, []);
 
 	const updateSearchTerms = (book: string, chapter: string) => {
-		setBook(book);
-		setChapter(chapter);
+		dispatch(setSearchBook(book));
+		dispatch(setSearchChapter(chapter));
 		const newNumberOfChapters = bookChapters[book]; //get chapter numbers
-		setNumberOfChapters(newNumberOfChapters); //set chapter numbers
+		dispatch(setSearchNumberOfChapters(newNumberOfChapters)); //set chapter numbers
 		return;
 	};
 
@@ -145,11 +159,11 @@ export const Home = (props: {
 		setAudioPosition(0);
 		setAudio(new Audio(`https://audio.esv.org/hw/mq/${book} ${chapter}.mp3`));
 
-		//Text Title:
-		setResultBook(book === 'Psalms' ? 'Psalm' : book);
-		setResultChapter(chapter);
+		//Search
 
-		//Text Body:
+		//Text Results:
+		dispatch(setBodyBook(book === 'Psalms' ? 'Psalm' : book));
+		dispatch(setBodyChapter(chapter));
 		dispatch(setBody(body));
 		const lineBrokenText = breakFullTextIntoLines(body);
 		dispatch(setLineBrokenBody(lineBrokenText));
@@ -281,12 +295,12 @@ export const Home = (props: {
 		let newNumberOfChapters = 1;
 		const bookString = e.target.value;
 		if (typeof bookString === 'string') {
-			setBook(bookString); //set selected option
+			dispatch(setSearchBook(bookString)); //set book name
 			newNumberOfChapters = bookChapters[bookString]; //get chapter numbers
-			setNumberOfChapters(newNumberOfChapters); //set chapter numbers
+			dispatch(setSearchNumberOfChapters(newNumberOfChapters)); //set chapter numbers
 		}
-		if (Number(chapter) <= newNumberOfChapters) return;
-		setChapter('1');
+		if (Number(searchChapter) <= newNumberOfChapters) return;
+		dispatch(setSearchChapter('1'));
 	};
 
 	const handleChapterChange = (
@@ -296,7 +310,7 @@ export const Home = (props: {
 		}>
 	) => {
 		if (typeof e.target.value === 'string') {
-			setChapter(e.target.value);
+			dispatch(setSearchChapter(e.target.value));
 		}
 	};
 
@@ -391,25 +405,25 @@ export const Home = (props: {
 	const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		e.preventDefault();
 		//Check local storage
-		const title = `${book}+${chapter}`;
+		const title = `${searchBook}+${searchChapter}`;
 		console.log(`Checking local storage for ${title}`);
 		//try to retrieve text body from local storage
 		let body = getTextBodyFromLocalStorage(title);
 		if (body) {
 			console.log(`Retrieved body of ${title} from local storage`);
-			updateResults(book, chapter, body);
+			updateResults(searchBook, searchChapter, body);
 			storeMostRecentInLocalStorage(title);
 			props.analytics.logEvent('fetched_text_from_local_storage', {
-				book,
-				chapter,
-				title: `${book} ${chapter}`,
+				searchBook,
+				searchChapter,
+				title: `${searchBook} ${searchChapter}`,
 			});
 		} else {
 			//If it does not exist in local storage, make an API call, and store the returned text
 			console.log(`${title} not found in local storage`);
 			console.log('Making a call to the ESV API');
-			updateResults(book, chapter, '', 'Loading...'); //show loading indicator
-			fetchTextFromESVAPI(book, chapter);
+			updateResults(searchBook, searchChapter, '', 'Loading...'); //show loading indicator
+			fetchTextFromESVAPI(searchBook, searchChapter);
 		}
 	};
 
@@ -492,7 +506,7 @@ export const Home = (props: {
 
 	//create chapter input options based on book of the bible
 	let chapterArray = [];
-	for (let i = 1; i <= numberOfChapters; i++) {
+	for (let i = 1; i <= searchNumberOfChapters; i++) {
 		chapterArray.push(i);
 	}
 	chapterArray = chapterArray.map((el) => (
@@ -512,7 +526,7 @@ export const Home = (props: {
 				}}
 			/>
 			<h1 className={styles.h1}>
-				{resultBook} {resultChapter}
+				{bodyBook} {bodyChapter}
 			</h1>
 			<form className={styles.form}>
 				<FormControl className={classes.formControl}>
@@ -523,7 +537,7 @@ export const Home = (props: {
 						className={classes.select}
 						labelId='bible-book'
 						id='bible-book'
-						value={book}
+						value={searchBook}
 						onChange={handleBookChange}>
 						{bookTitles.map((bookString) => (
 							<MenuItem value={bookString} key={bookString}>
@@ -540,7 +554,7 @@ export const Home = (props: {
 						className={classes.select}
 						labelId='bible-chapter'
 						id='bible-chapter'
-						value={chapter}
+						value={searchChapter}
 						onChange={handleChapterChange}>
 						{chapterArray}
 					</Select>

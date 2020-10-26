@@ -1,13 +1,31 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+interface State {
+	text: {
+		book: string;
+		chapter: string;
+		body: string;
+		lineBrokenBody: string[];
+		condensedBody: string[];
+	};
+}
+
 export const textSlice = createSlice({
 	name: 'text',
 	initialState: {
+		book: 'Psalm',
+		chapter: '23',
 		body: '',
 		lineBrokenBody: [],
 		condensedBody: [],
 	},
 	reducers: {
+		setBodyBook: (state, action) => {
+			state.book = action.payload;
+		},
+		setBodyChapter: (state, action) => {
+			state.chapter = action.payload;
+		},
 		setBody: (state, action) => {
 			state.body = action.payload;
 		},
@@ -21,6 +39,8 @@ export const textSlice = createSlice({
 });
 
 export const {
+	setBodyBook,
+	setBodyChapter,
 	setBody,
 	setLineBrokenBody,
 	setCondensedBody,
@@ -40,14 +60,9 @@ export const {
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
 // in the slice file. For example: `useSelector((state) => state.counter.value)`
-interface State {
-	text: {
-		body: string;
-		lineBrokenBody: string[];
-		condensedBody: string[];
-	};
-}
 
+export const selectBodyBook = (state: State) => state.text.book;
+export const selectBodyChapter = (state: State) => state.text.chapter;
 export const selectBody = (state: State) => state.text.body;
 export const selectLineBrokenBody = (state: State) => state.text.lineBrokenBody;
 export const selectCondensedBody = (state: State) => state.text.condensedBody;
