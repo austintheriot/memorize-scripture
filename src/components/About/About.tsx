@@ -26,6 +26,8 @@ export const About = () => {
 		window.scrollTo(0, 0);
 	}, []);
 
+	let listItemCounter = 1;
+
 	return (
 		<article className={styles.About}>
 			<h1>How to Memorize Scripture</h1>
@@ -301,36 +303,43 @@ export const About = () => {
 				</p>
 				<div className={styles.olWrapper}>
 					<ol>
-						<li>
+						<li value={listItemCounter}>
 							Speak the entire (original) text out loud a few times, or listen
 							to the audio version of the text a few times. Do this until you
 							feel like you have a strong sense of the overall meaning of the
 							passage as a whole.
 						</li>
-						<li>
+						<li value={++listItemCounter}>
 							Look up any unfamiliar words or the meaning of particular verses
 							that you don't understand. It's vital to understand what you
 							memorize and not just mindlessly cram it into your brain!
 						</li>
-						<li>Start with the first line. There are two primary methods:</li>
-						<ul>
-							<li>
-								Look only at the condensed text while you listen to the audio
-								version of the text. Focus on line at a time. Listen to the line
-								and try to speak it as you listen. If you get it wrong, rewind
-								the audio and try again. Do this until you can speak the line
-								perfectly while looking at the condensed text.
-							</li>
-							<li>
-								The second method is to flip back and forth between the
-								condensed text and the original text. Practice speaking the
-								original text while looking at the condensed text only. If you
-								can't remember the line, refer back to the original text. Do
-								this until you can speak the line perfectly while looking only
-								at the condensed text.
-							</li>
-						</ul>
-						<li>
+						<li value={++listItemCounter}>
+							Start with the first line. There are two primary methods:
+						</li>
+						<li
+							style={{
+								listStyle: 'none',
+							}}>
+							<ul>
+								<li>
+									Look only at the condensed text while you listen to the audio
+									version of the text. Focus on line at a time. Listen to the
+									line and try to speak it as you listen. If you get it wrong,
+									rewind the audio and try again. Do this until you can speak
+									the line perfectly while looking at the condensed text.
+								</li>
+								<li>
+									The second method is to flip back and forth between the
+									condensed text and the original text. Practice speaking the
+									original text while looking at the condensed text only. If you
+									can't remember the line, refer back to the original text. Do
+									this until you can speak the line perfectly while looking only
+									at the condensed text.
+								</li>
+							</ul>
+						</li>
+						<li value={++listItemCounter}>
 							Complete this process for line 1 only. Move onto line 2, and focus
 							on it alone. Once you can speak line 2, practice speaking both
 							line 1 and line 2 together while looking only at the condensed
