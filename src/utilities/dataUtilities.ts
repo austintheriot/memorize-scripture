@@ -7,6 +7,8 @@ import {
 	setAudioHasError,
 	setAudioIsReady,
 	setAudioPosition,
+	setAudioIsPlaying,
+	setAudioSpeed,
 } from '../state/audioSlice';
 import {
 	setBook,
@@ -25,13 +27,14 @@ import {
 import { bookChapters } from './bibleBookInfo';
 import { condenseText, breakFullTextIntoLines } from './condenseText';
 import {
+	getPlaySpeed,
 	storeMostRecentPassage,
 	getTextBody,
 	addToTextArray,
 } from './localStorage';
 
 //types
-import { UtilityConfig } from './types';
+import { UtilityConfig, AudioType, AudioState } from './types';
 
 export const updateSearchTerms = (
 	book: string,
@@ -150,4 +153,81 @@ export const initializeMostRecentPassage = (config: UtilityConfig) => {
 		updateSearchTerms('Psalms', '23', config);
 		fetchTextFromESVAPI('Psalms', '23', config);
 	}
+};
+
+export const initializeApp = (config: UtilityConfig) => {
+	//Loading textAudio playback rate
+	console.log(`Initializing playspeed with user's previous settings`);
+	const targetSpeed = getPlaySpeed();
+	config.dispatch(setAudioSpeed(targetSpeed));
+
+	//Loading last-viewed book and chapter
+	initializeMostRecentPassage(config);
+
+	//Prevent pinch zoom in Safari
+	document.addEventListener('gesturestart', function (e) {
+		e.preventDefault();
+		// special hack to prevent zoom-to-tabs gesture in safari
+		document.body.style.zoom = '0.99';
+	});
+
+	document.addEventListener('gesturechange', function (e) {
+		e.preventDefault();
+		// special hack to prevent zoom-to-tabs gesture in safari
+		document.body.style.zoom = '0.99';
+	});
+
+	document.addEventListener('gestureend', function (e) {
+		e.preventDefault();
+		// special hack to prevent zoom-to-tabs gesture in safari
+		document.body.style.zoom = '0.99';
+	});
+};
+
+export const initializeAudio = (
+	textAudio: AudioType,
+	audioSettings: AudioState,
+	config: UtilityConfig
+) => {
+	//load the resource (necessary on mobile)
+	textAudio.load();
+	textAudio.currentTime = 0;
+	textAudio.playbackRate = audioSettings.speed; //load textAudio settings
+
+	//loaded enough to play
+	textAudio.addEventListener('canplay', () => {
+		config.dispatch(setAudioIsReady(true));
+	});
+	textAudio.addEventListener('pause', () => {
+		config.dispatch(setAudioIsPlaying(false));
+	});
+	textAudio.addEventListener('play', () => {
+		config.dispatch(setAudioIsPlaying(true));
+	});
+	textAudio.addEventListener('error', () => {
+		config.dispatch(setAudioHasError(true));
+	});
+	//not enough data
+	textAudio.addEventListener('waiting', () => {
+		//No action currently selected for this event
+	});
+	//ready to play after waiting
+	textAudio.addEventListener('playing', () => {
+		config.dispatch(setAudioIsReady(true));
+	});
+	//textAudio is over
+	textAudio.addEventListener('ended', () => {
+		textAudio.pause();
+		textAudio.currentTime = 0;
+	});
+	//as time is updated
+	textAudio.addEventListener('timeupdate', () => {
+		config.dispatch(
+			setAudioPosition(textAudio.currentTime / textAudio.duration)
+		);
+	});
+	//when speed is changed
+	textAudio.addEventListener('ratechange', () => {
+		config.dispatch(setAudioSpeed(textAudio.playbackRate));
+	});
 };

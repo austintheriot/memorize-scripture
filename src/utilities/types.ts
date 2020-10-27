@@ -14,3 +14,15 @@ export interface UtilityConfig {
 	dispatch: Dispatch;
 	analytics: firebase.analytics.Analytics;
 }
+
+export interface AudioState {
+	hasError: boolean;
+	isReady: boolean;
+	isPlaying: boolean;
+	position: number;
+	speed: number;
+}
+
+export interface AudioSlice {
+	audio: AudioState;
+}

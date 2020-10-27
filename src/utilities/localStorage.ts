@@ -1,3 +1,5 @@
+// AUDIO ////////////////////////////
+
 export const storePlaySpeed = (speed: number) => {
 	console.log(`Storing ${speed} as default playback speed`);
 	window.localStorage.setItem('speed', speed.toString());
@@ -10,7 +12,7 @@ export const getPlaySpeed = () => {
 	return parseFloat(speed);
 };
 
-////////////////////////////
+// TEXT ////////////////////////////
 
 interface TextObject {
 	title: string;
