@@ -160,15 +160,15 @@ export const Contact = () => {
 				{/* EMAIL */}
 				<FormControl className={classes.formControl}>
 					<InputLabel
-						id='email'
+						htmlFor='email'
 						className={classes.label}
 						error={emailHasErrors}>
 						Email*
 					</InputLabel>
 					<Input
+						id='email'
 						className={classes.input}
 						fullWidth={true}
-						id='outlined-multiline-static'
 						disabled={emailDisabled}
 						value={email}
 						error={emailHasErrors}
@@ -182,15 +182,15 @@ export const Contact = () => {
 
 				{/* MESSAGE */}
 				<FormControl className={classes.formControl}>
-					<InputLabel id='bible-chapter' className={classes.label}>
+					<InputLabel htmlFor='message' className={classes.label}>
 						Message
 					</InputLabel>
 					<Input
+						id='message'
 						multiline={true}
 						rows={4}
 						className={classes.input}
 						fullWidth={true}
-						id='outlined-multiline-static'
 						disabled={messageDisabled}
 						value={message}
 						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -201,6 +201,7 @@ export const Contact = () => {
 
 				<p className={styles.userMessage}>{userMessage}</p>
 				<button
+					aria-label='submit'
 					disabled={buttonDisabled}
 					className={[
 						'button',
