@@ -7,7 +7,11 @@ export const Footer = () => {
 	return (
 		<footer className={styles.Footer}>
 			<a href='https://memorizescripture.org'>
-				<img src={chiRho} alt='Memorize Scripture Logo: Chi Rho' />
+				<img
+					src={chiRho}
+					alt='Memorize Scripture Logo: Chi Rho'
+					className='ChiRho'
+				/>
 			</a>
 		</footer>
 	);

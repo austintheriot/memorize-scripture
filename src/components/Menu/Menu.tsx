@@ -21,7 +21,11 @@ export const Menu = () => {
 		<header
 			className={[styles.header, menu.isOpen ? styles.menuOpen : ''].join(' ')}>
 			<a href='https://memorizescripture.org'>
-				<img src={chiRho} alt='Memorize Scripture Logo: Chi Rho' />
+				<img
+					src={chiRho}
+					alt='Memorize Scripture Logo: Chi Rho'
+					className='ChiRho'
+				/>
 			</a>
 			<ul className={styles.ul}>
 				<li className={styles.li}>
