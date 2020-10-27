@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 //App
 import './App.scss';
 
+import { AudioContext } from './state/audioContext';
+
 //Config
 import { firebaseConfig } from './utilities/config';
 
@@ -26,10 +28,26 @@ import { Contact } from './components/Contact/Contact';
 const app = firebase.initializeApp(firebaseConfig);
 const analytics = firebase.analytics(app);
 
+const audio = new Audio();
+type AudioType = typeof audio;
+type SetAudioType = React.Dispatch<React.SetStateAction<HTMLAudioElement>>;
+
+interface AudioState {
+	textAudio: AudioType;
+	userAudio: AudioType;
+}
+
 export default function App() {
 	const [menuOpen, setMenuOpen] = useState(false);
+	const [textAudio, setTextAudio] = useState(new Audio()); //Audio from ESV
+	const [userAudio, setUserAudio] = useState(new Audio()); //User-recorded Audio
 
-	const [audio, setAudio] = useState(new Audio());
+	const audio = {
+		textAudio,
+		setTextAudio,
+		userAudio,
+		setUserAudio,
+	};
 
 	const nonMenuClickHandler = (e: React.MouseEvent) => {
 		setMenuOpen(false);
@@ -45,27 +63,24 @@ export default function App() {
 
 	return (
 		<div className='App'>
-			<Transition menuOpen={menuOpen}>
-				<Router>
-					<MenuButton handleClick={handleMenuToggle} menuOpen={menuOpen} />
-					<Menu menuOpen={menuOpen} closeMenu={handleMenuClose} />
-					<div onClick={nonMenuClickHandler}>
-						<Switch>
-							<Route exact path='/contact' component={Contact} />
-							<Route exact path='/about' component={About} />
-							<Route path='/'>
-								<Home
-									menuOpen={menuOpen}
-									analytics={analytics}
-									audio={audio}
-									setAudio={setAudio}
-								/>
-							</Route>
-						</Switch>
-					</div>
-				</Router>
-				<Footer />
-			</Transition>
+			<AudioContext.Provider value={audio}>
+				<Transition menuOpen={menuOpen}>
+					<Router>
+						<MenuButton handleClick={handleMenuToggle} menuOpen={menuOpen} />
+						<Menu menuOpen={menuOpen} closeMenu={handleMenuClose} />
+						<div onClick={nonMenuClickHandler}>
+							<Switch>
+								<Route exact path='/contact' component={Contact} />
+								<Route exact path='/about' component={About} />
+								<Route path='/'>
+									<Home menuOpen={menuOpen} analytics={analytics} />
+								</Route>
+							</Switch>
+						</div>
+					</Router>
+					<Footer />
+				</Transition>
+			</AudioContext.Provider>
 		</div>
 	);
 }
