@@ -220,7 +220,11 @@ export const Home = () => {
 				</button>
 			</form>
 			{showCondensed ? (
-				<div className={styles.textAreaContainer}>
+				<div
+					className={styles.textAreaContainer}
+					style={{
+						height: text.body ? 'auto' : '939px',
+					}}>
 					{text.condensed.map((line, i) => {
 						return (
 							<p
