@@ -136,7 +136,7 @@ export const Controls = (props: { flipView: () => void }) => {
 				{audioSettings.hasError ? (
 					/* HAS ERROR */
 					<button data-info='error' className={styles.buttons} disabled={true}>
-						<img src={errorIcon} alt={'loading'} className={styles.loading} />
+						<img src={errorIcon} alt={'loading'} className={styles.icon} />
 					</button>
 				) : audioSettings.isReady ? (
 					audioSettings.isPlaying ? (
