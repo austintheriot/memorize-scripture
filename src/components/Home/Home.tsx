@@ -25,10 +25,8 @@ import {
 import {
 	setAudioHasError,
 	setAudioIsReady,
-	setAudioIsPlaying,
 	setAudioPosition,
 	setAudioSpeed,
-	selectAudioSettings,
 } from '../../state/audioSlice';
 
 //Routing
@@ -55,13 +53,12 @@ import {
 	breakFullTextIntoLines,
 } from '../../utilities/condenseText';
 import { bookTitles, bookChapters } from '../../utilities/bibleBookInfo';
-
-interface TextObject {
-	title: string;
-	body: string;
-}
-
-type TextArray = TextObject[];
+import {
+	getPlaySpeed,
+	storeMostRecentPassage,
+	addToTextArray,
+	getTextBody,
+} from '../../utilities/localStorage';
 
 const useStyles = makeStyles((theme) => ({
 	formControl: {
@@ -95,7 +92,6 @@ export const Home = () => {
 	//Redux State:
 	const search = useSelector(selectSearch);
 	const text = useSelector(selectText);
-	const audioSettings = useSelector(selectAudioSettings);
 
 	//Local State:
 	const [showCondensed, setShowCondensed] = useState(true);
@@ -142,121 +138,11 @@ export const Home = () => {
 		return;
 	};
 
-	const storePlaySpeedInLocalStorage = (speed: number) => {
-		console.log(`Storing ${speed} as default playback speed`);
-		window.localStorage.setItem('speed', speed.toString());
-	};
-
-	const getPlaySpeedFromLocalStorage = () => {
-		console.log('Retrieving playback speed from local storage');
-		const speed = window.localStorage.getItem('speed') || '1';
-		console.log(`Playback speed from local storage is ${speed}`);
-		return parseFloat(speed);
-	};
-
-	const getTextArrayFromLocalStorage = (title: string) => {
-		const textsString = window.localStorage.getItem('texts');
-		return textsString ? (JSON.parse(textsString) as TextArray) : [];
-	};
-
-	const getTextBodyFromLocalStorage = (title: string) => {
-		const textArray = getTextArrayFromLocalStorage(title);
-		const text = textArray.find((el) => el.title === title);
-		return text?.body;
-	};
-
-	const storeMostRecentInLocalStorage = (title: string) => {
-		console.log(
-			`Storing ${title} as most the most recently accessed chapter in local storage`
-		);
-		window.localStorage.setItem('recent', title);
-	};
-
-	const storePassageInLocalStorage = (title: string, body: string) => {
-		console.log(`Checking if ${title} already exists in local storage`);
-		let passageIsInLocalStorage = !!getTextBodyFromLocalStorage(title);
-		if (passageIsInLocalStorage) {
-			console.log(`${title} exists in local storage`);
-			return;
-		} else {
-			console.log(`${title} does not exist in local storage`);
-			console.log(`Adding ${title} to local storage`);
-			let textArray = getTextArrayFromLocalStorage(title);
-			//store no more than 5 passages at a time
-			if (textArray.length === 5) textArray.pop();
-			textArray.unshift({
-				title,
-				body,
-			});
-			window.localStorage.setItem('texts', JSON.stringify(textArray));
-		}
-	};
-
-	const handlePlay = () => {
-		analytics.logEvent('play_button_pressed');
-		if (textAudio.readyState !== 4) return;
-		textAudio.play();
-		dispatch(setAudioIsPlaying(true));
-	};
-
-	const handlePause = () => {
-		analytics.logEvent('pause_buton_pressed');
-		if (textAudio.readyState !== 4) return;
-		textAudio.pause();
-		dispatch(setAudioIsPlaying(false));
-	};
-
-	const handleRewind = () => {
-		analytics.logEvent('back_button_pressed');
-		if (textAudio.readyState !== 4) return;
-		const targetTime = Math.max(textAudio.currentTime - 5, 0);
-		dispatch(setAudioPosition(targetTime / textAudio.duration));
-		textAudio.currentTime = targetTime;
-	};
-
-	const handleForward = () => {
-		analytics.logEvent('forward_button_pressed');
-		if (textAudio.readyState !== 4) return;
-		const targetTime = Math.min(
-			textAudio.currentTime + 5,
-			textAudio.duration - 0.01
-		);
-		dispatch(setAudioPosition(targetTime / textAudio.duration));
-		textAudio.currentTime = targetTime;
-	};
-
-	const handleBeginning = () => {
-		analytics.logEvent('beginning_button_pressed');
-		if (textAudio.readyState !== 4) return;
-		textAudio.currentTime = 0;
-	};
-
 	const handleViewChange = () => {
 		analytics.logEvent('flip_view_button_pressed', {
 			showCondensed,
 		});
 		setShowCondensed((prevState) => !prevState);
-	};
-
-	const handleProgressClick = (
-		e: React.MouseEvent<HTMLDivElement, MouseEvent>
-	) => {
-		const targetTime = e.clientX / document.documentElement.offsetWidth;
-		analytics.logEvent('progress_bar_pressed', {
-			targetTime,
-		});
-		dispatch(setAudioPosition(targetTime));
-		textAudio.currentTime = textAudio.duration * targetTime;
-	};
-
-	const handleSpeedChange = () => {
-		const targetSpeed = Math.max((audioSettings.speed + 0.25) % 2.25, 0.5);
-		analytics.logEvent('speed_button_pressed', {
-			targetSpeed,
-		});
-		textAudio.playbackRate = targetSpeed;
-		dispatch(setAudioSpeed(targetSpeed));
-		storePlaySpeedInLocalStorage(targetSpeed);
 	};
 
 	const handleBookChange = (
@@ -329,8 +215,8 @@ export const Home = () => {
 				console.log(`Text body of ${title} received from ESV API`);
 				const body = response.data.passages[0];
 				updateResults(book, chapter, body);
-				storeMostRecentInLocalStorage(title);
-				storePassageInLocalStorage(title, body);
+				storeMostRecentPassage(title);
+				addToTextArray(title, body);
 			})
 			.catch((error) => {
 				console.log(error);
@@ -350,7 +236,7 @@ export const Home = () => {
 			//retrieve text body from local storage using title of most recent book and chapter
 			const title = `${book}+${chapter}`;
 			console.log(`Searching storage for ${title}`);
-			let body = getTextBodyFromLocalStorage(title);
+			let body = getTextBody(title);
 			if (body) {
 				console.log(`Retrieved text body of ${title} from local storage`);
 				updateResults(book, chapter, body);
@@ -381,11 +267,11 @@ export const Home = () => {
 		const title = `${search.book}+${search.chapter}`;
 		console.log(`Checking local storage for ${title}`);
 		//try to retrieve text body from local storage
-		let body = getTextBodyFromLocalStorage(title);
+		let body = getTextBody(title);
 		if (body) {
 			console.log(`Retrieved body of ${title} from local storage`);
 			updateResults(search.book, search.chapter, body);
-			storeMostRecentInLocalStorage(title);
+			storeMostRecentPassage(title);
 			analytics.logEvent('fetched_text_from_local_storage', {
 				searchBook: search.book,
 				searchChapter: search.chapter,
@@ -404,7 +290,7 @@ export const Home = () => {
 	useEffect(() => {
 		//Loading textAudio playback rate
 		console.log(`Initializing playspeed with user's previous settings`);
-		const targetSpeed = getPlaySpeedFromLocalStorage();
+		const targetSpeed = getPlaySpeed();
 		dispatch(setAudioSpeed(targetSpeed));
 
 		//Loading last-viewed book and chapter
@@ -431,51 +317,6 @@ export const Home = () => {
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-
-	/* textAudio event listeners */
-	useEffect(() => {
-		//load the resource (necessary on mobile)
-		textAudio.load();
-		textAudio.currentTime = 0;
-		textAudio.playbackRate = audioSettings.speed; //load textAudio settings
-
-		//loaded enough to play
-		textAudio.addEventListener('canplay', () => {
-			dispatch(setAudioIsReady(true));
-		});
-		textAudio.addEventListener('pause', () => {
-			dispatch(setAudioIsPlaying(false));
-		});
-		textAudio.addEventListener('play', () => {
-			dispatch(setAudioIsPlaying(true));
-		});
-		textAudio.addEventListener('error', () => {
-			dispatch(setAudioHasError(true));
-		});
-		//not enough data
-		textAudio.addEventListener('waiting', () => {
-			//No action currently selected for this event
-		});
-		//ready to play after waiting
-		textAudio.addEventListener('playing', () => {
-			dispatch(setAudioIsReady(true));
-		});
-		//textAudio is over
-		textAudio.addEventListener('ended', () => {
-			textAudio.pause();
-			textAudio.currentTime = 0;
-		});
-		//as time is updated
-		textAudio.addEventListener('timeupdate', () => {
-			dispatch(setAudioPosition(textAudio.currentTime / textAudio.duration));
-		});
-		//when speed is changed
-		textAudio.addEventListener('ratechange', () => {
-			dispatch(setAudioSpeed(textAudio.playbackRate));
-		});
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [textAudio]);
 
 	//create chapter input options based on book of the bible
 	let chapterArray = [];
@@ -571,16 +412,7 @@ export const Home = () => {
 				may not copy or download more than 500 consecutive verses of the ESV
 				Bible or more than one half of any book of the ESV Bible.
 			</p>
-			<Controls
-				flipView={handleViewChange}
-				play={handlePlay}
-				pause={handlePause}
-				rewind={handleRewind}
-				forward={handleForward}
-				beginning={handleBeginning}
-				progressClick={handleProgressClick}
-				speedChange={handleSpeedChange}
-			/>
+			<Controls flipView={handleViewChange} />
 		</>
 	);
 };
