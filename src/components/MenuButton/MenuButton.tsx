@@ -15,6 +15,7 @@ export const MenuButton = () => {
 
 	return (
 		<button
+			aria-label='Open Menu'
 			className={[styles.button, menu.isOpen ? styles.menuOpen : ''].join(' ')}
 			onClick={toggleMenuOpen}>
 			<span
