@@ -4,15 +4,25 @@ import './index.scss';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+//Firebase Config
+import { app, analytics, FirebaseContext } from './state/firebaseContext';
+
 //Redux
 import { Provider } from 'react-redux';
 import store from './state/store';
 
+const firebaseContext = {
+	app,
+	analytics,
+};
+
 ReactDOM.render(
 	<React.StrictMode>
-		<Provider store={store}>
-			<App />
-		</Provider>
+		<FirebaseContext.Provider value={firebaseContext}>
+			<Provider store={store}>
+				<App />
+			</Provider>
+		</FirebaseContext.Provider>
 	</React.StrictMode>,
 
 	document.getElementById('root')
