@@ -15,6 +15,8 @@ export interface UtilityConfig {
 	analytics: firebase.analytics.Analytics;
 }
 
+//STATE TYPES /////////////////////////////////////////
+
 export interface AudioState {
 	hasError: boolean;
 	isReady: boolean;
