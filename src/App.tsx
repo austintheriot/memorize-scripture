@@ -25,7 +25,10 @@ import { About } from './components/About/About';
 import { Contact } from './components/Contact/Contact';
 
 //Utilities
-import { initializeAudio, initializeApp } from './utilities/dataUtilities';
+import {
+	prepareAudioForPlayback,
+	initializeApp,
+} from './utilities/dataUtilities';
 
 //types
 import { UtilityConfig } from './utilities/types';
@@ -61,7 +64,7 @@ export default function App() {
 	}, []);
 
 	useEffect(() => {
-		initializeAudio(textAudio, audioState, utilityConfig);
+		prepareAudioForPlayback(textAudio, audioState, utilityConfig);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [textAudio]);
 

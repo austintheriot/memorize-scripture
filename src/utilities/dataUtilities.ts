@@ -188,7 +188,7 @@ export const initializeApp = (config: UtilityConfig) => {
 	initializeMostRecentPassage(config);
 };
 
-export const initializeAudio = (
+export const prepareAudioForPlayback = (
 	textAudio: HTMLAudioElement,
 	audioState: AudioState,
 	config: UtilityConfig
