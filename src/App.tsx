@@ -24,6 +24,10 @@ import { Contact } from './components/Contact/Contact';
 export default function App() {
 	const dispatch = useDispatch();
 
+	const closeMenu = () => {
+		dispatch(setMenuIsOpen(false));
+	};
+
 	const [textAudio, setTextAudio] = useState(new Audio()); //Audio from ESV
 	const [userAudio, setUserAudio] = useState(new Audio()); //User-recorded Audio
 	const audio = {
@@ -31,10 +35,6 @@ export default function App() {
 		setTextAudio,
 		userAudio,
 		setUserAudio,
-	};
-
-	const closeMenu = () => {
-		dispatch(setMenuIsOpen(false));
 	};
 
 	return (
