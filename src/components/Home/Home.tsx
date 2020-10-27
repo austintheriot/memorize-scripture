@@ -306,9 +306,9 @@ export const Home = () => {
 		});
 
 		const textURL =
-			'https://api.esv.org/v3/text/text/?' +
+			'https://api.esv.org/v3/passage/text/?' +
 			`q=${book.split(' ').join('+')}+${chapter}` +
-			'&include-text-references=false' +
+			'&include-passage-references=false' +
 			'&include-verse-numbers=false' +
 			'&include-first-verse-numbers=false' +
 			'&include-footnotes=false' +
