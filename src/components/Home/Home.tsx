@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+
+import { AudioContext } from '../../state/audioContext';
 
 //Redux State
 import { useSelector, useDispatch } from 'react-redux';
@@ -85,12 +87,8 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export const Home = (props: {
-	menuOpen: boolean;
-	analytics: any;
-	audio: HTMLMediaElement;
-	setAudio: any;
-}) => {
+export const Home = (props: { menuOpen: boolean; analytics: any }) => {
+	const { textAudio, setTextAudio } = useContext(AudioContext);
 	const dispatch = useDispatch();
 
 	//Material UI Styling:
@@ -125,11 +123,11 @@ export const Home = (props: {
 		error?: string | undefined
 	) => {
 		//Auio Settings:
-		props.audio.pause();
+		textAudio.pause();
 		dispatch(setAudioHasError(false));
 		dispatch(setAudioIsReady(false));
 		dispatch(setAudioPosition(0));
-		props.setAudio(
+		setTextAudio(
 			new Audio(`https://audio.esv.org/hw/mq/${book} ${chapter}.mp3`)
 		);
 
@@ -198,41 +196,41 @@ export const Home = (props: {
 
 	const handlePlay = () => {
 		props.analytics.logEvent('play_button_pressed');
-		if (props.audio.readyState !== 4) return;
-		props.audio.play();
+		if (textAudio.readyState !== 4) return;
+		textAudio.play();
 		dispatch(setAudioIsPlaying(true));
 	};
 
 	const handlePause = () => {
 		props.analytics.logEvent('pause_buton_pressed');
-		if (props.audio.readyState !== 4) return;
-		props.audio.pause();
+		if (textAudio.readyState !== 4) return;
+		textAudio.pause();
 		dispatch(setAudioIsPlaying(false));
 	};
 
 	const handleRewind = () => {
 		props.analytics.logEvent('back_button_pressed');
-		if (props.audio.readyState !== 4) return;
-		const targetTime = Math.max(props.audio.currentTime - 5, 0);
-		dispatch(setAudioPosition(targetTime / props.audio.duration));
-		props.audio.currentTime = targetTime;
+		if (textAudio.readyState !== 4) return;
+		const targetTime = Math.max(textAudio.currentTime - 5, 0);
+		dispatch(setAudioPosition(targetTime / textAudio.duration));
+		textAudio.currentTime = targetTime;
 	};
 
 	const handleForward = () => {
 		props.analytics.logEvent('forward_button_pressed');
-		if (props.audio.readyState !== 4) return;
+		if (textAudio.readyState !== 4) return;
 		const targetTime = Math.min(
-			props.audio.currentTime + 5,
-			props.audio.duration - 0.01
+			textAudio.currentTime + 5,
+			textAudio.duration - 0.01
 		);
-		dispatch(setAudioPosition(targetTime / props.audio.duration));
-		props.audio.currentTime = targetTime;
+		dispatch(setAudioPosition(targetTime / textAudio.duration));
+		textAudio.currentTime = targetTime;
 	};
 
 	const handleBeginning = () => {
 		props.analytics.logEvent('beginning_button_pressed');
-		if (props.audio.readyState !== 4) return;
-		props.audio.currentTime = 0;
+		if (textAudio.readyState !== 4) return;
+		textAudio.currentTime = 0;
 	};
 
 	const handleViewChange = () => {
@@ -250,7 +248,7 @@ export const Home = (props: {
 			targetTime,
 		});
 		dispatch(setAudioPosition(targetTime));
-		props.audio.currentTime = props.audio.duration * targetTime;
+		textAudio.currentTime = textAudio.duration * targetTime;
 	};
 
 	const handleSpeedChange = () => {
@@ -258,7 +256,7 @@ export const Home = (props: {
 		props.analytics.logEvent('speed_button_pressed', {
 			targetSpeed,
 		});
-		props.audio.playbackRate = targetSpeed;
+		textAudio.playbackRate = targetSpeed;
 		dispatch(setAudioSpeed(targetSpeed));
 		storePlaySpeedInLocalStorage(targetSpeed);
 	};
@@ -406,7 +404,7 @@ export const Home = (props: {
 
 	/* Initialize app on load */
 	useEffect(() => {
-		//Loading props.audio playback rate
+		//Loading textAudio playback rate
 		console.log(`Initializing playspeed with user's previous settings`);
 		const targetSpeed = getPlaySpeedFromLocalStorage();
 		dispatch(setAudioSpeed(targetSpeed));
@@ -436,52 +434,50 @@ export const Home = (props: {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	/* props.audio event listeners */
+	/* textAudio event listeners */
 	useEffect(() => {
 		//load the resource (necessary on mobile)
-		props.audio.load();
-		props.audio.currentTime = 0;
-		props.audio.playbackRate = audioSettings.speed; //load props.audio settings
+		textAudio.load();
+		textAudio.currentTime = 0;
+		textAudio.playbackRate = audioSettings.speed; //load textAudio settings
 
 		//loaded enough to play
-		props.audio.addEventListener('canplay', () => {
+		textAudio.addEventListener('canplay', () => {
 			dispatch(setAudioIsReady(true));
 		});
-		props.audio.addEventListener('pause', () => {
+		textAudio.addEventListener('pause', () => {
 			dispatch(setAudioIsPlaying(false));
 		});
-		props.audio.addEventListener('play', () => {
+		textAudio.addEventListener('play', () => {
 			dispatch(setAudioIsPlaying(true));
 		});
-		props.audio.addEventListener('error', () => {
+		textAudio.addEventListener('error', () => {
 			dispatch(setAudioHasError(true));
 		});
 		//not enough data
-		props.audio.addEventListener('waiting', () => {
+		textAudio.addEventListener('waiting', () => {
 			//No action currently selected for this event
 		});
 		//ready to play after waiting
-		props.audio.addEventListener('playing', () => {
+		textAudio.addEventListener('playing', () => {
 			dispatch(setAudioIsReady(true));
 		});
-		//props.audio is over
-		props.audio.addEventListener('ended', () => {
-			props.audio.pause();
-			props.audio.currentTime = 0;
+		//textAudio is over
+		textAudio.addEventListener('ended', () => {
+			textAudio.pause();
+			textAudio.currentTime = 0;
 		});
 		//as time is updated
-		props.audio.addEventListener('timeupdate', () => {
-			dispatch(
-				setAudioPosition(props.audio.currentTime / props.audio.duration)
-			);
+		textAudio.addEventListener('timeupdate', () => {
+			dispatch(setAudioPosition(textAudio.currentTime / textAudio.duration));
 		});
 		//when speed is changed
-		props.audio.addEventListener('ratechange', () => {
-			dispatch(setAudioSpeed(props.audio.playbackRate));
+		textAudio.addEventListener('ratechange', () => {
+			dispatch(setAudioSpeed(textAudio.playbackRate));
 		});
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [props.audio]);
+	}, [textAudio]);
 
 	//create chapter input options based on book of the bible
 	let chapterArray = [];
@@ -498,9 +494,9 @@ export const Home = (props: {
 		<>
 			<Prompt
 				message={() => {
-					//Pause props.audio when navigating away from Home
-					console.log('Leaving Home page. Pausing props.audio.');
-					props.audio.pause();
+					//Pause textAudio when navigating away from Home
+					console.log('Leaving Home page. Pausing textAudio.');
+					textAudio.pause();
 					return true;
 				}}
 			/>
