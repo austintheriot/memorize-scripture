@@ -1,14 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-
-interface State {
-	audio: {
-		hasError: boolean;
-		isReady: boolean;
-		isPlaying: boolean;
-		position: number;
-		speed: number;
-	};
-}
+import { AudioSlice } from '../utilities/types';
 
 export const audioSlice = createSlice({
 	name: 'search',
@@ -46,5 +37,5 @@ export const {
 	setAudioSpeed,
 } = audioSlice.actions;
 
-export const selectAudioSettings = (state: State) => state.audio;
+export const selectAudioSettings = (state: AudioSlice) => state.audio;
 export default audioSlice.reducer;
