@@ -34,9 +34,6 @@ export const {
 	setSearchNumberOfChapters,
 } = searchSlice.actions;
 
-export const selectSearchBook = (state: State) => state.search.book;
-export const selectSearchChapter = (state: State) => state.search.chapter;
-export const selectSearchNumberOfChapters = (state: State) =>
-	state.search.numberOfChapters;
+export const selectSearch = (state: State) => state.search;
 
 export default searchSlice.reducer;
