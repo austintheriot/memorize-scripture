@@ -34,7 +34,7 @@ import {
 } from './localStorage';
 
 //types
-import { UtilityConfig, AudioType, AudioState } from './types';
+import { UtilityConfig, AudioState } from './types';
 
 export const updateSearchTerms = (
 	book: string,
@@ -155,15 +155,7 @@ export const initializeMostRecentPassage = (config: UtilityConfig) => {
 	}
 };
 
-export const initializeApp = (config: UtilityConfig) => {
-	//Loading textAudio playback rate
-	console.log(`Initializing playspeed with user's previous settings`);
-	const targetSpeed = getPlaySpeed();
-	config.dispatch(setAudioSpeed(targetSpeed));
-
-	//Loading last-viewed book and chapter
-	initializeMostRecentPassage(config);
-
+const preventPinchZoom = () => {
 	//Prevent pinch zoom in Safari
 	document.addEventListener('gesturestart', function (e) {
 		e.preventDefault();
@@ -184,15 +176,27 @@ export const initializeApp = (config: UtilityConfig) => {
 	});
 };
 
+export const initializeApp = (config: UtilityConfig) => {
+	preventPinchZoom();
+
+	//Loading textAudio playback rate
+	console.log(`Initializing playspeed with user's previous settings`);
+	const targetSpeed = getPlaySpeed();
+	config.dispatch(setAudioSpeed(targetSpeed));
+
+	//Loading last-viewed book and chapter
+	initializeMostRecentPassage(config);
+};
+
 export const initializeAudio = (
-	textAudio: AudioType,
-	audioSettings: AudioState,
+	textAudio: HTMLAudioElement,
+	audioState: AudioState,
 	config: UtilityConfig
 ) => {
 	//load the resource (necessary on mobile)
 	textAudio.load();
 	textAudio.currentTime = 0;
-	textAudio.playbackRate = audioSettings.speed; //load textAudio settings
+	textAudio.playbackRate = audioState.speed; //load textAudio settings
 
 	//loaded enough to play
 	textAudio.addEventListener('canplay', () => {

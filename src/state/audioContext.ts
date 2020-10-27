@@ -1,13 +1,10 @@
 import React from 'react';
-
-const audio = new Audio();
-type AudioType = typeof audio;
-type SetAudioType = React.Dispatch<React.SetStateAction<HTMLAudioElement>>;
+import { SetAudioType } from '../utilities/types';
 
 interface Context {
-	textAudio: AudioType;
+	textAudio: HTMLAudioElement;
 	setTextAudio: SetAudioType;
-	userAudio: AudioType;
+	userAudio: HTMLAudioElement;
 	setUserAudio: SetAudioType;
 }
 

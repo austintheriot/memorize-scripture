@@ -31,7 +31,7 @@ import { initializeAudio, initializeApp } from './utilities/dataUtilities';
 import { UtilityConfig } from './utilities/types';
 
 export default function App() {
-	const audioSettings = useSelector(selectAudioSettings);
+	const audioState = useSelector(selectAudioSettings);
 	const { analytics } = useContext(FirebaseContext);
 	const dispatch = useDispatch();
 
@@ -61,7 +61,7 @@ export default function App() {
 	}, []);
 
 	useEffect(() => {
-		initializeAudio(textAudio, audioSettings, utilityConfig);
+		initializeAudio(textAudio, audioState, utilityConfig);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [textAudio]);
 
