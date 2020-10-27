@@ -137,7 +137,7 @@ export const Home = () => {
 	const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		e.preventDefault();
 		//Check local storage
-		const title = `${search.book}+${search.chapter}`;
+		const title = `${search.book} ${search.chapter}`;
 		console.log(`Checking local storage for ${title}`);
 		//try to retrieve text body from local storage
 		let body = getTextBody(title);

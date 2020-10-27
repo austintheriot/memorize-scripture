@@ -76,18 +76,18 @@ export const fetchTextFromESVAPI = (
 	chapter: string,
 	config: UtilityConfig
 ) => {
-	const title = `${book}+${chapter}`;
+	const title = `${book} ${chapter}`;
 	console.log(`Fetching text body file of ${title} from ESV API`);
 
 	config.analytics.logEvent('fetched_text_from_ESV_API', {
 		book,
 		chapter,
-		title: `${book} ${chapter}`,
+		title,
 	});
 
 	const textURL =
 		'https://api.esv.org/v3/passage/text/?' +
-		`q=${book.split(' ').join('+')}+${chapter}` +
+		`q=${title}` +
 		'&include-passage-references=false' +
 		'&include-verse-numbers=false' +
 		'&include-first-verse-numbers=false' +
@@ -118,17 +118,23 @@ export const fetchTextFromESVAPI = (
 		});
 };
 
+const splitTitleIntoBookAndChapter = (title: string) => {
+	const wordArray = title.split(' ');
+	const book = wordArray.slice(0, wordArray.length - 1).join(' ');
+	const chapter = wordArray[wordArray.length - 1];
+	return { book, chapter };
+};
+
 export const initializeMostRecentPassage = (config: UtilityConfig) => {
 	console.log('Checking for most recent book and chapter.');
-	const recent = window.localStorage.getItem('recent');
+	let recent = window.localStorage.getItem('recent');
 	if (recent) {
 		console.log(`${recent} is the most recent chapter accessed.`);
-		const book = recent.split('+')[0];
-		const chapter = recent.split('+')[1];
+		const { book, chapter } = splitTitleIntoBookAndChapter(recent);
 		updateSearchTerms(book, chapter, config);
 
 		//retrieve text body from local storage using title of most recent book and chapter
-		const title = `${book}+${chapter}`;
+		const title = `${book} ${chapter}`;
 		console.log(`Searching storage for ${title}`);
 		let body = getTextBody(title);
 		if (body) {
