@@ -5,8 +5,8 @@ interface State {
 		book: string;
 		chapter: string;
 		body: string;
-		lineBrokenBody: string[];
-		condensedBody: string[];
+		split: string[];
+		condensed: string[];
 	};
 }
 
@@ -16,34 +16,34 @@ export const textSlice = createSlice({
 		book: 'Psalm',
 		chapter: '23',
 		body: '',
-		lineBrokenBody: [],
-		condensedBody: [],
+		split: [],
+		condensed: [],
 	},
 	reducers: {
-		setBodyBook: (state, action) => {
+		setBook: (state, action) => {
 			state.book = action.payload;
 		},
-		setBodyChapter: (state, action) => {
+		setChapter: (state, action) => {
 			state.chapter = action.payload;
 		},
 		setBody: (state, action) => {
 			state.body = action.payload;
 		},
-		setLineBrokenBody: (state, action) => {
-			state.lineBrokenBody = action.payload;
+		setSplit: (state, action) => {
+			state.split = action.payload;
 		},
-		setCondensedBody: (state, action) => {
-			state.condensedBody = action.payload;
+		setCondensed: (state, action) => {
+			state.condensed = action.payload;
 		},
 	},
 });
 
 export const {
-	setBodyBook,
-	setBodyChapter,
+	setBook,
+	setChapter,
 	setBody,
-	setLineBrokenBody,
-	setCondensedBody,
+	setSplit,
+	setCondensed,
 } = textSlice.actions;
 
 // The function below is called a thunk and allows us to perform async logic. It
@@ -61,10 +61,6 @@ export const {
 // the state. Selectors can also be defined inline where they're used instead of
 // in the slice file. For example: `useSelector((state) => state.counter.value)`
 
-export const selectBodyBook = (state: State) => state.text.book;
-export const selectBodyChapter = (state: State) => state.text.chapter;
-export const selectBody = (state: State) => state.text.body;
-export const selectLineBrokenBody = (state: State) => state.text.lineBrokenBody;
-export const selectCondensedBody = (state: State) => state.text.condensedBody;
+export const selectText = (state: State) => state.text;
 
 export default textSlice.reducer;

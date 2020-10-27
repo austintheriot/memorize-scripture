@@ -1,28 +1,22 @@
 import React, { useState, useEffect } from 'react';
 
-//Redux
+//Redux State
 import { useSelector, useDispatch } from 'react-redux';
 //SearchSlice
 import {
 	setSearchBook,
 	setSearchChapter,
 	setSearchNumberOfChapters,
-	selectSearchBook,
-	selectSearchChapter,
-	selectSearchNumberOfChapters,
+	selectSearch,
 } from '../../state/searchSlice';
 //TextSlice
 import {
-	setBodyBook,
-	setBodyChapter,
+	setBook,
+	setChapter,
 	setBody,
-	setLineBrokenBody,
-	setCondensedBody,
-	selectBodyBook,
-	selectBodyChapter,
-	selectBody,
-	selectLineBrokenBody,
-	selectCondensedBody,
+	setSplit,
+	setCondensed,
+	selectText,
 } from '../../state/textSlice';
 //AudioSlice
 import {
@@ -41,11 +35,11 @@ import styles from './Home.module.scss';
 import axios from 'axios';
 import { ESVApiKey } from '../../utilities/config';
 
+//Routing
 import { Prompt } from 'react-router';
 
 //Material UI Components
 import { makeStyles } from '@material-ui/core/styles';
-
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
@@ -98,28 +92,19 @@ export const Home = (props: {
 	setAudio: any;
 }) => {
 	const dispatch = useDispatch();
+
 	//Material UI Styling:
 	const classes = useStyles();
 
-	//Text Body:
-	const bodyBook = useSelector(selectBodyBook);
-	const bodyChapter = useSelector(selectBodyChapter);
-	const body = useSelector(selectBody);
-	const lineBrokenBody = useSelector(selectLineBrokenBody);
-	const condensedBody = useSelector(selectCondensedBody);
+	//Redux State:
+	const search = useSelector(selectSearch);
+	const text = useSelector(selectText);
 	const audioSettings = useSelector(selectAudioSettings);
 
-	//Search Terms:
-	const searchBook = useSelector(selectSearchBook);
-	const searchChapter = useSelector(selectSearchChapter);
-	const searchNumberOfChapters = useSelector(selectSearchNumberOfChapters);
-
-	//Home Specific State:
+	//Local State:
 	const [showCondensed, setShowCondensed] = useState(true);
 	const [message, setMessage] = useState('');
 	const [clickedLine, setClickedLine] = useState(-1);
-
-	const { audio, setAudio } = props;
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
@@ -140,21 +125,21 @@ export const Home = (props: {
 		error?: string | undefined
 	) => {
 		//Auio Settings:
-		audio.pause();
+		props.audio.pause();
 		dispatch(setAudioHasError(false));
 		dispatch(setAudioIsReady(false));
 		dispatch(setAudioPosition(0));
-		setAudio(new Audio(`https://audio.esv.org/hw/mq/${book} ${chapter}.mp3`));
-
-		//Search
+		props.setAudio(
+			new Audio(`https://audio.esv.org/hw/mq/${book} ${chapter}.mp3`)
+		);
 
 		//Text Results:
-		dispatch(setBodyBook(book === 'Psalms' ? 'Psalm' : book));
-		dispatch(setBodyChapter(chapter));
+		dispatch(setBook(book === 'Psalms' ? 'Psalm' : book));
+		dispatch(setChapter(chapter));
 		dispatch(setBody(body));
 		const lineBrokenText = breakFullTextIntoLines(body);
-		dispatch(setLineBrokenBody(lineBrokenText));
-		dispatch(setCondensedBody(condenseText(lineBrokenText)));
+		dispatch(setSplit(lineBrokenText));
+		dispatch(setCondensed(condenseText(lineBrokenText)));
 
 		//Set loading/error message:
 		setMessage(error || '');
@@ -213,38 +198,41 @@ export const Home = (props: {
 
 	const handlePlay = () => {
 		props.analytics.logEvent('play_button_pressed');
-		if (audio.readyState !== 4) return;
-		audio.play();
+		if (props.audio.readyState !== 4) return;
+		props.audio.play();
 		dispatch(setAudioIsPlaying(true));
 	};
 
 	const handlePause = () => {
 		props.analytics.logEvent('pause_buton_pressed');
-		if (audio.readyState !== 4) return;
-		audio.pause();
+		if (props.audio.readyState !== 4) return;
+		props.audio.pause();
 		dispatch(setAudioIsPlaying(false));
 	};
 
 	const handleRewind = () => {
 		props.analytics.logEvent('back_button_pressed');
-		if (audio.readyState !== 4) return;
-		const targetTime = Math.max(audio.currentTime - 5, 0);
-		dispatch(setAudioPosition(targetTime / audio.duration));
-		audio.currentTime = targetTime;
+		if (props.audio.readyState !== 4) return;
+		const targetTime = Math.max(props.audio.currentTime - 5, 0);
+		dispatch(setAudioPosition(targetTime / props.audio.duration));
+		props.audio.currentTime = targetTime;
 	};
 
 	const handleForward = () => {
 		props.analytics.logEvent('forward_button_pressed');
-		if (audio.readyState !== 4) return;
-		const targetTime = Math.min(audio.currentTime + 5, audio.duration - 0.01);
-		dispatch(setAudioPosition(targetTime / audio.duration));
-		audio.currentTime = targetTime;
+		if (props.audio.readyState !== 4) return;
+		const targetTime = Math.min(
+			props.audio.currentTime + 5,
+			props.audio.duration - 0.01
+		);
+		dispatch(setAudioPosition(targetTime / props.audio.duration));
+		props.audio.currentTime = targetTime;
 	};
 
 	const handleBeginning = () => {
 		props.analytics.logEvent('beginning_button_pressed');
-		if (audio.readyState !== 4) return;
-		audio.currentTime = 0;
+		if (props.audio.readyState !== 4) return;
+		props.audio.currentTime = 0;
 	};
 
 	const handleViewChange = () => {
@@ -262,7 +250,7 @@ export const Home = (props: {
 			targetTime,
 		});
 		dispatch(setAudioPosition(targetTime));
-		audio.currentTime = audio.duration * targetTime;
+		props.audio.currentTime = props.audio.duration * targetTime;
 	};
 
 	const handleSpeedChange = () => {
@@ -270,7 +258,7 @@ export const Home = (props: {
 		props.analytics.logEvent('speed_button_pressed', {
 			targetSpeed,
 		});
-		audio.playbackRate = targetSpeed;
+		props.audio.playbackRate = targetSpeed;
 		dispatch(setAudioSpeed(targetSpeed));
 		storePlaySpeedInLocalStorage(targetSpeed);
 	};
@@ -288,7 +276,7 @@ export const Home = (props: {
 			newNumberOfChapters = bookChapters[bookString]; //get chapter numbers
 			dispatch(setSearchNumberOfChapters(newNumberOfChapters)); //set chapter numbers
 		}
-		if (Number(searchChapter) <= newNumberOfChapters) return;
+		if (Number(search.chapter) <= newNumberOfChapters) return;
 		dispatch(setSearchChapter('1'));
 	};
 
@@ -322,9 +310,9 @@ export const Home = (props: {
 		});
 
 		const textURL =
-			'https://api.esv.org/v3/passage/text/?' +
+			'https://api.esv.org/v3/text/text/?' +
 			`q=${book.split(' ').join('+')}+${chapter}` +
-			'&include-passage-references=false' +
+			'&include-text-references=false' +
 			'&include-verse-numbers=false' +
 			'&include-first-verse-numbers=false' +
 			'&include-footnotes=false' +
@@ -394,31 +382,31 @@ export const Home = (props: {
 	const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		e.preventDefault();
 		//Check local storage
-		const title = `${searchBook}+${searchChapter}`;
+		const title = `${search.book}+${search.chapter}`;
 		console.log(`Checking local storage for ${title}`);
 		//try to retrieve text body from local storage
 		let body = getTextBodyFromLocalStorage(title);
 		if (body) {
 			console.log(`Retrieved body of ${title} from local storage`);
-			updateResults(searchBook, searchChapter, body);
+			updateResults(search.book, search.chapter, body);
 			storeMostRecentInLocalStorage(title);
 			props.analytics.logEvent('fetched_text_from_local_storage', {
-				searchBook,
-				searchChapter,
-				title: `${searchBook} ${searchChapter}`,
+				searchBook: search.book,
+				searchChapter: search.chapter,
+				title: `${search.book} ${search.chapter}`,
 			});
 		} else {
 			//If it does not exist in local storage, make an API call, and store the returned text
 			console.log(`${title} not found in local storage`);
 			console.log('Making a call to the ESV API');
-			updateResults(searchBook, searchChapter, '', 'Loading...'); //show loading indicator
-			fetchTextFromESVAPI(searchBook, searchChapter);
+			updateResults(search.book, search.chapter, '', 'Loading...'); //show loading indicator
+			fetchTextFromESVAPI(search.book, search.chapter);
 		}
 	};
 
 	/* Initialize app on load */
 	useEffect(() => {
-		//Loading audio playback rate
+		//Loading props.audio playback rate
 		console.log(`Initializing playspeed with user's previous settings`);
 		const targetSpeed = getPlaySpeedFromLocalStorage();
 		dispatch(setAudioSpeed(targetSpeed));
@@ -448,54 +436,56 @@ export const Home = (props: {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	/* Audio event listeners */
+	/* props.audio event listeners */
 	useEffect(() => {
 		//load the resource (necessary on mobile)
-		audio.load();
-		audio.currentTime = 0;
-		audio.playbackRate = audioSettings.speed; //load audio settings
+		props.audio.load();
+		props.audio.currentTime = 0;
+		props.audio.playbackRate = audioSettings.speed; //load props.audio settings
 
 		//loaded enough to play
-		audio.addEventListener('canplay', () => {
+		props.audio.addEventListener('canplay', () => {
 			dispatch(setAudioIsReady(true));
 		});
-		audio.addEventListener('pause', () => {
+		props.audio.addEventListener('pause', () => {
 			dispatch(setAudioIsPlaying(false));
 		});
-		audio.addEventListener('play', () => {
+		props.audio.addEventListener('play', () => {
 			dispatch(setAudioIsPlaying(true));
 		});
-		audio.addEventListener('error', () => {
+		props.audio.addEventListener('error', () => {
 			dispatch(setAudioHasError(true));
 		});
 		//not enough data
-		audio.addEventListener('waiting', () => {
+		props.audio.addEventListener('waiting', () => {
 			//No action currently selected for this event
 		});
 		//ready to play after waiting
-		audio.addEventListener('playing', () => {
+		props.audio.addEventListener('playing', () => {
 			dispatch(setAudioIsReady(true));
 		});
-		//audio is over
-		audio.addEventListener('ended', () => {
-			audio.pause();
-			audio.currentTime = 0;
+		//props.audio is over
+		props.audio.addEventListener('ended', () => {
+			props.audio.pause();
+			props.audio.currentTime = 0;
 		});
 		//as time is updated
-		audio.addEventListener('timeupdate', () => {
-			dispatch(setAudioPosition(audio.currentTime / audio.duration));
+		props.audio.addEventListener('timeupdate', () => {
+			dispatch(
+				setAudioPosition(props.audio.currentTime / props.audio.duration)
+			);
 		});
 		//when speed is changed
-		audio.addEventListener('ratechange', () => {
-			dispatch(setAudioSpeed(audio.playbackRate));
+		props.audio.addEventListener('ratechange', () => {
+			dispatch(setAudioSpeed(props.audio.playbackRate));
 		});
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [audio]);
+	}, [props.audio]);
 
 	//create chapter input options based on book of the bible
 	let chapterArray = [];
-	for (let i = 1; i <= searchNumberOfChapters; i++) {
+	for (let i = 1; i <= search.numberOfChapters; i++) {
 		chapterArray.push(i);
 	}
 	chapterArray = chapterArray.map((el) => (
@@ -508,14 +498,14 @@ export const Home = (props: {
 		<>
 			<Prompt
 				message={() => {
-					//Pause audio when navigating away from Home
-					console.log('Leaving Home page. Pausing audio.');
-					audio.pause();
+					//Pause props.audio when navigating away from Home
+					console.log('Leaving Home page. Pausing props.audio.');
+					props.audio.pause();
 					return true;
 				}}
 			/>
 			<h1 className={styles.h1}>
-				{bodyBook} {bodyChapter}
+				{text.book} {text.chapter}
 			</h1>
 			<form className={styles.form}>
 				<FormControl className={classes.formControl}>
@@ -526,7 +516,7 @@ export const Home = (props: {
 						className={classes.select}
 						labelId='bible-book'
 						id='bible-book'
-						value={searchBook}
+						value={search.book}
 						onChange={handleBookChange}>
 						{bookTitles.map((bookString) => (
 							<MenuItem value={bookString} key={bookString}>
@@ -543,7 +533,7 @@ export const Home = (props: {
 						className={classes.select}
 						labelId='bible-chapter'
 						id='bible-chapter'
-						value={searchChapter}
+						value={search.chapter}
 						onChange={handleChapterChange}>
 						{chapterArray}
 					</Select>
@@ -554,7 +544,7 @@ export const Home = (props: {
 			</form>
 			{showCondensed ? (
 				<div className={styles.textAreaContainer}>
-					{condensedBody.map((line, i) => {
+					{text.condensed.map((line, i) => {
 						return (
 							<p
 								key={line + i.toString()}
@@ -566,14 +556,14 @@ export const Home = (props: {
 								onClick={(
 									e: React.MouseEvent<HTMLParagraphElement, MouseEvent>
 								) => handleLineBrokenText(e, i)}>
-								{clickedLine === i ? lineBrokenBody[i] : condensedBody[i]}
+								{clickedLine === i ? text.split[i] : text.condensed[i]}
 							</p>
 						);
 					})}
 				</div>
 			) : (
 				<div className={styles.textAreaContainer}>
-					<div className={styles.fullText}>{body}</div>
+					<div className={styles.fullText}>{text.body}</div>
 				</div>
 			)}
 
