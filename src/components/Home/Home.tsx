@@ -191,7 +191,6 @@ export const Home = () => {
 					<Select
 						className={classes.select}
 						labelId='bible-book'
-						id='bible-book'
 						value={search.book}
 						onChange={handleBookChange}>
 						{bookTitles.map((bookString) => (
@@ -208,13 +207,15 @@ export const Home = () => {
 					<Select
 						className={classes.select}
 						labelId='bible-chapter'
-						id='bible-chapter'
 						value={search.chapter}
 						onChange={handleChapterChange}>
 						{chapterArray}
 					</Select>
 				</FormControl>
-				<button className={styles.search} onClick={handleSubmit}>
+				<button
+					className={styles.search}
+					onClick={handleSubmit}
+					aria-label={'Search'}>
 					<img src={searchIcon} alt='search' />
 				</button>
 			</form>
