@@ -8,13 +8,6 @@ import { AudioContext } from './state/audioContext';
 import { useDispatch } from 'react-redux';
 import { setMenuIsOpen } from './state/menuSlice';
 
-//Config
-import { firebaseConfig } from './utilities/config';
-
-//Firebase Config
-import * as firebase from 'firebase/app';
-import 'firebase/analytics';
-
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 //Custom components
@@ -27,18 +20,6 @@ import { Footer } from './components/Footer/Footer';
 import { Home } from './components/Home/Home';
 import { About } from './components/About/About';
 import { Contact } from './components/Contact/Contact';
-
-const app = firebase.initializeApp(firebaseConfig);
-const analytics = firebase.analytics(app);
-
-const audio = new Audio();
-type AudioType = typeof audio;
-type SetAudioType = React.Dispatch<React.SetStateAction<HTMLAudioElement>>;
-
-interface AudioState {
-	textAudio: AudioType;
-	userAudio: AudioType;
-}
 
 export default function App() {
 	const dispatch = useDispatch();
@@ -68,7 +49,7 @@ export default function App() {
 								<Route exact path='/contact' component={Contact} />
 								<Route exact path='/about' component={About} />
 								<Route path='/'>
-									<Home analytics={analytics} />
+									<Home />
 								</Route>
 							</Switch>
 						</div>

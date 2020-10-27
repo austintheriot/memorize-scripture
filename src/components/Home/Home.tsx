@@ -6,6 +6,7 @@ import { ESVApiKey } from '../../utilities/config';
 
 //App State
 import { AudioContext } from '../../state/audioContext';
+import { FirebaseContext } from '../../state/firebaseContext';
 import { useSelector, useDispatch } from 'react-redux';
 import {
 	setSearchBook,
@@ -83,8 +84,9 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export const Home = (props: { analytics: any }) => {
+export const Home = () => {
 	const { textAudio, setTextAudio } = useContext(AudioContext);
+	const { analytics } = useContext(FirebaseContext);
 	const dispatch = useDispatch();
 
 	//Material UI Styling:
@@ -191,21 +193,21 @@ export const Home = (props: { analytics: any }) => {
 	};
 
 	const handlePlay = () => {
-		props.analytics.logEvent('play_button_pressed');
+		analytics.logEvent('play_button_pressed');
 		if (textAudio.readyState !== 4) return;
 		textAudio.play();
 		dispatch(setAudioIsPlaying(true));
 	};
 
 	const handlePause = () => {
-		props.analytics.logEvent('pause_buton_pressed');
+		analytics.logEvent('pause_buton_pressed');
 		if (textAudio.readyState !== 4) return;
 		textAudio.pause();
 		dispatch(setAudioIsPlaying(false));
 	};
 
 	const handleRewind = () => {
-		props.analytics.logEvent('back_button_pressed');
+		analytics.logEvent('back_button_pressed');
 		if (textAudio.readyState !== 4) return;
 		const targetTime = Math.max(textAudio.currentTime - 5, 0);
 		dispatch(setAudioPosition(targetTime / textAudio.duration));
@@ -213,7 +215,7 @@ export const Home = (props: { analytics: any }) => {
 	};
 
 	const handleForward = () => {
-		props.analytics.logEvent('forward_button_pressed');
+		analytics.logEvent('forward_button_pressed');
 		if (textAudio.readyState !== 4) return;
 		const targetTime = Math.min(
 			textAudio.currentTime + 5,
@@ -224,13 +226,13 @@ export const Home = (props: { analytics: any }) => {
 	};
 
 	const handleBeginning = () => {
-		props.analytics.logEvent('beginning_button_pressed');
+		analytics.logEvent('beginning_button_pressed');
 		if (textAudio.readyState !== 4) return;
 		textAudio.currentTime = 0;
 	};
 
 	const handleViewChange = () => {
-		props.analytics.logEvent('flip_view_button_pressed', {
+		analytics.logEvent('flip_view_button_pressed', {
 			showCondensed,
 		});
 		setShowCondensed((prevState) => !prevState);
@@ -240,7 +242,7 @@ export const Home = (props: { analytics: any }) => {
 		e: React.MouseEvent<HTMLDivElement, MouseEvent>
 	) => {
 		const targetTime = e.clientX / document.documentElement.offsetWidth;
-		props.analytics.logEvent('progress_bar_pressed', {
+		analytics.logEvent('progress_bar_pressed', {
 			targetTime,
 		});
 		dispatch(setAudioPosition(targetTime));
@@ -249,7 +251,7 @@ export const Home = (props: { analytics: any }) => {
 
 	const handleSpeedChange = () => {
 		const targetSpeed = Math.max((audioSettings.speed + 0.25) % 2.25, 0.5);
-		props.analytics.logEvent('speed_button_pressed', {
+		analytics.logEvent('speed_button_pressed', {
 			targetSpeed,
 		});
 		textAudio.playbackRate = targetSpeed;
@@ -297,7 +299,7 @@ export const Home = (props: { analytics: any }) => {
 		const title = `${book}+${chapter}`;
 		console.log(`Fetching text body file of ${title} from ESV API`);
 
-		props.analytics.logEvent('fetched_text_from_ESV_API', {
+		analytics.logEvent('fetched_text_from_ESV_API', {
 			book,
 			chapter,
 			title: `${book} ${chapter}`,
@@ -352,7 +354,7 @@ export const Home = (props: { analytics: any }) => {
 			if (body) {
 				console.log(`Retrieved text body of ${title} from local storage`);
 				updateResults(book, chapter, body);
-				props.analytics.logEvent('fetched_text_from_local_storage', {
+				analytics.logEvent('fetched_text_from_local_storage', {
 					book,
 					chapter,
 					title: `${book} ${chapter}`,
@@ -384,7 +386,7 @@ export const Home = (props: { analytics: any }) => {
 			console.log(`Retrieved body of ${title} from local storage`);
 			updateResults(search.book, search.chapter, body);
 			storeMostRecentInLocalStorage(title);
-			props.analytics.logEvent('fetched_text_from_local_storage', {
+			analytics.logEvent('fetched_text_from_local_storage', {
 				searchBook: search.book,
 				searchChapter: search.chapter,
 				title: `${search.book} ${search.chapter}`,
