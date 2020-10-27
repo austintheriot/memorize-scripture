@@ -26,3 +26,40 @@ export interface AudioState {
 export interface AudioSlice {
 	audio: AudioState;
 }
+
+export interface MenuState {
+	isOpen: boolean;
+}
+
+export interface MenuSlice {
+	menu: MenuState;
+}
+
+export interface SearchState {
+	book: string;
+	chapter: string;
+	numberOfChapters: number;
+}
+
+export interface SearchSlice {
+	search: SearchState;
+}
+
+export interface TextState {
+	book: string;
+	chapter: string;
+	body: string;
+	split: string[];
+	condensed: string[];
+}
+
+export interface TextSlice {
+	text: TextState;
+}
+
+export interface GlobalState {
+	menu: MenuState;
+	search: SearchState;
+	text: TextState;
+	audio: AudioState;
+}

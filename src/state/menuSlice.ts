@@ -1,10 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-
-interface State {
-	menu: {
-		isOpen: boolean;
-	};
-}
+import { MenuSlice } from '../utilities/types';
 
 export const searchSlice = createSlice({
 	name: 'menu',
@@ -20,6 +15,6 @@ export const searchSlice = createSlice({
 
 export const { setMenuIsOpen } = searchSlice.actions;
 
-export const selectMenu = (state: State) => state.menu;
+export const selectMenu = (state: MenuSlice) => state.menu;
 
 export default searchSlice.reducer;

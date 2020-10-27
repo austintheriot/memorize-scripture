@@ -1,12 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-
-interface State {
-	search: {
-		book: string;
-		chapter: string;
-		numberOfChapters: number;
-	};
-}
+import { SearchSlice } from '../utilities/types';
 
 export const searchSlice = createSlice({
 	name: 'search',
@@ -34,6 +27,6 @@ export const {
 	setSearchNumberOfChapters,
 } = searchSlice.actions;
 
-export const selectSearch = (state: State) => state.search;
+export const selectSearch = (state: SearchSlice) => state.search;
 
 export default searchSlice.reducer;
