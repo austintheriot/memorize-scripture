@@ -87,7 +87,11 @@
 }
 
 .tableOfContents {
+	ul li {
+		height: 48px;
+	}
 	a {
+		height: 48px;
 		text-decoration: none;
 
 		&:hover {
