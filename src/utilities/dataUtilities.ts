@@ -161,30 +161,7 @@ export const initializeMostRecentPassage = (config: UtilityConfig) => {
 	}
 };
 
-const preventPinchZoom = () => {
-	//Prevent pinch zoom in Safari
-	document.addEventListener('gesturestart', function (e) {
-		e.preventDefault();
-		// special hack to prevent zoom-to-tabs gesture in safari
-		document.body.style.zoom = '0.99';
-	});
-
-	document.addEventListener('gesturechange', function (e) {
-		e.preventDefault();
-		// special hack to prevent zoom-to-tabs gesture in safari
-		document.body.style.zoom = '0.99';
-	});
-
-	document.addEventListener('gestureend', function (e) {
-		e.preventDefault();
-		// special hack to prevent zoom-to-tabs gesture in safari
-		document.body.style.zoom = '0.99';
-	});
-};
-
 export const initializeApp = (config: UtilityConfig) => {
-	preventPinchZoom();
-
 	//Loading textAudio playback rate
 	console.log(`Initializing playspeed with user's previous settings`);
 	const targetSpeed = getPlaySpeed();
