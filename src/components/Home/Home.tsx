@@ -1,9 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 
-//Config
-import axios from 'axios';
-import { ESVApiKey } from '../../utilities/config';
-
 //App State
 import { AudioContext } from '../../state/audioContext';
 import { FirebaseContext } from '../../state/firebaseContext';
@@ -14,20 +10,7 @@ import {
 	setSearchNumberOfChapters,
 	selectSearch,
 } from '../../state/searchSlice';
-import {
-	setBook,
-	setChapter,
-	setBody,
-	setSplit,
-	setCondensed,
-	selectText,
-} from '../../state/textSlice';
-import {
-	setAudioHasError,
-	setAudioIsReady,
-	setAudioPosition,
-	setAudioSpeed,
-} from '../../state/audioSlice';
+import { selectText } from '../../state/textSlice';
 
 //Routing
 import { Prompt } from 'react-router';
@@ -47,18 +30,19 @@ import { Controls } from './Controls/Controls';
 import { SmallSpacer } from '../Spacers/Spacers';
 import searchIcon from '../../icons/search.svg';
 
-//Custom functions
-import {
-	condenseText,
-	breakFullTextIntoLines,
-} from '../../utilities/condenseText';
+//Utilities
 import { bookTitles, bookChapters } from '../../utilities/bibleBookInfo';
 import {
-	getPlaySpeed,
 	storeMostRecentPassage,
-	addToTextArray,
 	getTextBody,
 } from '../../utilities/localStorage';
+import {
+	updateResults,
+	fetchTextFromESVAPI,
+} from '../../utilities/dataUtilities';
+
+//types
+import { UtilityConfig } from '../../utilities/types';
 
 const useStyles = makeStyles((theme) => ({
 	formControl: {
@@ -85,6 +69,12 @@ export const Home = () => {
 	const { textAudio, setTextAudio } = useContext(AudioContext);
 	const { analytics } = useContext(FirebaseContext);
 	const dispatch = useDispatch();
+	const utilityConfig: UtilityConfig = {
+		textAudio,
+		setTextAudio,
+		dispatch,
+		analytics,
+	};
 
 	//Material UI Styling:
 	const classes = useStyles();
@@ -95,48 +85,11 @@ export const Home = () => {
 
 	//Local State:
 	const [showCondensed, setShowCondensed] = useState(true);
-	const [message, setMessage] = useState('');
 	const [clickedLine, setClickedLine] = useState(-1);
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, []);
-
-	const updateSearchTerms = (book: string, chapter: string) => {
-		dispatch(setSearchBook(book));
-		dispatch(setSearchChapter(chapter));
-		const newNumberOfChapters = bookChapters[book]; //get chapter numbers
-		dispatch(setSearchNumberOfChapters(newNumberOfChapters)); //set chapter numbers
-		return;
-	};
-
-	const updateResults = (
-		book: string,
-		chapter: string,
-		body: string,
-		error?: string | undefined
-	) => {
-		//Auio Settings:
-		textAudio.pause();
-		dispatch(setAudioHasError(false));
-		dispatch(setAudioIsReady(false));
-		dispatch(setAudioPosition(0));
-		setTextAudio(
-			new Audio(`https://audio.esv.org/hw/mq/${book} ${chapter}.mp3`)
-		);
-
-		//Text Results:
-		dispatch(setBook(book === 'Psalms' ? 'Psalm' : book));
-		dispatch(setChapter(chapter));
-		dispatch(setBody(body));
-		const lineBrokenText = breakFullTextIntoLines(body);
-		dispatch(setSplit(lineBrokenText));
-		dispatch(setCondensed(condenseText(lineBrokenText)));
-
-		//Set loading/error message:
-		setMessage(error || '');
-		return;
-	};
 
 	const handleViewChange = () => {
 		analytics.logEvent('flip_view_button_pressed', {
@@ -181,86 +134,6 @@ export const Home = () => {
 		setClickedLine(i);
 	};
 
-	const fetchTextFromESVAPI = (book: string, chapter: string) => {
-		const title = `${book}+${chapter}`;
-		console.log(`Fetching text body file of ${title} from ESV API`);
-
-		analytics.logEvent('fetched_text_from_ESV_API', {
-			book,
-			chapter,
-			title: `${book} ${chapter}`,
-		});
-
-		const textURL =
-			'https://api.esv.org/v3/passage/text/?' +
-			`q=${book.split(' ').join('+')}+${chapter}` +
-			'&include-passage-references=false' +
-			'&include-verse-numbers=false' +
-			'&include-first-verse-numbers=false' +
-			'&include-footnotes=false' +
-			'&include-footnote-body=false' +
-			'&include-headings=false' +
-			'&include-selahs=false' +
-			'&indent-paragraphs=10' +
-			'&indent-poetry-lines=5' +
-			'&include-short-copyright=false';
-
-		axios
-			.get(textURL, {
-				headers: {
-					Authorization: ESVApiKey,
-				},
-			})
-			.then((response) => {
-				console.log(`Text body of ${title} received from ESV API`);
-				const body = response.data.passages[0];
-				updateResults(book, chapter, body);
-				storeMostRecentPassage(title);
-				addToTextArray(title, body);
-			})
-			.catch((error) => {
-				console.log(error);
-				updateResults('', '', '', 'Sorry, an error occurred.');
-			});
-	};
-
-	const initializeMostRecentPassage = () => {
-		console.log('Checking for most recent book and chapter.');
-		const recent = window.localStorage.getItem('recent');
-		if (recent) {
-			console.log(`${recent} is the most recent chapter accessed.`);
-			const book = recent.split('+')[0];
-			const chapter = recent.split('+')[1];
-			updateSearchTerms(book, chapter);
-
-			//retrieve text body from local storage using title of most recent book and chapter
-			const title = `${book}+${chapter}`;
-			console.log(`Searching storage for ${title}`);
-			let body = getTextBody(title);
-			if (body) {
-				console.log(`Retrieved text body of ${title} from local storage`);
-				updateResults(book, chapter, body);
-				analytics.logEvent('fetched_text_from_local_storage', {
-					book,
-					chapter,
-					title: `${book} ${chapter}`,
-				});
-			} else {
-				console.log(`${title} not found in local storage`);
-				console.log(`Initializing results with Psalm 23 instead`);
-				updateSearchTerms('Psalms', '23');
-				fetchTextFromESVAPI('Psalms', '23');
-			}
-		} else {
-			console.log(
-				'A most recent book and chapter do not exist in local storage.'
-			);
-			console.log(`Initializing results with Psalm 23 instead`);
-			updateSearchTerms('Psalms', '23');
-			fetchTextFromESVAPI('Psalms', '23');
-		}
-	};
-
 	const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		e.preventDefault();
 		//Check local storage
@@ -270,7 +143,7 @@ export const Home = () => {
 		let body = getTextBody(title);
 		if (body) {
 			console.log(`Retrieved body of ${title} from local storage`);
-			updateResults(search.book, search.chapter, body);
+			updateResults(search.book, search.chapter, body, utilityConfig);
 			storeMostRecentPassage(title);
 			analytics.logEvent('fetched_text_from_local_storage', {
 				searchBook: search.book,
@@ -281,42 +154,10 @@ export const Home = () => {
 			//If it does not exist in local storage, make an API call, and store the returned text
 			console.log(`${title} not found in local storage`);
 			console.log('Making a call to the ESV API');
-			updateResults(search.book, search.chapter, '', 'Loading...'); //show loading indicator
-			fetchTextFromESVAPI(search.book, search.chapter);
+			updateResults(search.book, search.chapter, '', utilityConfig); //show loading indicator
+			fetchTextFromESVAPI(search.book, search.chapter, utilityConfig);
 		}
 	};
-
-	/* Initialize app on load */
-	useEffect(() => {
-		//Loading textAudio playback rate
-		console.log(`Initializing playspeed with user's previous settings`);
-		const targetSpeed = getPlaySpeed();
-		dispatch(setAudioSpeed(targetSpeed));
-
-		//Loading last-viewed book and chapter
-		initializeMostRecentPassage();
-
-		//Prevent pinch zoom in Safari
-		document.addEventListener('gesturestart', function (e) {
-			e.preventDefault();
-			// special hack to prevent zoom-to-tabs gesture in safari
-			document.body.style.zoom = '0.99';
-		});
-
-		document.addEventListener('gesturechange', function (e) {
-			e.preventDefault();
-			// special hack to prevent zoom-to-tabs gesture in safari
-			document.body.style.zoom = '0.99';
-		});
-
-		document.addEventListener('gestureend', function (e) {
-			e.preventDefault();
-			// special hack to prevent zoom-to-tabs gesture in safari
-			document.body.style.zoom = '0.99';
-		});
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 
 	//create chapter input options based on book of the bible
 	let chapterArray = [];
@@ -402,7 +243,6 @@ export const Home = () => {
 				</div>
 			)}
 
-			<p className={styles.message}>{message}</p>
 			<SmallSpacer />
 			<p className={styles.copyright}>Copyright Notice:</p>
 			<p className={styles.smallText}>

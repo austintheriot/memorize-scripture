@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 //App
 import './App.scss';
 
 //State
+import { FirebaseContext } from './state/firebaseContext';
 import { AudioContext } from './state/audioContext';
 import { useSelector, useDispatch } from 'react-redux';
 import { setMenuIsOpen } from './state/menuSlice';
@@ -15,6 +16,10 @@ import {
 	setAudioPosition,
 	setAudioSpeed,
 } from './state/audioSlice';
+
+//Utilities
+import { getPlaySpeed } from './utilities/localStorage';
+import { initializeMostRecentPassage } from './utilities/dataUtilities';
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
@@ -29,8 +34,12 @@ import { Home } from './components/Home/Home';
 import { About } from './components/About/About';
 import { Contact } from './components/Contact/Contact';
 
+//types
+import { UtilityConfig } from './utilities/types';
+
 export default function App() {
 	const audioSettings = useSelector(selectAudioSettings);
+	const { analytics } = useContext(FirebaseContext);
 	const dispatch = useDispatch();
 
 	const closeMenu = () => {
@@ -44,6 +53,13 @@ export default function App() {
 		setTextAudio,
 		userAudio,
 		setUserAudio,
+	};
+
+	const utilityConfig: UtilityConfig = {
+		textAudio,
+		setTextAudio,
+		dispatch,
+		analytics,
 	};
 
 	/* textAudio event listeners */
@@ -90,6 +106,38 @@ export default function App() {
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [textAudio]);
+
+	/* Initialize app on load */
+	useEffect(() => {
+		//Loading textAudio playback rate
+		console.log(`Initializing playspeed with user's previous settings`);
+		const targetSpeed = getPlaySpeed();
+		dispatch(setAudioSpeed(targetSpeed));
+
+		//Loading last-viewed book and chapter
+		initializeMostRecentPassage(utilityConfig);
+
+		//Prevent pinch zoom in Safari
+		document.addEventListener('gesturestart', function (e) {
+			e.preventDefault();
+			// special hack to prevent zoom-to-tabs gesture in safari
+			document.body.style.zoom = '0.99';
+		});
+
+		document.addEventListener('gesturechange', function (e) {
+			e.preventDefault();
+			// special hack to prevent zoom-to-tabs gesture in safari
+			document.body.style.zoom = '0.99';
+		});
+
+		document.addEventListener('gestureend', function (e) {
+			e.preventDefault();
+			// special hack to prevent zoom-to-tabs gesture in safari
+			document.body.style.zoom = '0.99';
+		});
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	return (
 		<div className='App'>
