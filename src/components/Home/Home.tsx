@@ -1,17 +1,18 @@
 import React, { useState, useEffect, useContext } from 'react';
 
-import { AudioContext } from '../../state/audioContext';
+//Config
+import axios from 'axios';
+import { ESVApiKey } from '../../utilities/config';
 
-//Redux State
+//App State
+import { AudioContext } from '../../state/audioContext';
 import { useSelector, useDispatch } from 'react-redux';
-//SearchSlice
 import {
 	setSearchBook,
 	setSearchChapter,
 	setSearchNumberOfChapters,
 	selectSearch,
 } from '../../state/searchSlice';
-//TextSlice
 import {
 	setBook,
 	setChapter,
@@ -20,7 +21,6 @@ import {
 	setCondensed,
 	selectText,
 } from '../../state/textSlice';
-//AudioSlice
 import {
 	setAudioHasError,
 	setAudioIsReady,
@@ -30,15 +30,11 @@ import {
 	selectAudioSettings,
 } from '../../state/audioSlice';
 
-//Styles
-import styles from './Home.module.scss';
-
-//Config
-import axios from 'axios';
-import { ESVApiKey } from '../../utilities/config';
-
 //Routing
 import { Prompt } from 'react-router';
+
+//Styles
+import styles from './Home.module.scss';
 
 //Material UI Components
 import { makeStyles } from '@material-ui/core/styles';
@@ -87,7 +83,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export const Home = (props: { menuOpen: boolean; analytics: any }) => {
+export const Home = (props: { analytics: any }) => {
 	const { textAudio, setTextAudio } = useContext(AudioContext);
 	const dispatch = useDispatch();
 

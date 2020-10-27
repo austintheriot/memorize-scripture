@@ -3,7 +3,10 @@ import React, { useState } from 'react';
 //App
 import './App.scss';
 
+//State
 import { AudioContext } from './state/audioContext';
+import { useDispatch } from 'react-redux';
+import { setMenuIsOpen } from './state/menuSlice';
 
 //Config
 import { firebaseConfig } from './utilities/config';
@@ -38,10 +41,10 @@ interface AudioState {
 }
 
 export default function App() {
-	const [menuOpen, setMenuOpen] = useState(false);
+	const dispatch = useDispatch();
+
 	const [textAudio, setTextAudio] = useState(new Audio()); //Audio from ESV
 	const [userAudio, setUserAudio] = useState(new Audio()); //User-recorded Audio
-
 	const audio = {
 		textAudio,
 		setTextAudio,
@@ -49,31 +52,23 @@ export default function App() {
 		setUserAudio,
 	};
 
-	const nonMenuClickHandler = (e: React.MouseEvent) => {
-		setMenuOpen(false);
-	};
-
-	const handleMenuToggle = () => {
-		setMenuOpen((prevState) => !prevState);
-	};
-
-	const handleMenuClose = () => {
-		setMenuOpen(false);
+	const closeMenu = () => {
+		dispatch(setMenuIsOpen(false));
 	};
 
 	return (
 		<div className='App'>
 			<AudioContext.Provider value={audio}>
-				<Transition menuOpen={menuOpen}>
+				<Transition>
 					<Router>
-						<MenuButton handleClick={handleMenuToggle} menuOpen={menuOpen} />
-						<Menu menuOpen={menuOpen} closeMenu={handleMenuClose} />
-						<div onClick={nonMenuClickHandler}>
+						<MenuButton />
+						<Menu />
+						<div onClick={closeMenu}>
 							<Switch>
 								<Route exact path='/contact' component={Contact} />
 								<Route exact path='/about' component={About} />
 								<Route path='/'>
-									<Home menuOpen={menuOpen} analytics={analytics} />
+									<Home analytics={analytics} />
 								</Route>
 							</Switch>
 						</div>
