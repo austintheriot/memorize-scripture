@@ -21,6 +21,27 @@ interface TextObject {
 
 type TextArray = TextObject[];
 
+export const storeShowCondensed = (boolean: boolean) => {
+	console.log(`Storing showCondensed as ${boolean} in local storage`);
+	window.localStorage.setItem('showCondensed', boolean.toString());
+};
+
+export const getShowCondensed = (): boolean => {
+	console.log(`Retrieving showCondensed setting from local storage`);
+	return Boolean(window.localStorage.getItem('showCondensed'));
+};
+
+export const storeClickedLine = (number: number) => {
+	console.log(`Storing ${number} as latest clicked line in local storage`);
+	window.localStorage.setItem('clickedLine', number.toString());
+};
+
+export const getClickedLine = (): number => {
+	console.log(`Retrieving clickedLine setting from local storage`);
+	const clickedLine = window.localStorage.getItem('clickedLine');
+	return clickedLine ? parseInt(clickedLine, 10) : -1;
+};
+
 export const storeMostRecentPassage = (title: string) => {
 	console.log(
 		`Storing ${title} as most the most recently accessed chapter in local storage`

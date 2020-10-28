@@ -16,6 +16,8 @@ import {
 	setBody,
 	setSplit,
 	setCondensed,
+	setShowCondensed,
+	setClickedLine,
 } from '../state/textSlice';
 import {
 	setSearchBook,
@@ -27,6 +29,8 @@ import {
 import { bookChapters } from './bibleBookInfo';
 import { condenseText, breakFullTextIntoLines } from './condenseText';
 import {
+	getShowCondensed,
+	getClickedLine,
 	getPlaySpeed,
 	storeMostRecentPassage,
 	getTextBody,
@@ -163,10 +167,13 @@ export const initializeMostRecentPassage = (config: UtilityConfig) => {
 
 export const initializeApp = (config: UtilityConfig) => {
 	//Loading textAudio playback rate
-	console.log(`Initializing playspeed with user's previous settings`);
+	console.log(`Initializing user's settings.`);
 	const targetSpeed = getPlaySpeed();
 	config.dispatch(setAudioSpeed(targetSpeed));
-
+	const showCondensed = getShowCondensed();
+	config.dispatch(setShowCondensed(showCondensed));
+	const clickedLine = getClickedLine();
+	config.dispatch(setClickedLine(clickedLine));
 	//Loading last-viewed book and chapter
 	initializeMostRecentPassage(config);
 };
