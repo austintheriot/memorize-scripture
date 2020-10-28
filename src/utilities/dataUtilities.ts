@@ -27,6 +27,7 @@ import {
 
 //Utilities
 import { bookChapters } from './bibleBookInfo';
+import { Psalm23 } from '../components/Home/Psalm23';
 import { condenseText, breakFullTextIntoLines } from './condenseText';
 import {
 	getShowCondensed,
@@ -153,7 +154,7 @@ export const initializeMostRecentPassage = (config: UtilityConfig) => {
 			console.log(`${title} not found in local storage`);
 			console.log(`Initializing results with Psalm 23 instead`);
 			updateSearchTerms('Psalms', '23', config);
-			fetchTextFromESVAPI('Psalms', '23', config);
+			updateResults('Psalms', '23', Psalm23, config);
 		}
 	} else {
 		console.log(
@@ -161,7 +162,7 @@ export const initializeMostRecentPassage = (config: UtilityConfig) => {
 		);
 		console.log(`Initializing results with Psalm 23 instead`);
 		updateSearchTerms('Psalms', '23', config);
-		fetchTextFromESVAPI('Psalms', '23', config);
+		updateResults('Psalms', '23', Psalm23, config);
 	}
 };
 
