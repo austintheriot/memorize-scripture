@@ -9,6 +9,8 @@ export const textSlice = createSlice({
 		body: '',
 		split: [],
 		condensed: [],
+		showCondensed: false,
+		clickedLine: -1,
 	},
 	reducers: {
 		setBook: (state, action) => {
@@ -26,6 +28,12 @@ export const textSlice = createSlice({
 		setCondensed: (state, action) => {
 			state.condensed = action.payload;
 		},
+		setShowCondensed: (state, action) => {
+			state.showCondensed = action.payload;
+		},
+		setClickedLine: (state, action) => {
+			state.clickedLine = action.payload;
+		},
 	},
 });
 
@@ -35,6 +43,8 @@ export const {
 	setBody,
 	setSplit,
 	setCondensed,
+	setShowCondensed,
+	setClickedLine,
 } = textSlice.actions;
 
 // The function below is called a thunk and allows us to perform async logic. It

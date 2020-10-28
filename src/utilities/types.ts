@@ -49,6 +49,8 @@ export interface TextState {
 	body: string;
 	split: string[];
 	condensed: string[];
+	showCondensed: boolean;
+	clickedLine: number;
 }
 
 export interface TextSlice {
