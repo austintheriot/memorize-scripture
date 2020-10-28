@@ -73,6 +73,8 @@ export const Controls = (props: { flipView: () => void }) => {
 	const handleProgressClick = (
 		e: React.MouseEvent<HTMLDivElement, MouseEvent>
 	) => {
+		e.stopPropagation();
+		e.preventDefault();
 		const targetTime = e.clientX / document.documentElement.offsetWidth;
 		analytics.logEvent('progress_bar_clicked', {
 			targetTime,
@@ -82,6 +84,8 @@ export const Controls = (props: { flipView: () => void }) => {
 	};
 
 	const handleProgressTouch = (e: React.TouchEvent<HTMLDivElement>) => {
+		e.stopPropagation();
+		e.preventDefault();
 		const targetTime =
 			e.changedTouches[0].clientX / document.documentElement.offsetWidth;
 		analytics.logEvent('progress_bar_touched', {
@@ -107,8 +111,7 @@ export const Controls = (props: { flipView: () => void }) => {
 			<div
 				className={styles.progressBarOuter}
 				onMouseDown={handleProgressClick}
-				onTouchStart={handleProgressTouch}
-				onTouchEnd={handleProgressTouch}>
+				onTouchStart={handleProgressTouch}>
 				<div
 					className={styles.progressBarInner}
 					style={{ width: `${audioSettings.position * 100}%` }}></div>
