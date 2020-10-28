@@ -10,11 +10,7 @@ import {
 	setSearchNumberOfChapters,
 	selectSearch,
 } from '../../state/searchSlice';
-import {
-	selectText,
-	setShowCondensed,
-	setClickedLine,
-} from '../../state/textSlice';
+import { selectText, setClickedLine } from '../../state/textSlice';
 
 //Routing
 import { Prompt } from 'react-router';
@@ -37,7 +33,6 @@ import searchIcon from '../../icons/search.svg';
 //Utilities
 import { bookTitles, bookChapters } from '../../utilities/bibleBookInfo';
 import {
-	storeShowCondensed,
 	storeClickedLine,
 	storeMostRecentPassage,
 	getTextBody,
@@ -92,15 +87,6 @@ export const Home = () => {
 	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, []);
-
-	const handleViewChange = () => {
-		analytics.logEvent('flip_view_button_pressed', {
-			showCondensed: text.showCondensed,
-		});
-		const targetShowCondensed = !text.showCondensed;
-		dispatch(setShowCondensed(targetShowCondensed));
-		storeShowCondensed(targetShowCondensed);
-	};
 
 	const handleBookChange = (
 		e: React.ChangeEvent<{
@@ -262,7 +248,7 @@ export const Home = () => {
 				may not copy or download more than 500 consecutive verses of the ESV
 				Bible or more than one half of any book of the ESV Bible.
 			</p>
-			<Controls flipView={handleViewChange} />
+			<Controls />
 		</>
 	);
 };
