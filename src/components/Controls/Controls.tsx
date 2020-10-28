@@ -2,32 +2,29 @@ import React, { useContext } from 'react';
 import styles from './Controls.module.scss';
 
 //State
-import { FirebaseContext } from '../../../state/firebaseContext';
-import { AudioContext } from '../../../state/audioContext';
+import { FirebaseContext } from '../../app/state/firebaseContext';
+import { AudioContext } from '../../app/state/audioContext';
 import { useSelector, useDispatch } from 'react-redux';
 import {
 	setAudioIsPlaying,
 	setAudioPosition,
 	setAudioSpeed,
 	selectAudioSettings,
-} from '../../../state/audioSlice';
-import { setShowCondensed, selectText } from '../../../state/textSlice';
+} from '../../app/state/audioSlice';
+import { setShowCondensed, selectText } from '../../app/state/textSlice';
 
 //Custom icons
-import flipIcon from '../../../icons/flip.svg';
-import beginningIcon from '../../../icons/beginning.svg';
-import rewindIcon from '../../../icons/rewind.svg';
-import pauseIcon from '../../../icons/pause.svg';
-import playIcon from '../../../icons/play.svg';
-import forwardIcon from '../../../icons/forward.svg';
-import loadingIcon from '../../../icons/loading.svg';
-import errorIcon from '../../../icons/error.svg';
+import flipIcon from '../../icons/flip.svg';
+import beginningIcon from '../../icons/beginning.svg';
+import rewindIcon from '../../icons/rewind.svg';
+import pauseIcon from '../../icons/pause.svg';
+import playIcon from '../../icons/play.svg';
+import forwardIcon from '../../icons/forward.svg';
+import loadingIcon from '../../icons/loading.svg';
+import errorIcon from '../../icons/error.svg';
 
 //Utilities
-import {
-	storePlaySpeed,
-	storeShowCondensed,
-} from '../../../utilities/localStorage';
+import { storePlaySpeed, storeShowCondensed } from '../../views/Home/storage';
 
 export const Controls = () => {
 	const dispatch = useDispatch();

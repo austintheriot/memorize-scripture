@@ -7,7 +7,7 @@ import chiRho from '../../images/chirho-light.svg';
 
 //Menu State
 import { useSelector, useDispatch } from 'react-redux';
-import { selectMenu, setMenuIsOpen } from '../../state/menuSlice';
+import { selectMenu, setMenuIsOpen } from '../../app/state/menuSlice';
 
 export const Menu = () => {
 	const dispatch = useDispatch();

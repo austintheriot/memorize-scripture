@@ -7,7 +7,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import { FormHelperText } from '@material-ui/core';
 
-import { emailAPIKey } from '../../utilities/config';
+import { emailAPIKey } from '../../app/config';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({

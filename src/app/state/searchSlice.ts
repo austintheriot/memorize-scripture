@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { SearchSlice } from '../utilities/types';
+import { SearchSlice } from '../types';
 
 export const searchSlice = createSlice({
 	name: 'search',

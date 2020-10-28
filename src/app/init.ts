@@ -1,7 +1,3 @@
-//UtilityConfig
-import axios from 'axios';
-import { ESVApiKey } from './config';
-
 //State
 import {
 	setAudioHasError,
@@ -9,119 +5,17 @@ import {
 	setAudioPosition,
 	setAudioIsPlaying,
 	setAudioSpeed,
-} from '../state/audioSlice';
-import {
-	setBook,
-	setChapter,
-	setBody,
-	setSplit,
-	setCondensed,
-	setShowCondensed,
-	setClickedLine,
-} from '../state/textSlice';
-import {
-	setSearchBook,
-	setSearchChapter,
-	setSearchNumberOfChapters,
-} from '../state/searchSlice';
-
-//Utilities
-import { bookChapters } from './bibleBookInfo';
-import { Psalm23 } from '../components/Home/Psalm23';
-import { condenseText, breakFullTextIntoLines } from './condenseText';
+} from './state/audioSlice';
+import { setShowCondensed, setClickedLine } from './state/textSlice';
 import {
 	getShowCondensed,
 	getClickedLine,
 	getPlaySpeed,
-	storeMostRecentPassage,
 	getTextBody,
-	addToTextArray,
-} from './localStorage';
-
-//types
+} from '../views/Home/storage';
+import { updateSearchTerms, updateResults } from '../views/Home/updateState';
 import { UtilityConfig, AudioState } from './types';
-
-export const updateSearchTerms = (
-	book: string,
-	chapter: string,
-	config: UtilityConfig
-) => {
-	config.dispatch(setSearchBook(book));
-	config.dispatch(setSearchChapter(chapter));
-	const newNumberOfChapters = bookChapters[book]; //get chapter numbers
-	config.dispatch(setSearchNumberOfChapters(newNumberOfChapters)); //set chapter numbers
-};
-
-export const updateResults = (
-	book: string,
-	chapter: string,
-	body: string,
-	config: UtilityConfig
-) => {
-	//Auio Settings:
-	config.textAudio.pause();
-	config.dispatch(setAudioHasError(false));
-	config.dispatch(setAudioIsReady(false));
-	config.dispatch(setAudioPosition(0));
-	config.setTextAudio(
-		new Audio(`https://audio.esv.org/hw/mq/${book} ${chapter}.mp3`)
-	);
-
-	//Text Results:
-	config.dispatch(setBook(book === 'Psalms' ? 'Psalm' : book));
-	config.dispatch(setChapter(chapter));
-	config.dispatch(setBody(body));
-	const lineBrokenText = breakFullTextIntoLines(body);
-	config.dispatch(setSplit(lineBrokenText));
-	config.dispatch(setCondensed(condenseText(lineBrokenText)));
-};
-
-export const fetchTextFromESVAPI = (
-	book: string,
-	chapter: string,
-	config: UtilityConfig
-) => {
-	const title = `${book} ${chapter}`;
-	console.log(`Fetching text body file of ${title} from ESV API`);
-
-	config.analytics.logEvent('fetched_text_from_ESV_API', {
-		book,
-		chapter,
-		title,
-	});
-
-	const textURL =
-		'https://api.esv.org/v3/passage/text/?' +
-		`q=${title}` +
-		'&include-passage-references=false' +
-		'&include-verse-numbers=false' +
-		'&include-first-verse-numbers=false' +
-		'&include-footnotes=false' +
-		'&include-footnote-body=false' +
-		'&include-headings=false' +
-		'&include-selahs=false' +
-		'&indent-paragraphs=10' +
-		'&indent-poetry-lines=5' +
-		'&include-short-copyright=false';
-
-	axios
-		.get(textURL, {
-			headers: {
-				Authorization: ESVApiKey,
-			},
-		})
-		.then((response) => {
-			console.log(`Text body of ${title} received from ESV API`);
-			const body = response.data.passages[0];
-			updateResults(book, chapter, body, config);
-			storeMostRecentPassage(title);
-			addToTextArray(title, body);
-		})
-		.catch((error) => {
-			console.log(error);
-			updateResults('', '', '', config);
-		});
-};
+import { Psalm23 } from '../views/Home/bible';
 
 const splitTitleIntoBookAndChapter = (title: string) => {
 	const wordArray = title.split(' ');

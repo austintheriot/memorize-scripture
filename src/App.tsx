@@ -4,11 +4,11 @@ import React, { useState, useEffect, useContext } from 'react';
 import './App.scss';
 
 //State
-import { FirebaseContext } from './state/firebaseContext';
-import { AudioContext } from './state/audioContext';
+import { FirebaseContext } from './app/state/firebaseContext';
+import { AudioContext } from './app/state/audioContext';
 import { useSelector, useDispatch } from 'react-redux';
-import { setMenuIsOpen } from './state/menuSlice';
-import { selectAudioSettings } from './state/audioSlice';
+import { setMenuIsOpen } from './app/state/menuSlice';
+import { selectAudioSettings } from './app/state/audioSlice';
 
 //Routing
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
@@ -20,18 +20,15 @@ import { Transition } from './components/Transition/Transition';
 import { Footer } from './components/Footer/Footer';
 
 //Pages
-import { Home } from './components/Home/Home';
-import { About } from './components/About/About';
-import { Contact } from './components/Contact/Contact';
+import { Home } from './views/Home/Home';
+import { About } from './views/About/About';
+import { Contact } from './views/Contact/Contact';
 
 //Utilities
-import {
-	prepareAudioForPlayback,
-	initializeApp,
-} from './utilities/dataUtilities';
+import { prepareAudioForPlayback, initializeApp } from './app/init';
 
 //types
-import { UtilityConfig } from './utilities/types';
+import { UtilityConfig } from './app/types';
 
 export default function App() {
 	const audioState = useSelector(selectAudioSettings);
