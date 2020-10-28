@@ -72,49 +72,6 @@
 
 		<link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 		<style>
-			.loading-container-outer {
-				height: 100vh;
-				width: 100vw;
-				display: flex;
-				flex: none;
-				justify-content: center;
-				align-items: center;
-			}
-
-			.loading-container-inner {
-				width: 100px;
-				height: 100px;
-				position: relative;
-			}
-
-			.loading-chirho {
-				width: 75px;
-				height: 75px;
-				position: absolute;
-				left: 50%;
-				top: 50%;
-				transform: translate(-50%, -50%);
-			}
-
-			.loading-spinner {
-				transform-origin: center center;
-				width: 115px;
-				height: 115px;
-				position: absolute;
-				left: 50%;
-				top: 50%;
-				animation: spin 4s linear infinite;
-			}
-
-			.loading-paragraph {
-				font-family: Open Sans, sans-serif;
-				color: #d9d9d9;
-				position: absolute;
-				left: 50%;
-				transform: translateX(-50%);
-				top: 100%;
-			}
-
 			@keyframes spin {
 				0% {
 					transform: translate(-50%, -50%) rotate(0deg);
@@ -128,19 +85,54 @@
 	<body style="background-color: #333533">
 		<noscript>You need to enable JavaScript to run this app.</noscript>
 		<div id="root">
-			<div class="loading-container-outer">
-				<div class="loading-container-inner">
+			<div
+				style="
+					height: 100vh;
+					width: 100vw;
+					display: flex;
+					flex: none;
+					justify-content: center;
+					align-items: center;
+				"
+			>
+				<div style="width: 100px; height: 100px; position: relative">
 					<img
-						class="loading-chirho"
+						style="
+							width: 75px;
+							height: 75px;
+							position: absolute;
+							left: 50%;
+							top: 50%;
+							transform: translate(-50%, -50%);
+						"
 						src="%PUBLIC_URL%/chirho-light.svg"
 						alt="Memorize Scripture Logo"
 					/>
 					<img
-						class="loading-spinner"
+						style="
+							transform-origin: center center;
+							width: 115px;
+							height: 115px;
+							position: absolute;
+							left: 50%;
+							top: 50%;
+							animation: spin 4s linear infinite;
+						"
 						src="%PUBLIC_URL%/loading.svg"
 						alt="Loading"
 					/>
-					<p class="loading-paragraph">Loading...</p>
+					<p
+						style="
+							font-family: Open Sans, sans-serif;
+							color: #d9d9d9;
+							position: absolute;
+							left: 50%;
+							transform: translateX(-50%);
+							top: 100%;
+						"
+					>
+						Loading...
+					</p>
 				</div>
 			</div>
 		</div>
