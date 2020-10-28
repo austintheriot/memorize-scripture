@@ -37,6 +37,8 @@ import searchIcon from '../../icons/search.svg';
 //Utilities
 import { bookTitles, bookChapters } from '../../utilities/bibleBookInfo';
 import {
+	storeShowCondensed,
+	storeClickedLine,
 	storeMostRecentPassage,
 	getTextBody,
 } from '../../utilities/localStorage';
@@ -95,7 +97,9 @@ export const Home = () => {
 		analytics.logEvent('flip_view_button_pressed', {
 			showCondensed: text.showCondensed,
 		});
-		dispatch(setShowCondensed(!text.showCondensed));
+		const targetShowCondensed = !text.showCondensed;
+		dispatch(setShowCondensed(targetShowCondensed));
+		storeShowCondensed(targetShowCondensed);
 	};
 
 	const handleBookChange = (
@@ -132,6 +136,7 @@ export const Home = () => {
 	) => {
 		if (text.clickedLine === i) return dispatch(setClickedLine(-1));
 		dispatch(setClickedLine(i));
+		storeClickedLine(i);
 	};
 
 	const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
