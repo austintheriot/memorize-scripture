@@ -1,16 +1,16 @@
 import React, { useEffect, useContext } from 'react';
 
 //App State
-import { AudioContext } from '../../state/audioContext';
-import { FirebaseContext } from '../../state/firebaseContext';
+import { AudioContext } from '../../app/state/audioContext';
+import { FirebaseContext } from '../../app/state/firebaseContext';
 import { useSelector, useDispatch } from 'react-redux';
 import {
 	setSearchBook,
 	setSearchChapter,
 	setSearchNumberOfChapters,
 	selectSearch,
-} from '../../state/searchSlice';
-import { selectText, setClickedLine } from '../../state/textSlice';
+} from '../../app/state/searchSlice';
+import { selectText, setClickedLine } from '../../app/state/textSlice';
 
 //Routing
 import { Prompt } from 'react-router';
@@ -26,24 +26,22 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
 //Custom components
-import { Controls } from './Controls/Controls';
-import { SmallSpacer } from '../Spacers/Spacers';
+import { Controls } from '../../components/Controls/Controls';
+import { SmallSpacer } from '../../components/Spacers/Spacers';
 import searchIcon from '../../icons/search.svg';
 
 //Utilities
-import { bookTitles, bookChapters } from '../../utilities/bibleBookInfo';
+import { bookTitles, bookChapters } from './bible';
 import {
 	storeClickedLine,
 	storeMostRecentPassage,
 	getTextBody,
-} from '../../utilities/localStorage';
-import {
-	updateResults,
-	fetchTextFromESVAPI,
-} from '../../utilities/dataUtilities';
+} from './storage';
+import { updateResults } from './updateState';
+import { fetchTextFromESVAPI } from './https';
 
 //types
-import { UtilityConfig } from '../../utilities/types';
+import { UtilityConfig } from '../../app/types';
 
 const useStyles = makeStyles((theme) => ({
 	formControl: {

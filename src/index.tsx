@@ -5,11 +5,11 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 //Firebase Config
-import { app, analytics, FirebaseContext } from './state/firebaseContext';
+import { app, analytics, FirebaseContext } from './app/state/firebaseContext';
 
 //Redux
 import { Provider } from 'react-redux';
-import store from './state/store';
+import store from './app/state/store';
 
 const firebaseContext = {
 	app,

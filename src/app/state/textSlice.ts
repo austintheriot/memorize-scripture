@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { TextSlice } from '../utilities/types';
+import { TextSlice } from '../types';
 
 export const textSlice = createSlice({
 	name: 'text',

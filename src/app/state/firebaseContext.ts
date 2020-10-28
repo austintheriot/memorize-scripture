@@ -1,7 +1,7 @@
 import React from 'react';
 
 //Firebase Config
-import { firebaseConfig } from '../utilities/config';
+import { firebaseConfig } from '../config';
 import * as firebase from 'firebase/app';
 import 'firebase/analytics';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { SetAudioType } from '../utilities/types';
+import { SetAudioType } from '../types';
 
 interface Context {
 	textAudio: HTMLAudioElement;
