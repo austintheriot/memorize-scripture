@@ -84,7 +84,7 @@ export const Home = () => {
 	const text = useSelector(selectText);
 
 	//Local State:
-	const [showCondensed, setShowCondensed] = useState(true);
+	const [showCondensed, setShowCondensed] = useState(false);
 	const [clickedLine, setClickedLine] = useState(-1);
 
 	useEffect(() => {
