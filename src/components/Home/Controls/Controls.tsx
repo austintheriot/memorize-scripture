@@ -11,6 +11,7 @@ import {
 	setAudioSpeed,
 	selectAudioSettings,
 } from '../../../state/audioSlice';
+import { setShowCondensed, selectText } from '../../../state/textSlice';
 
 //Custom icons
 import flipIcon from '../../../icons/flip.svg';
@@ -23,11 +24,15 @@ import loadingIcon from '../../../icons/loading.svg';
 import errorIcon from '../../../icons/error.svg';
 
 //Utilities
-import { storePlaySpeed } from '../../../utilities/localStorage';
+import {
+	storePlaySpeed,
+	storeShowCondensed,
+} from '../../../utilities/localStorage';
 
-export const Controls = (props: { flipView: () => void }) => {
+export const Controls = () => {
 	const dispatch = useDispatch();
 	const audioSettings = useSelector(selectAudioSettings);
+	const text = useSelector(selectText);
 	const { textAudio } = useContext(AudioContext);
 	const { analytics } = useContext(FirebaseContext);
 
@@ -103,6 +108,15 @@ export const Controls = (props: { flipView: () => void }) => {
 		textAudio.playbackRate = targetSpeed;
 		dispatch(setAudioSpeed(targetSpeed));
 		storePlaySpeed(targetSpeed);
+	};
+
+	const handleViewChange = () => {
+		analytics.logEvent('flip_view_button_pressed', {
+			showCondensed: text.showCondensed,
+		});
+		const targetShowCondensed = !text.showCondensed;
+		dispatch(setShowCondensed(targetShowCondensed));
+		storeShowCondensed(targetShowCondensed);
 	};
 
 	return (
@@ -189,7 +203,7 @@ export const Controls = (props: { flipView: () => void }) => {
 				<button
 					data-info='change view'
 					className={styles.buttons}
-					onMouseDown={props.flipView}>
+					onMouseDown={handleViewChange}>
 					<img src={flipIcon} alt={'change view'} className={styles.icon} />
 				</button>
 			</div>
