@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 
 //App State
 import { AudioContext } from '../../state/audioContext';
@@ -10,7 +10,11 @@ import {
 	setSearchNumberOfChapters,
 	selectSearch,
 } from '../../state/searchSlice';
-import { selectText } from '../../state/textSlice';
+import {
+	selectText,
+	setShowCondensed,
+	setClickedLine,
+} from '../../state/textSlice';
 
 //Routing
 import { Prompt } from 'react-router';
@@ -83,19 +87,15 @@ export const Home = () => {
 	const search = useSelector(selectSearch);
 	const text = useSelector(selectText);
 
-	//Local State:
-	const [showCondensed, setShowCondensed] = useState(false);
-	const [clickedLine, setClickedLine] = useState(-1);
-
 	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, []);
 
 	const handleViewChange = () => {
 		analytics.logEvent('flip_view_button_pressed', {
-			showCondensed,
+			showCondensed: text.showCondensed,
 		});
-		setShowCondensed((prevState) => !prevState);
+		dispatch(setShowCondensed(!text.showCondensed));
 	};
 
 	const handleBookChange = (
@@ -130,8 +130,8 @@ export const Home = () => {
 		e: React.MouseEvent<HTMLParagraphElement, MouseEvent>,
 		i: number
 	) => {
-		if (clickedLine === i) return setClickedLine(-1);
-		setClickedLine(i);
+		if (text.clickedLine === i) return dispatch(setClickedLine(-1));
+		dispatch(setClickedLine(i));
 	};
 
 	const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -219,7 +219,7 @@ export const Home = () => {
 					<img src={searchIcon} alt='search' />
 				</button>
 			</form>
-			{showCondensed ? (
+			{text.showCondensed ? (
 				<div
 					className={styles.textAreaContainer}
 					style={{
@@ -230,14 +230,14 @@ export const Home = () => {
 							<p
 								key={line + i.toString()}
 								className={
-									clickedLine === i
+									text.clickedLine === i
 										? styles.lineBrokenText
 										: styles.condensedLine
 								}
 								onClick={(
 									e: React.MouseEvent<HTMLParagraphElement, MouseEvent>
 								) => handleLineBrokenText(e, i)}>
-								{clickedLine === i ? text.split[i] : text.condensed[i]}
+								{text.clickedLine === i ? text.split[i] : text.condensed[i]}
 							</p>
 						);
 					})}
