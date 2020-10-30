@@ -8,7 +8,7 @@ export const storePlaySpeed = (speed: number) => {
 export const getPlaySpeed = () => {
 	console.log('Retrieving playback speed from local storage');
 	const speed = window.localStorage.getItem('speed') || '1';
-	console.log(`Playback speed from local storage is ${speed}`);
+	console.log(`localStorage: playSpeed = ${speed}`);
 	return parseFloat(speed);
 };
 
@@ -22,13 +22,17 @@ interface TextObject {
 type TextArray = TextObject[];
 
 export const storeShowCondensed = (boolean: boolean) => {
-	console.log(`Storing showCondensed as ${boolean} in local storage`);
+	console.log(
+		`Storing showCondensed as ${boolean.toString()} in local storage`
+	);
 	window.localStorage.setItem('showCondensed', boolean.toString());
 };
 
 export const getShowCondensed = (): boolean => {
 	console.log(`Retrieving showCondensed setting from local storage`);
-	return Boolean(window.localStorage.getItem('showCondensed'));
+	const showCondensed = window.localStorage.getItem('showCondensed') === 'true';
+	console.log(`localStorage: showCondensed = ${showCondensed}`);
+	return showCondensed;
 };
 
 export const storeClickedLine = (number: number) => {
@@ -38,7 +42,8 @@ export const storeClickedLine = (number: number) => {
 
 export const getClickedLine = (): number => {
 	console.log(`Retrieving clickedLine setting from local storage`);
-	const clickedLine = window.localStorage.getItem('clickedLine');
+	let clickedLine = window.localStorage.getItem('clickedLine');
+	console.log(`localStorage: clickedLine = ${clickedLine}`);
 	return clickedLine ? parseInt(clickedLine, 10) : -1;
 };
 
