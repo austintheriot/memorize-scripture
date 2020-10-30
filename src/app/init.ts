@@ -15,7 +15,6 @@ import {
 } from '../views/Home/storage';
 import { updateSearchTerms, updateResults } from '../views/Home/updateState';
 import { UtilityConfig, AudioState } from './types';
-import { Psalm23 } from '../views/Home/bible';
 
 const splitTitleIntoBookAndChapter = (title: string) => {
 	const wordArray = title.split(' ');
@@ -30,7 +29,6 @@ export const initializeMostRecentPassage = (config: UtilityConfig) => {
 	if (recent) {
 		console.log(`${recent} is the most recent chapter accessed.`);
 		const { book, chapter } = splitTitleIntoBookAndChapter(recent);
-		updateSearchTerms(book, chapter, config);
 
 		//retrieve text body from local storage using title of most recent book and chapter
 		const title = `${book} ${chapter}`;
@@ -38,6 +36,7 @@ export const initializeMostRecentPassage = (config: UtilityConfig) => {
 		let body = getTextBody(title);
 		if (body) {
 			console.log(`Retrieved text body of ${title} from local storage`);
+			updateSearchTerms(book, chapter, config);
 			updateResults(book, chapter, body, config);
 			config.analytics.logEvent('fetched_text_from_local_storage', {
 				book,
@@ -46,17 +45,13 @@ export const initializeMostRecentPassage = (config: UtilityConfig) => {
 			});
 		} else {
 			console.log(`${title} not found in local storage`);
-			console.log(`Initializing results with Psalm 23 instead`);
-			updateSearchTerms('Psalms', '23', config);
-			updateResults('Psalms', '23', Psalm23, config);
+			console.log(`Leaving Psalm 23 as initialized passage.`);
 		}
 	} else {
 		console.log(
 			'A most recent book and chapter do not exist in local storage.'
 		);
-		console.log(`Initializing results with Psalm 23 instead`);
-		updateSearchTerms('Psalms', '23', config);
-		updateResults('Psalms', '23', Psalm23, config);
+		console.log(`Leaving Psalm 23 as initialized passage.`);
 	}
 };
 

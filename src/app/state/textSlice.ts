@@ -1,14 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { TextSlice } from '../types';
+import { Psalm23, Psalm23Split, Psalm23Condensed } from './Psalm23';
 
 export const textSlice = createSlice({
 	name: 'text',
 	initialState: {
 		book: 'Psalm',
 		chapter: '23',
-		body: '',
-		split: [],
-		condensed: [],
+		body: Psalm23,
+		split: Psalm23Split,
+		condensed: Psalm23Condensed,
 		showCondensed: false,
 		clickedLine: -1,
 	},
