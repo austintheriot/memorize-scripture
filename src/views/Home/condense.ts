@@ -186,33 +186,32 @@ export const breakFullTextIntoLines = (
 	primaryPunctuationDistance: number = PRIMARY_PUNCTUATION_DISTANCE,
 	secondaryPunctuationDistance: number = SECONDARY_PUNCTUATION_DISTANCE
 ): string[] => {
-	return (
-		string
-			.split('\n') //break into array based on existing line breaks
-			.map((
-				innerString //split individual elements further recursively
-			) =>
-				breakLines(
-					innerString,
-					maxLineLength,
-					primaryPunctuationDistance,
-					secondaryPunctuationDistance
-				)
+	const lineBrokenArray = string
+		.split('\n') //break into array based on existing line breaks
+		.map((
+			innerString //split individual elements further recursively
+		) =>
+			breakLines(
+				innerString,
+				maxLineLength,
+				primaryPunctuationDistance,
+				secondaryPunctuationDistance
 			)
-			//join & split here move the inner line breaks into the primary string,
-			//creating a "shallow" array/string without any inner line breaks
-			.join('\n')
-			.split('\n')
-	);
+		)
+		//join & split here move the inner line breaks into the primary string,
+		//creating a "shallow" array/string without any inner line breaks
+		.join('\n')
+		.split('\n');
+	return lineBrokenArray;
 };
 
-export const condenseText = (uncondensedArrayOriginal: string[]) => {
+export const condenseText = (condensedArrayOriginal: string[]) => {
 	//make a copy of the original array (so as not to modify it)
-	const uncondensedArray = [...uncondensedArrayOriginal];
+	const condensedArray = [...condensedArrayOriginal];
 
 	//Iterate through each line of the text
-	for (let i = 0; i < uncondensedArray.length; i++) {
-		let words = uncondensedArray[i].split(' ');
+	for (let i = 0; i < condensedArray.length; i++) {
+		let words = condensedArray[i].split(' ');
 
 		//Iterate through every word
 		//Replace full word with condensed version of the word
@@ -262,7 +261,7 @@ export const condenseText = (uncondensedArrayOriginal: string[]) => {
 			}
 			words[j] = condensedWord;
 		}
-		uncondensedArray[i] = words.join('');
+		condensedArray[i] = words.join('');
 	}
-	return uncondensedArray;
+	return condensedArray;
 };
