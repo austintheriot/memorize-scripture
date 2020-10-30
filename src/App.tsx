@@ -41,7 +41,9 @@ export default function App() {
 		dispatch(setMenuIsOpen(false));
 	};
 
-	const [textAudio, setTextAudio] = useState(new Audio()); //Audio from ESV
+	const [textAudio, setTextAudio] = useState(
+		new Audio(`https://audio.esv.org/hw/mq/Psalm23.mp3`)
+	); //Audio from ESV
 	const [userAudio, setUserAudio] = useState(new Audio()); //User-recorded Audio
 	const audio = {
 		textAudio,
