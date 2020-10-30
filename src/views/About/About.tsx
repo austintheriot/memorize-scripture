@@ -19,7 +19,7 @@ import loadingIcon from '../../icons/loading.svg';
 import errorIcon from '../../icons/error.svg';
 import flipIcon from '../../icons/flip.svg';
 
-export const About = () => {
+export default () => {
 	const scrollToTop = () => scroll.scrollToTop({ smooth: true, duration: 500 });
 
 	useEffect(() => {

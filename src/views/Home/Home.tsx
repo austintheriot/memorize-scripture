@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export const Home = () => {
+export default () => {
 	const { textAudio, setTextAudio } = useContext(AudioContext);
 	const { analytics } = useContext(FirebaseContext);
 	const dispatch = useDispatch();

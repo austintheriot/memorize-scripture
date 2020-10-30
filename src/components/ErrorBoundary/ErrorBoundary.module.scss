@@ -1,0 +1,17 @@
+.outerWrapper {
+	height: 100vh;
+	width: 100vw;
+	display: flex;
+	flex: none;
+	justify-content: center;
+	align-items: center;
+}
+
+.innerWrapper {
+	width: 90%;
+	max-width: 600px;
+}
+
+.Link {
+	color: var(--light);
+}

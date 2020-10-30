@@ -26,12 +26,11 @@ import { prepareAudioForPlayback, initializeApp } from './app/init';
 import { UtilityConfig } from './app/types';
 
 //Pages
-import { Home } from './views/Home/Home';
-import { About } from './views/About/About';
-import { Contact } from './views/Contact/Contact';
 import { Loading } from './views/Loading/Loading';
-
-// const Home = lazy(() => import('./views/Home/Home'));
+import { ErrorBoundary } from './components/ErrorBoundary/ErrorBoundary';
+const Home = lazy(() => import('./views/Home/Home'));
+const About = lazy(() => import('./views/About/About'));
+const Contact = lazy(() => import('./views/Contact/Contact'));
 
 export default function App() {
 	const audioState = useSelector(selectAudioSettings);
@@ -70,25 +69,42 @@ export default function App() {
 
 	return (
 		<div className='App'>
-			<AudioContext.Provider value={audio}>
-				<Transition>
-					<Router>
-						<MenuButton />
-						<Menu />
-						<div onClick={closeMenu}>
-							<Switch>
-								<Route exact path='/loading' component={Loading} />
-								<Route exact path='/contact' component={Contact} />
-								<Route exact path='/about' component={About} />
-								<Route path='/'>
-									<Home />
-								</Route>
-							</Switch>
-						</div>
-					</Router>
-					<Footer />
-				</Transition>
-			</AudioContext.Provider>
+			<ErrorBoundary>
+				<AudioContext.Provider value={audio}>
+					<Transition>
+						<Router>
+							<MenuButton />
+							<Menu />
+							<div onClick={closeMenu}>
+								<Switch>
+									<Route exact path='/contact'>
+										<ErrorBoundary>
+											<Suspense fallback={Loading()}>
+												<Contact />
+											</Suspense>
+										</ErrorBoundary>
+									</Route>
+									<Route exact path='/about'>
+										<ErrorBoundary>
+											<Suspense fallback={Loading()}>
+												<About />
+											</Suspense>
+										</ErrorBoundary>
+									</Route>
+									<Route path='/'>
+										<ErrorBoundary>
+											<Suspense fallback={Loading()}>
+												<Home />
+											</Suspense>
+										</ErrorBoundary>
+									</Route>
+								</Switch>
+							</div>
+						</Router>
+						<Footer />
+					</Transition>
+				</AudioContext.Provider>
+			</ErrorBoundary>
 		</div>
 	);
 }
