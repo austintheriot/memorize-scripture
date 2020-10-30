@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export const Contact = () => {
+export default () => {
 	const classes = useStyles();
 	const [email, setEmail] = useState('');
 	const [emailHasErrors, setEmailHasErrors] = useState(false);
