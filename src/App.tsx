@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, lazy, Suspense } from 'react';
 
 //App
 import './App.scss';
@@ -19,16 +19,19 @@ import { MenuButton } from './components/MenuButton/MenuButton';
 import { Transition } from './components/Transition/Transition';
 import { Footer } from './components/Footer/Footer';
 
-//Pages
-import { Home } from './views/Home/Home';
-import { About } from './views/About/About';
-import { Contact } from './views/Contact/Contact';
-
 //Utilities
 import { prepareAudioForPlayback, initializeApp } from './app/init';
 
 //types
 import { UtilityConfig } from './app/types';
+
+//Pages
+import { Home } from './views/Home/Home';
+import { About } from './views/About/About';
+import { Contact } from './views/Contact/Contact';
+import { Loading } from './views/Loading/Loading';
+
+// const Home = lazy(() => import('./views/Home/Home'));
 
 export default function App() {
 	const audioState = useSelector(selectAudioSettings);
@@ -74,6 +77,7 @@ export default function App() {
 						<Menu />
 						<div onClick={closeMenu}>
 							<Switch>
+								<Route exact path='/loading' component={Loading} />
 								<Route exact path='/contact' component={Contact} />
 								<Route exact path='/about' component={About} />
 								<Route path='/'>
