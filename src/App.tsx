@@ -17,7 +17,6 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Menu } from './components/Menu/Menu';
 import { MenuButton } from './components/MenuButton/MenuButton';
 import { Transition } from './components/Transition/Transition';
-import { Footer } from './components/Footer/Footer';
 
 //Utilities
 import { prepareAudioForPlayback, initializeApp } from './app/init';
@@ -103,7 +102,6 @@ export default function App() {
 								</Switch>
 							</div>
 						</Router>
-						<Footer />
 					</Transition>
 				</AudioContext.Provider>
 			</ErrorBoundary>

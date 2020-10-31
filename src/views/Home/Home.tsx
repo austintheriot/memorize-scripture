@@ -28,6 +28,7 @@ import Select from '@material-ui/core/Select';
 //Custom components
 import { Controls } from '../../components/Controls/Controls';
 import { SmallSpacer } from '../../components/Spacers/Spacers';
+import { Footer } from '../../components/Footer/Footer';
 import searchIcon from '../../icons/search.svg';
 
 //Utilities
@@ -242,6 +243,7 @@ export default () => {
 				may not copy or download more than 500 consecutive verses of the ESV
 				Bible or more than one half of any book of the ESV Bible.
 			</p>
+			<Footer />
 			<Controls />
 		</>
 	);

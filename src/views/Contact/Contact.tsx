@@ -9,6 +9,7 @@ import { FormHelperText } from '@material-ui/core';
 
 import { emailAPIKey } from '../../app/config';
 import { makeStyles } from '@material-ui/core/styles';
+import { Footer } from '../../components/Footer/Footer';
 
 const useStyles = makeStyles((theme) => ({
 	formControl: {
@@ -211,6 +212,7 @@ export default () => {
 					Submit
 				</button>
 			</form>
+			<Footer />
 		</main>
 	);
 };

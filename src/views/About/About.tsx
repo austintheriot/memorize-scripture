@@ -18,6 +18,7 @@ import forwardIcon from '../../icons/forward.svg';
 import loadingIcon from '../../icons/loading.svg';
 import errorIcon from '../../icons/error.svg';
 import flipIcon from '../../icons/flip.svg';
+import { Footer } from '../../components/Footer/Footer';
 
 export default () => {
 	const scrollToTop = () => scroll.scrollToTop({ smooth: true, duration: 500 });
@@ -445,14 +446,15 @@ export default () => {
 					End Developers, please feel free to get in touch!
 				</Paragraph>
 			</section>
-			<div className={styles.copyright}>
+			<section className={styles.copyright}>
 				<p>Originally published October 22, 2020.</p>
 				<p>
 					{'Copyright '}&#169;
 					{` ${new Date().getFullYear()}, Austin Theriot.`}
 				</p>
 				<p>All rights reserved.</p>
-			</div>
+			</section>
+			<Footer />
 		</article>
 	);
 };
