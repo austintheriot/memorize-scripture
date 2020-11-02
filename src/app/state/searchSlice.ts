@@ -19,17 +19,18 @@ export const searchSlice = createSlice({
 			const newNumberOfChapters = bookChapters[action.payload.book];
 			search.numberOfChapters = newNumberOfChapters;
 		},
-		bookSelected: (search, action) => {
-			search.book = action.payload;
+		bookSelected: (
+			search,
+			action: { payload: { bookString: string; chapter: string } }
+		) => {
+			search.book = action.payload.bookString;
+			const newNumberOfChapters = bookChapters[action.payload.bookString]; //get chapter numbers
+			search.numberOfChapters = newNumberOfChapters;
+			if (Number(action.payload.chapter) <= newNumberOfChapters) return;
+			search.chapter = '1';
 		},
-		chapterAdjustedWithNewBook: (search, action) => {
+		chapterSelected: (search, action: { payload: string }) => {
 			search.chapter = action.payload;
-		},
-		chapterSelected: (search, action) => {
-			search.chapter = action.payload;
-		},
-		numberOfChaptersAdjustedWithNewBook: (search, action) => {
-			search.numberOfChapters = action.payload;
 		},
 	},
 });
@@ -38,8 +39,6 @@ export const {
 	searchInitialized,
 	bookSelected,
 	chapterSelected,
-	chapterAdjustedWithNewBook,
-	numberOfChaptersAdjustedWithNewBook,
 } = searchSlice.actions;
 
 export const selectSearch = (state: SearchSlice) => state.search;

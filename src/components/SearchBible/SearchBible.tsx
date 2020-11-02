@@ -6,9 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
 	selectSearch,
 	bookSelected,
-	chapterAdjustedWithNewBook,
 	chapterSelected,
-	numberOfChaptersAdjustedWithNewBook,
 } from '../../app/state/searchSlice';
 
 //Styles
@@ -25,7 +23,7 @@ import Select from '@material-ui/core/Select';
 import searchIcon from '../../icons/search.svg';
 
 //Utilities
-import { bookTitles, bookChapters } from '../../views/Home/bible';
+import { bookTitles } from '../../views/Home/bible';
 import { getTextBody, addToTextArray } from '../../views/Home/storage';
 import { fetchTextFromESVAPI } from '../../views/Home/https';
 
@@ -77,15 +75,10 @@ export const SearchBible = () => {
 			value: unknown;
 		}>
 	) => {
-		let newNumberOfChapters = 1;
 		const bookString = e.target.value;
 		if (typeof bookString === 'string') {
-			dispatch(bookSelected(bookString)); //set book name
-			newNumberOfChapters = bookChapters[bookString]; //get chapter numbers
-			dispatch(numberOfChaptersAdjustedWithNewBook(newNumberOfChapters)); //set chapter numbers
+			dispatch(bookSelected({ bookString, chapter: search.chapter })); //set book name
 		}
-		if (Number(search.chapter) <= newNumberOfChapters) return;
-		dispatch(chapterAdjustedWithNewBook('1'));
 	};
 
 	const handleChapterChange = (
