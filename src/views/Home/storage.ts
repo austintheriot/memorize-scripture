@@ -21,6 +21,13 @@ interface TextObject {
 
 type TextArray = TextObject[];
 
+export const splitTitleIntoBookAndChapter = (title: string) => {
+	const wordArray = title.split(' ');
+	const book = wordArray.slice(0, wordArray.length - 1).join(' ');
+	const chapter = wordArray[wordArray.length - 1];
+	return { book, chapter };
+};
+
 export const storeShowCondensed = (boolean: boolean) => {
 	console.log(
 		`Storing showCondensed as ${boolean.toString()} in local storage`
@@ -69,7 +76,7 @@ const shiftArrayByOne = (
 	return array;
 };
 
-const movePassageToFrontOfArray = (title: string) => {
+const movePassageToFrontOfArray = (title: string): TextArray => {
 	console.log(`Moving ${title} to the front of the text body array`);
 	const array = getTextArray();
 	const titleIndex = array.findIndex((el) => el.title === title);
