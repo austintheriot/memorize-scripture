@@ -6,7 +6,6 @@ import { FirebaseContext } from '../../app/state/firebaseContext';
 import { AudioContext } from '../../app/state/audioContext';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-	setAudioSpeed,
 	selectAudioSettings,
 	rewindButtonClicked,
 	forwardButtonClicked,
@@ -14,6 +13,7 @@ import {
 	progressBarTouched,
 	playButtonClicked,
 	pauseButtonClicked,
+	speedButtonClicked,
 } from '../../app/state/audioSlice';
 import { selectText, viewChangeButtonClicked } from '../../app/state/textSlice';
 
@@ -41,14 +41,14 @@ export const Controls = () => {
 		analytics.logEvent('play_button_pressed');
 		if (textAudio.readyState !== 4) return;
 		textAudio.play();
-		dispatch(playButtonClicked(true));
+		dispatch(playButtonClicked());
 	};
 
 	const handlePause = () => {
 		analytics.logEvent('pause_buton_pressed');
 		if (textAudio.readyState !== 4) return;
 		textAudio.pause();
-		dispatch(pauseButtonClicked(false));
+		dispatch(pauseButtonClicked());
 	};
 
 	const handleRewind = () => {
@@ -107,7 +107,7 @@ export const Controls = () => {
 			targetSpeed,
 		});
 		textAudio.playbackRate = targetSpeed;
-		dispatch(setAudioSpeed(targetSpeed));
+		dispatch(speedButtonClicked(targetSpeed));
 		storePlaySpeed(targetSpeed);
 	};
 

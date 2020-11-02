@@ -67,14 +67,14 @@ export const audioSlice = createSlice({
 		progressBarTouched: (audio, action) => {
 			audio.position = action.payload;
 		},
-		setAudioSpeed: (audio, action) => {
+		speedButtonClicked: (audio, action) => {
 			audio.speed = action.payload;
 		},
-		playButtonClicked: (audio, action) => {
+		playButtonClicked: (audio) => {
 			audio.isPlaying = true;
 		},
-		pauseButtonClicked: (audio, action) => {
-			audio.isPlaying = true;
+		pauseButtonClicked: (audio) => {
+			audio.isPlaying = false;
 		},
 	},
 });
@@ -94,7 +94,7 @@ export const {
 	forwardButtonClicked,
 	progressBarClicked,
 	progressBarTouched,
-	setAudioSpeed,
+	speedButtonClicked,
 	playButtonClicked,
 	pauseButtonClicked,
 } = audioSlice.actions;
