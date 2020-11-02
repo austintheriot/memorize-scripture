@@ -9,7 +9,7 @@ export const textSlice = createSlice({
 		showAppIsInstalled: false,
 	},
 	reducers: {
-		setIsOffline: (state, action) => {
+		setShowIsOffline: (state, action) => {
 			state.isOffline = action.payload;
 		},
 		setShowCloseTabs: (state, action) => {
@@ -22,7 +22,7 @@ export const textSlice = createSlice({
 });
 
 export const {
-	setIsOffline,
+	setShowIsOffline,
 	setShowCloseTabs,
 	setShowAppIsInstalled,
 } = textSlice.actions;
