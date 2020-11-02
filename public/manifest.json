@@ -1,6 +1,6 @@
 {
-	"short_name": "Memorize Scripture",
-	"name": "Scripture",
+	"short_name": "Memorize",
+	"name": "Memorize Scripture",
 	"icons": [
 		{
 			"src": "favicon.ico",
@@ -18,7 +18,7 @@
 			"sizes": "512x512"
 		}
 	],
-	"start_url": ".",
+	"start_url": "https://memorizescripture.org/",
 	"display": "standalone",
 	"theme_color": "#333533",
 	"background_color": "#333533"
