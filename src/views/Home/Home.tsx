@@ -207,7 +207,7 @@ export default () => {
 					className={styles.search}
 					onClick={handleSubmit}
 					aria-label={'Search'}>
-					<img src={searchIcon} alt='search' />
+					<img src={searchIcon} alt='search' className={styles.searchIcon} />
 				</button>
 			</form>
 			{text.showCondensed ? (
