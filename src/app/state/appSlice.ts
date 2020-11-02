@@ -22,6 +22,12 @@ export const appSlice = createSlice({
 		noInternetConnection: (app) => {
 			app.showIsOffline = true;
 		},
+		serviceWorkerInstalled: (app) => {
+			app.showAppIsInstalled = true;
+		},
+		updateAvailable: (app) => {
+			app.showCloseTabs = true;
+		},
 		offlineMessageClosed: (app) => {
 			app.showIsOffline = false;
 		},
@@ -31,12 +37,6 @@ export const appSlice = createSlice({
 		installedMessageClosed: (app) => {
 			app.showAppIsInstalled = false;
 		},
-		serviceWorkerInstalled: (app) => {
-			app.showAppIsInstalled = true;
-		},
-		updateAvailable: (app) => {
-			app.showCloseTabs = true;
-		},
 	},
 });
 
@@ -45,11 +45,11 @@ export const {
 	navLinkClicked,
 	outsideOfMenuClicked,
 	noInternetConnection,
+	serviceWorkerInstalled,
+	updateAvailable,
 	offlineMessageClosed,
 	updateMessageClosed,
 	installedMessageClosed,
-	serviceWorkerInstalled,
-	updateAvailable,
 } = appSlice.actions;
 
 export const selectApp = (state: AppSlice) => state.app;
