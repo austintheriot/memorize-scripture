@@ -9,6 +9,8 @@ import { FormHelperText } from '@material-ui/core';
 
 import { emailAPIKey } from '../../app/config';
 import { makeStyles } from '@material-ui/core/styles';
+
+import { ErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary';
 import { Footer } from '../../components/Footer/Footer';
 
 const useStyles = makeStyles((theme) => ({
@@ -147,72 +149,74 @@ export default () => {
 	};
 
 	return (
-		<main>
-			<h1 className={styles.h1}>Contact</h1>
-			<p className={styles.note}>
-				If you are submitting a bug report or a feature request, please be as
-				detailed as possible. Thank you!
-			</p>
-			<form
-				noValidate
-				autoComplete='off'
-				className={styles.root}
-				onSubmit={handleSubmit}>
-				{/* EMAIL */}
-				<FormControl className={classes.formControl}>
-					<InputLabel
-						htmlFor='email'
-						className={classes.label}
-						error={emailHasErrors}>
-						Email*
-					</InputLabel>
-					<Input
-						id='email'
-						className={classes.input}
-						fullWidth={true}
-						disabled={emailDisabled}
-						value={email}
-						error={emailHasErrors}
-						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-							handleChange(e, 'email')
-						}
-						onBlur={handleBlur}
-					/>
-					<FormHelperText error={emailHasErrors}>{emailError}</FormHelperText>
-				</FormControl>
+		<ErrorBoundary>
+			<main>
+				<h1 className={styles.h1}>Contact</h1>
+				<p className={styles.note}>
+					If you are submitting a bug report or a feature request, please be as
+					detailed as possible. Thank you!
+				</p>
+				<form
+					noValidate
+					autoComplete='off'
+					className={styles.root}
+					onSubmit={handleSubmit}>
+					{/* EMAIL */}
+					<FormControl className={classes.formControl}>
+						<InputLabel
+							htmlFor='email'
+							className={classes.label}
+							error={emailHasErrors}>
+							Email*
+						</InputLabel>
+						<Input
+							id='email'
+							className={classes.input}
+							fullWidth={true}
+							disabled={emailDisabled}
+							value={email}
+							error={emailHasErrors}
+							onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+								handleChange(e, 'email')
+							}
+							onBlur={handleBlur}
+						/>
+						<FormHelperText error={emailHasErrors}>{emailError}</FormHelperText>
+					</FormControl>
 
-				{/* MESSAGE */}
-				<FormControl className={classes.formControl}>
-					<InputLabel htmlFor='message' className={classes.label}>
-						Message
-					</InputLabel>
-					<Input
-						id='message'
-						multiline={true}
-						rows={4}
-						className={classes.input}
-						fullWidth={true}
-						disabled={messageDisabled}
-						value={message}
-						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-							handleChange(e, 'message')
-						}
-					/>
-				</FormControl>
+					{/* MESSAGE */}
+					<FormControl className={classes.formControl}>
+						<InputLabel htmlFor='message' className={classes.label}>
+							Message
+						</InputLabel>
+						<Input
+							id='message'
+							multiline={true}
+							rows={4}
+							className={classes.input}
+							fullWidth={true}
+							disabled={messageDisabled}
+							value={message}
+							onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+								handleChange(e, 'message')
+							}
+						/>
+					</FormControl>
 
-				<p className={styles.userMessage}>{userMessage}</p>
-				<button
-					aria-label='submit'
-					disabled={buttonDisabled}
-					className={[
-						'button',
-						styles.submit,
-						buttonDisabled ? styles.disabled : '',
-					].join(' ')}>
-					Submit
-				</button>
-			</form>
-			<Footer />
-		</main>
+					<p className={styles.userMessage}>{userMessage}</p>
+					<button
+						aria-label='submit'
+						disabled={buttonDisabled}
+						className={[
+							'button',
+							styles.submit,
+							buttonDisabled ? styles.disabled : '',
+						].join(' ')}>
+						Submit
+					</button>
+				</form>
+				<Footer />
+			</main>
+		</ErrorBoundary>
 	);
 };

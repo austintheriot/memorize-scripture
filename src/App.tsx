@@ -79,21 +79,9 @@ export default function App() {
 								<Menu />
 								<div onClick={closeMenu}>
 									<Switch>
-										<Route exact path='/contact'>
-											<ErrorBoundary>
-												<Contact />
-											</ErrorBoundary>
-										</Route>
-										<Route exact path='/about'>
-											<ErrorBoundary>
-												<About />
-											</ErrorBoundary>
-										</Route>
-										<Route path='/'>
-											<ErrorBoundary>
-												<Home />
-											</ErrorBoundary>
-										</Route>
+										<Route exact path='/contact' component={Contact} />
+										<Route exact path='/about' component={About} />
+										<Route path='/' component={Home} />
 									</Switch>
 								</div>
 							</Suspense>
