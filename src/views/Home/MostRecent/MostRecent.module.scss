@@ -1,0 +1,26 @@
+.mostRecentContainer {
+	margin: 1rem 0.09rem;
+	background-color: var(--dark);
+
+	summary {
+		padding: 0.6rem;
+		border-bottom: 2px solid var(--darker);
+		cursor: pointer;
+	}
+}
+
+.mostRecentList {
+	width: min-content;
+}
+
+.mostRecentListItem {
+	width: max-content;
+	margin: 1rem;
+	list-style: none;
+}
+
+.listButton {
+	padding: 0.5rem;
+	text-decoration: underline;
+	cursor: pointer;
+}

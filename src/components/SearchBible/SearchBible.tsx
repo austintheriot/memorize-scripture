@@ -1,0 +1,175 @@
+import React, { useContext } from 'react';
+
+import { AudioContext } from '../../app/state/audioContext';
+import { FirebaseContext } from '../../app/state/firebaseContext';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+	setSearchBook,
+	setSearchChapter,
+	setSearchNumberOfChapters,
+	selectSearch,
+} from '../../app/state/searchSlice';
+
+//Styles
+import styles from './SearchBible.module.scss';
+
+//Material UI Components
+import { makeStyles } from '@material-ui/core/styles';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+
+//Custom components
+import searchIcon from '../../icons/search.svg';
+
+//Utilities
+import { bookTitles, bookChapters } from '../../views/Home/bible';
+import { getTextBody, addToTextArray } from '../../views/Home/storage';
+import { updateResults } from '../../views/Home/updateState';
+import { fetchTextFromESVAPI } from '../../views/Home/https';
+
+//types
+import { UtilityConfig } from '../../app/types';
+
+const useStyles = makeStyles((theme) => ({
+	formControl: {
+		margin: theme.spacing(0.25),
+	},
+	selectEmpty: {
+		marginTop: theme.spacing(2),
+	},
+	iconButton: {
+		width: 'max-content',
+	},
+	label: {
+		color: 'var(--light)',
+	},
+	select: {
+		padding: '0.25rem 1rem',
+		backgroundColor: 'var(--dark)',
+		color: 'var(--light)',
+		fontSize: '1.1rem',
+	},
+}));
+
+export const SearchBible = () => {
+	const { analytics } = useContext(FirebaseContext);
+
+	//Material UI Styling:
+	const classes = useStyles();
+
+	//Redux State:
+	const dispatch = useDispatch();
+	const search = useSelector(selectSearch);
+	const { textAudio, setTextAudio } = useContext(AudioContext);
+	const utilityConfig: UtilityConfig = {
+		textAudio,
+		setTextAudio,
+		dispatch,
+		analytics,
+	};
+
+	const handleBookChange = (
+		e: React.ChangeEvent<{
+			name?: string | undefined;
+			value: unknown;
+		}>
+	) => {
+		let newNumberOfChapters = 1;
+		const bookString = e.target.value;
+		if (typeof bookString === 'string') {
+			dispatch(setSearchBook(bookString)); //set book name
+			newNumberOfChapters = bookChapters[bookString]; //get chapter numbers
+			dispatch(setSearchNumberOfChapters(newNumberOfChapters)); //set chapter numbers
+		}
+		if (Number(search.chapter) <= newNumberOfChapters) return;
+		dispatch(setSearchChapter('1'));
+	};
+
+	const handleChapterChange = (
+		e: React.ChangeEvent<{
+			name?: string | undefined;
+			value: unknown;
+		}>
+	) => {
+		if (typeof e.target.value === 'string') {
+			dispatch(setSearchChapter(e.target.value));
+		}
+	};
+
+	const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+		e.preventDefault();
+		//Check local storage
+		const title = `${search.book} ${search.chapter}`;
+		console.log(`Checking local storage for ${title}`);
+		//try to retrieve text body from local storage
+		let body = getTextBody(title);
+		if (body) {
+			console.log(`Retrieved body of ${title} from local storage`);
+			updateResults(search.book, search.chapter, body, utilityConfig);
+			addToTextArray(title, body);
+			analytics.logEvent('fetched_text_from_local_storage', {
+				searchBook: search.book,
+				searchChapter: search.chapter,
+				title: `${search.book} ${search.chapter}`,
+			});
+		} else {
+			//If it does not exist in local storage, make an API call, and store the returned text
+			console.log(`${title} not found in local storage`);
+			console.log('Making a call to the ESV API');
+			updateResults(search.book, search.chapter, '', utilityConfig); //show loading indicator
+			fetchTextFromESVAPI(search.book, search.chapter, utilityConfig);
+		}
+	};
+
+	//create chapter input options based on book of the bible
+	let chapterArray = [];
+	for (let i = 1; i <= search.numberOfChapters; i++) {
+		chapterArray.push(i);
+	}
+	chapterArray = chapterArray.map((el) => (
+		<MenuItem value={el.toString()} key={el}>
+			{el}
+		</MenuItem>
+	));
+
+	return (
+		<form className={styles.form}>
+			<FormControl className={classes.formControl}>
+				<InputLabel id='bible-book' className={classes.label}>
+					Book
+				</InputLabel>
+				<Select
+					className={classes.select}
+					labelId='bible-book'
+					value={search.book}
+					onChange={handleBookChange}>
+					{bookTitles.map((bookString) => (
+						<MenuItem value={bookString} key={bookString}>
+							{bookString}
+						</MenuItem>
+					))}
+				</Select>
+			</FormControl>
+			<FormControl className={classes.formControl}>
+				<InputLabel id='bible-chapter' className={classes.label}>
+					Chapter
+				</InputLabel>
+				<Select
+					className={classes.select}
+					labelId='bible-chapter'
+					value={search.chapter}
+					onChange={handleChapterChange}>
+					{chapterArray}
+				</Select>
+			</FormControl>
+			<button
+				className={styles.search}
+				onClick={handleSubmit}
+				aria-label={'Search'}>
+				<img src={searchIcon} alt='search' className={styles.searchIcon} />
+			</button>
+		</form>
+	);
+};
