@@ -74,8 +74,8 @@ const movePassageToFrontOfArray = (title: string) => {
 	const array = getTextArray();
 	const titleIndex = array.findIndex((el) => el.title === title);
 	if (titleIndex <= 0) return array;
-	const extractedText = array.splice(titleIndex, 1)[0];
-	array.unshift(extractedText); //extract and move to front
+	const extractedText = array.splice(titleIndex, 1)[0]; //extract and move to front
+	array.unshift(extractedText);
 	return array;
 };
 
