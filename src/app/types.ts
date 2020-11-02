@@ -25,14 +25,6 @@ export interface AudioSlice {
 	audio: AudioState;
 }
 
-export interface MenuState {
-	isOpen: boolean;
-}
-
-export interface MenuSlice {
-	menu: MenuState;
-}
-
 export interface SearchState {
 	book: string;
 	chapter: string;
@@ -58,6 +50,7 @@ export interface TextSlice {
 }
 
 export interface AppState {
+	menuIsOpen: boolean;
 	showIsOffline: boolean;
 	showCloseTabs: boolean;
 	showAppIsInstalled: boolean;
