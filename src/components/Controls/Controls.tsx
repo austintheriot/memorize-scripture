@@ -6,12 +6,16 @@ import { FirebaseContext } from '../../app/state/firebaseContext';
 import { AudioContext } from '../../app/state/audioContext';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-	setAudioIsPlaying,
-	setAudioPosition,
 	setAudioSpeed,
 	selectAudioSettings,
+	rewindButtonClicked,
+	forwardButtonClicked,
+	progressBarClicked,
+	progressBarTouched,
+	playButtonClicked,
+	pauseButtonClicked,
 } from '../../app/state/audioSlice';
-import { setShowCondensed, selectText } from '../../app/state/textSlice';
+import { selectText, viewChangeButtonClicked } from '../../app/state/textSlice';
 
 //Custom icons
 import flipIcon from '../../icons/flip.svg';
@@ -37,21 +41,21 @@ export const Controls = () => {
 		analytics.logEvent('play_button_pressed');
 		if (textAudio.readyState !== 4) return;
 		textAudio.play();
-		dispatch(setAudioIsPlaying(true));
+		dispatch(playButtonClicked(true));
 	};
 
 	const handlePause = () => {
 		analytics.logEvent('pause_buton_pressed');
 		if (textAudio.readyState !== 4) return;
 		textAudio.pause();
-		dispatch(setAudioIsPlaying(false));
+		dispatch(pauseButtonClicked(false));
 	};
 
 	const handleRewind = () => {
 		analytics.logEvent('back_button_pressed');
 		if (textAudio.readyState !== 4) return;
 		const targetTime = Math.max(textAudio.currentTime - 5, 0);
-		dispatch(setAudioPosition(targetTime / textAudio.duration));
+		dispatch(rewindButtonClicked(targetTime / textAudio.duration));
 		textAudio.currentTime = targetTime;
 	};
 
@@ -62,7 +66,7 @@ export const Controls = () => {
 			textAudio.currentTime + 5,
 			textAudio.duration - 0.01
 		);
-		dispatch(setAudioPosition(targetTime / textAudio.duration));
+		dispatch(forwardButtonClicked(targetTime / textAudio.duration));
 		textAudio.currentTime = targetTime;
 	};
 
@@ -81,7 +85,7 @@ export const Controls = () => {
 		analytics.logEvent('progress_bar_clicked', {
 			targetTime,
 		});
-		dispatch(setAudioPosition(targetTime));
+		dispatch(progressBarClicked(targetTime));
 		textAudio.currentTime = textAudio.duration * targetTime;
 	};
 
@@ -93,7 +97,7 @@ export const Controls = () => {
 		analytics.logEvent('progress_bar_touched', {
 			targetTime,
 		});
-		dispatch(setAudioPosition(targetTime));
+		dispatch(progressBarTouched(targetTime));
 		textAudio.currentTime = textAudio.duration * targetTime;
 	};
 
@@ -112,7 +116,7 @@ export const Controls = () => {
 			showCondensed: text.showCondensed,
 		});
 		const targetShowCondensed = !text.showCondensed;
-		dispatch(setShowCondensed(targetShowCondensed));
+		dispatch(viewChangeButtonClicked(targetShowCondensed));
 		storeShowCondensed(targetShowCondensed);
 	};
 

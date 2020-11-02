@@ -1,37 +1,60 @@
 //State
 import {
-	setAudioHasError,
-	setAudioIsReady,
-	setAudioPosition,
-	setAudioIsPlaying,
-	setAudioSpeed,
+	canPlayEvent,
+	pauseEvent,
+	playEvent,
+	errorEvent,
+	playingEvent,
+	timeupdateEvent,
+	ratechangeEvent,
+	audioSettingsLoaded,
+	audioFileChanged,
 } from './state/audioSlice';
-import { setShowCondensed, setClickedLine } from './state/textSlice';
+import { textInitialized, textSettingsLoaded } from './state/textSlice';
 import {
-	getShowCondensed,
-	getClickedLine,
-	getPlaySpeed,
 	addToTextArray,
 	getMostRecentText,
 	splitTitleIntoBookAndChapter,
+	getUserSettings,
 } from '../views/Home/storage';
-import { updateSearchTerms, updateResults } from '../views/Home/updateState';
 import { UtilityConfig, AudioState } from './types';
 import { Psalm23 } from './state/Psalm23';
+import { searchInitialized } from './state/searchSlice';
+
+const initializeUserSettings = (config: UtilityConfig) => {
+	//Loading textAudio playback rate
+	console.log(`Initializing user's settings.`);
+	const { targetSpeed, showCondensed, clickedLine } = getUserSettings();
+	config.dispatch(audioSettingsLoaded(targetSpeed));
+	config.dispatch(textSettingsLoaded({ showCondensed, clickedLine }));
+};
+
+const updateStateWithInitializedValues = (
+	title: string,
+	body: string,
+	config: UtilityConfig
+) => {
+	const { book, chapter } = splitTitleIntoBookAndChapter(title);
+	//Search State
+	config.dispatch(searchInitialized({ book, chapter }));
+	//Text State
+	config.dispatch(
+		textInitialized({
+			book: book === 'Psalms' ? 'Psalm' : book,
+			chapter,
+			body,
+		})
+	);
+	const newAudioUrl = `https://audio.esv.org/hw/mq/${book} ${chapter}.mp3`;
+	config.setTextAudio(new Audio(newAudioUrl));
+};
 
 export const initializeMostRecentPassage = (config: UtilityConfig) => {
 	console.log('Searching storage for most recent book and chapter.');
 	const { title, body } = getMostRecentText();
 	if (title && body) {
 		console.log(`${title} is the most recent text accessed.`);
-		const { book, chapter } = splitTitleIntoBookAndChapter(title);
-		updateSearchTerms(book, chapter, config);
-		updateResults(book, chapter, body, config);
-		config.analytics.logEvent('fetched_text_from_local_storage', {
-			book,
-			chapter,
-			title: `${book} ${chapter}`,
-		});
+		updateStateWithInitializedValues(title, body, config);
 	} else {
 		console.log(
 			'A most recent book and chapter do not exist in local storage.'
@@ -42,15 +65,7 @@ export const initializeMostRecentPassage = (config: UtilityConfig) => {
 };
 
 export const initializeApp = (config: UtilityConfig) => {
-	//Loading textAudio playback rate
-	console.log(`Initializing user's settings.`);
-	const targetSpeed = getPlaySpeed();
-	config.dispatch(setAudioSpeed(targetSpeed));
-	const showCondensed = getShowCondensed();
-	config.dispatch(setShowCondensed(showCondensed));
-	const clickedLine = getClickedLine();
-	config.dispatch(setClickedLine(clickedLine));
-	//Loading last-viewed book and chapter
+	initializeUserSettings(config);
 	initializeMostRecentPassage(config);
 };
 
@@ -59,6 +74,14 @@ export const prepareAudioForPlayback = (
 	audioState: AudioState,
 	config: UtilityConfig
 ) => {
+	textAudio.pause();
+	config.dispatch(
+		audioFileChanged({
+			hasErrors: false,
+			isReady: false,
+			position: 0,
+		})
+	);
 	//load the resource (necessary on mobile)
 	textAudio.load();
 	textAudio.currentTime = 0;
@@ -66,16 +89,16 @@ export const prepareAudioForPlayback = (
 
 	//loaded enough to play
 	textAudio.addEventListener('canplay', () => {
-		config.dispatch(setAudioIsReady(true));
+		config.dispatch(canPlayEvent());
 	});
 	textAudio.addEventListener('pause', () => {
-		config.dispatch(setAudioIsPlaying(false));
+		config.dispatch(pauseEvent());
 	});
 	textAudio.addEventListener('play', () => {
-		config.dispatch(setAudioIsPlaying(true));
+		config.dispatch(playEvent());
 	});
 	textAudio.addEventListener('error', () => {
-		config.dispatch(setAudioHasError(true));
+		config.dispatch(errorEvent());
 	});
 	//not enough data
 	textAudio.addEventListener('waiting', () => {
@@ -83,7 +106,7 @@ export const prepareAudioForPlayback = (
 	});
 	//ready to play after waiting
 	textAudio.addEventListener('playing', () => {
-		config.dispatch(setAudioIsReady(true));
+		config.dispatch(playingEvent());
 	});
 	//textAudio is over
 	textAudio.addEventListener('ended', () => {
@@ -92,12 +115,11 @@ export const prepareAudioForPlayback = (
 	});
 	//as time is updated
 	textAudio.addEventListener('timeupdate', () => {
-		config.dispatch(
-			setAudioPosition(textAudio.currentTime / textAudio.duration)
-		);
+		const targetPosition = textAudio.currentTime / textAudio.duration;
+		config.dispatch(timeupdateEvent(targetPosition));
 	});
 	//when speed is changed
 	textAudio.addEventListener('ratechange', () => {
-		config.dispatch(setAudioSpeed(textAudio.playbackRate));
+		config.dispatch(ratechangeEvent(textAudio.playbackRate));
 	});
 };

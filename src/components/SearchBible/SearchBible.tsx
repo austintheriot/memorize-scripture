@@ -4,10 +4,11 @@ import { AudioContext } from '../../app/state/audioContext';
 import { FirebaseContext } from '../../app/state/firebaseContext';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-	setSearchBook,
-	setSearchChapter,
-	setSearchNumberOfChapters,
 	selectSearch,
+	bookSelected,
+	chapterAdjustedWithNewBook,
+	chapterSelected,
+	numberOfChaptersAdjustedWithNewBook,
 } from '../../app/state/searchSlice';
 
 //Styles
@@ -26,11 +27,11 @@ import searchIcon from '../../icons/search.svg';
 //Utilities
 import { bookTitles, bookChapters } from '../../views/Home/bible';
 import { getTextBody, addToTextArray } from '../../views/Home/storage';
-import { updateResults } from '../../views/Home/updateState';
 import { fetchTextFromESVAPI } from '../../views/Home/https';
 
 //types
 import { UtilityConfig } from '../../app/types';
+import { textFetchedFromLocalStorage } from '../../app/state/textSlice';
 
 const useStyles = makeStyles((theme) => ({
 	formControl: {
@@ -79,12 +80,12 @@ export const SearchBible = () => {
 		let newNumberOfChapters = 1;
 		const bookString = e.target.value;
 		if (typeof bookString === 'string') {
-			dispatch(setSearchBook(bookString)); //set book name
+			dispatch(bookSelected(bookString)); //set book name
 			newNumberOfChapters = bookChapters[bookString]; //get chapter numbers
-			dispatch(setSearchNumberOfChapters(newNumberOfChapters)); //set chapter numbers
+			dispatch(numberOfChaptersAdjustedWithNewBook(newNumberOfChapters)); //set chapter numbers
 		}
 		if (Number(search.chapter) <= newNumberOfChapters) return;
-		dispatch(setSearchChapter('1'));
+		dispatch(chapterAdjustedWithNewBook('1'));
 	};
 
 	const handleChapterChange = (
@@ -94,7 +95,7 @@ export const SearchBible = () => {
 		}>
 	) => {
 		if (typeof e.target.value === 'string') {
-			dispatch(setSearchChapter(e.target.value));
+			dispatch(chapterSelected(e.target.value));
 		}
 	};
 
@@ -107,7 +108,13 @@ export const SearchBible = () => {
 		let body = getTextBody(title);
 		if (body) {
 			console.log(`Retrieved body of ${title} from local storage`);
-			updateResults(search.book, search.chapter, body, utilityConfig);
+			dispatch(
+				textFetchedFromLocalStorage({
+					book: search.book,
+					chapter: search.chapter,
+					body,
+				})
+			);
 			addToTextArray(title, body);
 			analytics.logEvent('fetched_text_from_local_storage', {
 				searchBook: search.book,
@@ -118,7 +125,6 @@ export const SearchBible = () => {
 			//If it does not exist in local storage, make an API call, and store the returned text
 			console.log(`${title} not found in local storage`);
 			console.log('Making a call to the ESV API');
-			updateResults(search.book, search.chapter, '', utilityConfig); //show loading indicator
 			fetchTextFromESVAPI(search.book, search.chapter, utilityConfig);
 		}
 	};

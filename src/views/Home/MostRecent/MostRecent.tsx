@@ -1,36 +1,19 @@
 import React, { useContext } from 'react';
 
 //App State
-import { AudioContext } from '../../../app/state/audioContext';
 import { FirebaseContext } from '../../../app/state/firebaseContext';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectText } from '../../../app/state/textSlice';
+import { useDispatch } from 'react-redux';
+import { mostRecentPassageClicked } from '../../../app/state/textSlice';
 
 //Styles
 import styles from './MostRecent.module.scss';
 
 //Utilities
-import {
-	addToTextArray,
-	getTextArray,
-	splitTitleIntoBookAndChapter,
-} from '../storage';
-import { updateResults } from '.././updateState';
-
-//types
-import { UtilityConfig } from '../../../app/types';
+import { addToTextArray, getTextArray } from '../storage';
 
 export const MostRecent = () => {
-	const { textAudio, setTextAudio } = useContext(AudioContext);
 	const { analytics } = useContext(FirebaseContext);
-	const text = useSelector(selectText);
 	const dispatch = useDispatch();
-	const utilityConfig: UtilityConfig = {
-		textAudio,
-		setTextAudio,
-		dispatch,
-		analytics,
-	};
 
 	interface TextObject {
 		title: string;
@@ -41,9 +24,7 @@ export const MostRecent = () => {
 		e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
 		{ title, body }: TextObject
 	) => {
-		const { book, chapter } = splitTitleIntoBookAndChapter(title);
-		if (text.book === book && text.chapter === chapter) return;
-		updateResults(book, chapter, body, utilityConfig);
+		dispatch(mostRecentPassageClicked({ title, body }));
 		addToTextArray(title, body);
 		analytics.logEvent('clicked_most_recent', {
 			title,

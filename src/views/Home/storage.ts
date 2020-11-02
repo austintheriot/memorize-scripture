@@ -21,6 +21,17 @@ interface TextObject {
 
 type TextArray = TextObject[];
 
+export const getUserSettings = () => {
+	const targetSpeed = getPlaySpeed();
+	const showCondensed = getShowCondensed();
+	const clickedLine = getClickedLine();
+	return {
+		targetSpeed,
+		showCondensed,
+		clickedLine,
+	};
+};
+
 export const splitTitleIntoBookAndChapter = (title: string) => {
 	const wordArray = title.split(' ');
 	const book = wordArray.slice(0, wordArray.length - 1).join(' ');

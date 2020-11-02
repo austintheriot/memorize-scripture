@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { SearchSlice } from '../types';
+import { bookChapters } from '../../views/Home/bible';
 
 export const searchSlice = createSlice({
 	name: 'search',
@@ -9,22 +10,36 @@ export const searchSlice = createSlice({
 		numberOfChapters: 150,
 	},
 	reducers: {
-		setSearchBook: (state, action) => {
-			state.book = action.payload;
+		searchInitialized: (
+			search,
+			action: { payload: { book: string; chapter: string } }
+		) => {
+			search.book = action.payload.book;
+			search.chapter = action.payload.chapter;
+			const newNumberOfChapters = bookChapters[action.payload.book];
+			search.numberOfChapters = newNumberOfChapters;
 		},
-		setSearchChapter: (state, action) => {
-			state.chapter = action.payload;
+		bookSelected: (search, action) => {
+			search.book = action.payload;
 		},
-		setSearchNumberOfChapters: (state, action) => {
-			state.numberOfChapters = action.payload;
+		chapterAdjustedWithNewBook: (search, action) => {
+			search.chapter = action.payload;
+		},
+		chapterSelected: (search, action) => {
+			search.chapter = action.payload;
+		},
+		numberOfChaptersAdjustedWithNewBook: (search, action) => {
+			search.numberOfChapters = action.payload;
 		},
 	},
 });
 
 export const {
-	setSearchBook,
-	setSearchChapter,
-	setSearchNumberOfChapters,
+	searchInitialized,
+	bookSelected,
+	chapterSelected,
+	chapterAdjustedWithNewBook,
+	numberOfChaptersAdjustedWithNewBook,
 } = searchSlice.actions;
 
 export const selectSearch = (state: SearchSlice) => state.search;
