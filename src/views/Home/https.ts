@@ -3,7 +3,10 @@ import axios from 'axios';
 import { ESVApiKey } from '../../app/config';
 import { UtilityConfig } from '../../app/types';
 import { addToTextArray } from './storage';
-import { updateResults } from './updateState';
+import {
+	textFetchedFromESVAPI,
+	textFetchFailed,
+} from '../../app/state/textSlice';
 
 export const fetchTextFromESVAPI = (
 	book: string,
@@ -12,7 +15,6 @@ export const fetchTextFromESVAPI = (
 ) => {
 	const title = `${book} ${chapter}`;
 	console.log(`Fetching text body file of ${title} from ESV API`);
-
 	config.analytics.logEvent('fetched_text_from_ESV_API', {
 		book,
 		chapter,
@@ -42,11 +44,26 @@ export const fetchTextFromESVAPI = (
 		.then((response) => {
 			console.log(`Text body of ${title} received from ESV API`);
 			const body = response.data.passages[0];
-			updateResults(book, chapter, body, config);
+			//Text State
+			config.dispatch(
+				textFetchedFromESVAPI({
+					book: book === 'Psalms' ? 'Psalm' : book,
+					chapter,
+					body,
+				})
+			);
+			const newAudioUrl = `https://audio.esv.org/hw/mq/${book} ${chapter}.mp3`;
+			config.setTextAudio(new Audio(newAudioUrl));
 			addToTextArray(title, body);
 		})
 		.catch((error) => {
 			console.log(error);
-			updateResults('', '', '', config);
+			config.dispatch(
+				textFetchFailed({
+					book: '',
+					chapter: '',
+					body: '',
+				})
+			);
 		});
 };

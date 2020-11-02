@@ -3,14 +3,14 @@ import styles from './MenuButton.module.scss';
 
 //Menu State
 import { useSelector, useDispatch } from 'react-redux';
-import { selectApp, setMenuIsOpen } from '../../app/state/appSlice';
+import { selectApp, menuButtonClicked } from '../../app/state/appSlice';
 
 export const MenuButton = () => {
 	const dispatch = useDispatch();
 	const app = useSelector(selectApp);
 
 	const toggleMenuOpen = () => {
-		dispatch(setMenuIsOpen(!app.menuIsOpen));
+		dispatch(menuButtonClicked());
 	};
 
 	return (

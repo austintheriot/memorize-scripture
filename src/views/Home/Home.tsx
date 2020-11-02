@@ -3,7 +3,7 @@ import React, { useEffect, useContext } from 'react';
 //App State
 import { AudioContext } from '../../app/state/audioContext';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectText, setClickedLine } from '../../app/state/textSlice';
+import { selectText, splitTextClicked } from '../../app/state/textSlice';
 
 //Routing
 import { Prompt } from 'react-router';
@@ -34,12 +34,12 @@ export default () => {
 		window.scrollTo(0, 0);
 	}, []);
 
-	const handleLineBrokenText = (
+	const handleSplitTextClick = (
 		e: React.MouseEvent<HTMLParagraphElement, MouseEvent>,
 		i: number
 	) => {
-		if (text.clickedLine === i) return dispatch(setClickedLine(-1));
-		dispatch(setClickedLine(i));
+		if (text.clickedLine === i) return dispatch(splitTextClicked(-1));
+		dispatch(splitTextClicked(i));
 		storeClickedLine(i);
 	};
 
@@ -74,7 +74,7 @@ export default () => {
 								}
 								onClick={(
 									e: React.MouseEvent<HTMLParagraphElement, MouseEvent>
-								) => handleLineBrokenText(e, i)}>
+								) => handleSplitTextClick(e, i)}>
 								{text.clickedLine === i ? text.split[i] : text.condensed[i]}
 							</p>
 						);

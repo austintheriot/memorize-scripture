@@ -1,8 +1,8 @@
 import store from './app/state/store';
 import {
-	setShowIsOffline,
-	setShowCloseTabs,
-	setShowAppIsInstalled,
+	serviceWorkerInstalled,
+	updateAvailable,
+	noInternetConnection,
 } from './app/state/appSlice';
 
 const isLocalhost = Boolean(
@@ -73,7 +73,7 @@ function registerValidSW(swUrl: string, config?: Config) {
 								'New content is available and will be used when all ' +
 									'tabs for this page are closed. See https://bit.ly/CRA-PWA.'
 							);
-							store.dispatch(setShowCloseTabs(true));
+							store.dispatch(updateAvailable());
 
 							// Execute callback
 							if (config && config.onUpdate) {
@@ -84,7 +84,7 @@ function registerValidSW(swUrl: string, config?: Config) {
 							// It's the perfect time to display a
 							// "Content is cached for offline use." message.
 							console.log('Content is cached for offline use.');
-							store.dispatch(setShowAppIsInstalled(true));
+							store.dispatch(serviceWorkerInstalled());
 
 							// Execute callback
 							if (config && config.onSuccess) {
@@ -127,7 +127,7 @@ function checkValidServiceWorker(swUrl: string, config?: Config) {
 			console.log(
 				'No internet connection found. App is running in offline mode.'
 			);
-			store.dispatch(setShowIsOffline(true));
+			store.dispatch(noInternetConnection());
 		});
 }
 

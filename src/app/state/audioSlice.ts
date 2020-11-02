@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { AudioSlice } from '../types';
 
 export const audioSlice = createSlice({
-	name: 'search',
+	name: 'audio',
 	initialState: {
 		hasError: false,
 		isReady: false,
@@ -11,30 +11,92 @@ export const audioSlice = createSlice({
 		speed: 1,
 	},
 	reducers: {
-		setAudioHasError: (state, action) => {
-			state.hasError = action.payload;
+		audioSettingsLoaded: (audio, action: { payload: number }) => {
+			audio.speed = action.payload;
 		},
-		setAudioIsReady: (state, action) => {
-			state.isReady = action.payload;
+		audioInitialized: (
+			audio,
+			action: {
+				payload: { hasErrors: boolean; isReady: boolean; position: number };
+			}
+		) => {
+			audio.hasError = action.payload.hasErrors;
+			audio.isReady = action.payload.isReady;
+			audio.position = action.payload.position;
 		},
-		setAudioIsPlaying: (state, action) => {
-			state.isPlaying = action.payload;
+		audioFileChanged: (
+			audio,
+			action: {
+				payload: { hasErrors: boolean; isReady: boolean; position: number };
+			}
+		) => {
+			audio.hasError = action.payload.hasErrors;
+			audio.isReady = action.payload.isReady;
+			audio.position = action.payload.position;
 		},
-		setAudioPosition: (state, action) => {
-			state.position = action.payload;
+		canPlayEvent: (audio) => {
+			audio.isReady = true;
 		},
-		setAudioSpeed: (state, action) => {
-			state.speed = action.payload;
+		pauseEvent: (audio) => {
+			audio.isPlaying = false;
+		},
+		playEvent: (audio) => {
+			audio.isPlaying = true;
+		},
+		errorEvent: (audio) => {
+			audio.hasError = true;
+		},
+		playingEvent: (audio) => {
+			audio.isReady = true;
+		},
+		timeupdateEvent: (audio, action: { payload: number }) => {
+			audio.position = action.payload;
+		},
+		ratechangeEvent: (audio, action: { payload: number }) => {
+			audio.speed = action.payload;
+		},
+		rewindButtonClicked: (audio, action) => {
+			audio.position = action.payload;
+		},
+		forwardButtonClicked: (audio, action) => {
+			audio.position = action.payload;
+		},
+		progressBarClicked: (audio, action) => {
+			audio.position = action.payload;
+		},
+		progressBarTouched: (audio, action) => {
+			audio.position = action.payload;
+		},
+		setAudioSpeed: (audio, action) => {
+			audio.speed = action.payload;
+		},
+		playButtonClicked: (audio, action) => {
+			audio.isPlaying = true;
+		},
+		pauseButtonClicked: (audio, action) => {
+			audio.isPlaying = true;
 		},
 	},
 });
 
 export const {
-	setAudioHasError,
-	setAudioIsReady,
-	setAudioIsPlaying,
-	setAudioPosition,
+	audioSettingsLoaded,
+	audioInitialized,
+	audioFileChanged,
+	canPlayEvent,
+	pauseEvent,
+	playEvent,
+	errorEvent,
+	playingEvent,
+	timeupdateEvent,
+	ratechangeEvent,
+	rewindButtonClicked,
+	forwardButtonClicked,
+	progressBarClicked,
+	progressBarTouched,
 	setAudioSpeed,
+	playButtonClicked,
+	pauseButtonClicked,
 } = audioSlice.actions;
 
 export const selectAudioSettings = (state: AudioSlice) => state.audio;

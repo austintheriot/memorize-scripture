@@ -10,26 +10,46 @@ export const appSlice = createSlice({
 		showAppIsInstalled: false,
 	},
 	reducers: {
-		setMenuIsOpen: (state, action) => {
-			state.menuIsOpen = action.payload;
+		menuButtonClicked: (app) => {
+			app.menuIsOpen = !app.menuIsOpen;
 		},
-		setShowIsOffline: (state, action) => {
-			state.showIsOffline = action.payload;
+		outsideOfMenuClicked: (app) => {
+			app.menuIsOpen = false;
 		},
-		setShowCloseTabs: (state, action) => {
-			state.showCloseTabs = action.payload;
+		navLinkClicked: (app) => {
+			app.menuIsOpen = false;
 		},
-		setShowAppIsInstalled: (state, action) => {
-			state.showAppIsInstalled = action.payload;
+		noInternetConnection: (app) => {
+			app.showIsOffline = true;
+		},
+		offlineMessageClosed: (app) => {
+			app.showIsOffline = false;
+		},
+		updateMessageClosed: (app) => {
+			app.showCloseTabs = false;
+		},
+		installedMessageClosed: (app) => {
+			app.showAppIsInstalled = false;
+		},
+		serviceWorkerInstalled: (app) => {
+			app.showAppIsInstalled = true;
+		},
+		updateAvailable: (app) => {
+			app.showCloseTabs = true;
 		},
 	},
 });
 
 export const {
-	setMenuIsOpen,
-	setShowIsOffline,
-	setShowCloseTabs,
-	setShowAppIsInstalled,
+	menuButtonClicked,
+	navLinkClicked,
+	outsideOfMenuClicked,
+	noInternetConnection,
+	offlineMessageClosed,
+	updateMessageClosed,
+	installedMessageClosed,
+	serviceWorkerInstalled,
+	updateAvailable,
 } = appSlice.actions;
 
 export const selectApp = (state: AppSlice) => state.app;

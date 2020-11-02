@@ -1,6 +1,23 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { TextSlice } from '../types';
+import { TextSlice, TextState } from '../types';
 import { Psalm23, Psalm23Split, Psalm23Condensed } from './Psalm23';
+import {
+	breakFullTextIntoLines,
+	condenseText,
+} from '../../views/Home/condense';
+import { splitTitleIntoBookAndChapter } from '../../views/Home/storage';
+
+const updateTextState = (
+	text: TextState,
+	action: { payload: { book: string; chapter: string; body: string } }
+) => {
+	text.book = action.payload.book === 'Psalms' ? 'Psalm' : action.payload.book;
+	text.chapter = action.payload.chapter;
+	text.body = action.payload.body;
+	const lineBrokenText = breakFullTextIntoLines(action.payload.body);
+	text.split = lineBrokenText;
+	text.condensed = condenseText(lineBrokenText);
+};
 
 export const textSlice = createSlice({
 	name: 'text',
@@ -14,38 +31,70 @@ export const textSlice = createSlice({
 		clickedLine: -1,
 	},
 	reducers: {
-		setBook: (state, action) => {
-			state.book = action.payload;
+		textSettingsLoaded: (
+			text,
+			action: { payload: { clickedLine: number; showCondensed: boolean } }
+		) => {
+			text.clickedLine = action.payload.clickedLine;
+			text.showCondensed = action.payload.showCondensed;
 		},
-		setChapter: (state, action) => {
-			state.chapter = action.payload;
+		textInitialized: (
+			text,
+			action: { payload: { book: string; chapter: string; body: string } }
+		) => {
+			updateTextState(text, action);
 		},
-		setBody: (state, action) => {
-			state.body = action.payload;
+		mostRecentPassageClicked: (
+			text,
+			action: { payload: { title: string; body: string } }
+		) => {
+			const splitTitle = splitTitleIntoBookAndChapter(action.payload.title);
+			if (text.book === splitTitle.book && text.chapter === splitTitle.chapter)
+				return;
+			updateTextState(text, {
+				payload: {
+					book: splitTitle.book,
+					chapter: splitTitle.chapter,
+					body: action.payload.body,
+				},
+			});
 		},
-		setSplit: (state, action) => {
-			state.split = action.payload;
+		textFetchedFromLocalStorage: (
+			text,
+			action: { payload: { book: string; chapter: string; body: string } }
+		) => {
+			updateTextState(text, action);
 		},
-		setCondensed: (state, action) => {
-			state.condensed = action.payload;
+		textFetchedFromESVAPI: (
+			text,
+			action: { payload: { book: string; chapter: string; body: string } }
+		) => {
+			updateTextState(text, action);
 		},
-		setShowCondensed: (state, action) => {
-			state.showCondensed = action.payload;
+		textFetchFailed: (
+			text,
+			action: { payload: { book: string; chapter: string; body: string } }
+		) => {
+			updateTextState(text, action);
 		},
-		setClickedLine: (state, action) => {
-			state.clickedLine = action.payload;
+		viewChangeButtonClicked: (text, action) => {
+			text.showCondensed = action.payload;
+		},
+		splitTextClicked: (text, action) => {
+			text.clickedLine = action.payload;
 		},
 	},
 });
 
 export const {
-	setBook,
-	setChapter,
-	setBody,
-	setSplit,
-	setCondensed,
-	setShowCondensed,
-	setClickedLine,
+	textSettingsLoaded,
+	textInitialized,
+	mostRecentPassageClicked,
+	textFetchedFromLocalStorage,
+	textFetchedFromESVAPI,
+	textFetchFailed,
+	viewChangeButtonClicked,
+	splitTextClicked,
 } = textSlice.actions;
 
 // The function below is called a thunk and allows us to perform async logic. It
