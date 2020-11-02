@@ -11,9 +11,8 @@ import {
 	getShowCondensed,
 	getClickedLine,
 	getPlaySpeed,
-	getTextBody,
-	storeMostRecentTitle,
 	addToTextArray,
+	getMostRecentText,
 } from '../views/Home/storage';
 import { updateSearchTerms, updateResults } from '../views/Home/updateState';
 import { UtilityConfig, AudioState } from './types';
@@ -27,37 +26,23 @@ const splitTitleIntoBookAndChapter = (title: string) => {
 };
 
 export const initializeMostRecentPassage = (config: UtilityConfig) => {
-	console.log('Checking for most recent book and chapter.');
-	let recent = window.localStorage.getItem('recent');
-	if (recent) {
-		console.log(`${recent} is the most recent chapter accessed.`);
-		const { book, chapter } = splitTitleIntoBookAndChapter(recent);
-
-		//retrieve text body from local storage using title of most recent book and chapter
-		const title = `${book} ${chapter}`;
-		console.log(`Searching storage for ${title}`);
-		let body = getTextBody(title);
-		if (body) {
-			console.log(`Retrieved text body of ${title} from local storage`);
-			updateSearchTerms(book, chapter, config);
-			updateResults(book, chapter, body, config);
-			config.analytics.logEvent('fetched_text_from_local_storage', {
-				book,
-				chapter,
-				title: `${book} ${chapter}`,
-			});
-		} else {
-			console.log(`${title} not found in local storage`);
-			console.log(`Leaving Psalm 23 as initialized passage.`);
-			storeMostRecentTitle('Psalms 23');
-			addToTextArray('Psalms 23', Psalm23);
-		}
+	console.log('Searching storage for most recent book and chapter.');
+	const { title, body } = getMostRecentText();
+	if (title && body) {
+		console.log(`${title} is the most recent text accessed.`);
+		const { book, chapter } = splitTitleIntoBookAndChapter(title);
+		updateSearchTerms(book, chapter, config);
+		updateResults(book, chapter, body, config);
+		config.analytics.logEvent('fetched_text_from_local_storage', {
+			book,
+			chapter,
+			title: `${book} ${chapter}`,
+		});
 	} else {
 		console.log(
 			'A most recent book and chapter do not exist in local storage.'
 		);
 		console.log(`Leaving Psalm 23 as initialized passage.`);
-		storeMostRecentTitle('Psalms 23');
 		addToTextArray('Psalms 23', Psalm23);
 	}
 };

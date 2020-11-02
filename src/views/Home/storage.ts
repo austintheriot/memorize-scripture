@@ -47,16 +47,46 @@ export const getClickedLine = (): number => {
 	return clickedLine ? parseInt(clickedLine, 10) : -1;
 };
 
-export const storeMostRecentTitle = (title: string) => {
-	console.log(
-		`Storing ${title} as most the most recently accessed title in local storage`
-	);
-	window.localStorage.setItem('recent', title);
+export const getTextArray = () => {
+	const textsString = window.localStorage.getItem('texts');
+	return textsString
+		? (JSON.parse(textsString) as TextArray)
+		: ([{ title: '', body: '' }] as TextArray);
 };
 
-export const getTextArray = (title: string) => {
-	const textsString = window.localStorage.getItem('texts');
-	return textsString ? (JSON.parse(textsString) as TextArray) : [];
+const shiftArrayByOne = (
+	originalArray: Array<{ title: string; body: string }>,
+	title: string,
+	body: string
+) => {
+	const array = [...originalArray].map((el) => ({ ...el }));
+	//store no more than 5 passages at a time
+	if (array.length === 5) array.pop();
+	array.unshift({
+		title,
+		body,
+	});
+	return array;
+};
+
+const movePassageToFrontOfArray = (title: string) => {
+	console.log(`Moving ${title} to the front of the text body array`);
+	const array = getTextArray();
+	const titleIndex = array.findIndex((el) => el.title === title);
+	if (titleIndex <= 0) return array;
+	const extractedText = array.splice(titleIndex, 1)[0];
+	array.unshift(extractedText); //extract and move to front
+	return array;
+};
+
+export const getTextBody = (title: string): string => {
+	const textArray = getTextArray();
+	const text = textArray.find((el) => el.title === title);
+	return text?.body || '';
+};
+
+export const getMostRecentText = () => {
+	return getTextArray()[0];
 };
 
 export const addToTextArray = (title: string, body: string) => {
@@ -66,23 +96,16 @@ export const addToTextArray = (title: string, body: string) => {
 	let passageIsInLocalStorage = !!getTextBody(title);
 	if (passageIsInLocalStorage) {
 		console.log(`${title} text body already exists in local storage array`);
+		const shiftedArray = movePassageToFrontOfArray(title);
+		window.localStorage.setItem('texts', JSON.stringify(shiftedArray));
 		return;
 	} else {
 		console.log(`${title} text body does not exist in local storage array`);
-		console.log(`Adding ${title} text body to local storage array`);
-		let textArray = getTextArray(title);
-		//store no more than 5 passages at a time
-		if (textArray.length === 5) textArray.pop();
-		textArray.unshift({
-			title,
-			body,
-		});
-		window.localStorage.setItem('texts', JSON.stringify(textArray));
+		console.log(
+			`Adding ${title} text body to local storage array as most recent`
+		);
+		const textArray = getTextArray();
+		const shiftedArray = shiftArrayByOne(textArray, title, body);
+		window.localStorage.setItem('texts', JSON.stringify(shiftedArray));
 	}
-};
-
-export const getTextBody = (title: string) => {
-	const textArray = getTextArray(title);
-	const text = textArray.find((el) => el.title === title);
-	return text?.body;
 };
