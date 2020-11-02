@@ -2,16 +2,17 @@ import React from 'react';
 import styles from './Transition.module.scss';
 
 import { useSelector } from 'react-redux';
-import { selectMenu } from '../../app/state/menuSlice';
+import { selectApp } from '../../app/state/appSlice';
 
 export const Transition = (props: any) => {
-	const menu = useSelector(selectMenu);
+	const app = useSelector(selectApp);
 
 	return (
 		<div
-			className={[styles.Transition, menu.isOpen ? styles.menuOpen : ''].join(
-				' '
-			)}>
+			className={[
+				styles.Transition,
+				app.menuIsOpen ? styles.menuOpen : '',
+			].join(' ')}>
 			{props.children}
 		</div>
 	);

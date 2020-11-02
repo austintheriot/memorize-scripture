@@ -7,11 +7,11 @@ import chiRho from '../../images/chirho-light.svg';
 
 //Menu State
 import { useSelector, useDispatch } from 'react-redux';
-import { selectMenu, setMenuIsOpen } from '../../app/state/menuSlice';
+import { selectApp, setMenuIsOpen } from '../../app/state/appSlice';
 
 export const Menu = () => {
 	const dispatch = useDispatch();
-	const menu = useSelector(selectMenu);
+	const app = useSelector(selectApp);
 
 	const closeMenu = () => {
 		dispatch(setMenuIsOpen(false));
@@ -19,7 +19,9 @@ export const Menu = () => {
 
 	return (
 		<header
-			className={[styles.header, menu.isOpen ? styles.menuOpen : ''].join(' ')}>
+			className={[styles.header, app.menuIsOpen ? styles.menuOpen : ''].join(
+				' '
+			)}>
 			<a href='https://memorizescripture.org'>
 				<img
 					src={chiRho}

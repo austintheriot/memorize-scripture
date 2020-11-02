@@ -4,11 +4,15 @@ import { AppSlice } from '../types';
 export const appSlice = createSlice({
 	name: 'app',
 	initialState: {
+		menuIsOpen: false,
 		showIsOffline: false,
 		showCloseTabs: false,
 		showAppIsInstalled: false,
 	},
 	reducers: {
+		setMenuIsOpen: (state, action) => {
+			state.menuIsOpen = action.payload;
+		},
 		setShowIsOffline: (state, action) => {
 			state.showIsOffline = action.payload;
 		},
@@ -22,6 +26,7 @@ export const appSlice = createSlice({
 });
 
 export const {
+	setMenuIsOpen,
 	setShowIsOffline,
 	setShowCloseTabs,
 	setShowAppIsInstalled,

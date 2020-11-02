@@ -9,7 +9,7 @@ import './App.scss';
 import { FirebaseContext } from './app/state/firebaseContext';
 import { AudioContext } from './app/state/audioContext';
 import { useSelector, useDispatch } from 'react-redux';
-import { setMenuIsOpen } from './app/state/menuSlice';
+import { setMenuIsOpen } from './app/state/appSlice';
 import { selectAudioSettings } from './app/state/audioSlice';
 
 //Routing
