@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useContext, lazy, Suspense } from 'react';
 
+import * as serviceWorker from './serviceWorker';
+
 //App
 import './App.scss';
 
@@ -59,6 +61,7 @@ export default function App() {
 	};
 
 	useEffect(() => {
+		serviceWorker.register();
 		initializeApp(utilityConfig);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);

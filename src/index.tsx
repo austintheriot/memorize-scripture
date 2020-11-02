@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';
 import App from './App';
-import * as serviceWorker from './serviceWorker';
 
 //Firebase Config
 import { app, analytics, FirebaseContext } from './app/state/firebaseContext';
@@ -27,5 +26,3 @@ ReactDOM.render(
 
 	document.getElementById('root')
 );
-
-serviceWorker.register();

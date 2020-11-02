@@ -57,9 +57,11 @@ export interface TextSlice {
 	text: TextState;
 }
 
-export interface GlobalState {
-	menu: MenuState;
-	search: SearchState;
-	text: TextState;
-	audio: AudioState;
+export interface AppState {
+	showCloseTabs: boolean;
+	showAppIsInstalled: boolean;
+}
+
+export interface AppSlice {
+	app: AppState;
 }
