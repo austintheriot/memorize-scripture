@@ -1,5 +1,9 @@
 import store from './app/state/store';
-import { setShowCloseTabs, setShowAppIsInstalled } from './app/state/appSlice';
+import {
+	setIsOffline,
+	setShowCloseTabs,
+	setShowAppIsInstalled,
+} from './app/state/appSlice';
 
 const isLocalhost = Boolean(
 	window.location.hostname === 'localhost' ||
@@ -123,6 +127,7 @@ function checkValidServiceWorker(swUrl: string, config?: Config) {
 			console.log(
 				'No internet connection found. App is running in offline mode.'
 			);
+			store.dispatch(setIsOffline(true));
 		});
 }
 
