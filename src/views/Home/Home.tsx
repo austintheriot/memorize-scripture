@@ -34,7 +34,12 @@ import searchIcon from '../../icons/search.svg';
 
 //Utilities
 import { bookTitles, bookChapters } from './bible';
-import { storeClickedLine, storeMostRecentTitle, getTextBody } from './storage';
+import {
+	storeClickedLine,
+	getTextBody,
+	getTextArray,
+	addToTextArray,
+} from './storage';
 import { updateResults } from './updateState';
 import { fetchTextFromESVAPI } from './https';
 
@@ -131,7 +136,7 @@ export default () => {
 		if (body) {
 			console.log(`Retrieved body of ${title} from local storage`);
 			updateResults(search.book, search.chapter, body, utilityConfig);
-			storeMostRecentTitle(title);
+			addToTextArray(title, body);
 			analytics.logEvent('fetched_text_from_local_storage', {
 				searchBook: search.book,
 				searchChapter: search.chapter,
@@ -206,6 +211,9 @@ export default () => {
 					<img src={searchIcon} alt='search' className={styles.searchIcon} />
 				</button>
 			</form>
+			{getTextArray().map((el) => (
+				<p key={el.title}>{el.title}</p>
+			))}
 			{text.showCondensed ? (
 				<div className={styles.textAreaContainer}>
 					{text.condensed.map((line, i) => {

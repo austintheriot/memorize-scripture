@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { ESVApiKey } from '../../app/config';
 import { UtilityConfig } from '../../app/types';
-import { storeMostRecentTitle, addToTextArray } from './storage';
+import { addToTextArray } from './storage';
 import { updateResults } from './updateState';
 
 export const fetchTextFromESVAPI = (
@@ -43,7 +43,6 @@ export const fetchTextFromESVAPI = (
 			console.log(`Text body of ${title} received from ESV API`);
 			const body = response.data.passages[0];
 			updateResults(book, chapter, body, config);
-			storeMostRecentTitle(title);
 			addToTextArray(title, body);
 		})
 		.catch((error) => {
