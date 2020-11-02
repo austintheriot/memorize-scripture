@@ -26,6 +26,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
 //Custom components
+import { ErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary';
 import { Controls } from '../../components/Controls/Controls';
 import { SmallSpacer } from '../../components/Spacers/Spacers';
 import { Footer } from '../../components/Footer/Footer';
@@ -161,7 +162,7 @@ export default () => {
 	));
 
 	return (
-		<>
+		<ErrorBoundary>
 			<Prompt
 				message={() => {
 					//Pause textAudio when navigating away from Home
@@ -245,6 +246,6 @@ export default () => {
 			</p>
 			<Footer />
 			<Controls />
-		</>
+		</ErrorBoundary>
 	);
 };
