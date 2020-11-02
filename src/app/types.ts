@@ -58,7 +58,7 @@ export interface TextSlice {
 }
 
 export interface AppState {
-	isOffline: boolean;
+	showIsOffline: boolean;
 	showCloseTabs: boolean;
 	showAppIsInstalled: boolean;
 }

@@ -1,16 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { AppSlice } from '../types';
 
-export const textSlice = createSlice({
+export const appSlice = createSlice({
 	name: 'app',
 	initialState: {
-		isOffline: false,
+		showIsOffline: false,
 		showCloseTabs: false,
 		showAppIsInstalled: false,
 	},
 	reducers: {
 		setShowIsOffline: (state, action) => {
-			state.isOffline = action.payload;
+			state.showIsOffline = action.payload;
 		},
 		setShowCloseTabs: (state, action) => {
 			state.showCloseTabs = action.payload;
@@ -25,8 +25,8 @@ export const {
 	setShowIsOffline,
 	setShowCloseTabs,
 	setShowAppIsInstalled,
-} = textSlice.actions;
+} = appSlice.actions;
 
 export const selectApp = (state: AppSlice) => state.app;
 
-export default textSlice.reducer;
+export default appSlice.reducer;

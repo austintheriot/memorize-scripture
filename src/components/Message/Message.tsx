@@ -4,14 +4,14 @@ import styles from './Message.module.scss';
 import { CloseButton } from '../CloseButton/CloseButton';
 
 interface Props {
-	hide: boolean;
+	show: boolean;
 	message: string;
 	handleHide: () => void;
 }
 
-export const Message = ({ message, hide, handleHide }: Props) => {
+export const Message = ({ message, show, handleHide }: Props) => {
 	return (
-		<div className={[styles.Message, hide ? styles.hideMessage : ''].join(' ')}>
+		<div className={[styles.Message, show ? '' : styles.hideMessage].join(' ')}>
 			<CloseButton onClick={handleHide} />
 			<p>{message}</p>
 		</div>

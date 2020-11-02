@@ -19,7 +19,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Menu } from './components/Menu/Menu';
 import { MenuButton } from './components/MenuButton/MenuButton';
 import { Transition } from './components/Transition/Transition';
-import { Message } from './components/Message/Message';
+import { ServiceWorkerMessages } from './components/ServiceWorkerMessages/ServiceWorkerMessages';
 
 //Utilities
 import { prepareAudioForPlayback, initializeApp } from './app/init';
@@ -36,6 +36,7 @@ const Contact = lazy(() => import('./views/Contact/Contact'));
 
 export default function App() {
 	const audioState = useSelector(selectAudioSettings);
+
 	const { analytics } = useContext(FirebaseContext);
 	const dispatch = useDispatch();
 
@@ -72,8 +73,6 @@ export default function App() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [textAudio]);
 
-	const [hideMessage, setHideMessage] = useState(false);
-
 	return (
 		<div className='App'>
 			<ErrorBoundary>
@@ -84,27 +83,7 @@ export default function App() {
 								<MenuButton />
 								<Menu />
 								<div onClick={closeMenu}>
-									<Message
-										message={
-											'Long message example.... lorem ipsum dolor sit amet. Long message example.... lorem ipsum dolor sit amet. Long message example.... lorem ipsum dolor sit amet.'
-										}
-										hide={hideMessage}
-										handleHide={() => setHideMessage(true)}
-									/>
-									<Message
-										message={'Example'}
-										hide={hideMessage}
-										handleHide={() => setHideMessage(true)}
-									/>
-									<Message
-										message={'Example'}
-										hide={hideMessage}
-										handleHide={() => setHideMessage(true)}
-									/>
-									<button
-										onClick={() => setHideMessage((prevState) => !prevState)}>
-										Show/Hide
-									</button>
+									<ServiceWorkerMessages />
 									<Switch>
 										<Route exact path='/contact' component={Contact} />
 										<Route exact path='/about' component={About} />
