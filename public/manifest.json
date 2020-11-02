@@ -1,6 +1,7 @@
 {
 	"short_name": "Memorize",
 	"name": "Memorize Scripture",
+	"description": "A web app for the extended memorization of God's Word.",
 	"icons": [
 		{
 			"src": "favicon.ico",
