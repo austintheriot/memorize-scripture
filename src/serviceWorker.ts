@@ -1,3 +1,6 @@
+import store from './app/state/store';
+import { setShowCloseTabs, setShowAppIsInstalled } from './app/state/appSlice';
+
 const isLocalhost = Boolean(
 	window.location.hostname === 'localhost' ||
 		// [::1] is the IPv6 localhost address.
@@ -66,6 +69,7 @@ function registerValidSW(swUrl: string, config?: Config) {
 								'New content is available and will be used when all ' +
 									'tabs for this page are closed. See https://bit.ly/CRA-PWA.'
 							);
+							store.dispatch(setShowCloseTabs(true));
 
 							// Execute callback
 							if (config && config.onUpdate) {
@@ -76,6 +80,7 @@ function registerValidSW(swUrl: string, config?: Config) {
 							// It's the perfect time to display a
 							// "Content is cached for offline use." message.
 							console.log('Content is cached for offline use.');
+							store.dispatch(setShowAppIsInstalled(true));
 
 							// Execute callback
 							if (config && config.onSuccess) {
