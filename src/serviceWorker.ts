@@ -1,6 +1,6 @@
 import store from './app/state/store';
 import {
-	setIsOffline,
+	setShowIsOffline,
 	setShowCloseTabs,
 	setShowAppIsInstalled,
 } from './app/state/appSlice';
@@ -127,7 +127,7 @@ function checkValidServiceWorker(swUrl: string, config?: Config) {
 			console.log(
 				'No internet connection found. App is running in offline mode.'
 			);
-			store.dispatch(setIsOffline(true));
+			store.dispatch(setShowIsOffline(true));
 		});
 }
 
