@@ -74,33 +74,29 @@ export default function App() {
 				<AudioContext.Provider value={audio}>
 					<Transition>
 						<Router>
-							<MenuButton />
-							<Menu />
-							<div onClick={closeMenu}>
-								<Switch>
-									<Route exact path='/contact'>
-										<ErrorBoundary>
-											<Suspense fallback={Loading()}>
+							<Suspense fallback={Loading()}>
+								<MenuButton />
+								<Menu />
+								<div onClick={closeMenu}>
+									<Switch>
+										<Route exact path='/contact'>
+											<ErrorBoundary>
 												<Contact />
-											</Suspense>
-										</ErrorBoundary>
-									</Route>
-									<Route exact path='/about'>
-										<ErrorBoundary>
-											<Suspense fallback={Loading()}>
+											</ErrorBoundary>
+										</Route>
+										<Route exact path='/about'>
+											<ErrorBoundary>
 												<About />
-											</Suspense>
-										</ErrorBoundary>
-									</Route>
-									<Route path='/'>
-										<ErrorBoundary>
-											<Suspense fallback={Loading()}>
+											</ErrorBoundary>
+										</Route>
+										<Route path='/'>
+											<ErrorBoundary>
 												<Home />
-											</Suspense>
-										</ErrorBoundary>
-									</Route>
-								</Switch>
-							</div>
+											</ErrorBoundary>
+										</Route>
+									</Switch>
+								</div>
+							</Suspense>
 						</Router>
 					</Transition>
 				</AudioContext.Provider>
