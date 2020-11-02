@@ -12,9 +12,12 @@ import {
 	getClickedLine,
 	getPlaySpeed,
 	getTextBody,
+	storeMostRecentTitle,
+	addToTextArray,
 } from '../views/Home/storage';
 import { updateSearchTerms, updateResults } from '../views/Home/updateState';
 import { UtilityConfig, AudioState } from './types';
+import { Psalm23 } from './state/Psalm23';
 
 const splitTitleIntoBookAndChapter = (title: string) => {
 	const wordArray = title.split(' ');
@@ -46,12 +49,16 @@ export const initializeMostRecentPassage = (config: UtilityConfig) => {
 		} else {
 			console.log(`${title} not found in local storage`);
 			console.log(`Leaving Psalm 23 as initialized passage.`);
+			storeMostRecentTitle('Psalms 23');
+			addToTextArray('Psalms 23', Psalm23);
 		}
 	} else {
 		console.log(
 			'A most recent book and chapter do not exist in local storage.'
 		);
 		console.log(`Leaving Psalm 23 as initialized passage.`);
+		storeMostRecentTitle('Psalms 23');
+		addToTextArray('Psalms 23', Psalm23);
 	}
 };
 
