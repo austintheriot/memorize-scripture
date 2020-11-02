@@ -4,10 +4,14 @@ import { AppSlice } from '../types';
 export const textSlice = createSlice({
 	name: 'app',
 	initialState: {
+		isOffline: false,
 		showCloseTabs: false,
 		showAppIsInstalled: false,
 	},
 	reducers: {
+		setIsOffline: (state, action) => {
+			state.isOffline = action.payload;
+		},
 		setShowCloseTabs: (state, action) => {
 			state.showCloseTabs = action.payload;
 		},
@@ -17,7 +21,11 @@ export const textSlice = createSlice({
 	},
 });
 
-export const { setShowCloseTabs, setShowAppIsInstalled } = textSlice.actions;
+export const {
+	setIsOffline,
+	setShowCloseTabs,
+	setShowAppIsInstalled,
+} = textSlice.actions;
 
 export const selectApp = (state: AppSlice) => state.app;
 
