@@ -34,11 +34,7 @@ import searchIcon from '../../icons/search.svg';
 
 //Utilities
 import { bookTitles, bookChapters } from './bible';
-import {
-	storeClickedLine,
-	storeMostRecentPassage,
-	getTextBody,
-} from './storage';
+import { storeClickedLine, storeMostRecentTitle, getTextBody } from './storage';
 import { updateResults } from './updateState';
 import { fetchTextFromESVAPI } from './https';
 
@@ -135,7 +131,7 @@ export default () => {
 		if (body) {
 			console.log(`Retrieved body of ${title} from local storage`);
 			updateResults(search.book, search.chapter, body, utilityConfig);
-			storeMostRecentPassage(title);
+			storeMostRecentTitle(title);
 			analytics.logEvent('fetched_text_from_local_storage', {
 				searchBook: search.book,
 				searchChapter: search.chapter,

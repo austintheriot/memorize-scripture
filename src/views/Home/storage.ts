@@ -47,9 +47,9 @@ export const getClickedLine = (): number => {
 	return clickedLine ? parseInt(clickedLine, 10) : -1;
 };
 
-export const storeMostRecentPassage = (title: string) => {
+export const storeMostRecentTitle = (title: string) => {
 	console.log(
-		`Storing ${title} as most the most recently accessed chapter in local storage`
+		`Storing ${title} as most the most recently accessed title in local storage`
 	);
 	window.localStorage.setItem('recent', title);
 };
@@ -60,14 +60,16 @@ export const getTextArray = (title: string) => {
 };
 
 export const addToTextArray = (title: string, body: string) => {
-	console.log(`Checking if ${title} already exists in local storage`);
+	console.log(
+		`Checking if ${title} text body already exists in local storage array`
+	);
 	let passageIsInLocalStorage = !!getTextBody(title);
 	if (passageIsInLocalStorage) {
-		console.log(`${title} exists in local storage`);
+		console.log(`${title} text body already exists in local storage array`);
 		return;
 	} else {
-		console.log(`${title} does not exist in local storage`);
-		console.log(`Adding ${title} to local storage`);
+		console.log(`${title} text body does not exist in local storage array`);
+		console.log(`Adding ${title} text body to local storage array`);
 		let textArray = getTextArray(title);
 		//store no more than 5 passages at a time
 		if (textArray.length === 5) textArray.pop();
