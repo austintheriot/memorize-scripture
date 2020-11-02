@@ -13,17 +13,11 @@ import {
 	getPlaySpeed,
 	addToTextArray,
 	getMostRecentText,
+	splitTitleIntoBookAndChapter,
 } from '../views/Home/storage';
 import { updateSearchTerms, updateResults } from '../views/Home/updateState';
 import { UtilityConfig, AudioState } from './types';
 import { Psalm23 } from './state/Psalm23';
-
-const splitTitleIntoBookAndChapter = (title: string) => {
-	const wordArray = title.split(' ');
-	const book = wordArray.slice(0, wordArray.length - 1).join(' ');
-	const chapter = wordArray[wordArray.length - 1];
-	return { book, chapter };
-};
 
 export const initializeMostRecentPassage = (config: UtilityConfig) => {
 	console.log('Searching storage for most recent book and chapter.');

@@ -96,6 +96,9 @@ p {
 	&:active {
 		background-color: var(--toggleLight);
 	}
+	&:focus {
+		outline: 1px dotted var(--light);
+	}
 }
 
 .ChiRho {

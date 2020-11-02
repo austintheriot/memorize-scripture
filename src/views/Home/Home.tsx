@@ -37,8 +37,9 @@ import { bookTitles, bookChapters } from './bible';
 import {
 	storeClickedLine,
 	getTextBody,
-	getTextArray,
 	addToTextArray,
+	getTextArray,
+	splitTitleIntoBookAndChapter,
 } from './storage';
 import { updateResults } from './updateState';
 import { fetchTextFromESVAPI } from './https';
@@ -126,6 +127,24 @@ export default () => {
 		storeClickedLine(i);
 	};
 
+	interface TextObject {
+		title: string;
+		body: string;
+	}
+
+	const handleClickRecent = (
+		e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+		{ title, body }: TextObject
+	) => {
+		const { book, chapter } = splitTitleIntoBookAndChapter(title);
+		updateResults(book, chapter, body, utilityConfig);
+		addToTextArray(title, body);
+		analytics.logEvent('clicked_most_recent', {
+			title,
+			body,
+		});
+	};
+
 	const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		e.preventDefault();
 		//Check local storage
@@ -172,48 +191,66 @@ export default () => {
 					return true;
 				}}
 			/>
+
 			<h1 className={styles.h1}>
 				{text.book} {text.chapter}
 			</h1>
-			<form className={styles.form}>
-				<FormControl className={classes.formControl}>
-					<InputLabel id='bible-book' className={classes.label}>
-						Book
-					</InputLabel>
-					<Select
-						className={classes.select}
-						labelId='bible-book'
-						value={search.book}
-						onChange={handleBookChange}>
-						{bookTitles.map((bookString) => (
-							<MenuItem value={bookString} key={bookString}>
-								{bookString}
-							</MenuItem>
-						))}
-					</Select>
-				</FormControl>
-				<FormControl className={classes.formControl}>
-					<InputLabel id='bible-chapter' className={classes.label}>
-						Chapter
-					</InputLabel>
-					<Select
-						className={classes.select}
-						labelId='bible-chapter'
-						value={search.chapter}
-						onChange={handleChapterChange}>
-						{chapterArray}
-					</Select>
-				</FormControl>
-				<button
-					className={styles.search}
-					onClick={handleSubmit}
-					aria-label={'Search'}>
-					<img src={searchIcon} alt='search' className={styles.searchIcon} />
-				</button>
-			</form>
-			{getTextArray().map((el) => (
-				<p key={el.title}>{el.title}</p>
-			))}
+			<div className={styles.formContainer}>
+				<form className={styles.form}>
+					<FormControl className={classes.formControl}>
+						<InputLabel id='bible-book' className={classes.label}>
+							Book
+						</InputLabel>
+						<Select
+							className={classes.select}
+							labelId='bible-book'
+							value={search.book}
+							onChange={handleBookChange}>
+							{bookTitles.map((bookString) => (
+								<MenuItem value={bookString} key={bookString}>
+									{bookString}
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
+					<FormControl className={classes.formControl}>
+						<InputLabel id='bible-chapter' className={classes.label}>
+							Chapter
+						</InputLabel>
+						<Select
+							className={classes.select}
+							labelId='bible-chapter'
+							value={search.chapter}
+							onChange={handleChapterChange}>
+							{chapterArray}
+						</Select>
+					</FormControl>
+					<button
+						className={styles.search}
+						onClick={handleSubmit}
+						aria-label={'Search'}>
+						<img src={searchIcon} alt='search' className={styles.searchIcon} />
+					</button>
+				</form>
+				<details className={styles.mostRecentContainer}>
+					<summary>Most Recent:</summary>
+					{getTextArray()[0].title ? (
+						<>
+							<ul className={styles.mostRecentList}>
+								{getTextArray().map((el) => (
+									<li key={el.title} className={styles.mostRecentListItem}>
+										<button
+											className={['button', styles.listButton].join(' ')}
+											onClick={(e) => handleClickRecent(e, el)}>
+											{el.title}
+										</button>
+									</li>
+								))}
+							</ul>
+						</>
+					) : null}
+				</details>
+			</div>
 			{text.showCondensed ? (
 				<div className={styles.textAreaContainer}>
 					{text.condensed.map((line, i) => {
