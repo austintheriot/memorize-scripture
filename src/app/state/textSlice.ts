@@ -61,10 +61,12 @@ export const textSlice = createSlice({
 			text,
 			action: { payload: { book: string; chapter: string; body: string } }
 		) => {
+			text.clickedLine = -1;
 			text.error = false;
 			updateTextState(text, action);
 		},
 		textBeingFetchedFromAPI: (text) => {
+			text.clickedLine = -1;
 			text.error = false;
 			text.loading = true;
 		},
