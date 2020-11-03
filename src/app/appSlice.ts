@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { AppSlice } from '../types';
+import { AppSlice } from './types';
 
 export const appSlice = createSlice({
 	name: 'app',

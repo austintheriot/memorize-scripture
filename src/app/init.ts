@@ -9,8 +9,8 @@ import {
 	ratechangeEvent,
 	audioSettingsLoaded,
 	audioFileChanged,
-} from './state/audioSlice';
-import { textInitialized, textSettingsLoaded } from './state/textSlice';
+} from './audioSlice';
+import { textInitialized, textSettingsLoaded } from './textSlice';
 import {
 	addToTextArray,
 	getMostRecentText,
@@ -18,8 +18,8 @@ import {
 	getUserSettings,
 } from '../views/Home/storage';
 import { UtilityConfig, AudioState } from './types';
-import { Psalm23 } from './state/Psalm23';
-import { searchInitialized } from './state/searchSlice';
+import { Psalm23 } from './Psalm23';
+import { searchInitialized } from './searchSlice';
 
 const initializeUserSettings = (config: UtilityConfig) => {
 	//Loading textAudio playback rate

@@ -3,7 +3,7 @@ import styles from './MenuButton.module.scss';
 
 //Menu State
 import { useSelector, useDispatch } from 'react-redux';
-import { selectApp, menuButtonClicked } from '../../app/state/appSlice';
+import { selectApp, menuButtonClicked } from '../../app/appSlice';
 
 export const MenuButton = () => {
 	const dispatch = useDispatch();

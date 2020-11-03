@@ -4,11 +4,11 @@ import './index.scss';
 import App from './App';
 
 //Firebase Config
-import { app, analytics, FirebaseContext } from './app/state/firebaseContext';
+import { app, analytics, FirebaseContext } from './app/firebaseContext';
 
 //Redux
 import { Provider } from 'react-redux';
-import store from './app/state/store';
+import store from './app/store';
 
 const firebaseContext = {
 	app,
