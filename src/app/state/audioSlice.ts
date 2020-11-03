@@ -64,9 +64,6 @@ export const audioSlice = createSlice({
 		progressBarClicked: (audio, action) => {
 			audio.position = action.payload;
 		},
-		progressBarTouched: (audio, action) => {
-			audio.position = action.payload;
-		},
 		speedButtonClicked: (audio, action) => {
 			audio.speed = action.payload;
 		},
@@ -93,7 +90,6 @@ export const {
 	rewindButtonClicked,
 	forwardButtonClicked,
 	progressBarClicked,
-	progressBarTouched,
 	speedButtonClicked,
 	playButtonClicked,
 	pauseButtonClicked,
