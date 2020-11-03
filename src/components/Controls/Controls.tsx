@@ -10,7 +10,6 @@ import {
 	rewindButtonClicked,
 	forwardButtonClicked,
 	progressBarClicked,
-	progressBarTouched,
 	playButtonClicked,
 	pauseButtonClicked,
 	speedButtonClicked,
@@ -76,28 +75,14 @@ export const Controls = () => {
 		textAudio.currentTime = 0;
 	};
 
-	const handleProgressClick = (
-		e: React.MouseEvent<HTMLDivElement, MouseEvent>
+	const handleAudioPositionChange = (
+		e: React.ChangeEvent<HTMLInputElement>
 	) => {
-		e.stopPropagation();
-		e.preventDefault();
-		const targetTime = e.clientX / document.documentElement.offsetWidth;
+		const targetTime: number = Number(e.currentTarget.value);
 		analytics.logEvent('progress_bar_clicked', {
 			targetTime,
 		});
 		dispatch(progressBarClicked(targetTime));
-		textAudio.currentTime = textAudio.duration * targetTime;
-	};
-
-	const handleProgressTouch = (e: React.TouchEvent<HTMLDivElement>) => {
-		e.stopPropagation();
-		e.preventDefault();
-		const targetTime =
-			e.changedTouches[0].clientX / document.documentElement.offsetWidth;
-		analytics.logEvent('progress_bar_touched', {
-			targetTime,
-		});
-		dispatch(progressBarTouched(targetTime));
 		textAudio.currentTime = textAudio.duration * targetTime;
 	};
 
@@ -123,14 +108,19 @@ export const Controls = () => {
 	return (
 		<div className={styles.Controls}>
 			{/* PROGRESS BAR */}
+			<input
+				className={styles.progressBar}
+				type='range'
+				min='0'
+				max='1'
+				step='0.000000001'
+				value={audioSettings.position.toString()}
+				onChange={handleAudioPositionChange}
+			/>
 			<div
-				className={styles.progressBarOuter}
-				onMouseDown={handleProgressClick}
-				onTouchStart={handleProgressTouch}>
-				<div
-					className={styles.progressBarInner}
-					style={{ width: `${audioSettings.position * 100}%` }}></div>
-			</div>
+				className={styles.progressIndicator}
+				style={{ width: `${audioSettings.position * 100}%` }}
+			/>
 
 			{/* BUTTON CONTAINER */}
 			<div className={styles.buttonContainer}>

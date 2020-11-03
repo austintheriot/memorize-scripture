@@ -4,6 +4,7 @@
 	height: 95px;
 	width: 100%;
 	background-color: var(--dark);
+	transition: height 0.2s;
 }
 
 @media (min-width: 800px) {
@@ -12,31 +13,149 @@
 	}
 }
 
-.progressBarOuter {
+/* Clear input slider styling */
+.progressBar {
+	-webkit-appearance: none;
 	width: 100%;
-	height: 12px;
-	margin-bottom: 5px;
-	cursor: pointer;
-	background-color: var(--darker);
+	background: var(--darker);
+}
 
-	.progressBarInner {
-		width: 0%;
-		height: 100%;
-		background-color: var(--pop);
-		cursor: pointer;
-	}
+.progressBar::-webkit-slider-thumb {
+	-webkit-appearance: none;
+}
+
+.progressBar:focus {
+	outline: none;
+}
+
+.progressBar::-ms-track {
+	width: 100%;
+	cursor: pointer;
+
+	background: var(--darker);
+	border-color: transparent;
+	color: transparent;
+}
+
+.progressIndicator {
+	position: absolute;
+	z-index: 2;
+	left: 0;
+	top: 0;
+	transform: translateY(-50%);
+	display: block;
+	height: 5px;
+	background-color: var(--pop);
+	pointer-events: none;
+	transition: height 0.2s;
+}
+
+/* Slider styling */
+.progressBar {
+	position: absolute;
+	z-index: 1;
+	top: 0;
+	transform: translateY(-50%);
+	display: block;
+	width: 100%;
+	height: 5px;
+	cursor: pointer;
+	transition: height 0.2s;
+}
+
+.progressBar:hover + .progressIndicator {
+	height: 10px;
+}
+.progressBar:hover {
+	height: 10px;
+}
+
+/* Thumb Styling */
+/* Firefox */
+.progressBar::-moz-range-thumb {
+	border: none;
+	height: 10px;
+	width: 10px;
+	border-radius: 50%;
+	transition: background-color 0.2s;
+	background: transparent;
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.progressBar::-moz-range-thumb:hover {
+	width: 20px;
+	height: 20px;
+}
+
+/* When focused */
+.progressBar:focus::-moz-range-thumb {
+	background: var(--pop);
+}
+
+/* Special styling for WebKit/Blink */
+.progressBar::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	margin-top: 0;
+	border: none;
+	height: 10px;
+	width: 10px;
+	border-radius: 50%;
+	transition: background-color 0.2s;
+	background: transparent;
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.progressBar::-webkit-slider-thumb:hover {
+	width: 20px;
+	height: 20px;
+}
+
+/* When focused */
+.progressBar:focus::-webkit-slider-thumb {
+	background: var(--pop);
+}
+
+/* All the same stuff for IE */
+.progressBar::-ms-thumb {
+	border: none;
+	height: 10px;
+	width: 10px;
+	border-radius: 50%;
+	transition: background-color 0.2s;
+	background: transparent;
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.progressBar::-ms-thumb:hover {
+	width: 20px;
+	height: 20px;
+}
+
+/* When focused */
+.progressBar:focus::-ms-thumb {
+	background: var(--pop);
 }
 
 .buttonContainer {
 	height: 50px;
 	width: 100%;
 	max-width: 400px;
-	margin: auto;
+	margin: 10px auto 0;
 
 	display: flex;
 	flex: none;
 	justify-content: center;
 	align-items: center;
+	transition: margin 0.2s;
+}
+
+@media (min-width: 800px) {
+	.buttonContainer {
+		margin: 5px auto 0;
+	}
 }
 
 .buttons {
