@@ -61,30 +61,52 @@ export default () => {
 				<SearchBible />
 				<MostRecent />
 			</div>
-			{text.showCondensed ? (
-				<div className={styles.textAreaContainer}>
-					{text.condensed.map((line, i) => {
-						return (
-							<p
-								key={line + i.toString()}
-								className={
-									text.clickedLine === i
-										? styles.lineBrokenText
-										: styles.condensedLine
-								}
-								onClick={(
-									e: React.MouseEvent<HTMLParagraphElement, MouseEvent>
-								) => handleSplitTextClick(e, i)}>
-								{text.clickedLine === i ? text.split[i] : text.condensed[i]}
-							</p>
-						);
-					})}
-				</div>
-			) : (
-				<div className={styles.textAreaContainer}>
-					<p className={styles.fullText}>{text.body}</p>
-				</div>
-			)}
+			<div className={styles.textAreaContainer}>
+				{
+					//Error Loading Text
+					text.error ? (
+						<p className={styles.errorMessage}>
+							Sorry, there was an error loading this passage.
+						</p>
+					) : //Text is Loading
+					text.loading ? (
+						<div className={styles.loadingMockContainer}>
+							<p></p>
+							<p></p>
+							<p></p>
+							<p></p>
+							<p></p>
+							<p></p>
+							<p></p>
+							<p></p>
+							<p></p>
+							<p></p>
+						</div>
+					) : //Condensed Text
+					text.showCondensed ? (
+						text.condensed.map((line, i) => {
+							return (
+								<p
+									key={line + i.toString()}
+									className={
+										text.clickedLine === i
+											? styles.lineBrokenText
+											: styles.condensedLine
+									}
+									onClick={(
+										e: React.MouseEvent<HTMLParagraphElement, MouseEvent>
+									) => handleSplitTextClick(e, i)}>
+									{text.clickedLine === i ? text.split[i] : text.condensed[i]}
+								</p>
+							);
+						})
+					) : (
+						//Original Text
+
+						<p className={styles.fullText}>{text.body}</p>
+					)
+				}
+			</div>
 
 			<SmallSpacer />
 			<p className={styles.copyright}>Copyright Notice:</p>

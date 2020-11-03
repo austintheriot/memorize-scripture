@@ -22,6 +22,8 @@ const updateTextState = (
 export const textSlice = createSlice({
 	name: 'text',
 	initialState: {
+		loading: false,
+		error: false,
 		book: 'Psalm',
 		chapter: '23',
 		body: Psalm23,
@@ -59,23 +61,30 @@ export const textSlice = createSlice({
 				},
 			});
 		},
-		textFetchedFromLocalStorage: (
+		textRetrievedFromLocalStorage: (
 			text,
 			action: { payload: { book: string; chapter: string; body: string } }
 		) => {
+			text.error = false;
 			updateTextState(text, action);
 		},
-		textFetchedFromESVAPI: (
+		textBeingFetchedFromAPI: (text) => {
+			text.error = false;
+			text.loading = true;
+		},
+		textFetchSucceeded: (
 			text,
 			action: { payload: { book: string; chapter: string; body: string } }
 		) => {
+			text.loading = false;
 			updateTextState(text, action);
 		},
-		textFetchFailed: (
-			text,
-			action: { payload: { book: string; chapter: string; body: string } }
-		) => {
-			updateTextState(text, action);
+		textFetchFailed: (text) => {
+			text.loading = false;
+			text.error = true;
+			text.body = '';
+			text.split = [''];
+			text.condensed = [''];
 		},
 		viewChangeButtonClicked: (text, action) => {
 			text.showCondensed = action.payload;
@@ -90,8 +99,9 @@ export const {
 	textSettingsLoaded,
 	textInitialized,
 	mostRecentPassageClicked,
-	textFetchedFromLocalStorage,
-	textFetchedFromESVAPI,
+	textRetrievedFromLocalStorage,
+	textBeingFetchedFromAPI,
+	textFetchSucceeded,
 	textFetchFailed,
 	viewChangeButtonClicked,
 	splitTextClicked,

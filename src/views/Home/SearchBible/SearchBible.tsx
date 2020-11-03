@@ -28,13 +28,14 @@ import { getTextBody, addToTextArray } from '../storage';
 import axios from 'axios';
 import { ESVApiKey } from '../../../app/config';
 import {
-	textFetchedFromESVAPI,
+	textBeingFetchedFromAPI,
+	textFetchSucceeded,
 	textFetchFailed,
 } from '../../../app/state/textSlice';
 
 //types
 import { UtilityConfig } from '../../../app/types';
-import { textFetchedFromLocalStorage } from '../../../app/state/textSlice';
+import { textRetrievedFromLocalStorage } from '../../../app/state/textSlice';
 
 const useStyles = makeStyles((theme) => ({
 	formControl: {
@@ -102,6 +103,8 @@ export const SearchBible = () => {
 		chapter: string,
 		config: UtilityConfig
 	) => {
+		dispatch(textBeingFetchedFromAPI());
+
 		const title = `${book} ${chapter}`;
 		console.log(`Fetching text body file of ${title} from ESV API`);
 		config.analytics.logEvent('fetched_text_from_ESV_API', {
@@ -133,9 +136,8 @@ export const SearchBible = () => {
 			.then((response) => {
 				console.log(`Text body of ${title} received from ESV API`);
 				const body = response.data.passages[0];
-				//Text State
 				config.dispatch(
-					textFetchedFromESVAPI({
+					textFetchSucceeded({
 						book: book === 'Psalms' ? 'Psalm' : book,
 						chapter,
 						body,
@@ -147,13 +149,7 @@ export const SearchBible = () => {
 			})
 			.catch((error) => {
 				console.log(error);
-				config.dispatch(
-					textFetchFailed({
-						book: '',
-						chapter: '',
-						body: '',
-					})
-				);
+				config.dispatch(textFetchFailed());
 			});
 	};
 
@@ -167,7 +163,7 @@ export const SearchBible = () => {
 		if (body) {
 			console.log(`Retrieved body of ${title} from local storage`);
 			dispatch(
-				textFetchedFromLocalStorage({
+				textRetrievedFromLocalStorage({
 					book: search.book,
 					chapter: search.chapter,
 					body,
