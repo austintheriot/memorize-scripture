@@ -2,8 +2,8 @@ import React, { useEffect, useContext } from 'react';
 
 //App State
 import { AudioContext } from '../../app/state/audioContext';
-import { useSelector, useDispatch } from 'react-redux';
-import { selectText, splitTextClicked } from '../../app/state/textSlice';
+import { useSelector } from 'react-redux';
+import { selectText } from '../../app/state/textSlice';
 
 //Routing
 import { Prompt } from 'react-router';
@@ -18,30 +18,21 @@ import { SmallSpacer } from '../../components/Spacers/Spacers';
 import { Footer } from '../../components/Footer/Footer';
 import { SearchBible } from './SearchBible/SearchBible';
 import { MostRecent } from './MostRecent/MostRecent';
+import { TextCondensed } from './TextCondensed/TextCondensed';
 
 //Utilities
-import { storeClickedLine } from './storage';
+import { TextLoading } from './TextLoading/TextLoading';
+import { Copyright } from './Copyright/Copyright';
 
 //types
 
 export default () => {
 	const { textAudio } = useContext(AudioContext);
-	const dispatch = useDispatch();
-
 	const text = useSelector(selectText);
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, []);
-
-	const handleSplitTextClick = (
-		e: React.MouseEvent<HTMLParagraphElement, MouseEvent>,
-		i: number
-	) => {
-		if (text.clickedLine === i) return dispatch(splitTextClicked(-1));
-		dispatch(splitTextClicked(i));
-		storeClickedLine(i);
-	};
 
 	return (
 		<ErrorBoundary>
@@ -63,60 +54,25 @@ export default () => {
 			</div>
 			<div className={styles.textAreaContainer}>
 				{
-					//Error Loading Text
+					//Error
 					text.error ? (
 						<p className={styles.errorMessage}>
 							Sorry, there was an error loading this passage.
 						</p>
-					) : //Text is Loading
+					) : //Loading
 					text.loading ? (
-						<div className={styles.loadingMockContainer}>
-							<p></p>
-							<p></p>
-							<p></p>
-							<p></p>
-							<p></p>
-							<p></p>
-							<p></p>
-							<p></p>
-							<p></p>
-							<p></p>
-						</div>
-					) : //Condensed Text
+						<TextLoading />
+					) : //Condensed
 					text.showCondensed ? (
-						text.condensed.map((line, i) => {
-							return (
-								<p
-									key={line + i.toString()}
-									className={
-										text.clickedLine === i
-											? styles.lineBrokenText
-											: styles.condensedLine
-									}
-									onClick={(
-										e: React.MouseEvent<HTMLParagraphElement, MouseEvent>
-									) => handleSplitTextClick(e, i)}>
-									{text.clickedLine === i ? text.split[i] : text.condensed[i]}
-								</p>
-							);
-						})
+						<TextCondensed />
 					) : (
-						//Original Text
-
+						//Original
 						<p className={styles.fullText}>{text.body}</p>
 					)
 				}
 			</div>
-
 			<SmallSpacer />
-			<p className={styles.copyright}>Copyright Notice:</p>
-			<p className={styles.smallText}>
-				Scripture quotations are from the ESV® Bible (The Holy Bible, English
-				Standard Version®), copyright © 2001 by Crossway, a publishing ministry
-				of Good News Publishers. Used by permission. All rights reserved. You
-				may not copy or download more than 500 consecutive verses of the ESV
-				Bible or more than one half of any book of the ESV Bible.
-			</p>
+			<Copyright />
 			<Footer />
 			<Controls />
 		</ErrorBoundary>

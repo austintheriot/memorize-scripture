@@ -24,9 +24,9 @@ import { searchInitialized } from './state/searchSlice';
 const initializeUserSettings = (config: UtilityConfig) => {
 	//Loading textAudio playback rate
 	console.log(`Initializing user's settings.`);
-	const { targetSpeed, showCondensed, clickedLine } = getUserSettings();
+	const { targetSpeed, showCondensed } = getUserSettings();
 	config.dispatch(audioSettingsLoaded(targetSpeed));
-	config.dispatch(textSettingsLoaded({ showCondensed, clickedLine }));
+	config.dispatch(textSettingsLoaded(showCondensed));
 };
 
 const updateStateWithInitializedValues = (

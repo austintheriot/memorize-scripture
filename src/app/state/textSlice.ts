@@ -33,12 +33,8 @@ export const textSlice = createSlice({
 		clickedLine: -1,
 	},
 	reducers: {
-		textSettingsLoaded: (
-			text,
-			action: { payload: { clickedLine: number; showCondensed: boolean } }
-		) => {
-			text.clickedLine = action.payload.clickedLine;
-			text.showCondensed = action.payload.showCondensed;
+		textSettingsLoaded: (text, action: { payload: boolean }) => {
+			text.showCondensed = action.payload;
 		},
 		textInitialized: (
 			text,

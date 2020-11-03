@@ -24,11 +24,9 @@ type TextArray = TextObject[];
 export const getUserSettings = () => {
 	const targetSpeed = getPlaySpeed();
 	const showCondensed = getShowCondensed();
-	const clickedLine = getClickedLine();
 	return {
 		targetSpeed,
 		showCondensed,
-		clickedLine,
 	};
 };
 
@@ -51,18 +49,6 @@ export const getShowCondensed = (): boolean => {
 	const showCondensed = window.localStorage.getItem('showCondensed') === 'true';
 	console.log(`localStorage: showCondensed = ${showCondensed}`);
 	return showCondensed;
-};
-
-export const storeClickedLine = (number: number) => {
-	console.log(`Storing ${number} as latest clicked line in local storage`);
-	window.localStorage.setItem('clickedLine', number.toString());
-};
-
-export const getClickedLine = (): number => {
-	console.log(`Retrieving clickedLine setting from local storage`);
-	let clickedLine = window.localStorage.getItem('clickedLine');
-	console.log(`localStorage: clickedLine = ${clickedLine}`);
-	return clickedLine ? parseInt(clickedLine, 10) : -1;
 };
 
 export const getTextArray = () => {
