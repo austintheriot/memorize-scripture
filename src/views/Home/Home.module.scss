@@ -17,6 +17,74 @@
 	margin: 50px auto;
 }
 
+.errorMessage {
+	text-align: center;
+	margin: 50px auto;
+}
+
+.loadingMockContainer {
+	width: 100%;
+	max-width: 400px;
+	height: 100%;
+	height: 50vh;
+	margin: 0 auto;
+
+	& > p {
+		border-radius: 3px;
+		height: 1.1rem;
+		margin: 1rem 0;
+		width: 100%;
+		opacity: 0.15;
+
+		background: linear-gradient(
+			var(--toggleLight),
+			var(--light),
+			var(--toggleLight)
+		);
+		background-size: 1000% 1000%;
+		animation: shimmer 10s linear infinite normal;
+	}
+}
+
+.loadingMockContainer p:nth-child(1) {
+	width: 53%;
+}
+.loadingMockContainer p:nth-child(2) {
+	width: 27%;
+}
+.loadingMockContainer p:nth-child(3) {
+	width: 47%;
+}
+.loadingMockContainer p:nth-child(4) {
+	width: 0%;
+}
+.loadingMockContainer p:nth-child(5) {
+	width: 17%;
+}
+.loadingMockContainer p:nth-child(6) {
+	width: 49%;
+}
+.loadingMockContainer p:nth-child(7) {
+	width: 43%;
+}
+.loadingMockContainer p:nth-child(8) {
+	width: 23%;
+}
+.loadingMockContainer p:nth-child(9) {
+	width: 27%;
+}
+.loadingMockContainer p:nth-child(10) {
+	width: 23%;
+}
+
+@keyframes shimmer {
+	0% {
+		background-position: 0% -100%;
+	}
+	100% {
+		background-position: 0% 200%;
+	}
+}
 //Not broken, not condensed
 .fullText {
 	white-space: pre-wrap;

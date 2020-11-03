@@ -36,6 +36,8 @@ export interface SearchSlice {
 }
 
 export interface TextState {
+	loading: boolean;
+	error: boolean;
 	book: string;
 	chapter: string;
 	body: string;
