@@ -16,7 +16,7 @@ import { ErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary';
 import { Controls } from '../../components/Controls/Controls';
 import { SmallSpacer } from '../../components/Spacers/Spacers';
 import { Footer } from '../../components/Footer/Footer';
-import { SearchBible } from '../../components/SearchBible/SearchBible';
+import { SearchBible } from './SearchBible/SearchBible';
 import { MostRecent } from './MostRecent/MostRecent';
 
 //Utilities
