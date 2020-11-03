@@ -7,7 +7,7 @@ import {
 	offlineMessageClosed,
 	updateMessageClosed,
 	installedMessageClosed,
-} from '../../app/state/appSlice';
+} from '../../app/appSlice';
 
 export const ServiceWorkerMessages = () => {
 	const dispatch = useDispatch();

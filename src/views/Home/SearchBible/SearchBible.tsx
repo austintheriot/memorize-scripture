@@ -1,13 +1,13 @@
 import React, { useContext } from 'react';
 
-import { AudioContext } from '../../../app/state/audioContext';
-import { FirebaseContext } from '../../../app/state/firebaseContext';
+import { AudioContext } from '../../../app/audioContext';
+import { FirebaseContext } from '../../../app/firebaseContext';
 import { useSelector, useDispatch } from 'react-redux';
 import {
 	selectSearch,
 	bookSelected,
 	chapterSelected,
-} from '../../../app/state/searchSlice';
+} from '../../../app/searchSlice';
 
 //Styles
 import styles from './SearchBible.module.scss';
@@ -31,11 +31,11 @@ import {
 	textBeingFetchedFromAPI,
 	textFetchSucceeded,
 	textFetchFailed,
-} from '../../../app/state/textSlice';
+} from '../../../app/textSlice';
 
 //types
 import { UtilityConfig } from '../../../app/types';
-import { textRetrievedFromLocalStorage } from '../../../app/state/textSlice';
+import { textRetrievedFromLocalStorage } from '../../../app/textSlice';
 
 const useStyles = makeStyles((theme) => ({
 	formControl: {

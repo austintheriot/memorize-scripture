@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { AudioSlice } from '../types';
+import { AudioSlice } from './types';
 
 export const audioSlice = createSlice({
 	name: 'audio',

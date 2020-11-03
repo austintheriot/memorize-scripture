@@ -6,11 +6,11 @@ import * as serviceWorker from './serviceWorker';
 import './App.scss';
 
 //State
-import { FirebaseContext } from './app/state/firebaseContext';
-import { AudioContext } from './app/state/audioContext';
+import { FirebaseContext } from './app/firebaseContext';
+import { AudioContext } from './app/audioContext';
 import { useSelector, useDispatch } from 'react-redux';
-import { outsideOfMenuClicked } from './app/state/appSlice';
-import { selectAudioSettings } from './app/state/audioSlice';
+import { outsideOfMenuClicked } from './app/appSlice';
+import { selectAudioSettings } from './app/audioSlice';
 
 //Routing
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';

@@ -2,8 +2,8 @@ import React, { useContext } from 'react';
 import styles from './Controls.module.scss';
 
 //State
-import { FirebaseContext } from '../../app/state/firebaseContext';
-import { AudioContext } from '../../app/state/audioContext';
+import { FirebaseContext } from '../../app/firebaseContext';
+import { AudioContext } from '../../app/audioContext';
 import { useSelector, useDispatch } from 'react-redux';
 import {
 	selectAudioSettings,
@@ -13,8 +13,8 @@ import {
 	playButtonClicked,
 	pauseButtonClicked,
 	speedButtonClicked,
-} from '../../app/state/audioSlice';
-import { selectText, viewChangeButtonClicked } from '../../app/state/textSlice';
+} from '../../app/audioSlice';
+import { selectText, viewChangeButtonClicked } from '../../app/textSlice';
 
 //Custom icons
 import flipIcon from '../../icons/flip.svg';

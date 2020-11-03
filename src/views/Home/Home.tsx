@@ -1,9 +1,9 @@
 import React, { useEffect, useContext } from 'react';
 
 //App State
-import { AudioContext } from '../../app/state/audioContext';
+import { AudioContext } from '../../app/audioContext';
 import { useSelector } from 'react-redux';
-import { selectText } from '../../app/state/textSlice';
+import { selectText } from '../../app/textSlice';
 
 //Routing
 import { Prompt } from 'react-router';

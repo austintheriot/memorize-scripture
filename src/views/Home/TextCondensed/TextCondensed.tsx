@@ -2,7 +2,7 @@ import React from 'react';
 
 //App State
 import { useSelector, useDispatch } from 'react-redux';
-import { selectText, splitTextClicked } from '../../../app/state/textSlice';
+import { selectText, splitTextClicked } from '../../../app/textSlice';
 
 //Styles
 import styles from './TextCondensed.module.scss';
