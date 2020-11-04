@@ -45,48 +45,74 @@ export const storeShowCondensed = (boolean: boolean) => {
 };
 
 export const getShowCondensed = (): boolean => {
-	console.log(`Retrieving showCondensed setting from local storage`);
-	const showCondensed = window.localStorage.getItem('showCondensed') === 'true';
-	console.log(`localStorage: showCondensed = ${showCondensed}`);
-	return showCondensed;
+	try {
+		console.log(`Retrieving showCondensed setting from local storage`);
+		const showCondensed =
+			window.localStorage.getItem('showCondensed') === 'true';
+		console.log(`localStorage: showCondensed = ${showCondensed}`);
+		return showCondensed;
+	} catch (err) {
+		console.log(err);
+		return false;
+	}
 };
 
-export const getTextArray = () => {
-	const textsString = window.localStorage.getItem('texts');
-	return textsString
-		? (JSON.parse(textsString) as TextArray)
-		: ([{ title: '', body: '' }] as TextArray);
+export const getTextArray = (): TextArray => {
+	try {
+		const textsString = window.localStorage.getItem('texts');
+		return textsString
+			? (JSON.parse(textsString) as TextArray)
+			: ([{ title: '', body: '' }] as TextArray);
+	} catch (err) {
+		console.log(err);
+		return [{ title: '', body: '' }];
+	}
 };
 
 const shiftArrayByOne = (
 	originalArray: Array<{ title: string; body: string }>,
 	title: string,
 	body: string
-) => {
-	const array = [...originalArray].map((el) => ({ ...el }));
-	//store no more than 5 passages at a time
-	if (array.length === 5) array.pop();
-	array.unshift({
-		title,
-		body,
-	});
-	return array;
+): TextArray => {
+	try {
+		const array = [...originalArray].map((el) => ({ ...el }));
+		//store no more than 5 passages at a time
+		if (array.length === 5) array.pop();
+		array.unshift({
+			title,
+			body,
+		});
+		return array;
+	} catch (err) {
+		console.log(err);
+		return [{ title: '', body: '' }];
+	}
 };
 
 const movePassageToFrontOfArray = (title: string): TextArray => {
-	console.log(`Moving ${title} to the front of the text body array`);
-	const array = getTextArray();
-	const titleIndex = array.findIndex((el) => el.title === title);
-	if (titleIndex <= 0) return array;
-	const extractedText = array.splice(titleIndex, 1)[0]; //extract and move to front
-	array.unshift(extractedText);
-	return array;
+	try {
+		console.log(`Moving ${title} to the front of the text body array`);
+		const array = getTextArray();
+		const titleIndex = array.findIndex((el) => el.title === title);
+		if (titleIndex <= 0) return array;
+		const extractedText = array.splice(titleIndex, 1)[0]; //extract and move to front
+		array.unshift(extractedText);
+		return array;
+	} catch (err) {
+		console.log(err);
+		return [{ title: '', body: '' }];
+	}
 };
 
 export const getTextBody = (title: string): string => {
-	const textArray = getTextArray();
-	const text = textArray.find((el) => el.title === title);
-	return text?.body || '';
+	try {
+		const textArray = getTextArray();
+		const text = textArray.find((el) => el.title === title);
+		return text?.body || '';
+	} catch (err) {
+		console.log(err);
+		return '';
+	}
 };
 
 export const getMostRecentText = () => {
