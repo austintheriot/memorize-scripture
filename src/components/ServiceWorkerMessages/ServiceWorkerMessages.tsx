@@ -30,7 +30,9 @@ export const ServiceWorkerMessages = () => {
 				handleHide={() => dispatch(updateMessageClosed())}
 			/>
 			<Message
-				message={'This app works offline!'}
+				message={
+					'This app works offline! You may view your 5 most recent chapters without an internet connection.'
+				}
 				show={appState.showAppIsInstalled}
 				handleHide={() => dispatch(installedMessageClosed())}
 			/>
