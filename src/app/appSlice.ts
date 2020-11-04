@@ -5,9 +5,9 @@ export const appSlice = createSlice({
 	name: 'app',
 	initialState: {
 		menuIsOpen: false,
-		showIsOffline: false,
-		showCloseTabs: false,
-		showAppIsInstalled: false,
+		showIsOffline: true,
+		showCloseTabs: true,
+		showAppIsInstalled: true,
 	},
 	reducers: {
 		menuButtonClicked: (app) => {
