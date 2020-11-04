@@ -11,12 +11,21 @@
 
 .mostRecentList {
 	width: min-content;
+	padding: 1rem 0;
+	display: flex;
+	flex: none;
+	flex-direction: column;
+	justify-content: space-evenly;
 }
 
 .mostRecentListItem {
 	width: max-content;
-	margin: 1rem;
+	margin: 0;
 	list-style: none;
+
+	button {
+		margin: 0.5rem 1rem;
+	}
 }
 
 .listButton {
