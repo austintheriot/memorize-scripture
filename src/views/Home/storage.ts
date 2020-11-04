@@ -135,7 +135,17 @@ export const addToTextArray = (title: string, body: string) => {
 			`Adding ${title} text body to local storage array as most recent`
 		);
 		const textArray = getTextArray();
-		const shiftedArray = shiftArrayByOne(textArray, title, body);
+		let shiftedArray: TextArray = [{ title: '', body: '' }];
+
+		//no true item has been added yet
+		if (textArray.length === 1 && textArray[0].title === '') {
+			shiftedArray[0] = { title, body };
+		}
+		//other, real items have been added
+		else {
+			shiftedArray = shiftArrayByOne(textArray, title, body);
+		}
+		console.log({ shiftedArray });
 		window.localStorage.setItem('texts', JSON.stringify(shiftedArray));
 	}
 };
