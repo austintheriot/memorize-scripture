@@ -20,6 +20,11 @@
 		margin: 2rem auto;
 	}
 
+	p,
+	li {
+		line-height: 2rem;
+	}
+
 	a {
 		text-decoration: underline;
 		color: var(--light);
@@ -138,4 +143,8 @@
 	position: sticky;
 	top: 20px;
 	border-radius: 3px;
+}
+
+.indent {
+	text-indent: 5ch;
 }

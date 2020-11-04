@@ -8,7 +8,6 @@ import { animateScroll as scroll } from 'react-scroll';
 //custom components
 import { ErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary';
 import { ScrollLink } from './ScrollLink';
-import { Paragraph } from './Paragraph';
 
 //Custom icons
 import beginningIcon from '../../icons/beginning.svg';
@@ -73,7 +72,7 @@ export default () => {
 
 				<section id='intro'>
 					<h2>Intro</h2>
-					<Paragraph>
+					<p>
 						The art of memory has been a fascination of mine for a long time.
 						Over the years, I've practiced memorizing many different kinds of
 						information, but extended memorization of the Bible in particular
@@ -84,9 +83,9 @@ export default () => {
 						large portions of Scripture at a time, <em>in its context</em>,
 						without the distraction of verse numbers and footnotes, appreciating
 						the ebb and flow of a psalm or book and its contents.
-					</Paragraph>
+					</p>
 
-					<Paragraph>
+					<p>
 						But let's face it: memorization, for the vast majority of people,
 						isn't enjoyable. More often than not, it's a laborious process,
 						filled with frustration and failure rather than success. For this
@@ -94,9 +93,9 @@ export default () => {
 						stop after they've learned only a verse or two. But I don't think it
 						has to be this way. Most people have just never learned <em>how</em>{' '}
 						to learn.
-					</Paragraph>
+					</p>
 
-					<Paragraph>
+					<p>
 						I first stumbled on the idea of condensing a text to memorize it via{' '}
 						<a href='http://www.productivity501.com/how-to-memorize-verbatim-text/294/'>
 							this article
@@ -111,13 +110,13 @@ export default () => {
 						but I hope to offer a more mobile-friendly, streamlined app here,
 						one that is focused on extended memorization, rather than
 						collections of shorter verses.
-					</Paragraph>
+					</p>
 
-					<Paragraph>
+					<p>
 						This app has been created with the permission of the creators of the{' '}
 						<a href='https://www.esv.org/'>English Standard Bible (ESV)</a>,
 						from which all Bible quotes are drawn, unless otherwise indicated.
-					</Paragraph>
+					</p>
 				</section>
 
 				<section id='app-controls'>
@@ -237,7 +236,7 @@ export default () => {
 
 				<section id='app-installation'>
 					<h2>App Installation</h2>
-					<Paragraph>
+					<p>
 						This app is perfectly accessible as a regular webpage (no
 						installation required), but for a more app-like experience on mobile
 						devices, you can add this website to your homescreen. This creates
@@ -245,7 +244,7 @@ export default () => {
 						it, the app will open in standalone mode (no address bar or
 						navigation menu getting in the way), like a native mobile app. See
 						below for instructions.
-					</Paragraph>
+					</p>
 					<p className={styles.miniHeading}>Android Users:</p>
 					<p>
 						Launch Chrome for Android and open{' '}
@@ -284,11 +283,11 @@ export default () => {
 					</p>
 					<blockquote>
 						<p>Praise the LORD, all nations!</p>
-						<Paragraph>Extol him, all peoples!</Paragraph>
+						<p className={styles.indent}>Extol him, all peoples!</p>
 						<p>For great is his steadfast love toward us,</p>
-						<Paragraph>
+						<p className={styles.indent}>
 							and the faithfulness of the LORD endures forever.
-						</Paragraph>
+						</p>
 						<p>Praise the LORD!</p>
 					</blockquote>
 					<p>
@@ -367,18 +366,18 @@ export default () => {
 						<p>123456</p>
 						<p>1234567 etc.</p>
 					</blockquote>
-					<Paragraph>
+					<p>
 						You will find that once you can speak the entire passage by looking
 						only at the condensed text, you already have most of the passage
 						memorized. All that's left to do is practice speaking the text
 						without looking at the letters at all. (Hint: you can then memorize
 						the text without looking by following the same pyramid pattern of
 						repetition).
-					</Paragraph>
+					</p>
 				</section>
 				<section id='how-this-technique-works'>
 					<h2>How This Technique Works</h2>
-					<Paragraph>
+					<p>
 						This process works well for most people because of a psychological
 						principle called{' '}
 						<a href='https://en.wikipedia.org/wiki/Chunking_(psychology)'>
@@ -393,11 +392,11 @@ export default () => {
 						memorizing a text: reducing a passage down to its first letters
 						allows us to "chunk" a text in groups of phrases, sentences, and
 						verses rather than as individual words.
-					</Paragraph>
+					</p>
 				</section>
 				<section id='how-to-review'>
 					<h2>How To Review</h2>
-					<Paragraph>
+					<p>
 						Once the text is memorized, it's important to regularly review what
 						you have learned. I always begin my study sessions with review
 						before learning any new material. If pressed for time, it's far
@@ -407,8 +406,8 @@ export default () => {
 						minutes per day at most. While I'm driving, I practice reciting an
 						entire book (without looking at the app) or I recite along with
 						audio to ensure I'm not making any mistakes.
-					</Paragraph>
-					<Paragraph>
+					</p>
+					<p>
 						One of the most efficient ways that I have found to review passages
 						is by using a spaced repetition flash card system, such as{' '}
 						<a href='https://apps.ankiweb.net/'>Anki</a>. Although it's possible
@@ -420,15 +419,15 @@ export default () => {
 						review intervals become longer and longer, allowing us to solidify a
 						text in our long term memory while minimizing the burden of review
 						time (because let's face it: there's only so much time in the day!).
-					</Paragraph>
+					</p>
 				</section>
 				<section id='more-resources'>
 					<h2>More Resources</h2>
-					<Paragraph>Coming Soon...</Paragraph>
+					<p>Coming Soon...</p>
 				</section>
 				<section id='contact'>
 					<h2>Contact</h2>
-					<Paragraph>
+					<p>
 						I hope you find this app to be a blessing to your faith life. If you
 						are interested in contributing to this project, have questions,
 						comments, suggestions, bug reports, or if you're just interested in
@@ -442,17 +441,17 @@ export default () => {
 							emailing me directly
 						</a>
 						.
-					</Paragraph>
-					<Paragraph>
+					</p>
+					<p>
 						This project was made with love and is offered free of charge. If
 						you'd like to contribute code to this project or if you would like
 						to donate towards website upkeep costs, please contact me (see
 						above).{' '}
-					</Paragraph>
-					<Paragraph>
+					</p>
+					<p>
 						Lastly, this developer is looking for a job. If you are hiring Front
 						End Developers, please feel free to get in touch!
-					</Paragraph>
+					</p>
 				</section>
 				<section className={styles.copyright}>
 					<p>Originally published October 22, 2020.</p>
