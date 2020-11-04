@@ -145,7 +145,7 @@ export const addToTextArray = (title: string, body: string) => {
 		else {
 			shiftedArray = shiftArrayByOne(textArray, title, body);
 		}
-		console.log({ shiftedArray });
+
 		window.localStorage.setItem('texts', JSON.stringify(shiftedArray));
 	}
 };
