@@ -28,7 +28,7 @@ import { prepareAudioForPlayback, initializeApp } from './app/init';
 import { UtilityConfig } from './app/types';
 
 //Pages
-import { Loading } from './views/Loading/Loading';
+import { Loading } from './components/Loading/Loading';
 import { ErrorBoundary } from './components/ErrorBoundary/ErrorBoundary';
 const Home = lazy(() => import('./views/Home/Home'));
 const About = lazy(() => import('./views/About/About'));
