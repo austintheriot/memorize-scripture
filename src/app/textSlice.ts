@@ -37,12 +37,14 @@ export const textSlice = createSlice({
 			text,
 			action: { payload: { book: string; chapter: string; body: string } }
 		) => {
+			text.error = false;
 			updateTextState(text, action);
 		},
 		mostRecentPassageClicked: (
 			text,
 			action: { payload: { title: string; body: string } }
 		) => {
+			text.error = false;
 			const splitTitle = splitTitleIntoBookAndChapter(action.payload.title);
 			if (text.book === splitTitle.book && text.chapter === splitTitle.chapter)
 				return;
