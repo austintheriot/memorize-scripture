@@ -64,7 +64,30 @@ export const initializeMostRecentPassage = (config: UtilityConfig) => {
 	}
 };
 
+const initLocalStorage = () => {
+	console.log('Initializing local storage and checking for errors');
+	try {
+		window.localStorage.removeItem('recent');
+		const clickedLine = window.localStorage.getItem('clickedLine');
+		if (isNaN(Number(clickedLine)))
+			window.localStorage.setItem('clickedLine', '-1');
+		const showCondensed = window.localStorage.getItem('showCondensed');
+		if (showCondensed !== 'true' && showCondensed !== 'false')
+			window.localStorage.setItem('showCondensed', 'false');
+		const texts = window.localStorage.getItem('texts');
+		if (texts !== null && typeof JSON.parse(texts) !== 'object')
+			window.localStorage.removeItem('texts');
+		if (texts !== null && texts.includes('+'))
+			window.localStorage.removeItem('texts');
+	} catch (err) {
+		console.log(err);
+		console.log('Error detected in local storage. Clearing local storage');
+		window.localStorage.clear();
+	}
+};
+
 export const initializeApp = (config: UtilityConfig) => {
+	initLocalStorage();
 	initializeUserSettings(config);
 	initializeMostRecentPassage(config);
 };
