@@ -64,6 +64,7 @@ export const initializeMostRecentPassage = (config: UtilityConfig) => {
 	}
 };
 
+/* Wipes any faulty local storage settings from previous versions */
 const initLocalStorage = () => {
 	console.log('Initializing local storage and checking for errors');
 	try {
