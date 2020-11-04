@@ -75,10 +75,12 @@ const initLocalStorage = () => {
 		if (showCondensed !== 'true' && showCondensed !== 'false')
 			window.localStorage.setItem('showCondensed', 'false');
 		const texts = window.localStorage.getItem('texts');
+		if (texts === 'null' || texts === 'undefined')
+			window.localStorage.setItem('texts', `[{title: '', body: ''}]`);
 		if (texts !== null && typeof JSON.parse(texts) !== 'object')
-			window.localStorage.removeItem('texts');
+			window.localStorage.setItem('texts', `[{title: '', body: ''}]`);
 		if (texts !== null && texts.includes('+'))
-			window.localStorage.removeItem('texts');
+			window.localStorage.setItem('texts', `[{title: '', body: ''}]`);
 	} catch (err) {
 		console.log(err);
 		console.log('Error detected in local storage. Clearing local storage');
