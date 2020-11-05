@@ -6,14 +6,15 @@ import { FirebaseContext } from '../../../app/firebaseContext';
 import { AudioContext } from '../../../app/audioContext';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-	selectAudioSettings,
+	selectRecordingSettings,
 	rewindButtonClicked,
 	forwardButtonClicked,
 	playButtonClicked,
 	pauseButtonClicked,
 	speedButtonClicked,
 	progressBarClicked,
-} from '../../../app/audioSlice';
+	recordingButtonClicked,
+} from '../../../app/recordingSlice';
 
 import { ProgressBar } from '../../../components/ProgressBar/ProgressBar';
 
@@ -31,7 +32,7 @@ import { storePlaySpeed } from '../../../app/storage';
 
 export const RecordingControls = () => {
 	const dispatch = useDispatch();
-	const audioSettings = useSelector(selectAudioSettings);
+	const recordingSettings = useSelector(selectRecordingSettings);
 	const { textAudio } = useContext(AudioContext);
 	const { analytics } = useContext(FirebaseContext);
 
@@ -86,7 +87,7 @@ export const RecordingControls = () => {
 	};
 
 	const handleSpeedChange = () => {
-		const targetSpeed = Math.max((audioSettings.speed + 0.25) % 2.25, 0.5);
+		const targetSpeed = Math.max((recordingSettings.speed + 0.25) % 2.25, 0.5);
 		analytics.logEvent('speed_button_pressed', {
 			targetSpeed,
 		});
@@ -100,12 +101,13 @@ export const RecordingControls = () => {
 			{/* RECORDING BUTTON */}
 			<div className={styles.recordingContainer}>
 				<button
+					onClick={() => dispatch(recordingButtonClicked())}
 					aria-label='record'
 					className={['button', styles.recordingButton].join(' ')}>
 					<div
 						className={[
 							styles.recordingButtonIcon,
-							'styles.recordingTrue',
+							recordingSettings.isRecording ? styles.recordingTrue : '',
 						].join(' ')}></div>
 				</button>
 			</div>
@@ -138,13 +140,13 @@ export const RecordingControls = () => {
 				</button>
 
 				{/* PLAY BUTTON */}
-				{audioSettings.hasError ? (
+				{recordingSettings.hasError ? (
 					/* HAS ERROR */
 					<button data-info='error' className={styles.buttons} disabled={true}>
 						<img src={errorIcon} alt={'loading'} className={styles.icon} />
 					</button>
-				) : audioSettings.isReady ? (
-					audioSettings.isPlaying ? (
+				) : recordingSettings.isReady ? (
+					recordingSettings.isPlaying ? (
 						/* NO ERROR, IS READY AND PLAYING */
 						<button
 							data-info='pause'
@@ -180,7 +182,7 @@ export const RecordingControls = () => {
 					data-info='playback speed'
 					className={styles.playSpeedButton}
 					onMouseDown={handleSpeedChange}>
-					<p className={styles.icon}>x{audioSettings.speed}</p>
+					<p className={styles.icon}>x{recordingSettings.speed}</p>
 				</button>
 			</div>
 		</div>

@@ -25,6 +25,19 @@ export interface AudioSlice {
 	audio: AudioState;
 }
 
+export interface RecordingState {
+	isRecording: boolean;
+	hasError: boolean;
+	isReady: boolean;
+	isPlaying: boolean;
+	position: number;
+	speed: number;
+}
+
+export interface RecordingSlice {
+	recording: RecordingState;
+}
+
 export interface SearchState {
 	book: string;
 	chapter: string;
