@@ -16,6 +16,8 @@ import {
 } from '../../../app/audioSlice';
 import { selectText, viewChangeButtonClicked } from '../../../app/textSlice';
 
+import { ProgressBar } from '../../../components/ProgressBar/ProgressBar';
+
 //Custom icons
 import flipIcon from '../../../icons/flip.svg';
 import beginningIcon from '../../../icons/beginning.svg';
@@ -108,20 +110,7 @@ export const AudioControls = () => {
 	return (
 		<div className={styles.Controls}>
 			{/* PROGRESS BAR */}
-			<input
-				aria-label='audio position'
-				className={styles.progressBar}
-				type='range'
-				min='0'
-				max='1'
-				step='0.000000001'
-				value={audioSettings.position.toString()}
-				onChange={handleAudioPositionChange}
-			/>
-			<div
-				className={styles.progressIndicator}
-				style={{ width: `${audioSettings.position * 100}%` }}
-			/>
+			<ProgressBar handleClick={handleAudioPositionChange} />
 
 			{/* BUTTON CONTAINER */}
 			<div className={styles.buttonContainer}>

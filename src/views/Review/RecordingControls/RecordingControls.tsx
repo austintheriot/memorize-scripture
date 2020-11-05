@@ -9,11 +9,13 @@ import {
 	selectAudioSettings,
 	rewindButtonClicked,
 	forwardButtonClicked,
-	progressBarClicked,
 	playButtonClicked,
 	pauseButtonClicked,
 	speedButtonClicked,
+	progressBarClicked,
 } from '../../../app/audioSlice';
+
+import { ProgressBar } from '../../../components/ProgressBar/ProgressBar';
 
 //Custom icons
 import beginningIcon from '../../../icons/beginning.svg';
@@ -55,6 +57,17 @@ export const RecordingControls = () => {
 		textAudio.currentTime = targetTime;
 	};
 
+	const handleAudioPositionChange = (
+		e: React.ChangeEvent<HTMLInputElement>
+	) => {
+		const targetTime: number = Number(e.currentTarget.value);
+		analytics.logEvent('progress_bar_clicked', {
+			targetTime,
+		});
+		dispatch(progressBarClicked(targetTime));
+		textAudio.currentTime = textAudio.duration * targetTime;
+	};
+
 	const handleForward = () => {
 		analytics.logEvent('forward_button_pressed');
 		if (textAudio.readyState !== 4) return;
@@ -72,17 +85,6 @@ export const RecordingControls = () => {
 		textAudio.currentTime = 0;
 	};
 
-	const handleAudioPositionChange = (
-		e: React.ChangeEvent<HTMLInputElement>
-	) => {
-		const targetTime: number = Number(e.currentTarget.value);
-		analytics.logEvent('progress_bar_clicked', {
-			targetTime,
-		});
-		dispatch(progressBarClicked(targetTime));
-		textAudio.currentTime = textAudio.duration * targetTime;
-	};
-
 	const handleSpeedChange = () => {
 		const targetSpeed = Math.max((audioSettings.speed + 0.25) % 2.25, 0.5);
 		analytics.logEvent('speed_button_pressed', {
@@ -95,21 +97,21 @@ export const RecordingControls = () => {
 
 	return (
 		<div className={styles.Controls}>
+			{/* RECORDING BUTTON */}
+			<div className={styles.recordingContainer}>
+				<button
+					aria-label='record'
+					className={['button', styles.recordingButton].join(' ')}>
+					<div
+						className={[
+							styles.recordingButtonIcon,
+							'styles.recordingTrue',
+						].join(' ')}></div>
+				</button>
+			</div>
+
 			{/* PROGRESS BAR */}
-			<input
-				aria-label='audio position'
-				className={styles.progressBar}
-				type='range'
-				min='0'
-				max='1'
-				step='0.000000001'
-				value={audioSettings.position.toString()}
-				onChange={handleAudioPositionChange}
-			/>
-			<div
-				className={styles.progressIndicator}
-				style={{ width: `${audioSettings.position * 100}%` }}
-			/>
+			<ProgressBar handleClick={handleAudioPositionChange} />
 
 			{/* BUTTON CONTAINER */}
 			<div className={styles.buttonContainer}>
