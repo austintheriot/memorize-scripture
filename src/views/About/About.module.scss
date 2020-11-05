@@ -20,11 +20,6 @@
 		margin: 2rem auto;
 	}
 
-	p,
-	li {
-		line-height: 2rem;
-	}
-
 	a {
 		text-decoration: underline;
 		color: var(--light);
@@ -143,6 +138,11 @@
 	position: sticky;
 	top: 20px;
 	border-radius: 3px;
+}
+
+p:not(.tableOfContentsLI),
+li:not(.tableOfContentsLI) {
+	line-height: 2rem;
 }
 
 .indent {

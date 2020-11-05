@@ -35,30 +35,30 @@ export default () => {
 				<h1>How to Memorize Scripture</h1>
 				<nav className={styles.tableOfContents}>
 					<ul>
-						<li>
+						<li className={styles.tableOfContentsLI}>
 							<ScrollLink to='intro'>Intro</ScrollLink>
 						</li>
-						<li>
+						<li className={styles.tableOfContentsLI}>
 							<ScrollLink to='app-controls'>App Controls</ScrollLink>
 						</li>
-						<li>
+						<li className={styles.tableOfContentsLI}>
 							<ScrollLink to='app-installation'>App Installation</ScrollLink>
 						</li>
-						<li>
+						<li className={styles.tableOfContentsLI}>
 							<ScrollLink to='how-to-memorize'>How to Memorize</ScrollLink>
 						</li>
-						<li>
+						<li className={styles.tableOfContentsLI}>
 							<ScrollLink to='how-this-technique-works'>
 								How This Technique Works
 							</ScrollLink>
 						</li>
-						<li>
+						<li className={styles.tableOfContentsLI}>
 							<ScrollLink to='how-to-review'>How To Review</ScrollLink>
 						</li>
-						<li>
+						<li className={styles.tableOfContentsLI}>
 							<ScrollLink to='more-resources'>More Resources</ScrollLink>
 						</li>
-						<li>
+						<li className={styles.tableOfContentsLI}>
 							<ScrollLink to='contact'>Contact</ScrollLink>
 						</li>
 					</ul>
