@@ -69,8 +69,8 @@ export const SearchBible = () => {
 	const search = useSelector(selectSearch);
 	const { textAudio, setTextAudio } = useContext(AudioContext);
 	const utilityConfig: UtilityConfig = {
-		textAudio,
-		setTextAudio,
+		audio: textAudio,
+		setAudio: setTextAudio,
 		dispatch,
 		analytics,
 	};
@@ -144,7 +144,7 @@ export const SearchBible = () => {
 					})
 				);
 				const newAudioUrl = `https://audio.esv.org/hw/mq/${book} ${chapter}.mp3`;
-				config.setTextAudio(new Audio(newAudioUrl));
+				config.setAudio(new Audio(newAudioUrl));
 				addToTextArray(title, body);
 			})
 			.catch((error) => {

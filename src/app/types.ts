@@ -5,8 +5,8 @@ export type SetAudioType = React.Dispatch<
 export type Dispatch = (action: any) => void;
 
 export interface UtilityConfig {
-	textAudio: HTMLAudioElement;
-	setTextAudio: SetAudioType;
+	audio: HTMLAudioElement;
+	setAudio: SetAudioType;
 	dispatch: Dispatch;
 	analytics: firebase.analytics.Analytics;
 }

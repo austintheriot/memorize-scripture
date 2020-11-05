@@ -31,6 +31,7 @@ import { UtilityConfig } from './app/types';
 //Pages
 import { Loading } from './components/Loading/Loading';
 import { ErrorBoundary } from './components/ErrorBoundary/ErrorBoundary';
+import { selectRecordingSettings } from './app/recordingSlice';
 const Home = lazy(() => import('./views/Learn/Learn'));
 const Review = lazy(() => import('./views/Review/Review'));
 const About = lazy(() => import('./views/About/About'));
@@ -38,6 +39,7 @@ const Contact = lazy(() => import('./views/Contact/Contact'));
 
 export default function App() {
 	const audioState = useSelector(selectAudioSettings);
+	const recordedAudioState = useSelector(selectRecordingSettings);
 
 	const { analytics } = useContext(FirebaseContext);
 	const dispatch = useDispatch();
@@ -66,23 +68,39 @@ export default function App() {
 		setRecordedAudio,
 	};
 
-	const utilityConfig: UtilityConfig = {
-		textAudio,
-		setTextAudio,
+	const textAudioConfig: UtilityConfig = {
+		audio: textAudio,
+		setAudio: setTextAudio,
+		dispatch,
+		analytics,
+	};
+
+	const recordedAudioConfig: UtilityConfig = {
+		audio: recordedAudio,
+		setAudio: setRecordedAudio,
 		dispatch,
 		analytics,
 	};
 
 	useEffect(() => {
 		serviceWorker.register();
-		initializeApp(utilityConfig);
+		initializeApp(textAudioConfig);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
-		prepareAudioForPlayback(textAudio, audioState, utilityConfig);
+		prepareAudioForPlayback(textAudio, audioState, textAudioConfig);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [textAudio]);
+
+	useEffect(() => {
+		prepareAudioForPlayback(
+			recordedAudio,
+			recordedAudioState,
+			recordedAudioConfig
+		);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [recordedAudio]);
 
 	return (
 		<div className='App'>
