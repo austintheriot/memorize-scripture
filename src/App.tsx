@@ -8,6 +8,7 @@ import './App.scss';
 //State
 import { FirebaseContext } from './app/firebaseContext';
 import { AudioContext } from './app/audioContext';
+import { RecordingContext } from './app/recordingContext';
 import { useSelector, useDispatch } from 'react-redux';
 import { outsideOfMenuClicked } from './app/appSlice';
 import { selectAudioSettings } from './app/audioSlice';
@@ -48,12 +49,21 @@ export default function App() {
 	const [textAudio, setTextAudio] = useState(
 		new Audio(`https://audio.esv.org/hw/mq/Psalm23.mp3`)
 	); //Audio from ESV
-	const [userAudio, setUserAudio] = useState(new Audio()); //User-recorded Audio
+
 	const audio = {
 		textAudio,
 		setTextAudio,
-		userAudio,
-		setUserAudio,
+	};
+
+	const [mediaRecorder, setMediaRecorder] = useState(
+		null as MediaRecorder | null
+	); //Media stream for recording
+	const [recordedAudio, setRecordedAudio] = useState(new Audio()); //Recorded Audio from USER
+	const userAudio = {
+		mediaRecorder,
+		setMediaRecorder,
+		recordedAudio,
+		setRecordedAudio,
 	};
 
 	const utilityConfig: UtilityConfig = {
@@ -78,23 +88,25 @@ export default function App() {
 		<div className='App'>
 			<ErrorBoundary>
 				<AudioContext.Provider value={audio}>
-					<Transition>
-						<Router>
-							<Suspense fallback={Loading()}>
-								<MenuButton />
-								<Menu />
-								<div onClick={closeMenu}>
-									<ServiceWorkerMessages />
-									<Switch>
-										<Route exact path='/review' component={Review} />
-										<Route exact path='/contact' component={Contact} />
-										<Route exact path='/about' component={About} />
-										<Route path='/' component={Home} />
-									</Switch>
-								</div>
-							</Suspense>
-						</Router>
-					</Transition>
+					<RecordingContext.Provider value={userAudio}>
+						<Transition>
+							<Router>
+								<Suspense fallback={Loading()}>
+									<MenuButton />
+									<Menu />
+									<div onClick={closeMenu}>
+										<ServiceWorkerMessages />
+										<Switch>
+											<Route exact path='/review' component={Review} />
+											<Route exact path='/contact' component={Contact} />
+											<Route exact path='/about' component={About} />
+											<Route path='/' component={Home} />
+										</Switch>
+									</div>
+								</Suspense>
+							</Router>
+						</Transition>
+					</RecordingContext.Provider>
 				</AudioContext.Provider>
 			</ErrorBoundary>
 		</div>

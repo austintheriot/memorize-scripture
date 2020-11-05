@@ -6,14 +6,17 @@ export const recordingSlice = createSlice({
 	initialState: {
 		isRecording: false,
 		hasError: false,
-		isReady: false,
+		isReady: true,
 		isPlaying: false,
 		position: 0,
 		speed: 1,
 	},
 	reducers: {
-		recordingButtonClicked: (recording) => {
-			recording.isRecording = !recording.isRecording;
+		recordingStarted: (recording) => {
+			recording.isRecording = true;
+		},
+		recordingStopped: (recording) => {
+			recording.isRecording = false;
 		},
 		audioSettingsLoaded: (recording, action: { payload: number }) => {
 			recording.speed = action.payload;
@@ -81,7 +84,8 @@ export const recordingSlice = createSlice({
 });
 
 export const {
-	recordingButtonClicked,
+	recordingStarted,
+	recordingStopped,
 	audioSettingsLoaded,
 	audioInitialized,
 	audioFileChanged,

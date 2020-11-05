@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import styles from './RecordingControls.module.scss';
 
 //State
 import { FirebaseContext } from '../../../app/firebaseContext';
-import { AudioContext } from '../../../app/audioContext';
+import { RecordingContext } from '../../../app/recordingContext';
 import { useSelector, useDispatch } from 'react-redux';
 import {
 	selectRecordingSettings,
@@ -13,7 +13,8 @@ import {
 	pauseButtonClicked,
 	speedButtonClicked,
 	progressBarClicked,
-	recordingButtonClicked,
+	recordingStarted,
+	recordingStopped,
 } from '../../../app/recordingSlice';
 
 import { ProgressBar } from '../../../components/ProgressBar/ProgressBar';
@@ -33,75 +34,159 @@ import { storePlaySpeed } from '../../../app/storage';
 export const RecordingControls = () => {
 	const dispatch = useDispatch();
 	const recordingSettings = useSelector(selectRecordingSettings);
-	const { textAudio } = useContext(AudioContext);
+	const {
+		recordedAudio,
+		setRecordedAudio,
+		mediaRecorder,
+		setMediaRecorder,
+	} = useContext(RecordingContext);
 	const { analytics } = useContext(FirebaseContext);
+	const [recordedAudioChunks, setRecordedAudioChunks] = useState<BlobPart[]>(
+		[]
+	);
 
 	const handlePlay = () => {
-		analytics.logEvent('play_button_pressed');
-		if (textAudio.readyState !== 4) return;
-		textAudio.play();
+		analytics.logEvent('recording_play_button_pressed');
+		if (recordedAudio.readyState !== 4) return;
+		recordedAudio.play();
 		dispatch(playButtonClicked());
 	};
 
 	const handlePause = () => {
-		analytics.logEvent('pause_buton_pressed');
-		if (textAudio.readyState !== 4) return;
-		textAudio.pause();
+		analytics.logEvent('recording_pause_buton_pressed');
+		if (recordedAudio.readyState !== 4) return;
+		recordedAudio.pause();
 		dispatch(pauseButtonClicked());
 	};
 
 	const handleRewind = () => {
-		analytics.logEvent('back_button_pressed');
-		if (textAudio.readyState !== 4) return;
-		const targetTime = Math.max(textAudio.currentTime - 5, 0);
-		dispatch(rewindButtonClicked(targetTime / textAudio.duration));
-		textAudio.currentTime = targetTime;
+		analytics.logEvent('recording_back_button_pressed');
+		if (recordedAudio.readyState !== 4) return;
+		const targetTime = Math.max(recordedAudio.currentTime - 5, 0);
+		dispatch(rewindButtonClicked(targetTime / recordedAudio.duration));
+		recordedAudio.currentTime = targetTime;
 	};
 
 	const handleAudioPositionChange = (
 		e: React.ChangeEvent<HTMLInputElement>
 	) => {
+		if (recordedAudio.readyState !== 4) return;
 		const targetTime: number = Number(e.currentTarget.value);
-		analytics.logEvent('progress_bar_clicked', {
+		analytics.logEvent('recording_progress_bar_clicked', {
 			targetTime,
 		});
 		dispatch(progressBarClicked(targetTime));
-		textAudio.currentTime = textAudio.duration * targetTime;
+		recordedAudio.currentTime = recordedAudio.duration * targetTime;
 	};
 
 	const handleForward = () => {
-		analytics.logEvent('forward_button_pressed');
-		if (textAudio.readyState !== 4) return;
+		analytics.logEvent('recording_forward_button_pressed');
+		if (recordedAudio.readyState !== 4) return;
 		const targetTime = Math.min(
-			textAudio.currentTime + 5,
-			textAudio.duration - 0.01
+			recordedAudio.currentTime + 5,
+			recordedAudio.duration - 0.01
 		);
-		dispatch(forwardButtonClicked(targetTime / textAudio.duration));
-		textAudio.currentTime = targetTime;
+		dispatch(forwardButtonClicked(targetTime / recordedAudio.duration));
+		recordedAudio.currentTime = targetTime;
 	};
 
 	const handleBeginning = () => {
-		analytics.logEvent('beginning_button_pressed');
-		if (textAudio.readyState !== 4) return;
-		textAudio.currentTime = 0;
+		analytics.logEvent('recording_beginning_button_pressed');
+		if (recordedAudio.readyState !== 4) return;
+		recordedAudio.currentTime = 0;
 	};
 
 	const handleSpeedChange = () => {
 		const targetSpeed = Math.max((recordingSettings.speed + 0.25) % 2.25, 0.5);
-		analytics.logEvent('speed_button_pressed', {
+		analytics.logEvent('recording_speed_button_pressed', {
 			targetSpeed,
 		});
-		textAudio.playbackRate = targetSpeed;
+		recordedAudio.playbackRate = targetSpeed;
 		dispatch(speedButtonClicked(targetSpeed));
 		storePlaySpeed(targetSpeed);
 	};
+
+	const initMediaRecorderEventListeners = (mediaRecorder: MediaRecorder) => {
+		mediaRecorder.addEventListener('dataavailable', (e) => {
+			console.log('Audio data being pushed to chunk');
+			setRecordedAudioChunks((prevState) => {
+				const newRecordedAudioChunks = [...prevState];
+				newRecordedAudioChunks.push(e.data);
+				console.log(e.data);
+				return newRecordedAudioChunks;
+			});
+		});
+
+		mediaRecorder.addEventListener('stop', () => {
+			console.log('Recording stopped');
+			const recordedAudioBlob = new Blob(recordedAudioChunks, {
+				type: 'audio/ogg; codecs=opus',
+			});
+			const recordedAudioURL = URL.createObjectURL(recordedAudioBlob);
+			const recordedAudio = new Audio(recordedAudioURL);
+			setRecordedAudio(recordedAudio);
+		});
+	};
+
+	const stopRecording = () => {
+		if (mediaRecorder == null) return;
+		mediaRecorder.stop();
+		console.log('Stopping recording');
+		dispatch(recordingStopped());
+	};
+
+	const startRecording = () => {
+		if (mediaRecorder == null) return;
+		mediaRecorder.start();
+		console.log('Starting recording');
+		dispatch(recordingStarted());
+	};
+
+	const handleRecordingButtonClick = () => {
+		console.log('Record button clicked');
+		//Stop Recording
+		if (mediaRecorder && mediaRecorder.state === 'recording') {
+			stopRecording();
+		}
+
+		//Start Recording
+		else if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+			console.log('getUserMedia() function is supported');
+			console.log('Requesting permission to record audio');
+			navigator.mediaDevices
+				.getUserMedia({ audio: true })
+				.then((stream) => {
+					console.log('Audio Recording Enabled');
+					const mediaRecorder = new MediaRecorder(stream);
+					initMediaRecorderEventListeners(mediaRecorder);
+					setMediaRecorder(mediaRecorder);
+				})
+				.catch((err) => {
+					console.log('Audio Recording Disabled');
+					console.log(err);
+					setMediaRecorder(null);
+					return err;
+				});
+		} else {
+			console.log('getUserMedia() function is not supported.');
+		}
+	};
+
+	//Once new mediaRecorder is instantiated,
+	//Begin recording
+	useEffect(() => {
+		console.log('!!!!!', mediaRecorder?.state);
+		if (mediaRecorder == null || mediaRecorder.state === 'recording') return;
+		startRecording();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [mediaRecorder]);
 
 	return (
 		<div className={styles.Controls}>
 			{/* RECORDING BUTTON */}
 			<div className={styles.recordingContainer}>
 				<button
-					onClick={() => dispatch(recordingButtonClicked())}
+					onClick={() => handleRecordingButtonClick()}
 					aria-label='record'
 					className={['button', styles.recordingButton].join(' ')}>
 					<div

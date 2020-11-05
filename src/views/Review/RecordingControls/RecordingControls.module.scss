@@ -36,6 +36,11 @@
 	left: 50%;
 	transform: translate(-50%, -50%);
 	border-radius: 50%;
+
+	display: flex;
+	flex: none;
+	justify-content: center;
+	align-items: center;
 }
 
 .recordingButtonIcon {
@@ -46,9 +51,6 @@
 	height: 35px;
 	width: 35px;
 	border-radius: 50%;
-	top: 50%;
-	left: 51%;
-	transform: translate(-50%, -50%);
 	transition: all 0.1s;
 }
 

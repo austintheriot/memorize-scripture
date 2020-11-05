@@ -49,6 +49,7 @@
     ]
   },
   "devDependencies": {
+    "@types/dom-mediacapture-record": "^1.0.7",
     "@types/react-redux": "^7.1.9",
     "@types/redux": "^3.6.0",
     "@types/redux-thunk": "^2.1.0",
