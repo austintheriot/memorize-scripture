@@ -41,6 +41,7 @@ export const MostRecent = () => {
 						{getTextArray().map((el) => (
 							<li key={el.title} className={styles.mostRecentListItem}>
 								<button
+									aria-label='recent passage'
 									className={['button', styles.listButton].join(' ')}
 									onClick={(e) => handleClickRecent(e, el)}>
 									{el.title}

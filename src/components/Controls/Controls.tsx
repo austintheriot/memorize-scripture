@@ -109,6 +109,7 @@ export const Controls = () => {
 		<div className={styles.Controls}>
 			{/* PROGRESS BAR */}
 			<input
+				aria-label='audio position'
 				className={styles.progressBar}
 				type='range'
 				min='0'
