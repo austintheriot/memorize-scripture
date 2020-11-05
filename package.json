@@ -17,6 +17,7 @@
     "@types/react-scroll": "^1.8.2",
     "axios": "^0.20.0",
     "firebase": "^7.23.0",
+    "mic-recorder-to-mp3": "^2.2.2",
     "node-sass": "^4.14.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
