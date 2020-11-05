@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
-import styles from './Controls.module.scss';
+import styles from './RecordingControls.module.scss';
 
 //State
-import { FirebaseContext } from '../../app/firebaseContext';
-import { AudioContext } from '../../app/audioContext';
+import { FirebaseContext } from '../../../app/firebaseContext';
+import { AudioContext } from '../../../app/audioContext';
 import { useSelector, useDispatch } from 'react-redux';
 import {
 	selectAudioSettings,
@@ -13,26 +13,23 @@ import {
 	playButtonClicked,
 	pauseButtonClicked,
 	speedButtonClicked,
-} from '../../app/audioSlice';
-import { selectText, viewChangeButtonClicked } from '../../app/textSlice';
+} from '../../../app/audioSlice';
 
 //Custom icons
-import flipIcon from '../../icons/flip.svg';
-import beginningIcon from '../../icons/beginning.svg';
-import rewindIcon from '../../icons/rewind.svg';
-import pauseIcon from '../../icons/pause.svg';
-import playIcon from '../../icons/play.svg';
-import forwardIcon from '../../icons/forward.svg';
-import loadingIcon from '../../icons/loading.svg';
-import errorIcon from '../../icons/error.svg';
+import beginningIcon from '../../../icons/beginning.svg';
+import rewindIcon from '../../../icons/rewind.svg';
+import pauseIcon from '../../../icons/pause.svg';
+import playIcon from '../../../icons/play.svg';
+import forwardIcon from '../../../icons/forward.svg';
+import loadingIcon from '../../../icons/loading.svg';
+import errorIcon from '../../../icons/error.svg';
 
 //Utilities
-import { storePlaySpeed, storeShowCondensed } from '../../app/storage';
+import { storePlaySpeed } from '../../../app/storage';
 
-export const Controls = () => {
+export const RecordingControls = () => {
 	const dispatch = useDispatch();
 	const audioSettings = useSelector(selectAudioSettings);
-	const text = useSelector(selectText);
 	const { textAudio } = useContext(AudioContext);
 	const { analytics } = useContext(FirebaseContext);
 
@@ -96,15 +93,6 @@ export const Controls = () => {
 		storePlaySpeed(targetSpeed);
 	};
 
-	const handleViewChange = () => {
-		analytics.logEvent('flip_view_button_pressed', {
-			showCondensed: text.showCondensed,
-		});
-		const targetShowCondensed = !text.showCondensed;
-		dispatch(viewChangeButtonClicked(targetShowCondensed));
-		storeShowCondensed(targetShowCondensed);
-	};
-
 	return (
 		<div className={styles.Controls}>
 			{/* PROGRESS BAR */}
@@ -125,12 +113,6 @@ export const Controls = () => {
 
 			{/* BUTTON CONTAINER */}
 			<div className={styles.buttonContainer}>
-				<button
-					data-info='playback speed'
-					className={styles.playSpeedButton}
-					onMouseDown={handleSpeedChange}>
-					<p className={styles.icon}>x{audioSettings.speed}</p>
-				</button>
 				<button
 					data-info='skip to beginning'
 					className={styles.buttons}
@@ -193,10 +175,10 @@ export const Controls = () => {
 					<img src={forwardIcon} alt={'forward 5s'} className={styles.icon} />
 				</button>
 				<button
-					data-info='change view'
-					className={styles.buttons}
-					onMouseDown={handleViewChange}>
-					<img src={flipIcon} alt={'change view'} className={styles.icon} />
+					data-info='playback speed'
+					className={styles.playSpeedButton}
+					onMouseDown={handleSpeedChange}>
+					<p className={styles.icon}>x{audioSettings.speed}</p>
 				</button>
 			</div>
 		</div>

@@ -13,7 +13,7 @@ import styles from './Learn.module.scss';
 
 //Custom components
 import { ErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary';
-import { Controls } from '../../components/Controls/Controls';
+import { AudioControls } from './AudioControls/AudioControls';
 import { SmallSpacer } from '../../components/Spacers/Spacers';
 import { Footer } from '../../components/Footer/Footer';
 import { SearchBible } from '../../components/SearchBible/SearchBible';
@@ -74,7 +74,7 @@ export default () => {
 			<SmallSpacer />
 			<Copyright />
 			<Footer />
-			<Controls />
+			<AudioControls />
 		</ErrorBoundary>
 	);
 };
