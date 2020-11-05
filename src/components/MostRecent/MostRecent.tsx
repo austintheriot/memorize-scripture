@@ -1,15 +1,15 @@
 import React, { useContext } from 'react';
 
 //App State
-import { FirebaseContext } from '../../../app/firebaseContext';
+import { FirebaseContext } from '../../app/firebaseContext';
 import { useDispatch } from 'react-redux';
-import { mostRecentPassageClicked } from '../../../app/textSlice';
+import { mostRecentPassageClicked } from '../../app/textSlice';
 
 //Styles
 import styles from './MostRecent.module.scss';
 
 //Utilities
-import { addToTextArray, getTextArray } from '../storage';
+import { addToTextArray, getTextArray } from '../../app/storage';
 
 export const MostRecent = () => {
 	const { analytics } = useContext(FirebaseContext);
