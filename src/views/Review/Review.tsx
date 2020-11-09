@@ -16,6 +16,7 @@ import { MostRecent } from '../../components/MostRecent/MostRecent';
 
 //Utilities
 import { Copyright } from '../../components/Copyright/Copyright';
+import { Comparison } from './Comparison';
 
 //types
 
@@ -29,6 +30,7 @@ export default () => {
 	}, []);
 
 	const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+		e.preventDefault();
 		const textareaValue = e.currentTarget.value;
 		setTextareaValue(textareaValue);
 		if (textarea) {
@@ -47,13 +49,22 @@ export default () => {
 			<h2>
 				{text.book} {text.chapter}
 			</h2>
-			<div className={styles.textAreaContainer}>
-				<textarea
-					ref={textarea}
-					value={textareaValue}
-					onChange={handleChange}
-					className={styles.textarea}></textarea>
-			</div>
+
+			<label className={styles.textareaLabel} htmlFor='textarea'>
+				Input
+			</label>
+			<textarea
+				id='textarea'
+				ref={textarea}
+				placeholder='Enter your text here'
+				value={textareaValue}
+				onChange={handleChange}
+				spellCheck={false}
+				className={styles.textarea}
+			/>
+
+			<Comparison bible={text.body} input={textareaValue} />
+
 			<SmallSpacer />
 			<Copyright />
 			<Footer />
