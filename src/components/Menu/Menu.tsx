@@ -36,6 +36,11 @@ export const Menu = () => {
 					</Link>
 				</li>
 				<li className={styles.li}>
+					<Link to='/review' className={styles.link} onClick={closeMenu}>
+						Review
+					</Link>
+				</li>
+				<li className={styles.li}>
 					<Link to='/about' className={styles.link} onClick={closeMenu}>
 						About
 					</Link>
