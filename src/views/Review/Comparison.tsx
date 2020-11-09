@@ -125,21 +125,19 @@ export const Comparison = (props: { bible: string; input: string }) => {
 
 	return (
 		<>
-			<label className={styles.comparisonLabel} htmlFor='comparison'>
-				Results
-			</label>
-			<div className={styles.comparisonContainer}>
+			<h3 className={styles.resultsLabel}>Results</h3>
+			<div className={styles.resultsContainer}>
 				{textArray.length === 0 ? (
-					<p className={styles.placeholder}>Your results will appear here</p>
+					<p className={styles.placeholder}>Corrected text will appear here</p>
 				) : (
-					<p id='comparison' className={styles.comparisonP}>
-						{textArray}
-					</p>
+					<p className={styles.resultsP}>{textArray}</p>
 				)}
 			</div>
-			<p>Stats:</p>
-			<p>Attempted Percent Correct: {attemptedPercentCorrect}%</p>
-			<p>Total Percent Correct: {totalPercentCorrect}%</p>
+			<h3 className={styles.statsLabel}>Stats:</h3>
+			<section className={styles.statsContainer}>
+				<p>Attempted Correct: {attemptedPercentCorrect}%</p>
+				<p>Total Correct: {totalPercentCorrect}%</p>
+			</section>
 		</>
 	);
 };

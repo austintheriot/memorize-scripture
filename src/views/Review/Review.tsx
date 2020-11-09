@@ -51,7 +51,7 @@ export default () => {
 			</h2>
 
 			<label className={styles.textareaLabel} htmlFor='textarea'>
-				Input
+				<h3>Input</h3>
 			</label>
 			<textarea
 				id='textarea'
