@@ -29,13 +29,14 @@ export default () => {
 
 	return (
 		<ErrorBoundary>
-			<h1 className={styles.h1}>
-				{text.book} {text.chapter}
-			</h1>
+			<h1 className={styles.h1}>Review</h1>
 			<div className={styles.searchContainer}>
 				<SearchBible />
 				<MostRecent />
 			</div>
+			<h2>
+				{text.book} {text.chapter}
+			</h2>
 			<div className={styles.textAreaContainer}>
 				{
 					//Error
