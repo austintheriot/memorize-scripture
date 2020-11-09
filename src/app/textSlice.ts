@@ -28,8 +28,12 @@ export const textSlice = createSlice({
 		condensed: Psalm23Condensed,
 		showCondensed: false,
 		clickedLine: -1,
+		reviewInput: '',
 	},
 	reducers: {
+		userEnteredReviewInput: (text, action: { payload: string }) => {
+			text.reviewInput = action.payload;
+		},
 		textSettingsLoaded: (text, action: { payload: boolean }) => {
 			text.showCondensed = action.payload;
 		},
@@ -93,6 +97,7 @@ export const textSlice = createSlice({
 });
 
 export const {
+	userEnteredReviewInput,
 	textSettingsLoaded,
 	textInitialized,
 	mostRecentPassageClicked,

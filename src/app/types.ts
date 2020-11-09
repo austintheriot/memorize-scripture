@@ -45,6 +45,7 @@ export interface TextState {
 	condensed: string[];
 	showCondensed: boolean;
 	clickedLine: number;
+	reviewInput: string;
 }
 
 export interface TextSlice {

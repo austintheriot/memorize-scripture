@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef, ChangeEvent } from 'react';
 
 //App State
-import { useSelector } from 'react-redux';
-import { selectText } from '../../app/textSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectText, userEnteredReviewInput } from '../../app/textSlice';
 
 //Styles
 import styles from './Review.module.scss';
@@ -21,9 +21,9 @@ import { Comparison } from './Comparison';
 //types
 
 export default () => {
+	const dispatch = useDispatch();
 	const text = useSelector(selectText);
 	const textarea = useRef<HTMLTextAreaElement | null>(null);
-	const [textareaValue, setTextareaValue] = useState('');
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
@@ -32,7 +32,7 @@ export default () => {
 	const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		e.preventDefault();
 		const textareaValue = e.currentTarget.value;
-		setTextareaValue(textareaValue);
+		dispatch(userEnteredReviewInput(textareaValue));
 		if (textarea) {
 			textarea!.current!.style.height = 'auto';
 			textarea!.current!.style.height = `${textarea!.current!.scrollHeight}px`;
@@ -57,13 +57,13 @@ export default () => {
 				id='textarea'
 				ref={textarea}
 				placeholder='Enter your text here'
-				value={textareaValue}
+				value={text.reviewInput}
 				onChange={handleChange}
 				spellCheck={false}
 				className={styles.textarea}
 			/>
 
-			<Comparison bible={text.body} input={textareaValue} />
+			<Comparison bible={text.body} input={text.reviewInput} />
 
 			<SmallSpacer />
 			<Copyright />
