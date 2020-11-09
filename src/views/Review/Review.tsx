@@ -57,7 +57,7 @@ export default () => {
 			<textarea
 				id='textarea'
 				ref={textarea}
-				placeholder='Enter your text here'
+				placeholder={`Enter the text of ${text.book} ${text.chapter} here`}
 				value={text.reviewInput}
 				onChange={handleChange}
 				spellCheck={false}
