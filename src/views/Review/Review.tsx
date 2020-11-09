@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, ChangeEvent } from 'react';
 
 //App State
 import { useSelector } from 'react-redux';
@@ -15,7 +15,6 @@ import { SearchBible } from '../../components/SearchBible/SearchBible';
 import { MostRecent } from '../../components/MostRecent/MostRecent';
 
 //Utilities
-import { TextLoading } from '../../components/TextLoading/TextLoading';
 import { Copyright } from '../../components/Copyright/Copyright';
 
 //types
@@ -23,12 +22,15 @@ import { Copyright } from '../../components/Copyright/Copyright';
 export default () => {
 	const text = useSelector(selectText);
 	const textarea = useRef<HTMLTextAreaElement | null>(null);
+	const [textareaValue, setTextareaValue] = useState('');
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, []);
 
-	const handleChange = () => {
+	const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+		const textareaValue = e.currentTarget.value;
+		setTextareaValue(textareaValue);
 		if (textarea) {
 			textarea!.current!.style.height = 'auto';
 			textarea!.current!.style.height = `${textarea!.current!.scrollHeight}px`;
@@ -48,6 +50,7 @@ export default () => {
 			<div className={styles.textAreaContainer}>
 				<textarea
 					ref={textarea}
+					value={textareaValue}
 					onChange={handleChange}
 					className={styles.textarea}></textarea>
 			</div>
