@@ -16,13 +16,13 @@ import { ErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary';
 import { Controls } from '../../components/Controls/Controls';
 import { SmallSpacer } from '../../components/Spacers/Spacers';
 import { Footer } from '../../components/Footer/Footer';
-import { SearchBible } from './SearchBible/SearchBible';
-import { MostRecent } from './MostRecent/MostRecent';
+import { SearchBible } from '../../components/SearchBible/SearchBible';
+import { MostRecent } from '../../components/MostRecent/MostRecent';
 import { TextCondensed } from './TextCondensed/TextCondensed';
 
 //Utilities
-import { TextLoading } from './TextLoading/TextLoading';
-import { Copyright } from './Copyright/Copyright';
+import { TextLoading } from '../../components/TextLoading/TextLoading';
+import { Copyright } from '../../components/Copyright/Copyright';
 
 //types
 

@@ -1,13 +1,13 @@
 import React, { useContext } from 'react';
 
-import { AudioContext } from '../../../app/audioContext';
-import { FirebaseContext } from '../../../app/firebaseContext';
+import { AudioContext } from '../../app/audioContext';
+import { FirebaseContext } from '../../app/firebaseContext';
 import { useSelector, useDispatch } from 'react-redux';
 import {
 	selectSearch,
 	bookSelected,
 	chapterSelected,
-} from '../../../app/searchSlice';
+} from '../../app/searchSlice';
 
 //Styles
 import styles from './SearchBible.module.scss';
@@ -20,22 +20,22 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
 //Custom components
-import searchIcon from '../../../icons/search.svg';
+import searchIcon from '../../icons/search.svg';
 
 //Utilities
-import { bookTitles } from '../bible';
-import { getTextBody, addToTextArray } from '../storage';
+import { bookTitles } from '../../views/Home/bible';
+import { getTextBody, addToTextArray } from '../../views/Home/storage';
 import axios from 'axios';
-import { ESVApiKey } from '../../../app/config';
+import { ESVApiKey } from '../../app/config';
 import {
 	textBeingFetchedFromAPI,
 	textFetchSucceeded,
 	textFetchFailed,
-} from '../../../app/textSlice';
+} from '../../app/textSlice';
 
 //types
-import { UtilityConfig } from '../../../app/types';
-import { textRetrievedFromLocalStorage } from '../../../app/textSlice';
+import { UtilityConfig } from '../../app/types';
+import { textRetrievedFromLocalStorage } from '../../app/textSlice';
 
 const useStyles = makeStyles((theme) => ({
 	formControl: {
