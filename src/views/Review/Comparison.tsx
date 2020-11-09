@@ -77,7 +77,7 @@ export const Comparison = () => {
 
 			//Skip over ommitted characters in input text
 			else if (characterShouldBeOmitted(input[j])) {
-				//for stats, assume punctuation is correct
+				//count neutral characters for accurate stats
 				neutral++;
 				//let omitted characters take on the "correctness"
 				//of any preceding characters for styling
