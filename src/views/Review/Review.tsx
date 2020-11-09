@@ -50,6 +50,7 @@ export default () => {
 				{text.book} {text.chapter}
 			</h2>
 
+			{/* USER INPUT */}
 			<label className={styles.textareaLabel} htmlFor='textarea'>
 				<h3>Input</h3>
 			</label>
@@ -62,7 +63,10 @@ export default () => {
 				spellCheck={false}
 				className={styles.textarea}
 			/>
+
+			{/* RESULTS & STATS*/}
 			<Comparison />
+
 			<SmallSpacer />
 			<Copyright />
 			<Footer />
