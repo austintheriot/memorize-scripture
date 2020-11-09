@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, ChangeEvent } from 'react';
+import React, { useEffect, useRef, ChangeEvent } from 'react';
 
 //App State
 import { useSelector, useDispatch } from 'react-redux';
@@ -62,9 +62,7 @@ export default () => {
 				spellCheck={false}
 				className={styles.textarea}
 			/>
-
-			<Comparison bible={text.body} input={text.reviewInput} />
-
+			<Comparison />
 			<SmallSpacer />
 			<Copyright />
 			<Footer />

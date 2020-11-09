@@ -1,8 +1,15 @@
 import React from 'react';
 import styles from './Comparison.module.scss';
 
-export const Comparison = (props: { bible: string; input: string }) => {
-	const { bible, input } = props;
+//App State
+import { useSelector } from 'react-redux';
+import { selectText } from '../../app/textSlice';
+
+export const Comparison = () => {
+	const text = useSelector(selectText);
+
+	const input = text.reviewInput;
+	const bible = text.body;
 	const bibleCondensed = bible.split(/[^A-Za-z0-9_]/).join('');
 	const length = Math.max(bible.length, input.length);
 	const textArray: JSX.Element[] = [];
