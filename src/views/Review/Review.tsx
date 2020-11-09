@@ -16,7 +16,7 @@ import { MostRecent } from '../../components/MostRecent/MostRecent';
 
 //Utilities
 import { Copyright } from '../../components/Copyright/Copyright';
-import { Comparison } from './Comparison';
+import { Comparison } from './Comparison/Comparison';
 
 //types
 

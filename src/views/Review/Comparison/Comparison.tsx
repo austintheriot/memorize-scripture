@@ -3,9 +3,9 @@ import styles from './Comparison.module.scss';
 
 //App State
 import { useSelector } from 'react-redux';
-import { selectText } from '../../app/textSlice';
+import { selectText } from '../../../app/textSlice';
 
-import { ErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary';
+import { ErrorBoundary } from '../../../components/ErrorBoundary/ErrorBoundary';
 
 export const Comparison = () => {
 	const text = useSelector(selectText);
