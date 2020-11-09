@@ -5,6 +5,8 @@ import styles from './Comparison.module.scss';
 import { useSelector } from 'react-redux';
 import { selectText } from '../../app/textSlice';
 
+import { ErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary';
+
 export const Comparison = () => {
 	const text = useSelector(selectText);
 
@@ -65,77 +67,90 @@ export const Comparison = () => {
 		}
 	};
 
-	for (let i = 0, j = 0; j < length; i++, j++) {
-		//Skip over ommitted characters in original text
-		if (characterShouldBeOmitted(bible[i])) {
-			j--;
-			continue;
-		}
+	const checkInputForErrors = () => {
+		for (let i = 0, j = 0; j < length; i++, j++) {
+			//Skip over ommitted characters in original text
+			if (characterShouldBeOmitted(bible[i])) {
+				j--;
+				continue;
+			}
 
-		//Skip over ommitted characters in input text
-		else if (characterShouldBeOmitted(input[j])) {
-			//for stats, assume punctuation is correct
-			neutral++;
-			//let omitted characters take on the "correctness"
-			//of any preceding characters for styling
-			chunk += input[j];
+			//Skip over ommitted characters in input text
+			else if (characterShouldBeOmitted(input[j])) {
+				//for stats, assume punctuation is correct
+				neutral++;
+				//let omitted characters take on the "correctness"
+				//of any preceding characters for styling
+				chunk += input[j];
+				conditionallyPushLastChunk(input.length, j);
+				i--;
+				continue;
+			}
+
+			//if characters match
+			else if (charactersMatch(bible[i], input[j])) {
+				correct++;
+				if (lastCh === 'correct') {
+					chunk += input[j];
+				} else {
+					pushAndResetChunk(i, j);
+					lastCh = 'correct';
+				}
+			}
+
+			//if characters dont match
+			else if (charactersDontMatch(bible[i], input[j])) {
+				if (lastCh === 'incorrect') {
+					chunk += input[j];
+				} else {
+					pushAndResetChunk(i, j);
+					lastCh = 'incorrect';
+				}
+			}
+
+			//if input is longer than bible text
+			else if (input[j] && !bible[i]) {
+				if (lastCh === 'incorrect') {
+					chunk += input[j];
+				} else {
+					pushAndResetChunk(i, j);
+					lastCh = 'incorrect';
+				}
+			}
 			conditionallyPushLastChunk(input.length, j);
-			i--;
-			continue;
 		}
+	};
 
-		//if characters match
-		else if (charactersMatch(bible[i], input[j])) {
-			correct++;
-			if (lastCh === 'correct') {
-				chunk += input[j];
-			} else {
-				pushAndResetChunk(i, j);
-				lastCh = 'correct';
-			}
-		}
+	const calculateStats = () => {
+		attemptedPercentCorrect =
+			//0 input = 0% attempted success
+			input.length === 0
+				? 0
+				: //do not divide by zero
+				input.length - neutral === 0
+				? Math.round((correct / input.length) * 100)
+				: //normal calculation, given ideal conditions
+				  Math.round((correct / (input.length - neutral)) * 1000) / 10;
 
-		//if characters dont match
-		else if (charactersDontMatch(bible[i], input[j])) {
-			if (lastCh === 'incorrect') {
-				chunk += input[j];
-			} else {
-				pushAndResetChunk(i, j);
-				lastCh = 'incorrect';
-			}
-		}
+		totalPercentCorrect =
+			Math.round((correct / bibleCondensed.length) * 1000) / 10;
+	};
 
-		//if input is longer than bible text
-		else if (input[j] && !bible[i]) {
-			if (lastCh === 'incorrect') {
-				chunk += input[j];
-			} else {
-				pushAndResetChunk(i, j);
-				lastCh = 'incorrect';
-			}
-		}
-		conditionallyPushLastChunk(input.length, j);
+	try {
+		checkInputForErrors();
+		calculateStats();
+	} catch (err) {
+		console.log(err);
 	}
 
-	attemptedPercentCorrect =
-		//0 input = 0% attempted success
-		input.length === 0
-			? 0
-			: //do not divide by zero
-			input.length - neutral === 0
-			? Math.round((correct / input.length) * 100)
-			: //normal calculation, given ideal conditions
-			  Math.round((correct / (input.length - neutral)) * 1000) / 10;
-
-	totalPercentCorrect =
-		Math.round((correct / bibleCondensed.length) * 1000) / 10;
-
 	return (
-		<>
+		<ErrorBoundary>
 			<h3 className={styles.resultsLabel}>Results</h3>
 			<div className={styles.resultsContainer}>
 				{textArray.length === 0 ? (
-					<p className={styles.placeholder}>Corrected text will appear here</p>
+					<p className={styles.placeholder}>
+						Your corrected text will appear here
+					</p>
 				) : (
 					<p className={styles.resultsP}>{textArray}</p>
 				)}
@@ -145,6 +160,6 @@ export const Comparison = () => {
 				<p>Attempted Correct: {attemptedPercentCorrect}%</p>
 				<p>Total Correct: {totalPercentCorrect}%</p>
 			</section>
-		</>
+		</ErrorBoundary>
 	);
 };
