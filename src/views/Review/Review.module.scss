@@ -17,6 +17,11 @@
 	margin: 50px auto;
 }
 
+.textarea {
+	overflow-y: hidden;
+	resize: none;
+}
+
 .errorMessage {
 	text-align: center;
 	margin: 50px auto;

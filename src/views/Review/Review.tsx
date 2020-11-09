@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 //App State
 import { useSelector } from 'react-redux';
@@ -22,10 +22,18 @@ import { Copyright } from '../../components/Copyright/Copyright';
 
 export default () => {
 	const text = useSelector(selectText);
+	const textarea = useRef<HTMLTextAreaElement | null>(null);
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, []);
+
+	const handleChange = () => {
+		if (textarea) {
+			textarea!.current!.style.height = 'auto';
+			textarea!.current!.style.height = `${textarea!.current!.scrollHeight}px`;
+		}
+	};
 
 	return (
 		<ErrorBoundary>
@@ -38,20 +46,10 @@ export default () => {
 				{text.book} {text.chapter}
 			</h2>
 			<div className={styles.textAreaContainer}>
-				{
-					//Error
-					text.error ? (
-						<p className={styles.errorMessage}>
-							Sorry, there was an error loading this passage.
-						</p>
-					) : //Loading
-					text.loading ? (
-						<TextLoading />
-					) : (
-						//Original
-						<p className={styles.fullText}>{text.body}</p>
-					)
-				}
+				<textarea
+					ref={textarea}
+					onChange={handleChange}
+					className={styles.textarea}></textarea>
 			</div>
 			<SmallSpacer />
 			<Copyright />
