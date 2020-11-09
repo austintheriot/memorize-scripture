@@ -239,7 +239,7 @@ export default () => {
 					<p>
 						This app is perfectly accessible as a regular webpage (no
 						installation required), but for a more app-like experience on mobile
-						devices, you can add this website to your homescreen. This creates
+						devices, you can add this website to your home screen. This creates
 						an icon for the website, and when you open the webpage by tapping on
 						it, the app will open in standalone mode (no address bar or
 						navigation menu getting in the way), like a native mobile app. See
@@ -251,7 +251,7 @@ export default () => {
 						<a href='https://memorizescripture.org/'>
 							https://memorizescripture.org/
 						</a>
-						. Tap the menu button and tap Add to Homescreen. You’ll be able to
+						. Tap the menu button and tap Add to Home Screen. You’ll be able to
 						enter a name for the shortcut and then Chrome will add it to your
 						home screen.
 					</p>
@@ -401,24 +401,45 @@ export default () => {
 						you have learned. I always begin my study sessions with review
 						before learning any new material. If pressed for time, it's far
 						better to retain the words you've already worked so hard to learn
-						than to learn new passages. I typically review individual chapters
-						of a book at a time with flashcards, which takes around 10-15
-						minutes per day at most. While I'm driving, I practice reciting an
-						entire book (without looking at the app) or I recite along with
-						audio to ensure I'm not making any mistakes.
+						than to learn new passages.
 					</p>
 					<p>
-						One of the most efficient ways that I have found to review passages
+						On the <Link to='/review'>Review Page</Link>, you can test your
+						knowledge of a passage by typing it into the Input box. The tester
+						only grades the letters you type, ignoring punctuation,
+						capitalization, line breaks, and spaces. This is so that you can
+						more easily test yourself by using your phone's speech-to-text, if
+						available. Most mobile phones should allow you to use this feature
+						to speak the passage while your phone transcribes the text into the
+						input box, instead of having to manually type the passage.
+					</p>
+					<p>
+						An alternative is to simply record yourself speaking the passage
+						from memory. Then listen to the recording and check that you've
+						spoken it accurately by looking at the original text. I hope to add
+						this feature to the app as a built-in option in the near feature.
+					</p>
+					<p>
+						I typically review individual chapters of a book at a time with the
+						audio method, which takes around 5-10 minutes per day. Additionally,
+						whenever I'm driving, I often practice reciting an entire book
+						(without looking at the app) or I recite along with an audio bible
+						to ensure I'm not making any mistakes.{' '}
+						<em>Please don't try to use this app while driving!</em>
+					</p>
+					<p>
+						One of the most efficient ways that I have found to time my reviews
 						is by using a spaced repetition flash card system, such as{' '}
-						<a href='https://apps.ankiweb.net/'>Anki</a>. Although it's possible
-						to implement this type of system with pen-and-paper flashcards, Anki
-						saves <em>a lot</em> of time in the long run, especially when
-						creating flashcards is as simple as copying and pasting from the
-						internet. A spaced repetition flash card system allows us to review
-						a text right before we might normally forget it. Over time, the
-						review intervals become longer and longer, allowing us to solidify a
-						text in our long term memory while minimizing the burden of review
-						time (because let's face it: there's only so much time in the day!).
+						<a href='https://apps.ankiweb.net/'>Anki</a> to remind me when a
+						passage is due for review. Although it's possible to implement this
+						type of system with pen-and-paper flashcards, Anki saves{' '}
+						<em>a lot</em> of time in the long run, especially when creating
+						flashcards is as simple as copying and pasting from the internet. A
+						spaced repetition flash card system allows you to review a text
+						right before you might normally forget it. Over time, the review
+						intervals become longer and longer, allowing you to solidify a text
+						in our long term memory while minimizing the burden of review time
+						(because let's face it: there's only so much time in the day!).
 					</p>
 				</section>
 				<section id='more-resources'>
