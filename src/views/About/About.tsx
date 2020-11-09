@@ -82,7 +82,8 @@ export default () => {
 						firmly believe it's of enormous benefit to the Christian to memorize
 						large portions of Scripture at a time, <em>in its context</em>,
 						without the distraction of verse numbers and footnotes, appreciating
-						the ebb and flow of a psalm or book and its contents.
+						the ebb and flow of a psalm, chapter, or even a book and its
+						contents.
 					</p>
 
 					<p>
@@ -122,13 +123,14 @@ export default () => {
 				<section id='app-controls'>
 					<h2>App Controls</h2>
 					<p>
-						Here's quick rundown of the various buttons you can find on the Home
-						screen of the app.
+						Here's quick rundown of the various buttons you can find on the{' '}
+						<Link to='/'>Learn</Link> page of the app.
 					</p>
 					<div className={styles.tipWrapper}>
 						<p>
-							Tip: You may click on any condensed line in the app to quickly
-							reveal the full text.
+							Tip: You may click on any condensed line on the{' '}
+							<Link to='/'>Learn</Link> page of the app to quickly reveal the
+							full text.
 						</p>
 					</div>
 					<p>
@@ -228,22 +230,30 @@ export default () => {
 						Fast-forward audio 5 seconds.
 					</p>
 					<p>
-						Lastly, you can tap any location at the top of the control bar
-						(where the blue audio indicator is) to skip to a particular location
-						in the audio.
+						Lastly, you can tap anywhere along the blue audio indicator to skip
+						to a particular position in the audio.
 					</p>
 				</section>
 
 				<section id='app-installation'>
 					<h2>App Installation</h2>
 					<p>
-						This app is perfectly accessible as a regular webpage (no
-						installation required), but for a more app-like experience on mobile
+						By default, this app is available for offline use by visiting{' '}
+						<a href='https://memorizescripture.org/'>
+							https://memorizescripture.org/
+						</a>{' '}
+						in your browser, even without an internet connection (as long as
+						you've visited the page once in the last year). Your last 5 most
+						recently accessed chapters are automatically saved and are available
+						for viewing anywhere and anytime.
+					</p>
+					<p>
+						For a more app-like experience on mobile devices and some desktop
 						devices, you can add this website to your home screen. This creates
 						an icon for the website, and when you open the webpage by tapping on
 						it, the app will open in standalone mode (no address bar or
-						navigation menu getting in the way), like a native mobile app. See
-						below for instructions.
+						navigation menu getting in the way), like a native app. See below
+						for instructions.
 					</p>
 					<p className={styles.miniHeading}>Android Users:</p>
 					<p>
@@ -267,6 +277,13 @@ export default () => {
 						an iPhone or iPod Touch. Tap "Add to Home Screen". You'll be able to
 						name the shortcut, and then Safari will add the shortcut to your
 						home screen.
+					</p>
+					<p className={styles.miniHeading}>Desktop:</p>
+					<p>
+						When opened with Google Chrome, this app can be installed to the
+						desktop by clicking the "install" button at the top of the window to
+						the right of the address bar. If you don't see the word "install",
+						you might see a small plus sign instead.
 					</p>
 				</section>
 
@@ -408,10 +425,11 @@ export default () => {
 						knowledge of a passage by typing it into the Input box. The tester
 						only grades the letters you type, ignoring punctuation,
 						capitalization, line breaks, and spaces. This is so that you can
-						more easily test yourself by using your phone's speech-to-text, if
-						available. Most mobile phones should allow you to use this feature
-						to speak the passage while your phone transcribes the text into the
-						input box, instead of having to manually type the passage.
+						more easily test yourself by using your phone's speech-to-text
+						feature, if available. Most mobile phones should allow you to use
+						this feature to speak the passage while your phone transcribes the
+						text into the input box, instead of having to manually type the
+						passage.
 					</p>
 					<p>
 						An alternative is to simply record yourself speaking the passage
@@ -438,7 +456,7 @@ export default () => {
 						spaced repetition flash card system allows you to review a text
 						right before you might normally forget it. Over time, the review
 						intervals become longer and longer, allowing you to solidify a text
-						in our long term memory while minimizing the burden of review time
+						in your long term memory while minimizing the burden of review time
 						(because let's face it: there's only so much time in the day!).
 					</p>
 				</section>
@@ -449,7 +467,7 @@ export default () => {
 				<section id='contact'>
 					<h2>Contact</h2>
 					<p>
-						I hope you find this app to be a blessing to your faith life. If you
+						I hope you find this app to be a blessing in your faith life. If you
 						are interested in contributing to this project, have questions,
 						comments, suggestions, bug reports, or if you're just interested in
 						chatting, please don't hesitate to contact me via the{' '}
@@ -464,6 +482,13 @@ export default () => {
 						.
 					</p>
 					<p>
+						Checkout out the{' '}
+						<a href='https://github.com/austintheriot/memorize-scripture'>
+							GitHub repository
+						</a>{' '}
+						for this project.
+					</p>
+					<p>
 						This project was made with love and is offered free of charge. If
 						you'd like to contribute code to this project or if you would like
 						to donate towards website upkeep costs, please contact me (see
@@ -476,6 +501,7 @@ export default () => {
 				</section>
 				<section className={styles.copyright}>
 					<p>Originally published October 22, 2020.</p>
+					<p>Last updated November 9, 2020.</p>
 					<p>
 						{'Copyright '}&#169;
 						{` ${new Date().getFullYear()}, Austin Theriot.`}
