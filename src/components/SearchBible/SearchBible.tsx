@@ -23,8 +23,8 @@ import Select from '@material-ui/core/Select';
 import searchIcon from '../../icons/search.svg';
 
 //Utilities
-import { bookTitles } from '../../views/Home/bible';
-import { getTextBody, addToTextArray } from '../../views/Home/storage';
+import { bookTitles } from '../../views/Learn/bible';
+import { getTextBody, addToTextArray } from '../../views/Learn/storage';
 import axios from 'axios';
 import { ESVApiKey } from '../../app/config';
 import {

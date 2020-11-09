@@ -27,7 +27,7 @@ import loadingIcon from '../../icons/loading.svg';
 import errorIcon from '../../icons/error.svg';
 
 //Utilities
-import { storePlaySpeed, storeShowCondensed } from '../../views/Home/storage';
+import { storePlaySpeed, storeShowCondensed } from '../../views/Learn/storage';
 
 export const Controls = () => {
 	const dispatch = useDispatch();

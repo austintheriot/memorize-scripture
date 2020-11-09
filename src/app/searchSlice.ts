@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { SearchSlice } from './types';
-import { bookChapters } from '../views/Home/bible';
+import { bookChapters } from '../views/Learn/bible';
 
 export const searchSlice = createSlice({
 	name: 'search',

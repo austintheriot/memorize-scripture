@@ -9,7 +9,7 @@ import { mostRecentPassageClicked } from '../../app/textSlice';
 import styles from './MostRecent.module.scss';
 
 //Utilities
-import { addToTextArray, getTextArray } from '../../views/Home/storage';
+import { addToTextArray, getTextArray } from '../../views/Learn/storage';
 
 export const MostRecent = () => {
 	const { analytics } = useContext(FirebaseContext);

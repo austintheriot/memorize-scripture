@@ -30,7 +30,7 @@ import { UtilityConfig } from './app/types';
 //Pages
 import { Loading } from './components/Loading/Loading';
 import { ErrorBoundary } from './components/ErrorBoundary/ErrorBoundary';
-const Home = lazy(() => import('./views/Home/Home'));
+const Home = lazy(() => import('./views/Learn/Learn'));
 const Review = lazy(() => import('./views/Review/Review'));
 const About = lazy(() => import('./views/About/About'));
 const Contact = lazy(() => import('./views/Contact/Contact'));

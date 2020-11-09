@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { TextSlice, TextState } from './types';
 import { Psalm23, Psalm23Split, Psalm23Condensed } from './Psalm23';
-import { breakFullTextIntoLines, condenseText } from '../views/Home/condense';
-import { splitTitleIntoBookAndChapter } from '../views/Home/storage';
+import { breakFullTextIntoLines, condenseText } from '../views/Learn/condense';
+import { splitTitleIntoBookAndChapter } from '../views/Learn/storage';
 
 const updateTextState = (
 	text: TextState,

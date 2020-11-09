@@ -32,7 +32,7 @@ export const Menu = () => {
 			<ul className={styles.ul}>
 				<li className={styles.li}>
 					<Link to='/' className={styles.link} onClick={closeMenu}>
-						Home
+						Learn
 					</Link>
 				</li>
 				<li className={styles.li}>

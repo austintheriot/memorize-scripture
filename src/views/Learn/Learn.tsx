@@ -9,7 +9,7 @@ import { selectText } from '../../app/textSlice';
 import { Prompt } from 'react-router';
 
 //Styles
-import styles from './Home.module.scss';
+import styles from './Learn.module.scss';
 
 //Custom components
 import { ErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary';

@@ -16,7 +16,7 @@ import {
 	getMostRecentText,
 	splitTitleIntoBookAndChapter,
 	getUserSettings,
-} from '../views/Home/storage';
+} from '../views/Learn/storage';
 import { UtilityConfig, AudioState } from './types';
 import { Psalm23 } from './Psalm23';
 import { searchInitialized } from './searchSlice';
