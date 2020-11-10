@@ -51,6 +51,11 @@ export const Menu = () => {
 						Contact
 					</Link>
 				</li>
+				<li className={styles.li}>
+					<Link to='/tools' className={styles.link} onClick={closeMenu}>
+						Tools
+					</Link>
+				</li>
 			</ul>
 		</header>
 	);

@@ -1,0 +1,65 @@
+.h1 {
+	margin: 75px auto;
+	border-bottom: 1px solid var(--dark);
+	width: 80%;
+	max-width: 400px;
+}
+
+.label {
+	font-size: 1.5rem;
+	display: block;
+	width: 90%;
+	max-width: 600px;
+	margin: 2rem auto 1rem;
+	text-align: left;
+}
+
+.input {
+	position: block;
+	overflow-y: hidden;
+	resize: none;
+	background: var(--dark);
+	color: var(--light);
+	outline: none;
+	border: 1px solid transparent;
+	border-radius: 3px;
+	padding: 1rem;
+	font-size: 1.1rem;
+	line-height: 1.5rem;
+
+	display: block;
+	width: 90%;
+	max-width: 600px;
+	min-height: 100px;
+	margin: 1rem auto 2rem;
+}
+
+.condensedContainer {
+	display: block;
+	width: 90%;
+	max-width: 600px;
+	min-height: 100px;
+	margin: 1rem auto 2rem;
+	padding: 1rem;
+	border-radius: 3px;
+	overflow-x: auto;
+
+	background: var(--background);
+	border: 1px solid var(--dark);
+}
+
+.condensedPlaceholder {
+	margin: 0rem;
+}
+
+.condensedLine {
+	text-align: left;
+	width: 100%;
+	margin: 0;
+	display: block;
+	min-height: 2rem;
+	height: max-content;
+	border-radius: 3px;
+	-ms-word-break: break-all;
+	word-break: break-all;
+}

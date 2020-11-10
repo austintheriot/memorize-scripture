@@ -21,13 +21,13 @@ import { Comparison } from './Comparison/Comparison';
 //types
 
 export default () => {
-	const dispatch = useDispatch();
-	const text = useSelector(selectText);
-	const textarea = useRef<HTMLTextAreaElement | null>(null);
-
 	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, []);
+
+	const dispatch = useDispatch();
+	const text = useSelector(selectText);
+	const textarea = useRef<HTMLTextAreaElement | null>(null);
 
 	const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		e.preventDefault();
