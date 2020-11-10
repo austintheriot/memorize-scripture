@@ -187,6 +187,7 @@ export const breakFullTextIntoLines = (
 	secondaryPunctuationDistance: number = SECONDARY_PUNCTUATION_DISTANCE
 ): string[] => {
 	const lineBrokenArray = string
+		.trim()
 		.split('\n') //break into array based on existing line breaks
 		.map((
 			innerString //split individual elements further recursively
