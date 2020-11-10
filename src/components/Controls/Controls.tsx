@@ -82,11 +82,13 @@ export const Controls = () => {
 		analytics.logEvent('progress_bar_clicked', {
 			targetTime,
 		});
+		if (textAudio.readyState !== 4) return;
 		dispatch(progressBarClicked(targetTime));
 		textAudio.currentTime = textAudio.duration * targetTime;
 	};
 
 	const handleSpeedChange = () => {
+		if (textAudio.readyState !== 4) return;
 		const targetSpeed = Math.max((audioSettings.speed + 0.25) % 2.25, 0.5);
 		analytics.logEvent('speed_button_pressed', {
 			targetSpeed,
