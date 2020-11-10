@@ -48,12 +48,9 @@ export default function App() {
 	const [textAudio, setTextAudio] = useState(
 		new Audio(`https://audio.esv.org/hw/mq/Psalm23.mp3`)
 	); //Audio from ESV
-	const [userAudio, setUserAudio] = useState(new Audio()); //User-recorded Audio
 	const audio = {
 		textAudio,
 		setTextAudio,
-		userAudio,
-		setUserAudio,
 	};
 
 	const utilityConfig: UtilityConfig = {
