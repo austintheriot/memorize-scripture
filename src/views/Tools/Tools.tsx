@@ -1,8 +1,12 @@
-import React, { useEffect, useRef, Fragment } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styles from './Tools.module.scss';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { selectText, condenseToolInputChanged } from '../../app/textSlice';
+import {
+	selectText,
+	condenseToolInputChanged,
+	copyButtonClicked,
+} from '../../app/textSlice';
 import { Footer } from '../../components/Footer/Footer';
 
 export default () => {
@@ -24,9 +28,18 @@ export default () => {
 		}
 	};
 
+	const copyToClipboard = () => {
+		try {
+			navigator.clipboard.writeText(text.condenseToolOutput.join('\n'));
+			dispatch(copyButtonClicked());
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
 	return (
 		<>
-			<h1 className={styles.h1}>Condense Other Texts:</h1>
+			<h1 className={styles.h1}>Condense Texts:</h1>
 			<label htmlFor='input'>
 				<h2 className={styles.label}>Input Text</h2>
 			</label>
@@ -41,22 +54,23 @@ export default () => {
 			/>
 			<h2 className={styles.label}>Condensed Text</h2>
 			<div className={styles.condensedContainer}>
+				{navigator.clipboard && (
+					<div className={styles.copyButtonContainer}>
+						<button
+							disabled={text.condenseToolOutput[0] === '' ? true : false}
+							onClick={copyToClipboard}
+							className={['button', styles.copyButton].join(' ')}>
+							{text.copied ? 'Copied!' : 'Copy to Clipboard'}
+						</button>
+					</div>
+				)}
 				{text.condenseToolOutput[0] === '' ? (
 					<p className={styles.condensedPlaceholder}>
 						Your condensed text will appear here
 					</p>
 				) : (
-					<p className={styles.condensedLine}>
-						{text.condenseToolOutput.map((line, i) =>
-							line === '' ? (
-								<br key={new Date().getDate().toString() + i.toString()} />
-							) : (
-								<Fragment key={new Date().getDate().toString() + line}>
-									{line}
-									<br />
-								</Fragment>
-							)
-						)}
+					<p className={styles.condensedText}>
+						{text.condenseToolOutput.join('\n')}
 					</p>
 				)}
 			</div>

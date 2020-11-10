@@ -37,6 +37,7 @@ export const textSlice = createSlice({
 		reviewInput: '',
 		condenseToolInput: '',
 		condenseToolOutput: [''],
+		copied: false,
 	},
 	reducers: {
 		userEnteredReviewInput: (text, action: { payload: string }) => {
@@ -102,10 +103,14 @@ export const textSlice = createSlice({
 			text.clickedLine = action.payload;
 		},
 		condenseToolInputChanged: (text, action: { payload: string }) => {
+			text.copied = false;
 			text.condenseToolInput = action.payload;
 			text.condenseToolOutput = condenseText(
 				breakFullTextIntoLines(action.payload)
 			);
+		},
+		copyButtonClicked: (text) => {
+			text.copied = true;
 		},
 	},
 });
@@ -122,6 +127,7 @@ export const {
 	viewChangeButtonClicked,
 	splitTextClicked,
 	condenseToolInputChanged,
+	copyButtonClicked,
 } = textSlice.actions;
 
 export const fetchTextFromESVAPI = (

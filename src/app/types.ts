@@ -48,6 +48,7 @@ export interface TextState {
 	reviewInput: string;
 	condenseToolInput: string;
 	condenseToolOutput: string[];
+	copied: boolean;
 }
 
 export interface TextSlice {

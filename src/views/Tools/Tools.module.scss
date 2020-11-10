@@ -1,5 +1,5 @@
 .h1 {
-	margin: 75px auto;
+	margin: 75px auto 50px;
 	border-bottom: 1px solid var(--dark);
 	width: 80%;
 	max-width: 400px;
@@ -10,8 +10,7 @@
 	display: block;
 	width: 90%;
 	max-width: 600px;
-	margin: 2rem auto 1rem;
-	text-align: left;
+	margin: 50px auto 1rem;
 }
 
 .input {
@@ -34,6 +33,24 @@
 	margin: 1rem auto 2rem;
 }
 
+.copyButtonContainer {
+	width: 90%;
+	max-width: 600px;
+	margin: 1rem auto 2rem;
+}
+
+.copyButton {
+	margin: auto;
+	width: 200px;
+
+	&:disabled {
+		color: var(--toggleLight);
+	}
+	&:disabled:active {
+		background-color: var(--dark);
+	}
+}
+
 .condensedContainer {
 	display: block;
 	width: 90%;
@@ -49,17 +66,18 @@
 }
 
 .condensedPlaceholder {
-	margin: 0rem;
+	margin: 1rem auto;
 }
 
-.condensedLine {
+.condensedText {
 	text-align: left;
-	width: 100%;
-	margin: 0;
+	width: max-content;
+	margin: 1rem auto;
 	display: block;
-	min-height: 2rem;
+	min-height: 100px;
 	height: max-content;
 	border-radius: 3px;
 	-ms-word-break: break-all;
 	word-break: break-all;
+	white-space: pre-wrap;
 }
