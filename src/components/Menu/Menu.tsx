@@ -42,13 +42,13 @@ export const Menu = () => {
 					</Link>
 				</li>
 				<li className={styles.li}>
-					<Link to='/about' className={styles.link} onClick={closeMenu}>
-						About
+					<Link to='/tools' className={styles.link} onClick={closeMenu}>
+						Tools
 					</Link>
 				</li>
 				<li className={styles.li}>
-					<Link to='/tools' className={styles.link} onClick={closeMenu}>
-						Tools
+					<Link to='/about' className={styles.link} onClick={closeMenu}>
+						About
 					</Link>
 				</li>
 				<li className={styles.li}>

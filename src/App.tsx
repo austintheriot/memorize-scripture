@@ -86,8 +86,8 @@ export default function App() {
 									<Switch>
 										<Route exact path='/learn' component={Learn} />
 										<Route exact path='/review' component={Review} />
-										<Route exact path='/about' component={About} />
 										<Route exact path='/tools' component={Tools} />
+										<Route exact path='/about' component={About} />
 										<Route exact path='/contact' component={Contact} />
 										<Route path='/' component={Learn} />
 									</Switch>
