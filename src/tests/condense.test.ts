@@ -1,4 +1,4 @@
-import { breakFullTextIntoLines, condenseText } from '../views/Learn/condense';
+import { breakFullTextIntoLines, condenseText } from '../app/condense';
 
 import {
 	Genesis3,

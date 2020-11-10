@@ -1,7 +1,7 @@
 import { createSlice, Dispatch } from '@reduxjs/toolkit';
 import { TextSlice, TextState, UtilityConfig } from './types';
 import { Psalm23, Psalm23Split, Psalm23Condensed } from './Psalm23';
-import { breakFullTextIntoLines, condenseText } from '../views/Learn/condense';
+import { breakFullTextIntoLines, condenseText } from './condense';
 import {
 	splitTitleIntoBookAndChapter,
 	addToTextArray,
