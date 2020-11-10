@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { FirebaseContext } from '../../../app/firebaseContext';
 
 //App State
 import { useSelector, useDispatch } from 'react-redux';
@@ -8,6 +9,7 @@ import { selectText, splitTextClicked } from '../../../app/textSlice';
 import styles from './TextCondensed.module.scss';
 
 export const TextCondensed = () => {
+	const { analytics } = useContext(FirebaseContext);
 	const dispatch = useDispatch();
 	const text = useSelector(selectText);
 
@@ -15,6 +17,9 @@ export const TextCondensed = () => {
 		e: React.MouseEvent<HTMLParagraphElement, MouseEvent>,
 		i: number
 	) => {
+		analytics.logEvent('condensed_line_clicked', {
+			clickedLine: text.clickedLine === i ? -1 : text.clickedLine,
+		});
 		if (text.clickedLine === i) return dispatch(splitTextClicked(-1));
 		dispatch(splitTextClicked(i));
 	};
