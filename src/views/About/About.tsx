@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import styles from './About.module.scss';
+import { FirebaseContext } from '../../app/firebaseContext';
 import { Link } from 'react-router-dom';
 
 //animated scroll library
@@ -7,7 +8,8 @@ import { animateScroll as scroll } from 'react-scroll';
 
 //custom components
 import { ErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary';
-import { ScrollLink } from './ScrollLink';
+import { ScrollLink } from '../../components/Links/ScrollLink';
+import { ExternalLink } from '../../components/Links/ExternalLink';
 
 //Custom icons
 import beginningIcon from '../../icons/beginning.svg';
@@ -21,7 +23,17 @@ import flipIcon from '../../icons/flip.svg';
 import { Footer } from '../../components/Footer/Footer';
 
 export default () => {
-	const scrollToTop = () => scroll.scrollToTop({ smooth: true, duration: 500 });
+	const { analytics } = useContext(FirebaseContext);
+	const scrollToTop = () => {
+		scroll.scrollToTop({ smooth: true, duration: 500 });
+		analytics.logEvent('back_to_top_button_pressed');
+	};
+
+	const handleNavLinkClick = (link: string) => {
+		analytics.logEvent('table_of_contents_link_clicked', {
+			link,
+		});
+	};
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
@@ -36,30 +48,46 @@ export default () => {
 				<nav className={styles.tableOfContents}>
 					<ul>
 						<li className={styles.tableOfContentsLI}>
-							<ScrollLink to='intro'>Intro</ScrollLink>
+							<ScrollLink to='intro' onClick={handleNavLinkClick}>
+								Intro
+							</ScrollLink>
 						</li>
 						<li className={styles.tableOfContentsLI}>
-							<ScrollLink to='app-controls'>App Controls</ScrollLink>
+							<ScrollLink to='app-controls' onClick={handleNavLinkClick}>
+								App Controls
+							</ScrollLink>
 						</li>
 						<li className={styles.tableOfContentsLI}>
-							<ScrollLink to='app-installation'>App Installation</ScrollLink>
+							<ScrollLink to='app-installation' onClick={handleNavLinkClick}>
+								App Installation
+							</ScrollLink>
 						</li>
 						<li className={styles.tableOfContentsLI}>
-							<ScrollLink to='how-to-memorize'>How to Memorize</ScrollLink>
+							<ScrollLink to='how-to-memorize' onClick={handleNavLinkClick}>
+								How to Memorize
+							</ScrollLink>
 						</li>
 						<li className={styles.tableOfContentsLI}>
-							<ScrollLink to='how-this-technique-works'>
+							<ScrollLink
+								to='how-this-technique-works'
+								onClick={handleNavLinkClick}>
 								How This Technique Works
 							</ScrollLink>
 						</li>
 						<li className={styles.tableOfContentsLI}>
-							<ScrollLink to='how-to-review'>How To Review</ScrollLink>
+							<ScrollLink to='how-to-review' onClick={handleNavLinkClick}>
+								How To Review
+							</ScrollLink>
 						</li>
 						<li className={styles.tableOfContentsLI}>
-							<ScrollLink to='more-resources'>More Resources</ScrollLink>
+							<ScrollLink to='more-resources' onClick={handleNavLinkClick}>
+								More Resources
+							</ScrollLink>
 						</li>
 						<li className={styles.tableOfContentsLI}>
-							<ScrollLink to='contact'>Contact</ScrollLink>
+							<ScrollLink to='contact' onClick={handleNavLinkClick}>
+								Contact
+							</ScrollLink>
 						</li>
 					</ul>
 				</nav>
@@ -98,25 +126,29 @@ export default () => {
 
 					<p>
 						I first stumbled on the idea of condensing a text to memorize it via{' '}
-						<a href='http://www.productivity501.com/how-to-memorize-verbatim-text/294/'>
+						<ExternalLink to='http://www.productivity501.com/how-to-memorize-verbatim-text/294/'>
 							this article
-						</a>{' '}
+						</ExternalLink>{' '}
 						by Mark Shead. After finding the article, I began implementing the
 						process in my own Bible memorization, and I have personally found
 						the process to be so much more quick and painless ever since then.
 						And that's my end goal for this app: to facilitate the extended
 						memorization of God's Word. This same technique is also used by a
 						few other scripture memory softwares (
-						<a href='https://www.memverse.com/'>memverse.com</a> for example),
-						but I hope to offer a more mobile-friendly, streamlined app here,
-						one that is focused on extended memorization, rather than
-						collections of shorter verses.
+						<ExternalLink to='https://www.memverse.com/'>
+							memverse.com
+						</ExternalLink>{' '}
+						for example), but I hope to offer a more mobile-friendly,
+						streamlined app here, one that is focused on extended memorization,
+						rather than collections of shorter verses.
 					</p>
 
 					<p>
 						This app has been created with the permission of the creators of the{' '}
-						<a href='https://www.esv.org/'>English Standard Bible (ESV)</a>,
-						from which all Bible quotes are drawn, unless otherwise indicated.
+						<ExternalLink to='https://www.esv.org/'>
+							English Standard Bible (ESV)
+						</ExternalLink>
+						, from which all Bible quotes are drawn, unless otherwise indicated.
 					</p>
 				</section>
 
@@ -239,9 +271,9 @@ export default () => {
 					<h2>App Installation</h2>
 					<p>
 						By default, this app is available for offline use by visiting{' '}
-						<a href='https://memorizescripture.org/'>
+						<ExternalLink to='https://memorizescripture.org/'>
 							https://memorizescripture.org/
-						</a>{' '}
+						</ExternalLink>{' '}
 						in your browser, even without an internet connection (as long as
 						you've visited the page once in the last year). Your last 5 most
 						recently accessed chapters are automatically saved and are available
@@ -258,9 +290,9 @@ export default () => {
 					<p className={styles.miniHeading}>Android Users:</p>
 					<p>
 						Launch Chrome for Android and open{' '}
-						<a href='https://memorizescripture.org/'>
+						<ExternalLink to='https://memorizescripture.org/'>
 							https://memorizescripture.org/
-						</a>
+						</ExternalLink>
 						. Tap the menu button and tap Add to Home Screen. You’ll be able to
 						enter a name for the shortcut and then Chrome will add it to your
 						home screen.
@@ -268,9 +300,9 @@ export default () => {
 					<p className={styles.miniHeading}>iPhone, iPad, &amp; iPod Users:</p>
 					<p>
 						Launch Safari and go to{' '}
-						<a href='https://memorizescripture.org/'>
+						<ExternalLink to='https://memorizescripture.org/'>
 							https://memorizescripture.org/
-						</a>
+						</ExternalLink>
 						. Tap the Share button on the browser’s toolbar (the rectangle with
 						upward-pointing arrow). This can be found on the bar at the top of
 						the screen on an iPad, and on the bar at the bottom of the screen on
@@ -397,9 +429,9 @@ export default () => {
 					<p>
 						This process works well for most people because of a psychological
 						principle called{' '}
-						<a href='https://en.wikipedia.org/wiki/Chunking_(psychology)'>
+						<ExternalLink to='https://en.wikipedia.org/wiki/Chunking_(psychology)'>
 							"chunking"
-						</a>
+						</ExternalLink>
 						, in which individual pieces of information are grouped together
 						into a collected whole. Chunking helps us remember more than we
 						normally would be able to if we were trying to remember the same
@@ -448,16 +480,17 @@ export default () => {
 					<p>
 						One of the most efficient ways that I have found to time my reviews
 						is by using a spaced repetition flash card system, such as{' '}
-						<a href='https://apps.ankiweb.net/'>Anki</a> to remind me when a
-						passage is due for review. Although it's possible to implement this
-						type of system with pen-and-paper flashcards, Anki saves{' '}
-						<em>a lot</em> of time in the long run, especially when creating
-						flashcards is as simple as copying and pasting from the internet. A
-						spaced repetition flash card system allows you to review a text
-						right before you might normally forget it. Over time, the review
-						intervals become longer and longer, allowing you to solidify a text
-						in your long term memory while minimizing the burden of review time
-						(because let's face it: there's only so much time in the day!).
+						<ExternalLink to='https://apps.ankiweb.net/'>Anki</ExternalLink> to
+						remind me when a passage is due for review. Although it's possible
+						to implement this type of system with pen-and-paper flashcards, Anki
+						saves <em>a lot</em> of time in the long run, especially when
+						creating flashcards is as simple as copying and pasting from the
+						internet. A spaced repetition flash card system allows you to review
+						a text right before you might normally forget it. Over time, the
+						review intervals become longer and longer, allowing you to solidify
+						a text in your long term memory while minimizing the burden of
+						review time (because let's face it: there's only so much time in the
+						day!).
 					</p>
 				</section>
 				<section id='more-resources'>
@@ -473,19 +506,24 @@ export default () => {
 						chatting, please don't hesitate to contact me via the{' '}
 						<Link to='/contact'>Contact</Link> page on this website, and I'll
 						get back to you shortly. Additionally, I can be reached via my{' '}
-						<a href='https://austintheriot.com/contact'>website</a>,{' '}
-						<a href='https://www.linkedin.com/in/austinmtheriot/'>LinkedIn</a>,
-						or by{' '}
-						<a href='mailto:austinmtheriot@gmail.com?subject=Scripture Memorization App'>
+						<ExternalLink to='https://austintheriot.com/contact'>
+							website
+						</ExternalLink>
+						,{' '}
+						<ExternalLink to='https://www.linkedin.com/in/austinmtheriot/'>
+							LinkedIn
+						</ExternalLink>
+						, or by{' '}
+						<ExternalLink to='mailto:austinmtheriot@gmail.com?subject=Scripture Memorization App'>
 							emailing me directly
-						</a>
+						</ExternalLink>
 						.
 					</p>
 					<p>
 						Checkout out the{' '}
-						<a href='https://github.com/austintheriot/memorize-scripture'>
+						<ExternalLink to='https://github.com/austintheriot/memorize-scripture'>
 							GitHub repository
-						</a>{' '}
+						</ExternalLink>{' '}
 						for this project.
 					</p>
 					<p>

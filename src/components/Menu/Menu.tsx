@@ -8,6 +8,7 @@ import chiRho from '../../images/chirho-light.svg';
 //Menu State
 import { useSelector, useDispatch } from 'react-redux';
 import { selectApp, navLinkClicked } from '../../app/appSlice';
+import { ExternalLink } from '../Links/ExternalLink';
 
 export const Menu = () => {
 	const dispatch = useDispatch();
@@ -22,13 +23,13 @@ export const Menu = () => {
 			className={[styles.header, app.menuIsOpen ? styles.menuOpen : ''].join(
 				' '
 			)}>
-			<a href='https://memorizescripture.org'>
+			<ExternalLink to='https://memorizescripture.org'>
 				<img
 					src={chiRho}
 					alt='Memorize Scripture Logo: Chi Rho'
 					className='ChiRho'
 				/>
-			</a>
+			</ExternalLink>
 			<ul className={styles.ul}>
 				<li className={styles.li}>
 					<Link to='/' className={styles.link} onClick={closeMenu}>

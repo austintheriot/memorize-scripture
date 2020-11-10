@@ -1,5 +1,6 @@
 import React, { ErrorInfo } from 'react';
 import styles from './ErrorBoundary.module.scss';
+import { ExternalLink } from '../Links/ExternalLink';
 
 interface Props {}
 
@@ -33,11 +34,11 @@ export class ErrorBoundary extends React.Component<Props, State> {
 					<div className={styles.innerWrapper}>
 						<h2>Uh-oh! Something went wrong!</h2>
 						<p>
-							<a
-								href='https://memorizescripture.org/contact'
+							<ExternalLink
+								to='https://memorizescripture.org/contact'
 								className={styles.Link}>
 								Submit a bug report
-							</a>
+							</ExternalLink>
 							, and I'll get the issue fixed as soon as possible. Thanks!
 						</p>
 					</div>
