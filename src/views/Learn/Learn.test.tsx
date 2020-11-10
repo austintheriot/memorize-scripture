@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import Learn from './Learn';
 
 //Firebase Config
-import { app, analytics, FirebaseContext } from './app/firebaseContext';
+import { app, analytics, FirebaseContext } from '../../app/firebaseContext';
 
 //Redux
 import { Provider } from 'react-redux';
-import store from './app/store';
+import store from '../../app/store';
 import { MemoryRouter } from 'react-router-dom';
 
 const firebaseContext = {
@@ -21,7 +21,7 @@ test('renders without crashing', () => {
 		<FirebaseContext.Provider value={firebaseContext}>
 			<Provider store={store}>
 				<MemoryRouter>
-					<App />
+					<Learn />
 				</MemoryRouter>
 			</Provider>
 		</FirebaseContext.Provider>,
