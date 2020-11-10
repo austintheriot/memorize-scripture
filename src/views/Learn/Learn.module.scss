@@ -1,3 +1,10 @@
+.LearnContainer {
+	outline: none;
+	&:focus {
+		outline: none;
+	}
+}
+
 .h1 {
 	margin: 75px auto;
 	border-bottom: 1px solid var(--dark);

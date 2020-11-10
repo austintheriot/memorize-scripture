@@ -77,6 +77,13 @@ p {
 	line-height: 1.5rem;
 }
 
+.App {
+	outline: none;
+	&:focus {
+		outline: none;
+	}
+}
+
 .button {
 	display: block;
 	border: none;

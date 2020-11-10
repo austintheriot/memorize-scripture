@@ -75,7 +75,10 @@ export default () => {
 
 	return (
 		<ErrorBoundary>
-			<div onKeyDown={handleKeyDown} tabIndex={0}>
+			<div
+				onKeyDown={handleKeyDown}
+				tabIndex={0}
+				className={styles.LearnContainer}>
 				<Prompt
 					message={() => {
 						//Pause textAudio when navigating away from Home
