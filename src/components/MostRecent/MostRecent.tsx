@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef } from 'react';
 
 //App State
 import { FirebaseContext } from '../../app/firebaseContext';
@@ -14,6 +14,7 @@ import { addToTextArray, getTextArray } from '../../views/Learn/storage';
 export const MostRecent = () => {
 	const { analytics } = useContext(FirebaseContext);
 	const dispatch = useDispatch();
+	const details = useRef<HTMLDetailsElement | null>(null);
 
 	interface TextObject {
 		title: string;
@@ -26,6 +27,7 @@ export const MostRecent = () => {
 	) => {
 		dispatch(mostRecentPassageClicked({ title, body }));
 		addToTextArray(title, body);
+		if (details) details.current?.removeAttribute('open');
 		analytics.logEvent('clicked_most_recent', {
 			title,
 			body,
@@ -33,7 +35,7 @@ export const MostRecent = () => {
 	};
 
 	return (
-		<details className={styles.mostRecentContainer}>
+		<details className={styles.mostRecentContainer} ref={details}>
 			<summary>Most Recent:</summary>
 			{getTextArray()[0].title ? (
 				<>
