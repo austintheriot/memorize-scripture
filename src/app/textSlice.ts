@@ -153,7 +153,7 @@ export const fetchTextFromESVAPI = (
 		.then((response) => {
 			console.log(`Text body of ${title} received from ESV API`);
 			const body = response.data.passages[0];
-			config.dispatch(
+			dispatch(
 				textFetchSucceeded({
 					book: book === 'Psalms' ? 'Psalm' : book,
 					chapter,
@@ -166,7 +166,7 @@ export const fetchTextFromESVAPI = (
 		})
 		.catch((error) => {
 			console.log(error);
-			config.dispatch(textFetchFailed());
+			dispatch(textFetchFailed());
 		});
 };
 
