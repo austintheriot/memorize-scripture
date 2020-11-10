@@ -40,7 +40,7 @@ const updateStateWithInitializedValues = (
 	//Text State
 	config.dispatch(
 		textInitialized({
-			book: book === 'Psalms' ? 'Psalm' : book,
+			book,
 			chapter,
 			body,
 		})
