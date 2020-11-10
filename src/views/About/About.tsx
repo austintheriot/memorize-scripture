@@ -80,11 +80,6 @@ export default () => {
 							</ScrollLink>
 						</li>
 						<li className={styles.tableOfContentsLI}>
-							<ScrollLink to='more-resources' onClick={handleNavLinkClick}>
-								More Resources
-							</ScrollLink>
-						</li>
-						<li className={styles.tableOfContentsLI}>
 							<ScrollLink to='contact' onClick={handleNavLinkClick}>
 								Contact
 							</ScrollLink>
@@ -492,10 +487,6 @@ export default () => {
 						review time (because let's face it: there's only so much time in the
 						day!).
 					</p>
-				</section>
-				<section id='more-resources'>
-					<h2>More Resources</h2>
-					<p>Coming Soon...</p>
 				</section>
 				<section id='contact'>
 					<h2>Contact</h2>
