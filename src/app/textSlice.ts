@@ -1,8 +1,14 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { TextSlice, TextState } from './types';
+import { createSlice, Dispatch } from '@reduxjs/toolkit';
+import { TextSlice, TextState, UtilityConfig } from './types';
 import { Psalm23, Psalm23Split, Psalm23Condensed } from './Psalm23';
 import { breakFullTextIntoLines, condenseText } from '../views/Learn/condense';
-import { splitTitleIntoBookAndChapter } from '../views/Learn/storage';
+import {
+	splitTitleIntoBookAndChapter,
+	addToTextArray,
+} from '../views/Learn/storage';
+
+import axios from 'axios';
+import { ESVApiKey } from './config';
 
 const updateTextState = (
 	text: TextState,
@@ -109,20 +115,60 @@ export const {
 	splitTextClicked,
 } = textSlice.actions;
 
-// The function below is called a thunk and allows us to perform async logic. It
-// can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This
-// will call the thunk with the `dispatch` function as the first argument. Async
-// code can then be executed and other actions can be dispatched
+export const fetchTextFromESVAPI = (
+	book: string,
+	chapter: string,
+	config: UtilityConfig
+) => (dispatch: Dispatch) => {
+	dispatch(textBeingFetchedFromAPI());
 
-// export const incrementAsync = (amount) => (dispatch) => {
-// 	setTimeout(() => {
-// 		dispatch(incrementByAmount(amount));
-// 	}, 1000);
-// };
+	const title = `${book} ${chapter}`;
+	console.log(`Fetching text body file of ${title} from ESV API`);
+	config.analytics.logEvent('fetched_text_from_ESV_API', {
+		book,
+		chapter,
+		title,
+	});
 
-// The function below is called a selector and allows us to select a value from
-// the state. Selectors can also be defined inline where they're used instead of
-// in the slice file. For example: `useSelector((state) => state.counter.value)`
+	const textURL =
+		'https://api.esv.org/v3/passage/text/?' +
+		`q=${title}` +
+		'&include-passage-references=false' +
+		'&include-verse-numbers=false' +
+		'&include-first-verse-numbers=false' +
+		'&include-footnotes=false' +
+		'&include-footnote-body=false' +
+		'&include-headings=false' +
+		'&include-selahs=false' +
+		'&indent-paragraphs=10' +
+		'&indent-poetry-lines=5' +
+		'&include-short-copyright=false';
+
+	axios
+		.get(textURL, {
+			headers: {
+				Authorization: ESVApiKey,
+			},
+		})
+		.then((response) => {
+			console.log(`Text body of ${title} received from ESV API`);
+			const body = response.data.passages[0];
+			config.dispatch(
+				textFetchSucceeded({
+					book: book === 'Psalms' ? 'Psalm' : book,
+					chapter,
+					body,
+				})
+			);
+			const newAudioUrl = `https://audio.esv.org/hw/mq/${book} ${chapter}.mp3`;
+			config.setTextAudio(new Audio(newAudioUrl));
+			addToTextArray(title, body);
+		})
+		.catch((error) => {
+			console.log(error);
+			config.dispatch(textFetchFailed());
+		});
+};
 
 export const selectText = (state: TextSlice) => state.text;
 

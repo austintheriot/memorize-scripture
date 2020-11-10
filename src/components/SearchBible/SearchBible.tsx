@@ -25,17 +25,13 @@ import searchIcon from '../../icons/search.svg';
 //Utilities
 import { bookTitles } from '../../views/Learn/bible';
 import { getTextBody, addToTextArray } from '../../views/Learn/storage';
-import axios from 'axios';
-import { ESVApiKey } from '../../app/config';
-import {
-	textBeingFetchedFromAPI,
-	textFetchSucceeded,
-	textFetchFailed,
-} from '../../app/textSlice';
 
 //types
 import { UtilityConfig } from '../../app/types';
-import { textRetrievedFromLocalStorage } from '../../app/textSlice';
+import {
+	textRetrievedFromLocalStorage,
+	fetchTextFromESVAPI,
+} from '../../app/textSlice';
 
 const useStyles = makeStyles((theme) => ({
 	formControl: {
@@ -98,61 +94,6 @@ export const SearchBible = () => {
 		}
 	};
 
-	const fetchTextFromESVAPI = (
-		book: string,
-		chapter: string,
-		config: UtilityConfig
-	) => {
-		dispatch(textBeingFetchedFromAPI());
-
-		const title = `${book} ${chapter}`;
-		console.log(`Fetching text body file of ${title} from ESV API`);
-		config.analytics.logEvent('fetched_text_from_ESV_API', {
-			book,
-			chapter,
-			title,
-		});
-
-		const textURL =
-			'https://api.esv.org/v3/passage/text/?' +
-			`q=${title}` +
-			'&include-passage-references=false' +
-			'&include-verse-numbers=false' +
-			'&include-first-verse-numbers=false' +
-			'&include-footnotes=false' +
-			'&include-footnote-body=false' +
-			'&include-headings=false' +
-			'&include-selahs=false' +
-			'&indent-paragraphs=10' +
-			'&indent-poetry-lines=5' +
-			'&include-short-copyright=false';
-
-		axios
-			.get(textURL, {
-				headers: {
-					Authorization: ESVApiKey,
-				},
-			})
-			.then((response) => {
-				console.log(`Text body of ${title} received from ESV API`);
-				const body = response.data.passages[0];
-				config.dispatch(
-					textFetchSucceeded({
-						book: book === 'Psalms' ? 'Psalm' : book,
-						chapter,
-						body,
-					})
-				);
-				const newAudioUrl = `https://audio.esv.org/hw/mq/${book} ${chapter}.mp3`;
-				config.setTextAudio(new Audio(newAudioUrl));
-				addToTextArray(title, body);
-			})
-			.catch((error) => {
-				console.log(error);
-				config.dispatch(textFetchFailed());
-			});
-	};
-
 	const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		e.preventDefault();
 		//Check local storage
@@ -179,7 +120,7 @@ export const SearchBible = () => {
 			//If it does not exist in local storage, make an API call, and store the returned text
 			console.log(`${title} not found in local storage`);
 			console.log('Making a call to the ESV API');
-			fetchTextFromESVAPI(search.book, search.chapter, utilityConfig);
+			dispatch(fetchTextFromESVAPI(search.book, search.chapter, utilityConfig));
 		}
 	};
 

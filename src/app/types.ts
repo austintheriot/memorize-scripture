@@ -1,8 +1,8 @@
+import { Dispatch } from '@reduxjs/toolkit';
+
 export type SetAudioType = React.Dispatch<
 	React.SetStateAction<HTMLAudioElement>
 >;
-
-export type Dispatch = (action: any) => void;
 
 export interface UtilityConfig {
 	textAudio: HTMLAudioElement;
