@@ -32,9 +32,9 @@ import { Loading } from './components/Loading/Loading';
 import { ErrorBoundary } from './components/ErrorBoundary/ErrorBoundary';
 const Learn = lazy(() => import('./views/Learn/Learn'));
 const Review = lazy(() => import('./views/Review/Review'));
-const Tools = lazy(() => import('./views/Tools/Tools'));
 const About = lazy(() => import('./views/About/About'));
 const Contact = lazy(() => import('./views/Contact/Contact'));
+const Tools = lazy(() => import('./views/Tools/Tools'));
 
 export default function App() {
 	const audioState = useSelector(selectAudioSettings);
