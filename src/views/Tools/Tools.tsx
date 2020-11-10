@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, Fragment } from 'react';
 import styles from './Tools.module.scss';
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -49,12 +49,12 @@ export default () => {
 					<p className={styles.condensedLine}>
 						{text.condenseToolOutput.map((line, i) =>
 							line === '' ? (
-								<br />
+								<br key={new Date().getDate().toString() + i.toString()} />
 							) : (
-								<>
+								<Fragment key={new Date().getDate().toString() + line}>
 									{line}
 									<br />
-								</>
+								</Fragment>
 							)
 						)}
 					</p>
