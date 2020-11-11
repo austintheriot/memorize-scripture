@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import { render, screen, waitForElement } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ReactDOM from 'react-dom';
@@ -16,6 +17,8 @@ const firebaseContext = {
 	app,
 	analytics,
 };
+
+jest.mock('axios');
 
 const MockedLearn = () => {
 	return (
@@ -38,48 +41,92 @@ describe('Learn', () => {
 
 		test('Should have title Learn', () => {
 			render(<MockedLearn />);
-			const title = screen.getByRole('heading', { name: /Learn/i });
-			expect(title).toHaveTextContent('Learn');
+			screen.getByRole('heading', { name: /Learn/ });
 		});
 
-		test('Should render a search button', async () => {
+		test('Should render Psalm 23 title', () => {
 			render(<MockedLearn />);
-			const search = screen.getByRole('button', { name: /search/i });
-			expect(search).toBeInTheDocument();
+			screen.getByRole('heading', { name: /Psalm 23/ });
+		});
+
+		test('Should render a select input called Book', async () => {
+			render(<MockedLearn />);
+			screen.getByLabelText('Book');
+		});
+
+		test('getByLabelText Book should be the same as getByRole Book', async () => {
+			render(<MockedLearn />);
+			const book = screen.getByLabelText('Book');
+			const bookCopy = screen.getByRole('button', { name: /book/i });
+			expect(book).toEqual(bookCopy);
+		});
+
+		test('Should render a select input called Chapter', async () => {
+			render(<MockedLearn />);
+			screen.getByLabelText('Chapter');
+		});
+
+		test('getByLabelText Chapter should be the same as getByRole Chapter', async () => {
+			render(<MockedLearn />);
+			const chapter = screen.getByLabelText('Chapter');
+			const chapterCopy = screen.getByRole('button', { name: /chapter/i });
+			expect(chapter).toEqual(chapterCopy);
+		});
+
+		test('Should render a button called Search', async () => {
+			render(<MockedLearn />);
+			screen.getByRole('button', { name: /search/i });
 		});
 	});
 
-	describe('ESV API Call', () => {
-		test('Should show loading screen, then passage', async () => {
+	describe('ESV API Call (e2e)', () => {
+		test('Should load new passage via the ESV API', async () => {
 			render(<MockedLearn />);
 
 			//Initialized with Psalm 23 from file
-			let Psalm23 = screen.getByText(/A Psalm of David/i);
+			let Psalm23: HTMLElement | null = screen.getByText(/A Psalm of David/i);
 			expect(Psalm23).toBeInTheDocument();
+
 			//No loading screen initially
 			let loadingScreen = screen.queryByTestId('text-loading');
-			expect(loadingScreen).toBeNull();
+			expect(loadingScreen).not.toBeInTheDocument();
+
+			const book = screen.getByRole('button', { name: /book/i });
+			const chapter = screen.getByRole('button', { name: /chapter/i });
+			const search = screen.getByRole('button', { name: /search/i });
+
+			//Select the book of Genesis
+			userEvent.click(book);
+			let genesis = await screen.getByText(/Genesis/i);
+			userEvent.click(genesis);
+
+			//Select chapter 1
+			userEvent.click(chapter);
+			let chapter1 = await screen.getByText('3');
+			userEvent.click(chapter1);
 
 			//User clicks search button (searching for Psalm 23)
-			const search = screen.getByRole('button', { name: /search/i });
 			userEvent.click(search);
 
+			// useFetch should be called to get data
+			expect(axios.get).toHaveBeenCalled();
+
 			//State is updated, loading screen appears
-			//Psalm 23 disappears
 			loadingScreen = await screen.getByTestId('text-loading');
+
+			//Psalm 23 has already disappeared
 			Psalm23 = screen.queryByText(/A Psalm of David/i);
-			expect(loadingScreen).toBeInTheDocument();
-			expect(Psalm23).toBeNull();
+			expect(Psalm23).not.toBeInTheDocument();
 
-			//Psalm 23 appears after API fetch
-			Psalm23 = await waitForElement(() =>
-				screen.getByText(/A Psalm of David/i)
+			//Genesis 1 appears after API fetch
+			const Genesis1 = await waitForElement(() =>
+				screen.getByText(/Now the serpent/i)
 			);
-			expect(Psalm23).toBeInTheDocument();
+			expect(Genesis1).toBeInTheDocument();
 
-			//loading screen disappears
+			//loading screen has disappeared
 			loadingScreen = screen.queryByTestId('text-loading');
-			expect(loadingScreen).toBeNull();
+			expect(loadingScreen).not.toBeInTheDocument();
 		});
 	});
 });
