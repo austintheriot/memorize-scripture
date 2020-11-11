@@ -156,7 +156,7 @@ describe('<Learn/>', () => {
 			userEvent.click(search);
 
 			// useFetch should be called to get data
-			expect(axios.get).toHaveBeenCalled();
+			expect(axios.get).toHaveBeenCalledTimes(1);
 
 			//Psalm 23 should disappear
 			const Psalm23 = screen.queryByText(/A Psalm of David/i);
@@ -196,7 +196,7 @@ describe('<Learn/>', () => {
 			userEvent.click(search);
 
 			// useFetch should be called to get data
-			expect(axios.get).toHaveBeenCalled();
+			expect(axios.get).toHaveBeenCalledTimes(1);
 
 			//Psalm 23 should disappear
 			const Psalm23 = screen.queryByText(/A Psalm of David/i);
