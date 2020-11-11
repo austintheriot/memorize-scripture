@@ -20,7 +20,7 @@ const firebaseContext = {
 
 jest.mock('axios');
 
-const MockedLearn = () => {
+const LearnWrapper = () => {
 	return (
 		<FirebaseContext.Provider value={firebaseContext}>
 			<Provider store={store}>
@@ -32,56 +32,56 @@ const MockedLearn = () => {
 	);
 };
 
-describe('Learn', () => {
-	describe('Components', () => {
+describe('<Learn/>', () => {
+	describe('Inner Components', () => {
 		test('Should render without crashing', () => {
 			const div = document.createElement('div');
-			ReactDOM.render(<MockedLearn />, div);
+			ReactDOM.render(<LearnWrapper />, div);
 		});
 
 		test('Should have title Learn', () => {
-			render(<MockedLearn />);
+			render(<LearnWrapper />);
 			screen.getByRole('heading', { name: /Learn/ });
 		});
 
 		test('Should render Psalm 23 title', () => {
-			render(<MockedLearn />);
+			render(<LearnWrapper />);
 			screen.getByRole('heading', { name: /Psalm 23/ });
 		});
 
 		test('Should render a select input called Book', async () => {
-			render(<MockedLearn />);
+			render(<LearnWrapper />);
 			screen.getByLabelText('Book');
 		});
 
 		test('getByLabelText Book should be the same as getByRole Book', async () => {
-			render(<MockedLearn />);
+			render(<LearnWrapper />);
 			const book = screen.getByLabelText('Book');
 			const bookCopy = screen.getByRole('button', { name: /book/i });
 			expect(book).toEqual(bookCopy);
 		});
 
 		test('Should render a select input called Chapter', async () => {
-			render(<MockedLearn />);
+			render(<LearnWrapper />);
 			screen.getByLabelText('Chapter');
 		});
 
 		test('getByLabelText Chapter should be the same as getByRole Chapter', async () => {
-			render(<MockedLearn />);
+			render(<LearnWrapper />);
 			const chapter = screen.getByLabelText('Chapter');
 			const chapterCopy = screen.getByRole('button', { name: /chapter/i });
 			expect(chapter).toEqual(chapterCopy);
 		});
 
 		test('Should render a button called Search', async () => {
-			render(<MockedLearn />);
+			render(<LearnWrapper />);
 			screen.getByRole('button', { name: /search/i });
 		});
 	});
 
-	describe('ESV API Call (e2e)', () => {
+	describe('End-to-End Tests', () => {
 		test('Should load new passage via the ESV API', async () => {
-			render(<MockedLearn />);
+			render(<LearnWrapper />);
 
 			//Initialized with Psalm 23 from file
 			let Psalm23: HTMLElement | null = screen.getByText(/A Psalm of David/i);
@@ -127,6 +127,86 @@ describe('Learn', () => {
 			//loading screen has disappeared
 			loadingScreen = screen.queryByTestId('text-loading');
 			expect(loadingScreen).not.toBeInTheDocument();
+		});
+
+		test('Should show error message if API call fails (network error)', async () => {
+			render(<LearnWrapper />);
+			const book = screen.getByRole('button', { name: /book/i });
+			const chapter = screen.getByRole('button', { name: /chapter/i });
+			const search = screen.getByRole('button', { name: /search/i });
+
+			//Select the book of Ephesians
+			userEvent.click(book);
+			let genesis = await screen.getByText(/Ephesians/i);
+			userEvent.click(genesis);
+
+			//Select chapter 1
+			userEvent.click(chapter);
+			let chapter1 = await screen.getByText('1');
+			userEvent.click(chapter1);
+
+			axios.get = jest
+				.fn()
+				.mockImplementationOnce(() =>
+					Promise.reject('This is a fake network error.')
+				)
+				.mockName('Unsuccessful ESV API call (simulated network error');
+
+			//User clicks search button (searching for Psalm 23)
+			userEvent.click(search);
+
+			// useFetch should be called to get data
+			expect(axios.get).toHaveBeenCalled();
+
+			//Psalm 23 should disappear
+			const Psalm23 = screen.queryByText(/A Psalm of David/i);
+			expect(Psalm23).not.toBeInTheDocument();
+
+			//Error message appears when API call fails
+			const errorMessage = await waitForElement(() =>
+				screen.getByText('Sorry, there was an error loading this passage.')
+			);
+			expect(errorMessage).toBeInTheDocument();
+		});
+
+		test('Should show error message when API call fails (API error)', async () => {
+			render(<LearnWrapper />);
+			const book = screen.getByRole('button', { name: /book/i });
+			const chapter = screen.getByRole('button', { name: /chapter/i });
+			const search = screen.getByRole('button', { name: /search/i });
+
+			//Select the book of Ephesians
+			userEvent.click(book);
+			let genesis = await screen.getByText(/Philippians/i);
+			userEvent.click(genesis);
+
+			//Select chapter 1
+			userEvent.click(chapter);
+			let chapter1 = await screen.getByText('2');
+			userEvent.click(chapter1);
+
+			axios.get = jest
+				.fn()
+				.mockImplementationOnce(() =>
+					Promise.reject('This is a fake API error.')
+				)
+				.mockName('Unsuccessful ESV API call (simulated API error');
+
+			//User clicks search button (searching for Psalm 23)
+			userEvent.click(search);
+
+			// useFetch should be called to get data
+			expect(axios.get).toHaveBeenCalled();
+
+			//Psalm 23 should disappear
+			const Psalm23 = screen.queryByText(/A Psalm of David/i);
+			expect(Psalm23).not.toBeInTheDocument();
+
+			//Error message appears when API call fails
+			const errorMessage = await waitForElement(() =>
+				screen.getByText('Sorry, there was an error loading this passage.')
+			);
+			expect(errorMessage).toBeInTheDocument();
 		});
 	});
 });

@@ -13,7 +13,11 @@ const axiosReponse: AxiosResponse = {
 
 export default {
 	default: {
-		get: jest.fn().mockImplementation(() => Promise.resolve(axiosReponse)),
+		get: jest
+			.fn(() => Promise.resolve(axiosReponse))
+			.mockName('Successful ESV API call'),
 	},
-	get: jest.fn(() => Promise.resolve(axiosReponse)),
+	get: jest
+		.fn(() => Promise.resolve(axiosReponse))
+		.mockName('Successful ESV API call'),
 };
