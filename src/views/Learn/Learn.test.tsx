@@ -12,6 +12,7 @@ import { app, analytics, FirebaseContext } from '../../app/firebaseContext';
 import { Provider } from 'react-redux';
 import store from '../../app/store';
 import { MemoryRouter } from 'react-router-dom';
+import { act } from 'react-dom/test-utils';
 
 const firebaseContext = {
 	app,
@@ -49,33 +50,43 @@ describe('<Learn/>', () => {
 			screen.getByRole('heading', { name: /Psalm 23/ });
 		});
 
-		test('Should render a select input called Book', async () => {
+		test('Should render a select input called Book', () => {
 			render(<LearnWrapper />);
 			screen.getByLabelText('Book');
 		});
 
-		test('getByLabelText Book should be the same as getByRole Book', async () => {
+		test('getByLabelText Book should be the same as getByRole Book', () => {
 			render(<LearnWrapper />);
 			const book = screen.getByLabelText('Book');
 			const bookCopy = screen.getByRole('button', { name: /book/i });
 			expect(book).toEqual(bookCopy);
 		});
 
-		test('Should render a select input called Chapter', async () => {
+		test('Should render a select input called Chapter', () => {
 			render(<LearnWrapper />);
 			screen.getByLabelText('Chapter');
 		});
 
-		test('getByLabelText Chapter should be the same as getByRole Chapter', async () => {
+		test('getByLabelText Chapter should be the same as getByRole Chapter', () => {
 			render(<LearnWrapper />);
 			const chapter = screen.getByLabelText('Chapter');
 			const chapterCopy = screen.getByRole('button', { name: /chapter/i });
 			expect(chapter).toEqual(chapterCopy);
 		});
 
-		test('Should render a button called Search', async () => {
+		test('Should render a button called Search', () => {
 			render(<LearnWrapper />);
 			screen.getByRole('button', { name: /search/i });
+		});
+
+		test('Should render a Most Recent <summary> element', () => {
+			render(<LearnWrapper />);
+			screen.getByTestId('most-recent-details');
+		});
+
+		test('Should render a Most Recent <details> element', () => {
+			render(<LearnWrapper />);
+			screen.getByTestId('most-recent-details');
 		});
 	});
 
@@ -96,14 +107,22 @@ describe('<Learn/>', () => {
 			const search = screen.getByRole('button', { name: /search/i });
 
 			//Select the book of Genesis
-			userEvent.click(book);
+			await act(async () => {
+				userEvent.click(book);
+			});
 			let genesis = await screen.getByText(/Genesis/i);
-			userEvent.click(genesis);
+			await act(async () => {
+				userEvent.click(genesis);
+			});
 
 			//Select chapter 1
-			userEvent.click(chapter);
+			await act(async () => {
+				userEvent.click(chapter);
+			});
 			let chapter1 = await screen.getByText('3');
-			userEvent.click(chapter1);
+			await act(async () => {
+				userEvent.click(chapter1);
+			});
 
 			//User clicks search button (searching for Psalm 23)
 			userEvent.click(search);
@@ -136,14 +155,22 @@ describe('<Learn/>', () => {
 			const search = screen.getByRole('button', { name: /search/i });
 
 			//Select the book of Ephesians
-			userEvent.click(book);
+			await act(async () => {
+				userEvent.click(book);
+			});
 			let genesis = await screen.getByText(/Ephesians/i);
-			userEvent.click(genesis);
+			await act(async () => {
+				userEvent.click(genesis);
+			});
 
-			//Select chapter 1
-			userEvent.click(chapter);
-			let chapter1 = await screen.getByText('1');
-			userEvent.click(chapter1);
+			//Select chapter 6
+			await act(async () => {
+				userEvent.click(chapter);
+			});
+			let chapter6 = await screen.getByText('6');
+			await act(async () => {
+				userEvent.click(chapter6);
+			});
 
 			axios.get = jest
 				.fn()
@@ -153,7 +180,9 @@ describe('<Learn/>', () => {
 				.mockName('Unsuccessful ESV API call (simulated network error');
 
 			//User clicks search button (searching for Psalm 23)
-			userEvent.click(search);
+			await act(async () => {
+				userEvent.click(search);
+			});
 
 			// useFetch should be called to get data
 			expect(axios.get).toHaveBeenCalledTimes(1);
@@ -176,14 +205,22 @@ describe('<Learn/>', () => {
 			const search = screen.getByRole('button', { name: /search/i });
 
 			//Select the book of Ephesians
-			userEvent.click(book);
+			await act(async () => {
+				userEvent.click(book);
+			});
 			let genesis = await screen.getByText(/Philippians/i);
-			userEvent.click(genesis);
+			await act(async () => {
+				userEvent.click(genesis);
+			});
 
 			//Select chapter 1
-			userEvent.click(chapter);
+			await act(async () => {
+				userEvent.click(chapter);
+			});
 			let chapter1 = await screen.getByText('2');
-			userEvent.click(chapter1);
+			await act(async () => {
+				userEvent.click(chapter1);
+			});
 
 			axios.get = jest
 				.fn()
@@ -193,7 +230,9 @@ describe('<Learn/>', () => {
 				.mockName('Unsuccessful ESV API call (simulated API error');
 
 			//User clicks search button (searching for Psalm 23)
-			userEvent.click(search);
+			await act(async () => {
+				userEvent.click(search);
+			});
 
 			// useFetch should be called to get data
 			expect(axios.get).toHaveBeenCalledTimes(1);
