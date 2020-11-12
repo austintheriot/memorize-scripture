@@ -1,98 +1,73 @@
 import React from 'react';
 import axios from 'axios';
-import { render, screen, waitForElement } from '@testing-library/react';
+import { render, screen, waitForElement } from '../../utils/test-utils';
 import userEvent from '@testing-library/user-event';
-import ReactDOM from 'react-dom';
 import Learn from './Learn';
 
-//Firebase Config
-import { app, analytics, FirebaseContext } from '../../app/firebaseContext';
-
 //Redux
-import { Provider } from 'react-redux';
-import store from '../../app/store';
-import { MemoryRouter } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
 
-const firebaseContext = {
-	app,
-	analytics,
-};
-
 jest.mock('axios');
-
-const LearnWrapper = () => {
-	return (
-		<FirebaseContext.Provider value={firebaseContext}>
-			<Provider store={store}>
-				<MemoryRouter>
-					<Learn />
-				</MemoryRouter>
-			</Provider>
-		</FirebaseContext.Provider>
-	);
-};
 
 describe('<Learn/>', () => {
 	describe('Inner Components', () => {
 		test('Should render without crashing', () => {
-			const div = document.createElement('div');
-			ReactDOM.render(<LearnWrapper />, div);
+			render(<Learn />);
 		});
 
 		test('Should have title Learn', () => {
-			render(<LearnWrapper />);
+			render(<Learn />);
 			screen.getByRole('heading', { name: /Learn/ });
 		});
 
 		test('Should render Psalm 23 title', () => {
-			render(<LearnWrapper />);
+			render(<Learn />);
 			screen.getByRole('heading', { name: /Psalm 23/ });
 		});
 
 		test('Should render a select input called Book', () => {
-			render(<LearnWrapper />);
+			render(<Learn />);
 			screen.getByLabelText('Book');
 		});
 
 		test('getByLabelText Book should be the same as getByRole Book', () => {
-			render(<LearnWrapper />);
+			render(<Learn />);
 			const book = screen.getByLabelText('Book');
 			const bookCopy = screen.getByRole('button', { name: /book/i });
 			expect(book).toEqual(bookCopy);
 		});
 
 		test('Should render a select input called Chapter', () => {
-			render(<LearnWrapper />);
+			render(<Learn />);
 			screen.getByLabelText('Chapter');
 		});
 
 		test('getByLabelText Chapter should be the same as getByRole Chapter', () => {
-			render(<LearnWrapper />);
+			render(<Learn />);
 			const chapter = screen.getByLabelText('Chapter');
 			const chapterCopy = screen.getByRole('button', { name: /chapter/i });
 			expect(chapter).toEqual(chapterCopy);
 		});
 
 		test('Should render a button called Search', () => {
-			render(<LearnWrapper />);
+			render(<Learn />);
 			screen.getByRole('button', { name: /search/i });
 		});
 
 		test('Should render a Most Recent <summary> element', () => {
-			render(<LearnWrapper />);
+			render(<Learn />);
 			screen.getByTestId('most-recent-details');
 		});
 
 		test('Should render a Most Recent <details> element', () => {
-			render(<LearnWrapper />);
+			render(<Learn />);
 			screen.getByTestId('most-recent-details');
 		});
 	});
 
 	describe('End-to-End Tests', () => {
 		test('Should load new passage via the ESV API', async () => {
-			render(<LearnWrapper />);
+			render(<Learn />);
 
 			//Initialized with Psalm 23 from file
 			let Psalm23: HTMLElement | null = screen.getByText(/A Psalm of David/i);
@@ -149,7 +124,7 @@ describe('<Learn/>', () => {
 		});
 
 		test('Should show error message if API call fails (network error)', async () => {
-			render(<LearnWrapper />);
+			render(<Learn />);
 			const book = screen.getByRole('button', { name: /book/i });
 			const chapter = screen.getByRole('button', { name: /chapter/i });
 			const search = screen.getByRole('button', { name: /search/i });
@@ -199,7 +174,7 @@ describe('<Learn/>', () => {
 		});
 
 		test('Should show error message when API call fails (API error)', async () => {
-			render(<LearnWrapper />);
+			render(<Learn />);
 			const book = screen.getByRole('button', { name: /book/i });
 			const chapter = screen.getByRole('button', { name: /chapter/i });
 			const search = screen.getByRole('button', { name: /search/i });
