@@ -148,11 +148,13 @@ export const Comparison = () => {
 			<h3 className={styles.resultsLabel}>Results</h3>
 			<div className={styles.resultsContainer}>
 				{textArray.length === 0 ? (
-					<p className={styles.placeholder}>
+					<p className={styles.placeholder} data-testid='empty-results'>
 						Your corrected text will appear here
 					</p>
 				) : (
-					<p className={styles.resultsP}>{textArray}</p>
+					<p className={styles.resultsP} data-testid='filledin-results'>
+						{textArray}
+					</p>
 				)}
 			</div>
 			<h3 className={styles.statsLabel}>Stats:</h3>
