@@ -1,7 +1,8 @@
 import '@testing-library/jest-dom/extend-expect';
 
 beforeEach(() => {
-	window.scrollTo = jest.fn();
+	global.scrollTo = jest.fn();
+	global.console.log = jest.fn();
 
 	HTMLMediaElement.prototype.play = jest.fn();
 	HTMLMediaElement.prototype.pause = jest.fn();
