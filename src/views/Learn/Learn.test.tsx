@@ -4,8 +4,6 @@ import { render, screen, waitForElement } from '../../utils/test-utils';
 import userEvent from '@testing-library/user-event';
 import Learn from './Learn';
 
-jest.mock('axios');
-
 describe('<Learn/>', () => {
 	describe('Inner Components', () => {
 		test('Should render without crashing', () => {
