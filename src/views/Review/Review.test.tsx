@@ -35,6 +35,17 @@ describe('<Review/>', () => {
 			).toBeInTheDocument();
 		});
 
+		test('Should not show placeholder texts after text is entered', () => {
+			const enteredText = 'This is an example.';
+			userEvent.type(screen.getByLabelText(/Input/i), enteredText);
+			expect(
+				screen.getByPlaceholderText('Enter the text of Psalm 23 here')
+			).not.toHaveTextContent('Enter the text of Psalm 23 here');
+			expect(
+				screen.queryByText('Your corrected text will appear here')
+			).not.toBeInTheDocument();
+		});
+
 		describe('Entering some correct example text', () => {
 			const enteredText = 'A Psalm of David.';
 
