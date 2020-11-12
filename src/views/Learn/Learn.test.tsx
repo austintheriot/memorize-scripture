@@ -1,6 +1,6 @@
 import React from 'react';
 import mockAxios from 'axios';
-import { render, screen, waitForElement } from '../../utils/test-utils';
+import { render, screen, waitForElement } from 'utils/test-utils';
 import userEvent from '@testing-library/user-event';
 import Learn from './Learn';
 
