@@ -1,10 +1,8 @@
 import React from 'react';
-import axios from 'axios';
+import mockAxios from 'axios';
 import { render, screen, waitForElement } from '../../utils/test-utils';
 import userEvent from '@testing-library/user-event';
 import Learn from './Learn';
-
-jest.mock('axios');
 
 describe('<Learn/>', () => {
 	describe('Inner Components', () => {
@@ -71,25 +69,20 @@ describe('<Learn/>', () => {
 			const search = screen.getByRole('button', { name: /search/i });
 
 			//Select the book of Genesis
-
 			userEvent.click(book);
-
 			let genesis = await screen.getByText(/Genesis/i);
-
 			userEvent.click(genesis);
 
 			//Select chapter 1
-
 			userEvent.click(chapter);
 			let chapter1 = await screen.getByText('3');
-
 			userEvent.click(chapter1);
 
 			//User clicks search button (searching for Psalm 23)
 			userEvent.click(search);
 
 			// useFetch should be called to get data
-			expect(axios.get).toHaveBeenCalled();
+			expect(mockAxios.get).toHaveBeenCalled();
 
 			//State is updated, loading screen appears
 			loadingScreen = await screen.getByTestId('text-loading');
@@ -117,16 +110,15 @@ describe('<Learn/>', () => {
 
 			//Select the book of Ephesians
 			userEvent.click(book);
-			let genesis = await screen.getByText(/Ephesians/i);
-
-			userEvent.click(genesis);
+			let ephesians = await screen.getByText(/Ephesians/i);
+			userEvent.click(ephesians);
 
 			//Select chapter 6
 			userEvent.click(chapter);
 			let chapter6 = await screen.getByText('6');
 
 			userEvent.click(chapter6);
-			axios.get = jest
+			mockAxios.get = jest
 				.fn()
 				.mockImplementationOnce(() =>
 					Promise.reject('This is a fake network error.')
@@ -137,7 +129,7 @@ describe('<Learn/>', () => {
 			userEvent.click(search);
 
 			// useFetch should be called to get data
-			expect(axios.get).toHaveBeenCalledTimes(1);
+			expect(mockAxios.get).toHaveBeenCalledTimes(1);
 
 			//Psalm 23 should disappear
 			const Psalm23 = screen.queryByText(/A Psalm of David/i);
@@ -156,17 +148,17 @@ describe('<Learn/>', () => {
 			const chapter = screen.getByRole('button', { name: /chapter/i });
 			const search = screen.getByRole('button', { name: /search/i });
 
-			//Select the book of Ephesians
+			//Select the book of Philippians
 			userEvent.click(book);
-			let genesis = await screen.getByText(/Philippians/i);
-			userEvent.click(genesis);
+			let philippians = await screen.getByText(/Philippians/i);
+			userEvent.click(philippians);
 
 			//Select chapter 1
 			userEvent.click(chapter);
 			let chapter1 = await screen.getByText('2');
 			userEvent.click(chapter1);
 
-			axios.get = jest
+			mockAxios.get = jest
 				.fn()
 				.mockImplementationOnce(() =>
 					Promise.reject('This is a fake API error.')
@@ -177,7 +169,7 @@ describe('<Learn/>', () => {
 			userEvent.click(search);
 
 			// useFetch should be called to get data
-			expect(axios.get).toHaveBeenCalledTimes(1);
+			expect(mockAxios.get).toHaveBeenCalledTimes(1);
 
 			//Psalm 23 should disappear
 			const Psalm23 = screen.queryByText(/A Psalm of David/i);
