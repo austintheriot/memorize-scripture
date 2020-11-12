@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios';
-import { Genesis3 } from '../../../app/testChapters';
+import { Genesis3 } from 'app/testChapters';
 
 const axiosReponse: AxiosResponse = {
 	data: {
