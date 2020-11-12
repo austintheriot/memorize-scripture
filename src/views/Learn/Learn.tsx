@@ -5,11 +5,6 @@ import { FirebaseContext } from '../../app/firebaseContext';
 import { AudioContext } from '../../app/audioContext';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectText } from '../../app/textSlice';
-import {
-	spacebarPressed,
-	leftArrowPressed,
-	rightArrowPressed,
-} from '../../app/audioSlice';
 
 //Routing
 import { Prompt } from 'react-router';
@@ -29,6 +24,8 @@ import { TextCondensed } from './TextCondensed/TextCondensed';
 //Utilities
 import { TextLoading } from '../../components/TextLoading/TextLoading';
 import { Copyright } from '../../components/Copyright/Copyright';
+import { UtilityConfig } from 'app/types';
+import { handleKeyPress } from 'app/audioCommands';
 
 //types
 
@@ -38,45 +35,20 @@ export default () => {
 	}, []);
 
 	const { analytics } = useContext(FirebaseContext);
-	const { textAudio } = useContext(AudioContext);
+	const { textAudio, setTextAudio } = useContext(AudioContext);
 	const dispatch = useDispatch();
 	const text = useSelector(selectText);
-
-	const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-		const key = e.key;
-		console.log(key);
-		if (textAudio.readyState !== 4) return;
-		if (key === ' ') {
-			e.preventDefault();
-			analytics.logEvent('space_bar_pressed');
-			if (textAudio.paused) {
-				textAudio.play();
-			} else {
-				textAudio.pause();
-			}
-			dispatch(spacebarPressed());
-		}
-		if (key === 'ArrowLeft') {
-			analytics.logEvent('left_arrow_pressed');
-			const targetTime = Math.max(textAudio.currentTime - 5, 0);
-			dispatch(leftArrowPressed(targetTime / textAudio.duration));
-			textAudio.currentTime = targetTime;
-		}
-		if (key === 'ArrowRight') {
-			analytics.logEvent('right_arrow_pressed');
-			const targetTime = Math.min(
-				textAudio.currentTime + 5,
-				textAudio.duration - 0.01
-			);
-			dispatch(rightArrowPressed(targetTime / textAudio.duration));
-			textAudio.currentTime = targetTime;
-		}
+	const config: UtilityConfig = {
+		dispatch,
+		textAudio,
+		setTextAudio,
+		analytics,
 	};
 
 	return (
 		<ErrorBoundary>
 			<div
-				onKeyDown={handleKeyDown}
+				onKeyDown={(e) => handleKeyPress(e, config)}
 				tabIndex={0}
 				className={styles.LearnContainer}>
 				<Prompt
