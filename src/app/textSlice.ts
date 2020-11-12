@@ -2,10 +2,7 @@ import { createSlice, Dispatch } from '@reduxjs/toolkit';
 import { TextSlice, TextState, UtilityConfig } from './types';
 import { Psalm23, Psalm23Split, Psalm23Condensed } from './Psalm23';
 import { breakFullTextIntoLines, condenseText } from './condense';
-import {
-	splitTitleIntoBookAndChapter,
-	addToTextArray,
-} from '../views/Learn/storage';
+import { splitTitleIntoBookAndChapter, addToTextArray } from './storage';
 
 import axios from 'axios';
 import { ESVApiKey } from './config';

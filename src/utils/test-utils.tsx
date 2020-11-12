@@ -3,7 +3,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 
 //Firebase Config
-import { app, analytics, FirebaseContext } from '../app/firebaseContext';
+import { app, FirebaseContext, analytics } from '../app/firebaseContext';
 
 //Redux
 import { Provider } from 'react-redux';

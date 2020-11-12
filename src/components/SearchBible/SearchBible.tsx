@@ -24,7 +24,7 @@ import searchIcon from '../../icons/search.svg';
 
 //Utilities
 import { bookTitles } from '../../views/Learn/bible';
-import { getTextBody, addToTextArray } from '../../views/Learn/storage';
+import { getTextBody, addToTextArray } from '../../app/storage';
 
 //types
 import { UtilityConfig } from '../../app/types';

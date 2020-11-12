@@ -1,15 +1,17 @@
 import '@testing-library/jest-dom/extend-expect';
 
-let assignMock: any = null;
-
 beforeEach(() => {
-	//Prevent error on window.scrollTo() not supported
-	assignMock = jest.fn();
-	delete window.scrollTo;
-	window.scrollTo = assignMock;
-});
+	window.scrollTo = jest.fn();
 
-afterEach(() => {
-	//delete scrollTo mock function
-	assignMock.mockClear();
+	HTMLMediaElement.prototype.play = jest.fn();
+	HTMLMediaElement.prototype.pause = jest.fn();
+	HTMLMediaElement.prototype.load = jest.fn();
+
+	const localStorageMock = {
+		getItem: jest.fn(),
+		setItem: jest.fn(),
+		removeItem: jest.fn(),
+		clear: jest.fn(),
+	};
+	global.localStorage = localStorageMock as any;
 });
