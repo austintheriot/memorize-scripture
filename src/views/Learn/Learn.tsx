@@ -82,7 +82,9 @@ export default () => {
 							<TextCondensed />
 						) : (
 							//Original
-							<p className={styles.fullText}>{text.body}</p>
+							<p className={styles.fullText} data-testid='text-original'>
+								{text.body}
+							</p>
 						)
 					}
 				</div>
