@@ -15,6 +15,7 @@
 		"@types/react-router-dom": "^5.1.6",
 		"@types/react-scroll": "^1.8.2",
 		"axios": "^0.20.0",
+		"cypress": "^5.6.0",
 		"firebase": "^7.23.0",
 		"node-sass": "^4.14.1",
 		"react": "^16.13.1",
@@ -30,7 +31,8 @@
 		"start": "react-scripts start",
 		"build": "react-scripts build",
 		"test": "react-scripts test",
-		"eject": "react-scripts eject"
+		"eject": "react-scripts eject",
+		"cypress": "cypress open"
 	},
 	"eslintConfig": {
 		"extends": "react-app"
