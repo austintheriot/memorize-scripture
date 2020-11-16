@@ -130,7 +130,7 @@ export const SearchBible = () => {
 		chapterArray.push(i);
 	}
 	chapterArray = chapterArray.map((el) => (
-		<MenuItem value={el.toString()} key={el}>
+		<MenuItem value={el.toString()} key={el} data-testid={el}>
 			{el}
 		</MenuItem>
 	));
@@ -144,6 +144,7 @@ export const SearchBible = () => {
 				<Select
 					className={classes.select}
 					labelId='bible-book'
+					data-testid='select-book'
 					value={search.book}
 					onChange={handleBookChange}>
 					{bookTitles.map((bookString) => (
@@ -160,6 +161,7 @@ export const SearchBible = () => {
 				<Select
 					className={classes.select}
 					labelId='bible-chapter'
+					data-testid='select-chapter'
 					value={search.chapter}
 					onChange={handleChapterChange}>
 					{chapterArray}
@@ -168,7 +170,8 @@ export const SearchBible = () => {
 			<button
 				className={styles.search}
 				onClick={handleSubmit}
-				aria-label={'Search'}>
+				aria-label={'Search'}
+				data-testid='search'>
 				<img src={searchIcon} alt='search' className={styles.searchIcon} />
 			</button>
 		</form>
