@@ -118,12 +118,14 @@ export const Controls = () => {
 			{/* BUTTON CONTAINER */}
 			<div className={styles.buttonContainer}>
 				<button
+					aria-label='speed'
 					data-info='playback speed'
 					className={styles.playSpeedButton}
 					onMouseDown={handleSpeedChange}>
 					<p className={styles.icon}>x{audioSettings.speed}</p>
 				</button>
 				<button
+					aria-label='beginning'
 					data-info='skip to beginning'
 					className={styles.buttons}
 					onMouseDown={handleBeginning}>
@@ -135,6 +137,7 @@ export const Controls = () => {
 				</button>
 
 				<button
+					aria-label='rewind'
 					data-info='back 5s'
 					className={styles.buttons}
 					onMouseDown={handleRewind}>
@@ -148,13 +151,18 @@ export const Controls = () => {
 				{/* PLAY BUTTON */}
 				{audioSettings.hasError ? (
 					/* HAS ERROR */
-					<button data-info='error' className={styles.buttons} disabled={true}>
+					<button
+						data-info='error'
+						aria-label='error'
+						className={styles.buttons}
+						disabled={true}>
 						<img src={errorIcon} alt={'loading'} className={styles.icon} />
 					</button>
 				) : audioSettings.isReady ? (
 					audioSettings.isPlaying ? (
 						/* NO ERROR, IS READY AND PLAYING */
 						<button
+							aria-label='pause'
 							data-info='pause'
 							className={styles.buttons}
 							onMouseDown={handlePause}>
@@ -163,6 +171,7 @@ export const Controls = () => {
 					) : (
 						/* NO ERROR, IS READY AND PAUSED */
 						<button
+							aria-label='play'
 							data-info='play'
 							className={styles.buttons}
 							onMouseDown={handlePlay}>
@@ -173,6 +182,7 @@ export const Controls = () => {
 					/* NO ERROR, IS NOT READY (LOADING) */
 					<button
 						data-info='loading'
+						aria-label='loading'
 						className={styles.buttons}
 						disabled={true}>
 						<img src={loadingIcon} alt={'loading'} className={styles.loading} />
@@ -180,11 +190,15 @@ export const Controls = () => {
 				)}
 				<button
 					data-info='forward 5s'
+					aria-label='forward'
 					className={styles.buttons}
 					onMouseDown={handleForward}>
 					<img src={forwardIcon} alt={'forward 5s'} className={styles.icon} />
 				</button>
 				<button
+					aria-label={
+						text.showCondensed ? 'show original text' : 'show condensed text'
+					}
 					data-info='change view'
 					className={styles.buttons}
 					onMouseDown={handleViewChange}>
