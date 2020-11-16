@@ -14,11 +14,7 @@
 		"isolatedModules": true,
 		"noEmit": true,
 		"jsx": "react",
-		"baseUrl": "src",
-		"paths": {
-			"jquery": ["../node_modules"]
-		},
-		"types": ["cypress"]
+		"baseUrl": "src"
 	},
-	"include": ["**/*.*"]
+	"include": ["src"]
 }
