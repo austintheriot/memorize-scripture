@@ -24,3 +24,7 @@ yarn-error.log*
 
 notes.txt
 config.ts
+
+#Cypress
+/videos
+/screenshots
