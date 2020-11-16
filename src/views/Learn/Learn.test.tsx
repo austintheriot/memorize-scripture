@@ -91,11 +91,11 @@ describe('<Learn/>', () => {
 			Psalm23 = screen.queryByText(/A Psalm of David/i);
 			expect(Psalm23).not.toBeInTheDocument();
 
-			//Genesis 1 appears after API fetch
-			const Genesis1 = await waitForElement(() =>
+			//Genesis 3 appears after API fetch
+			const Genesis3 = await waitForElement(() =>
 				screen.getByText(/Now the serpent/i)
 			);
-			expect(Genesis1).toBeInTheDocument();
+			expect(Genesis3).toBeInTheDocument();
 
 			//loading screen has disappeared
 			loadingScreen = screen.queryByTestId('text-loading');
