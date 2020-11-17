@@ -26,5 +26,6 @@ notes.txt
 config.ts
 
 #Cypress
-/videos
-/screenshots
+**/cypress/videos
+**/cypress/screenshots
+cypress.json
