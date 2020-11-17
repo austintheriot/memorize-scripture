@@ -72,7 +72,6 @@ export const handleKeyPress = (
 	config: UtilityConfig
 ) => {
 	const key = e.key;
-	console.log(key);
 	if (config.textAudio.readyState !== 4) return;
 	if (key === ' ') {
 		e.preventDefault();
