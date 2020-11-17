@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, lazy, Suspense } from 'react';
+import React, { useEffect, useContext, lazy, Suspense, useRef } from 'react';
 
 import * as serviceWorker from './serviceWorker';
 
@@ -46,17 +46,10 @@ export default function App() {
 		dispatch(outsideOfMenuClicked());
 	};
 
-	const [textAudio, setTextAudio] = useState(
-		new Audio(`https://audio.esv.org/hw/mq/Psalm23.mp3`)
-	); //Audio from ESV
-	const audio = {
-		textAudio,
-		setTextAudio,
-	};
+	const audioElement = useRef<HTMLAudioElement>(require('audio/Psalm23.mp3'));
 
 	const utilityConfig: UtilityConfig = {
-		textAudio,
-		setTextAudio,
+		audioElement: audioElement.current,
 		dispatch,
 		analytics,
 	};
@@ -68,19 +61,20 @@ export default function App() {
 	}, []);
 
 	useEffect(() => {
-		prepareAudioForPlayback(textAudio, audioState, utilityConfig);
+		prepareAudioForPlayback(audioElement.current, audioState, utilityConfig);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [textAudio]);
+	}, [audioState.url]);
 
 	return (
 		<div className='App'>
 			<ErrorBoundary>
-				<AudioContext.Provider value={audio}>
+				<AudioContext.Provider value={audioElement.current}>
 					<Transition>
 						<Router>
 							<Suspense fallback={Loading()}>
 								<MenuButton />
 								<Menu />
+								<audio src={audioState.url} ref={audioElement} />
 								<div onClick={closeMenu}>
 									<ServiceWorkerMessages />
 									<Switch>

@@ -1,12 +1,9 @@
 import { Dispatch } from '@reduxjs/toolkit';
 
-export type SetAudioType = React.Dispatch<
-	React.SetStateAction<HTMLAudioElement>
->;
+export type SetAudioType = React.Dispatch<React.SetStateAction<string>>;
 
 export interface UtilityConfig {
-	textAudio: HTMLAudioElement;
-	setTextAudio: SetAudioType;
+	audioElement: HTMLAudioElement;
 	dispatch: Dispatch;
 	analytics: firebase.analytics.Analytics;
 }
@@ -14,6 +11,7 @@ export interface UtilityConfig {
 //STATE TYPES /////////////////////////////////////////
 
 export interface AudioState {
+	url: string;
 	hasError: boolean;
 	isReady: boolean;
 	isPlaying: boolean;

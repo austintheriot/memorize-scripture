@@ -6,6 +6,7 @@ import { splitTitleIntoBookAndChapter, addToTextArray } from './storage';
 
 import axios from 'axios';
 import { ESVApiKey } from './config';
+import { audioFileChanged } from './audioSlice';
 
 const updateTextState = (
 	text: TextState,
@@ -50,7 +51,7 @@ export const textSlice = createSlice({
 			text.error = false;
 			updateTextState(text, action);
 		},
-		mostRecentPassageClicked: (
+		textMostRecentPassageClicked: (
 			text,
 			action: { payload: { title: string; body: string } }
 		) => {
@@ -116,7 +117,7 @@ export const {
 	userEnteredReviewInput,
 	textSettingsLoaded,
 	textInitialized,
-	mostRecentPassageClicked,
+	textMostRecentPassageClicked,
 	textRetrievedFromLocalStorage,
 	textBeingFetchedFromAPI,
 	textFetchSucceeded,
@@ -172,8 +173,7 @@ export const fetchTextFromESVAPI = (
 					body,
 				})
 			);
-			const newAudioUrl = `https://audio.esv.org/hw/mq/${book} ${chapter}.mp3`;
-			config.setTextAudio(new Audio(newAudioUrl));
+			dispatch(audioFileChanged({ book, chapter }));
 			addToTextArray(title, body);
 		})
 		.catch((error) => {

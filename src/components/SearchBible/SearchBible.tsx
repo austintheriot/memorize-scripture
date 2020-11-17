@@ -32,6 +32,7 @@ import {
 	textRetrievedFromLocalStorage,
 	fetchTextFromESVAPI,
 } from '../../app/textSlice';
+import { audioFileChanged } from 'app/audioSlice';
 
 const useStyles = makeStyles((theme) => ({
 	formControl: {
@@ -63,10 +64,9 @@ export const SearchBible = () => {
 	//Redux State:
 	const dispatch = useDispatch();
 	const search = useSelector(selectSearch);
-	const { textAudio, setTextAudio } = useContext(AudioContext);
+	const audioElement = useContext(AudioContext);
 	const utilityConfig: UtilityConfig = {
-		textAudio,
-		setTextAudio,
+		audioElement,
 		dispatch,
 		analytics,
 	};
@@ -109,6 +109,9 @@ export const SearchBible = () => {
 					chapter: search.chapter,
 					body,
 				})
+			);
+			dispatch(
+				audioFileChanged({ book: search.book, chapter: search.chapter })
 			);
 			addToTextArray(title, body);
 			analytics.logEvent('fetched_text_from_local_storage', {

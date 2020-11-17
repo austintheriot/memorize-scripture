@@ -35,12 +35,11 @@ export const Controls = () => {
 	const dispatch = useDispatch();
 	const audioSettings = useSelector(selectAudioSettings);
 	const text = useSelector(selectText);
-	const { textAudio, setTextAudio } = useContext(AudioContext);
+	const audioElement = useContext(AudioContext);
 	const { analytics } = useContext(FirebaseContext);
 
 	const config: UtilityConfig = {
-		textAudio,
-		setTextAudio,
+		audioElement,
 		analytics,
 		dispatch,
 	};

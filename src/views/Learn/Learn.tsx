@@ -35,13 +35,12 @@ export default () => {
 	}, []);
 
 	const { analytics } = useContext(FirebaseContext);
-	const { textAudio, setTextAudio } = useContext(AudioContext);
+	const audioElement = useContext(AudioContext);
 	const dispatch = useDispatch();
 	const text = useSelector(selectText);
 	const config: UtilityConfig = {
+		audioElement,
 		dispatch,
-		textAudio,
-		setTextAudio,
 		analytics,
 	};
 
@@ -55,7 +54,7 @@ export default () => {
 					message={() => {
 						//Pause textAudio when navigating away from Home
 						console.log('Leaving Home page. Pausing textAudio.');
-						textAudio.pause();
+						if (audioElement.readyState >= 2) audioElement.pause();
 						return true;
 					}}
 				/>

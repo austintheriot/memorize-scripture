@@ -8,7 +8,7 @@ import {
 	timeupdateEvent,
 	ratechangeEvent,
 	audioSettingsLoaded,
-	audioFileChanged,
+	audioInitialized,
 } from './audioSlice';
 import { textInitialized, textSettingsLoaded } from './textSlice';
 import {
@@ -45,8 +45,8 @@ const updateStateWithInitializedValues = (
 			body,
 		})
 	);
-	const newAudioUrl = `https://audio.esv.org/hw/mq/${book} ${chapter}.mp3`;
-	config.setTextAudio(new Audio(newAudioUrl));
+	//Audio State
+	config.dispatch(audioInitialized({ book, chapter }));
 };
 
 export const initializeMostRecentPassage = (config: UtilityConfig) => {
@@ -101,15 +101,7 @@ export const prepareAudioForPlayback = (
 	config: UtilityConfig
 ) => {
 	textAudio.pause();
-	config.dispatch(
-		audioFileChanged({
-			hasErrors: false,
-			isReady: false,
-			position: 0,
-		})
-	);
-	//load the resource (necessary on mobile)
-	textAudio.load();
+	textAudio.load(); //(necessary on mobile
 	textAudio.currentTime = 0;
 	textAudio.playbackRate = audioState.speed; //load textAudio settings
 

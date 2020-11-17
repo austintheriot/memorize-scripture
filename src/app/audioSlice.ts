@@ -1,9 +1,25 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { AudioSlice } from './types';
+import { AudioSlice, AudioState } from './types';
+import { splitTitleIntoBookAndChapter } from './storage';
+
+const createNewUrl = (book: string, chapter: string): string => {
+	return `https://audio.esv.org/hw/mq/${book} ${chapter}.mp3`;
+};
+
+const updateAudio = (audio: AudioState, book: string, chapter: string) => {
+	const newUrl = createNewUrl(book, chapter);
+	if (audio.url !== newUrl) {
+		audio.url = newUrl;
+		audio.isPlaying = false;
+		audio.hasError = false;
+		audio.position = 0;
+	}
+};
 
 export const audioSlice = createSlice({
 	name: 'audio',
 	initialState: {
+		url: 'https://audio.esv.org/hw/mq/Psalm23.mp3',
 		hasError: false,
 		isReady: false,
 		isPlaying: false,
@@ -16,23 +32,19 @@ export const audioSlice = createSlice({
 		},
 		audioInitialized: (
 			audio,
-			action: {
-				payload: { hasErrors: boolean; isReady: boolean; position: number };
-			}
+			action: { payload: { book: string; chapter: string } }
 		) => {
-			audio.hasError = action.payload.hasErrors;
-			audio.isReady = action.payload.isReady;
-			audio.position = action.payload.position;
+			updateAudio(audio, action.payload.book, action.payload.chapter);
 		},
 		audioFileChanged: (
 			audio,
-			action: {
-				payload: { hasErrors: boolean; isReady: boolean; position: number };
-			}
+			action: { payload: { book: string; chapter: string } }
 		) => {
-			audio.hasError = action.payload.hasErrors;
-			audio.isReady = action.payload.isReady;
-			audio.position = action.payload.position;
+			updateAudio(audio, action.payload.book, action.payload.chapter);
+		},
+		audioMostRecentPassageClicked: (audio, action: { payload: string }) => {
+			const { book, chapter } = splitTitleIntoBookAndChapter(action.payload);
+			updateAudio(audio, book, chapter);
 		},
 		canPlayEvent: (audio) => {
 			audio.isReady = true;
@@ -89,6 +101,7 @@ export const {
 	audioSettingsLoaded,
 	audioInitialized,
 	audioFileChanged,
+	audioMostRecentPassageClicked,
 	canPlayEvent,
 	pauseEvent,
 	playEvent,
