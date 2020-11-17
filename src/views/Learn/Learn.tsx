@@ -66,7 +66,7 @@ export default () => {
 				<h2>
 					{text.book} {text.chapter}
 				</h2>
-				<div className={styles.textAreaContainer}>
+				<div className={styles.textAreaContainer} data-testid='text-container'>
 					{
 						//Error
 						text.error ? (

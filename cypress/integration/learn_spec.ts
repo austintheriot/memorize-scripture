@@ -276,7 +276,65 @@ describe('Learn', () => {
 		});
 	});
 
-	describe('Condense Functions', () => {});
+	describe('Condensed Text Functionality', () => {
+		it.only('Should respond appropriately to user clicks', () => {
+			cy.visit('/');
+			//Should show condensed text initially
+			cy.get('[data-testid=text-original]').should('exist');
+			cy.get('[data-testid=text-condensed]').should('not.exist');
 
-	describe('Recent Passages', () => {});
+			//Should show condensed when flip view button is clicked
+			cy.get('[data-testid=flip]').click();
+			cy.get('[data-testid=text-original]').should('not.exist');
+			cy.get('[data-testid=text-condensed]').should('exist');
+			cy.get('[data-testid=text-container]')
+				.children()
+				.should('have.length.at.least', 10);
+
+			//Should allow lines to be clicked to reveal their full text
+			cy.get('[data-testid=text-condensed]')
+				.first()
+				.should('contain.text', 'APoD.')
+				.and('not.contain.text', 'A Psalm of David.')
+				.click()
+				.should('contain.text', 'A Psalm of David.')
+				.and('not.contain.text', 'APoD.');
+
+			//Should show condensed line again when clicked again
+			cy.get('[data-testid=text-condensed]')
+				.first()
+				.click()
+				.should('contain.text', 'APoD.')
+				.and('not.contain.text', 'A Psalm of David.');
+
+			//Clicking a different line should hide the other
+			cy.get('[data-testid=text-condensed]')
+				.first()
+				.click()
+				.should('contain.text', 'A Psalm of David.');
+			cy.get('[data-testid=text-condensed]').eq(2).click();
+			cy.get('[data-testid=text-condensed]')
+				.first()
+				.should('contain.text', 'APoD.');
+			cy.get('[data-testid=text-condensed]')
+				.eq(2)
+				.should('contain.text', 'The LORD is my shepherd; I shall not want.');
+		});
+	});
+
+	describe('Recent Passages', () => {
+		//Clicking summary should open the details
+		//Should start with Psalm 23
+		//Fetching a new passage should add it to most recent
+		//New passage should be at the top
+		//Cliking new passage should close the details
+		//Clicking Psalm 23 should return to Psalm 23
+		//Psalm 23 should now be at the top
+
+		it('', () => {});
+		it('', () => {});
+		it('', () => {});
+		it('', () => {});
+		it('', () => {});
+	});
 });

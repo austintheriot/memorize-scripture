@@ -29,6 +29,7 @@ export const TextCondensed = () => {
 			{text.condensed.map((line, i) => {
 				return (
 					<p
+						data-testid='text-condensed'
 						key={line + i.toString()}
 						className={
 							text.clickedLine === i ? styles.splitLine : styles.condensedLine
