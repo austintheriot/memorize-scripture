@@ -43,7 +43,7 @@ export const MostRecent = () => {
 			className={styles.mostRecentContainer}
 			ref={details}
 			data-testid='most-recent-details'>
-			<summary>Most Recent:</summary>
+			<summary data-testid='most-recent-summary'>Most Recent:</summary>
 			{getTextArray()[0].title ? (
 				<>
 					<ul className={styles.mostRecentList}>

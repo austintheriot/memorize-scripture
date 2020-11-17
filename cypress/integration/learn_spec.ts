@@ -1,4 +1,4 @@
-import { Genesis3 } from 'app/testChapters';
+import { Genesis3, Revelation7 } from 'app/testChapters';
 
 describe('Learn', () => {
 	describe('ESV API', () => {
@@ -277,7 +277,7 @@ describe('Learn', () => {
 	});
 
 	describe('Condensed Text Functionality', () => {
-		it.only('Should respond appropriately to user clicks', () => {
+		it('Should respond appropriately to user clicks', () => {
 			cy.visit('/');
 			//Should show condensed text initially
 			cy.get('[data-testid=text-original]').should('exist');
@@ -323,18 +323,97 @@ describe('Learn', () => {
 	});
 
 	describe('Recent Passages', () => {
-		//Clicking summary should open the details
-		//Should start with Psalm 23
-		//Fetching a new passage should add it to most recent
-		//New passage should be at the top
-		//Cliking new passage should close the details
-		//Clicking Psalm 23 should return to Psalm 23
-		//Psalm 23 should now be at the top
+		//Init local storage
+		before(() => {
+			cy.fixture('localStorageTexts.txt').then((texts) => {
+				cy.window().then((window) => {
+					window.localStorage.setItem('texts', texts.toString());
+				});
+			});
+		});
 
-		it('', () => {});
-		it('', () => {});
-		it('', () => {});
-		it('', () => {});
-		it('', () => {});
+		it('Should open/close and load passages', () => {
+			cy.server({
+				delay: 100,
+			});
+
+			cy.route({
+				method: 'GET',
+				url: 'https://api.esv.org/v3/passage/text/*',
+				response: {
+					passages: [Revelation7],
+				},
+			});
+
+			cy.visit('/');
+
+			//Should open the details when clicked
+			cy.get('[data-testid=most-recent-summary]').should(
+				'not.have.prop',
+				'open'
+			);
+			cy.get('[data-testid=most-recent-details]')
+				.click()
+				.should('have.attr', 'open');
+
+			//Psalm 23 is first on the most recent list
+			cy.get('[data-testid=most-recent-details] button')
+				.eq(0)
+				.should('have.text', 'Psalms 23');
+
+			//Should load passage from localStorage when clicked
+			cy.get('[data-testid=most-recent-details] button').eq(2).click();
+			cy.get('h2').should('have.text', 'Habakkuk 1');
+
+			//Clicking a most recent passage should move it to the top of the most recent list
+			cy.get('[data-testid=most-recent-details] button')
+				.eq(0)
+				.should('have.text', 'Habakkuk 1');
+			cy.get('[data-testid=most-recent-details] button')
+				.eq(1)
+				.should('have.text', 'Psalms 23');
+
+			//Clicking new passage should close the details
+			cy.get('[data-testid=most-recent-details]').should(
+				'not.have.attr',
+				'open'
+			);
+
+			//Loading a text from the ESV API should move the passage to the top
+			//Select the book of Revelation
+			cy.get('[data-testid=select-book]').scrollIntoView().click();
+			cy.contains('Revelation').scrollIntoView().click();
+
+			//Select chapter 3
+			cy.get('[data-testid=select-chapter]').click();
+			cy.get('[data-testid=7]').scrollIntoView().click();
+
+			//User clicks search button (searching Revelation 7)
+			cy.get('[data-testid=search]').click();
+
+			//Revelation should now be the page title and body
+			cy.get('h2').should('have.text', 'Revelation 7');
+			cy.contains('After this I saw four angels');
+
+			//The most recent details should be closed
+			cy.get('[data-testid=most-recent-details]').should(
+				'not.have.attr',
+				'open'
+			);
+
+			//Revelation 7 should now be at the top of the most recent
+			//and Habbakuk 1 should be the second most recent
+			//and Psalm 23 should be the 3rd most recent
+			cy.get('[data-testid=most-recent-summary]').click();
+			cy.get('[data-testid=most-recent-details] button')
+				.eq(0)
+				.should('have.text', 'Revelation 7');
+			cy.get('[data-testid=most-recent-details] button')
+				.eq(1)
+				.should('have.text', 'Habakkuk 1');
+			cy.get('[data-testid=most-recent-details] button')
+				.eq(2)
+				.should('have.text', 'Psalms 23');
+		});
 	});
 });
