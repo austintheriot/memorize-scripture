@@ -100,8 +100,8 @@ export const prepareAudioForPlayback = (
 	audioState: AudioState,
 	config: UtilityConfig
 ) => {
-	textAudio.pause();
 	textAudio.load(); //(necessary on mobile
+	textAudio.pause();
 	textAudio.currentTime = 0;
 	textAudio.playbackRate = audioState.speed; //load textAudio settings
 
