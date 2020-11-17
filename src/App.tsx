@@ -46,7 +46,9 @@ export default function App() {
 		dispatch(outsideOfMenuClicked());
 	};
 
-	const audioElement = useRef<HTMLAudioElement>(require('audio/Psalm23.mp3'));
+	const audioElement = useRef<HTMLAudioElement>(
+		new Audio(require('audio/Psalm23.mp3'))
+	);
 
 	const utilityConfig: UtilityConfig = {
 		audioElement: audioElement.current,
