@@ -1,12 +1,6 @@
 import { Genesis3 } from 'app/testChapters';
 
-describe('E2E Tests', () => {
-	describe('App', () => {
-		it('Should successfully load', () => {
-			cy.visit('/');
-		});
-	});
-
+describe('Learn', () => {
 	describe('ESV API', () => {
 		it('Should load a passage via the ESV API', () => {
 			cy.server({
@@ -90,6 +84,8 @@ describe('E2E Tests', () => {
 			cy.contains('Sorry, there was an error loading this passage.');
 		});
 	});
+
+	describe('Audio Controls', () => {});
 
 	describe('Condense Functions', () => {});
 
