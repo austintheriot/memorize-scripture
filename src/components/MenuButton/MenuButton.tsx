@@ -16,6 +16,7 @@ export const MenuButton = () => {
 	return (
 		<button
 			aria-label='Open Menu'
+			data-testid='menu-button'
 			className={[styles.button, app.menuIsOpen ? styles.menuOpen : ''].join(
 				' '
 			)}

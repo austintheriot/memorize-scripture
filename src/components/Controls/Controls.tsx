@@ -101,6 +101,7 @@ export const Controls = () => {
 			{/* PROGRESS BAR */}
 			<input
 				aria-label='audio position'
+				data-testid='position'
 				className={styles.progressBar}
 				type='range'
 				min='0'
@@ -119,6 +120,7 @@ export const Controls = () => {
 				<button
 					aria-label='speed'
 					data-info='playback speed'
+					data-testid='speed'
 					className={styles.playSpeedButton}
 					onMouseDown={handleSpeedChange}>
 					<p className={styles.icon}>x{audioSettings.speed}</p>
@@ -126,6 +128,7 @@ export const Controls = () => {
 				<button
 					aria-label='beginning'
 					data-info='skip to beginning'
+					data-testid='beginning'
 					className={styles.buttons}
 					onMouseDown={handleBeginning}>
 					<img
@@ -138,6 +141,7 @@ export const Controls = () => {
 				<button
 					aria-label='rewind'
 					data-info='back 5s'
+					data-testid='rewind'
 					className={styles.buttons}
 					onMouseDown={handleRewind}>
 					<img
@@ -153,6 +157,7 @@ export const Controls = () => {
 					<button
 						data-info='error'
 						aria-label='error'
+						data-testid='error'
 						className={styles.buttons}
 						disabled={true}>
 						<img src={errorIcon} alt={'loading'} className={styles.icon} />
@@ -163,6 +168,7 @@ export const Controls = () => {
 						<button
 							aria-label='pause'
 							data-info='pause'
+							data-testid='pause'
 							className={styles.buttons}
 							onMouseDown={handlePause}>
 							<img src={pauseIcon} alt={'pause'} className={styles.icon} />
@@ -172,6 +178,7 @@ export const Controls = () => {
 						<button
 							aria-label='play'
 							data-info='play'
+							data-testid='play'
 							className={styles.buttons}
 							onMouseDown={handlePlay}>
 							<img src={playIcon} alt={'play'} className={styles.icon} />
@@ -182,6 +189,7 @@ export const Controls = () => {
 					<button
 						data-info='loading'
 						aria-label='loading'
+						data-testid='loading'
 						className={styles.buttons}
 						disabled={true}>
 						<img src={loadingIcon} alt={'loading'} className={styles.loading} />
@@ -190,6 +198,7 @@ export const Controls = () => {
 				<button
 					data-info='forward 5s'
 					aria-label='forward'
+					data-testid='forward'
 					className={styles.buttons}
 					onMouseDown={handleForward}>
 					<img src={forwardIcon} alt={'forward 5s'} className={styles.icon} />
@@ -198,6 +207,7 @@ export const Controls = () => {
 					aria-label={
 						text.showCondensed ? 'show original text' : 'show condensed text'
 					}
+					data-testid='flip'
 					data-info='change view'
 					className={styles.buttons}
 					onMouseDown={handleViewChange}>

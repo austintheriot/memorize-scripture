@@ -19,10 +19,9 @@ export const Menu = () => {
 	};
 
 	return (
-		<header
-			className={[styles.header, app.menuIsOpen ? styles.menuOpen : ''].join(
-				' '
-			)}>
+		<nav
+			data-testid='menu'
+			className={[styles.nav, app.menuIsOpen ? styles.menuOpen : ''].join(' ')}>
 			<ExternalLink to='https://memorizescripture.org'>
 				<img
 					src={chiRho}
@@ -32,31 +31,51 @@ export const Menu = () => {
 			</ExternalLink>
 			<ul className={styles.ul}>
 				<li className={styles.li}>
-					<Link to='/' className={styles.link} onClick={closeMenu}>
+					<Link
+						to='/'
+						className={styles.link}
+						onClick={closeMenu}
+						data-testid='learn'>
 						Learn
 					</Link>
 				</li>
 				<li className={styles.li}>
-					<Link to='/review' className={styles.link} onClick={closeMenu}>
+					<Link
+						to='/review'
+						className={styles.link}
+						onClick={closeMenu}
+						data-testid='review'>
 						Review
 					</Link>
 				</li>
 				<li className={styles.li}>
-					<Link to='/tools' className={styles.link} onClick={closeMenu}>
+					<Link
+						to='/tools'
+						className={styles.link}
+						onClick={closeMenu}
+						data-testid='tools'>
 						Tools
 					</Link>
 				</li>
 				<li className={styles.li}>
-					<Link to='/about' className={styles.link} onClick={closeMenu}>
+					<Link
+						to='/about'
+						className={styles.link}
+						onClick={closeMenu}
+						data-testid='about'>
 						About
 					</Link>
 				</li>
 				<li className={styles.li}>
-					<Link to='/contact' className={styles.link} onClick={closeMenu}>
+					<Link
+						to='/contact'
+						className={styles.link}
+						onClick={closeMenu}
+						data-testid='contact'>
 						Contact
 					</Link>
 				</li>
 			</ul>
-		</header>
+		</nav>
 	);
 };
