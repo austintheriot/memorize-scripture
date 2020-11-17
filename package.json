@@ -32,9 +32,9 @@
 		"build": "react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
-		"cy:open": "cypress open",
-		"cy:run": "cypress run",
-		"cy": "start-server-and-test start http://localhost:3000 cy:run"
+		"cy:open": "start-server-and-test start http://localhost:3000 \"cypress open\"",
+		"cy:run": "start-server-and-test start http://localhost:3000 \"cypress run\"",
+		"cy": "cy:run"
 	},
 	"eslintConfig": {
 		"extends": "react-app"
