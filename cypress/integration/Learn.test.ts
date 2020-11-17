@@ -107,7 +107,6 @@ describe('Learn', () => {
 		};
 
 		const playAudio = () => {
-			//Play
 			cy.get('[data-testid=play]').as('play').click();
 			cy.get('audio').should('have.prop', 'paused', false);
 			cy.get('[data-testid=play]').should('not.exist');
