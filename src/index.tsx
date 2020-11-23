@@ -10,6 +10,11 @@ import { app, analytics, FirebaseContext } from './app/firebaseContext';
 import { Provider } from 'react-redux';
 import store from './app/store';
 
+//Routing
+import { BrowserRouter as Router } from 'react-router-dom';
+
+import { ErrorBoundary } from 'components/ErrorBoundary/ErrorBoundary';
+
 const firebaseContext = {
 	app,
 	analytics,
@@ -19,7 +24,11 @@ ReactDOM.render(
 	<React.StrictMode>
 		<FirebaseContext.Provider value={firebaseContext}>
 			<Provider store={store}>
-				<App />
+				<Router>
+					<ErrorBoundary>
+						<App />
+					</ErrorBoundary>
+				</Router>
 			</Provider>
 		</FirebaseContext.Provider>
 	</React.StrictMode>,

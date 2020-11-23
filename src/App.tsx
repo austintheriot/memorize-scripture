@@ -13,7 +13,7 @@ import { outsideOfMenuClicked } from './app/appSlice';
 import { selectAudioSettings } from './app/audioSlice';
 
 //Routing
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Route, Switch, useLocation } from 'react-router-dom';
 
 //Components
 import { Menu } from './components/Menu/Menu';
@@ -29,7 +29,7 @@ import { UtilityConfig } from './app/types';
 
 //Pages
 import { Loading } from './components/Loading/Loading';
-import { ErrorBoundary } from './components/ErrorBoundary/ErrorBoundary';
+
 const Learn = lazy(() => import('./views/Learn/Learn'));
 const Review = lazy(() => import('./views/Review/Review'));
 const About = lazy(() => import('./views/About/About'));
@@ -56,6 +56,15 @@ export default function App() {
 		analytics,
 	};
 
+	const location = useLocation();
+
+	useEffect(() => {
+		analytics.logEvent('page_view', {
+			page_path: location.pathname,
+			page_location: window.location.href,
+		});
+	}, [analytics, location]);
+
 	useEffect(() => {
 		serviceWorker.register();
 		initializeApp(utilityConfig);
@@ -69,30 +78,26 @@ export default function App() {
 
 	return (
 		<div className='App'>
-			<ErrorBoundary>
-				<AudioContext.Provider value={audioElement.current}>
-					<Transition>
-						<Router>
-							<Suspense fallback={Loading()}>
-								<MenuButton />
-								<Menu />
-								<audio src={audioState.url} ref={audioElement} />
-								<div onClick={closeMenu}>
-									<ServiceWorkerMessages />
-									<Switch>
-										<Route exact path='/learn' component={Learn} />
-										<Route exact path='/review' component={Review} />
-										<Route exact path='/tools' component={Tools} />
-										<Route exact path='/about' component={About} />
-										<Route exact path='/contact' component={Contact} />
-										<Route path='/' component={Learn} />
-									</Switch>
-								</div>
-							</Suspense>
-						</Router>
-					</Transition>
-				</AudioContext.Provider>
-			</ErrorBoundary>
+			<AudioContext.Provider value={audioElement.current}>
+				<Transition>
+					<Suspense fallback={Loading()}>
+						<MenuButton />
+						<Menu />
+						<audio src={audioState.url} ref={audioElement} />
+						<div onClick={closeMenu}>
+							<ServiceWorkerMessages />
+							<Switch>
+								<Route exact path='/learn' component={Learn} />
+								<Route exact path='/review' component={Review} />
+								<Route exact path='/tools' component={Tools} />
+								<Route exact path='/about' component={About} />
+								<Route exact path='/contact' component={Contact} />
+								<Route path='/' component={Learn} />
+							</Switch>
+						</div>
+					</Suspense>
+				</Transition>
+			</AudioContext.Provider>
 		</div>
 	);
 }
