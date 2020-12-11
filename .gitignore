@@ -29,3 +29,6 @@ config.ts
 **/cypress/videos
 **/cypress/screenshots
 cypress.json
+
+#Firebase 
+.firebase/
