@@ -47,6 +47,7 @@ export interface TextState {
 	condenseToolInput: string;
 	condenseToolOutput: string[];
 	copied: boolean;
+	copiedError: boolean;
 }
 
 export interface TextSlice {

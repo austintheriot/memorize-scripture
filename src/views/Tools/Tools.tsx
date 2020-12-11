@@ -5,9 +5,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
 	selectText,
 	condenseToolInputChanged,
-	copyButtonClicked,
+	condensedTextCopiedSuccess,
+	condensedTextCopiedFail,
 } from '../../app/textSlice';
 import { Footer } from '../../components/Footer/Footer';
+
+import * as clipboard from 'clipboard-polyfill/text';
 
 export default () => {
 	useEffect(() => {
@@ -29,12 +32,15 @@ export default () => {
 	};
 
 	const copyToClipboard = () => {
-		try {
-			navigator.clipboard.writeText(text.condenseToolOutput.join('\n'));
-			dispatch(copyButtonClicked());
-		} catch (err) {
-			console.log(err);
-		}
+		clipboard.writeText(text.condenseToolOutput.join('\n')).then(
+			() => {
+				dispatch(condensedTextCopiedSuccess());
+			},
+			(err) => {
+				console.log(err);
+				dispatch(condensedTextCopiedFail());
+			}
+		);
 	};
 
 	return (
@@ -54,16 +60,19 @@ export default () => {
 			/>
 			<h2 className={styles.label}>Condensed Text</h2>
 			<div className={styles.condensedContainer}>
-				{navigator.clipboard && (
-					<div className={styles.copyButtonContainer}>
-						<button
-							disabled={text.condenseToolOutput[0] === '' ? true : false}
-							onClick={copyToClipboard}
-							className={['button', styles.copyButton].join(' ')}>
-							{text.copied ? 'Copied!' : 'Copy to Clipboard'}
-						</button>
-					</div>
-				)}
+				<div className={styles.copyButtonContainer}>
+					<button
+						disabled={text.condenseToolOutput[0] === '' ? true : false}
+						onClick={copyToClipboard}
+						className={['button', styles.copyButton].join(' ')}>
+						{text.copiedError
+							? `Sorry, couldn't copy...`
+							: text.copied
+							? 'Copied!'
+							: 'Copy to Clipboard'}
+					</button>
+				</div>
+
 				{text.condenseToolOutput[0] === '' ? (
 					<p className={styles.condensedPlaceholder}>
 						Your condensed text will appear here
