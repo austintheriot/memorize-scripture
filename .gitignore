@@ -32,3 +32,4 @@ cypress.json
 
 #Firebase 
 .firebase/
+*.log
