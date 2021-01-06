@@ -521,11 +521,7 @@ export default () => {
 						This project was made with love and is offered free of charge. If
 						you'd like to contribute code to this project or if you would like
 						to donate towards website upkeep costs, please contact me (see
-						above).{' '}
-					</p>
-					<p>
-						Lastly, this developer is looking for a job. If you are hiring Front
-						End Developers, please feel free to get in touch!
+						above).
 					</p>
 				</section>
 				<section className={styles.copyright}>
