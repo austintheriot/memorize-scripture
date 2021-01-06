@@ -23,7 +23,7 @@ import Select from '@material-ui/core/Select';
 import searchIcon from '../../icons/search.svg';
 
 //Utilities
-import { bookTitles } from '../../views/Learn/bible';
+import { bookTitles } from '../../pages/Learn/bible';
 import { getTextBody, addToTextArray } from '../../app/storage';
 
 //types

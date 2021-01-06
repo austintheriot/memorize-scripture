@@ -30,11 +30,11 @@ import { UtilityConfig } from './app/types';
 //Pages
 import { Loading } from './components/Loading/Loading';
 
-const Learn = lazy(() => import('./views/Learn/Learn'));
-const Review = lazy(() => import('./views/Review/Review'));
-const About = lazy(() => import('./views/About/About'));
-const Contact = lazy(() => import('./views/Contact/Contact'));
-const Tools = lazy(() => import('./views/Tools/Tools'));
+const Learn = lazy(() => import('./pages/Learn/Learn'));
+const Review = lazy(() => import('./pages/Review/Review'));
+const About = lazy(() => import('./pages/About/About'));
+const Contact = lazy(() => import('./pages/Contact/Contact'));
+const Tools = lazy(() => import('./pages/Tools/Tools'));
 
 export default function App() {
 	const audioState = useSelector(selectAudioSettings);
