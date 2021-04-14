@@ -61,14 +61,11 @@ export const useAudioRecorder = () => {
 	const startRecording = useCallback(() => {
 		if (!checkIsSupported()) return;
 		deleteRecording();
-		alert(JSON.stringify(mediaRecorder));
-		alert(mediaRecorder?.current);
-		alert(mediaRecorder.current?.state);
 		if (
 			mediaRecorder?.current?.state &&
 			mediaRecorder?.current?.state !== 'recording'
 		) {
-			setRecordingState(RecordinStateEnum.STOPPED);
+			setRecordingState(RecordinStateEnum.RECORDING);
 			mediaRecorder.current.start();
 		}
 	}, [deleteRecording, checkIsSupported, setRecordingState]);
@@ -96,6 +93,7 @@ export const useAudioRecorder = () => {
 				newMediaRecorder.ondataavailable = onDataAvailable;
 				newMediaRecorder.onstop = onStop;
 				mediaRecorder.current = newMediaRecorder;
+				setIsSupported(true);
 			} else {
 				setIsSupported(false);
 			}
