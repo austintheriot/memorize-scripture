@@ -26,6 +26,7 @@ export default () => {
 	const text = useSelector(selectText);
 	const textarea = useRef<HTMLTextAreaElement | null>(null);
 	const {
+		recordingState,
 		startRecording,
 		stopRecording,
 		deleteRecording,
@@ -49,6 +50,7 @@ export default () => {
 	return (
 		<ErrorBoundary>
 			<div>
+				<p>{recordingState}</p>
 				<button type="button" onClick={startRecording}>
 					Start Recording
 				</button>
