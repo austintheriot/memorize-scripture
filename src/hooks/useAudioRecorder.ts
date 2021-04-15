@@ -1,120 +1,113 @@
-import { useCallback, useEffect, useRef } from 'react';
-import useStateIfMounted from './useStateIfMounted';
+import { useEffect, useRef, useState } from 'react';
 
-export const NOT_SUPPORTED_MESSAGE =
-	'Sorry, audio recording is not supported by your browser. ' +
-	'If you are on a mobile device, try using a desktop computer instead.';
+const ERROR_UNSUPPORTED = 'Your browser does not support recording audio. ' +
+  'Try using the latest version of Chrome on a desktop computer.';
 
-export enum RecordinStateEnum {
-	RECORDING = 'recording',
-	STOPPED = 'stopped',
+enum RecordingStatesEnum {
+  INACTIVE = 'inactive',
+  RECORDING = 'recording',
+  PAUSED = 'paused',
 }
 
-/**
- * Allows the user to record, play, and delete audio from their own device.
- * Returns a src url to play the audio from an <audio> component.
- */
 export const useAudioRecorder = () => {
-	// updates the DOM with a new audio recording
-	const [isSupported, setIsSupported] = useStateIfMounted(false);
-	const [recordingState, setRecordingState] = useStateIfMounted<RecordinStateEnum>(
-		RecordinStateEnum.STOPPED,
-	);
-	const [src, setSrc] = useStateIfMounted<string | null>(null);
-	const chunks = useRef<Blob[]>([]);
-	const mediaRecorder = useRef<MediaRecorder | null>();
+  const mediaRecorder = useRef<MediaRecorder | undefined>();
+  const chunks = useRef<Blob[]>([]);
+  const localStream = useRef<MediaStream | undefined>();
+  const [supported, setIsSupported] = useState(false);
+  const [url, setUrl] = useState('');
+  const [recordingState, setRecordingState] = useState<RecordingState | undefined>(RecordingStatesEnum.INACTIVE);
 
-	const checkIsSupported = useCallback(() => {
-		if (!isSupported) {
-			alert(NOT_SUPPORTED_MESSAGE);
-			return false;
-		} else {
-			return true;
-		}
-	}, [isSupported])
+  const init = async () => {
+    try {
+      if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
+        alert(ERROR_UNSUPPORTED);
+        setIsSupported(false);
+      } else {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        localStream.current = stream;
+        setIsSupported(true);
+      }
+    } catch (error) {
+      console.log(error);
+      setIsSupported(false);
+      alert(ERROR_UNSUPPORTED);
+    }
+  }
 
-	// stop recording
-	const stopRecording = useCallback(() => {
-		if (!checkIsSupported()) return;
-		if (
-			mediaRecorder?.current?.state &&
-			mediaRecorder.current.state !== 'inactive'
-		) {
-			setRecordingState(RecordinStateEnum.STOPPED);
-			mediaRecorder.current.stop();
-		}
-	}, [checkIsSupported, setRecordingState]);
+  const record = () => {
+    if (!supported) return alert(ERROR_UNSUPPORTED);
+    if (mediaRecorder.current?.state === RecordingStatesEnum.RECORDING) return;
+    if (!localStream.current) return alert('Could not get local stream from mic/camera');
+    chunks.current = [];
 
-	// pause any existing playback
-	// delete any existing saved data
-	const deleteRecording = useCallback(() => {
-		if (!checkIsSupported()) return;
-		stopRecording();
-		chunks.current = [];
-		setRecordingState(RecordinStateEnum.STOPPED);
-		setSrc(null);
-	}, [stopRecording, checkIsSupported, setRecordingState, setSrc]);
+    /* use the stream */
+    console.log('Start recording...');
+    mediaRecorder.current = new MediaRecorder(localStream.current);
 
-	// pause any existing playback
-	// delete any existing saved data
-	// start recording
-	const startRecording = useCallback(() => {
-		if (!checkIsSupported()) return;
-		deleteRecording();
-		if (
-			mediaRecorder?.current?.state &&
-			mediaRecorder?.current?.state !== 'recording'
-		) {
-			setRecordingState(RecordinStateEnum.RECORDING);
-			mediaRecorder.current.start();
-		}
-	}, [deleteRecording, checkIsSupported, setRecordingState]);
+    mediaRecorder.current.ondataavailable = (e) => {
+      console.log('mediaRecorder.ondataavailable, e.data.size='+e.data.size);
+      if (e.data && e.data.size > 0) {
+        chunks.current.push(e.data);
+      }
+    };
 
-	// typically called after recording or stops or when a
-	// blob becomes large enough to save
-	const onDataAvailable = useCallback((e: BlobEvent) => {
-		chunks.current.push(e.data);
-	}, []);
+    mediaRecorder.current.onerror = (e) => {
+      console.log('mediaRecorder.onerror: ' + e);
+    };
 
-	const onStop = useCallback(() => {
-		const blob = new Blob(chunks.current, { type: 'audio/ogg; codecs=opus' });
-		const audioURL = window.URL.createObjectURL(blob);
-		setSrc(audioURL);
-	}, [setSrc]);
+    mediaRecorder.current.onstart = function () {
+      setRecordingState(mediaRecorder.current?.state);
+      console.log('mediaRecorder.onstart, mediaRecorder.state = ' + mediaRecorder.current?.state);
+      
+      if (localStream.current) localStream.current.getTracks().forEach(function(track) {
+              if(track.kind == "audio"){
+                console.log("onstart - Audio track.readyState="+track.readyState+", track.muted=" + track.muted);
+              }
+              if(track.kind == "video"){
+                console.log("onstart - Video track.readyState="+track.readyState+", track.muted=" + track.muted);
+              }
+            });
+      
+    };
 
-	const initStream = useCallback(async () => {
-		try {
-			if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-				console.log('getUserMedia supported.');
-				const stream = await navigator.mediaDevices.getUserMedia({
-					audio: true,
-				});
-				const newMediaRecorder = new MediaRecorder(stream);
-				newMediaRecorder.ondataavailable = onDataAvailable;
-				newMediaRecorder.onstop = onStop;
-				mediaRecorder.current = newMediaRecorder;
-				setIsSupported(true);
-			} else {
-				setIsSupported(false);
-			}
-		} catch (err) {
-			console.log(err);
-			setIsSupported(false);
-		}
-	}, [onDataAvailable, onStop, setIsSupported]);
+    mediaRecorder.current.onstop = function () {
+      setRecordingState(mediaRecorder.current?.state);
+      console.log('mediaRecorder.onstop, mediaRecorder.state = ' + mediaRecorder.current?.state);
+      const recording = new Blob(chunks.current, {type: mediaRecorder.current?.mimeType});
+      setUrl(URL.createObjectURL(recording));
+    };
 
-	/* Set up audio stream for recording */
-	useEffect(() => {
-		initStream();
-	}, [initStream]);
+    mediaRecorder.current.onpause = () => {
+      setRecordingState(mediaRecorder.current?.state);
+      console.log('mediaRecorder.onpause, mediaRecorder.state = ' + mediaRecorder.current?.state);
+    }
 
-	return {
-		isSupported,
-		startRecording,
-		stopRecording,
-		deleteRecording,
-		recordingState,
-		mediaRecorder: mediaRecorder.current,
-		src,
-	};
-};
+    mediaRecorder.current.onresume = () => {
+      setRecordingState(mediaRecorder.current?.state);
+      console.log('mediaRecorder.onresume, mediaRecorder.state = ' + mediaRecorder.current?.state);
+    }
+    
+    // records chunks in blobs of 1 second
+    mediaRecorder.current.start(1000);
+  }
+
+  const stop = () => {
+    if (!supported) alert(ERROR_UNSUPPORTED);
+    if (mediaRecorder.current) {
+      if (mediaRecorder.current.state === RecordingStatesEnum.INACTIVE) return;
+      mediaRecorder.current.stop();
+    }
+}
+
+  useEffect(() => {
+    init();
+  }, [])
+
+  return {
+    supported,
+    recordingState,
+    record,
+    stop,
+    url,
+  }
+}

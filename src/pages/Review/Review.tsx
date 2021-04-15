@@ -17,7 +17,7 @@ import { MostRecent } from '../../components/MostRecent/MostRecent';
 //Utilities
 import { Copyright } from '../../components/Copyright/Copyright';
 import { Comparison } from './Comparison/Comparison';
-import useAudioRecorder from 'hooks/useAudioRecorder2';
+import {useAudioRecorder} from 'hooks/useAudioRecorder';
 
 //types
 
@@ -26,9 +26,10 @@ export default () => {
 	const text = useSelector(selectText);
 	const textarea = useRef<HTMLTextAreaElement | null>(null);
 	const {
-		url,
+		recordingState,
 		record,
 		stop,
+		url
 	} = useAudioRecorder();
 
 	useEffect(() => {
@@ -48,13 +49,14 @@ export default () => {
 	return (
 		<ErrorBoundary>
 			<div>
+				<p>{recordingState}</p>
 				<button type="button" onClick={record}>
 					Start Recording
 				</button>
 				<button type="button" onClick={stop}>
 					Stop Recording
 				</button>
-				<audio src={url} controls />
+				{url && <audio src={url} controls />}
 			</div>
 			<h1 className={styles.h1}>Review</h1>
 			<div className={styles.searchContainer}>
