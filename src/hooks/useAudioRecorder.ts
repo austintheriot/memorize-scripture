@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 const ERROR_UNSUPPORTED = 'Your browser does not support recording audio. ' +
   'Try using the latest version of Chrome on a desktop computer.';
@@ -9,46 +9,49 @@ enum RecordingStatesEnum {
   PAUSED = 'paused',
 }
 
+enum BrowserSupportEnum {
+  SUPPORTED = 'supported',
+  NOT_SUPPORTED = 'notSupported',
+  UNKNOWN = 'unknown',
+}
+
 export const useAudioRecorder = () => {
   const mediaRecorder = useRef<MediaRecorder | undefined>();
   const chunks = useRef<Blob[]>([]);
-  const localStream = useRef<MediaStream | undefined>();
-  const [supported, setIsSupported] = useState(false);
+  const stream = useRef<MediaStream | undefined>();
+  const [supported, setIsSupported] = useState(BrowserSupportEnum.UNKNOWN);
   const [url, setUrl] = useState('');
   const [recordingState, setRecordingState] = useState<RecordingState | undefined>(RecordingStatesEnum.INACTIVE);
 
-  const init = async () => {
+  const initializeStream = async () => {
     try {
       if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
         alert(ERROR_UNSUPPORTED);
-        setIsSupported(false);
+        setIsSupported(BrowserSupportEnum.NOT_SUPPORTED);
       } else {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        localStream.current = stream;
-        setIsSupported(true);
+        stream.current = await navigator.mediaDevices.getUserMedia({ audio: true });
+        setIsSupported(BrowserSupportEnum.SUPPORTED);
       }
     } catch (error) {
       console.log(error);
-      setIsSupported(false);
+      setIsSupported(BrowserSupportEnum.NOT_SUPPORTED);
       alert(ERROR_UNSUPPORTED);
     }
   }
 
-  const record = () => {
-    if (!supported) return alert(ERROR_UNSUPPORTED);
+  const record = async () => {
+    if (supported === BrowserSupportEnum.NOT_SUPPORTED) return alert(ERROR_UNSUPPORTED);
+    if (!stream.current || !mediaRecorder.current) await initializeStream();
     if (mediaRecorder.current?.state === RecordingStatesEnum.RECORDING) return;
-    if (!localStream.current) return alert('Could not get local stream from mic/camera');
+    if (!stream.current) return alert('Could not get local stream from mic/camera');
     chunks.current = [];
 
     /* use the stream */
     console.log('Start recording...');
-    mediaRecorder.current = new MediaRecorder(localStream.current);
+    mediaRecorder.current = new MediaRecorder(stream.current);
 
     mediaRecorder.current.ondataavailable = (e) => {
-      console.log('mediaRecorder.ondataavailable, e.data.size='+e.data.size);
-      if (e.data && e.data.size > 0) {
-        chunks.current.push(e.data);
-      }
+      if (e.data.size > 0) chunks.current.push(e.data);
     };
 
     mediaRecorder.current.onerror = (e) => {
@@ -57,34 +60,20 @@ export const useAudioRecorder = () => {
 
     mediaRecorder.current.onstart = function () {
       setRecordingState(mediaRecorder.current?.state);
-      console.log('mediaRecorder.onstart, mediaRecorder.state = ' + mediaRecorder.current?.state);
-      
-      if (localStream.current) localStream.current.getTracks().forEach(function(track) {
-              if(track.kind == "audio"){
-                console.log("onstart - Audio track.readyState="+track.readyState+", track.muted=" + track.muted);
-              }
-              if(track.kind == "video"){
-                console.log("onstart - Video track.readyState="+track.readyState+", track.muted=" + track.muted);
-              }
-            });
-      
     };
 
     mediaRecorder.current.onstop = function () {
       setRecordingState(mediaRecorder.current?.state);
-      console.log('mediaRecorder.onstop, mediaRecorder.state = ' + mediaRecorder.current?.state);
       const recording = new Blob(chunks.current, {type: mediaRecorder.current?.mimeType});
       setUrl(URL.createObjectURL(recording));
     };
 
     mediaRecorder.current.onpause = () => {
       setRecordingState(mediaRecorder.current?.state);
-      console.log('mediaRecorder.onpause, mediaRecorder.state = ' + mediaRecorder.current?.state);
     }
 
     mediaRecorder.current.onresume = () => {
       setRecordingState(mediaRecorder.current?.state);
-      console.log('mediaRecorder.onresume, mediaRecorder.state = ' + mediaRecorder.current?.state);
     }
     
     // records chunks in blobs of 1 second
@@ -92,22 +81,25 @@ export const useAudioRecorder = () => {
   }
 
   const stop = () => {
-    if (!supported) alert(ERROR_UNSUPPORTED);
+    if (supported === BrowserSupportEnum.NOT_SUPPORTED) return alert(ERROR_UNSUPPORTED);
     if (mediaRecorder.current) {
       if (mediaRecorder.current.state === RecordingStatesEnum.INACTIVE) return;
       mediaRecorder.current.stop();
+      if (stream.current) { 
+        stream.current.getTracks().forEach(track => track.stop()); 
+        mediaRecorder.current = undefined;
+        stream.current = undefined;
+      }
     }
-}
-
-  useEffect(() => {
-    init();
-  }, [])
+  }
 
   return {
-    supported,
-    recordingState,
     record,
     stop,
     url,
+    recordingState,
+    supported,
+    BrowserSupportEnum,
+    RecordingStatesEnum,
   }
 }
