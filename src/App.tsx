@@ -1,4 +1,4 @@
-import React, { useEffect, lazy, Suspense, useRef } from 'react';
+import React, { useEffect, lazy, Suspense } from 'react';
 import * as serviceWorker from './serviceWorker';
 import './App.scss';
 import { useDispatch } from 'react-redux';
@@ -11,7 +11,7 @@ import { ServiceWorkerMessages } from './components/ServiceWorkerMessages/Servic
 import { initializeApp } from './app/init';
 import { UtilityConfig } from './app/types';
 import { Loading } from './components/Loading/Loading';
-import { AudioProvider } from 'hooks/useAudioContext';
+import { AudioProvider, useAudioContext } from 'hooks/useAudioContext';
 import { Provider as StoreProvider } from 'react-redux';
 import store, { useAppSelector } from './store/store';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -31,13 +31,10 @@ function App() {
 	const { analytics } = useFirebaseContext();
 	const dispatch = useDispatch();
 	const closeMenu = () => dispatch(outsideOfMenuClicked());
-
-	const audioRef = useRef<HTMLAudioElement>(
-		new Audio(require('audio/Psalm23.mp3'))
-	);
+	const { textAudioRef } = useAudioContext();
 
 	const utilityConfig: UtilityConfig = {
-		audioElement: audioRef.current,
+		audioElement: textAudioRef.current,
 		dispatch,
 		analytics,
 	};
@@ -55,7 +52,7 @@ function App() {
 					<Suspense fallback={Loading()}>
 						<MenuButton />
 						<Menu />
-						<audio src={url} ref={audioRef} />
+						<audio src={url} ref={textAudioRef} />
 						<div onClick={closeMenu}>
 							<ServiceWorkerMessages />
 							<Switch>

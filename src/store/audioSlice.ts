@@ -23,13 +23,13 @@ const createNewUrl = (book: string, chapter: string): string => {
 	return `https://audio.esv.org/hw/mq/${book} ${chapter}.mp3`;
 };
 
-const updateAudio = (audio: AudioState, book: string, chapter: string) => {
+const updateAudio = (draft: AudioState, book: string, chapter: string) => {
 	const newUrl = createNewUrl(book, chapter);
-	if (audio.url !== newUrl) {
-		audio.url = newUrl;
-		audio.isPlaying = false;
-		audio.hasError = false;
-		audio.position = 0;
+	if (draft.url !== newUrl) {
+		draft.url = newUrl;
+		draft.isPlaying = false;
+		draft.hasError = false;
+		draft.position = 0;
 	}
 };
 

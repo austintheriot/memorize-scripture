@@ -1,4 +1,4 @@
-import { createSlice, Dispatch } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { UtilityConfig } from '../app/types';
 import { Psalm23, Psalm23Split, Psalm23Condensed } from '../app/Psalm23';
 import { breakFullTextIntoLines, condenseText } from '../app/condense';
@@ -8,6 +8,7 @@ import { splitTitleIntoBookAndChapter, addToTextArray } from '../app/storage';
 import axios from 'axios';
 import { ESVApiKey } from '../app/config';
 import { audioFileChanged } from './audioSlice';
+import { AppDispatch } from './store';
 
 export interface TextState {
 	loading: boolean;
@@ -160,7 +161,7 @@ export const fetchTextFromESVAPI = (
 	book: string,
 	chapter: string,
 	config: UtilityConfig
-) => (dispatch: Dispatch) => {
+) => (dispatch: AppDispatch) => {
 	dispatch(textBeingFetchedFromAPI());
 
 	const title = `${book} ${chapter}`;

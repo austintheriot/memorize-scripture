@@ -1,5 +1,5 @@
 import { storePlaySpeed } from 'app/storage';
-import React, { KeyboardEvent, useCallback, useContext, useEffect, useRef } from 'react';
+import React, { KeyboardEvent, MutableRefObject, useCallback, useContext, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 //State
 import {
@@ -23,7 +23,7 @@ import { useFirebaseContext } from './useFirebaseContext';
 const psalm23 = require('audio/Psalm23.mp3');
 
 interface AudioContextType {
-	audio: HTMLAudioElement,
+	textAudioRef: MutableRefObject<HTMLAudioElement>,
 	togglePlayPause: () => void,
 	play: () => void,
 	pause: () => void,
@@ -38,7 +38,7 @@ interface AudioContextType {
 
 // audio context value when no provider given
 export const AudioContext = React.createContext<AudioContextType>({
-	audio: new Audio(psalm23),
+	textAudioRef: { current: new Audio(psalm23) },
 	togglePlayPause: () => { },
 	play: () => { },
 	pause: () => { },
@@ -54,11 +54,12 @@ export const AudioProvider = ({ children }: { children: any }) => {
 	const dispatch = useDispatch();
 	const audioSpeed = useAppSelector((state) => state.audio.speed);
 	const { analytics } = useFirebaseContext();
-	const audioRef = useRef(new Audio(psalm23));
-	const textAudio = audioRef.current;
+	const textAudioRef = useRef(new Audio(psalm23));
+	const { url } = useAppSelector(state => state.audio)
+	const textAudio = textAudioRef.current;
 
 	const prepareAudioForPlayback = useCallback(() => {
-		textAudio.load(); //(necessary on mobile
+		textAudio.load(); // necessary on mobile
 		textAudio.pause();
 		textAudio.currentTime = 0;
 		textAudio.playbackRate = audioSpeed; //load textAudio settings
@@ -210,11 +211,11 @@ export const AudioProvider = ({ children }: { children: any }) => {
 	useEffect(() => {
 		prepareAudioForPlayback();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
+	}, [url])
 
 	return (
 		<AudioContext.Provider value={{
-			audio: audioRef.current,
+			textAudioRef,
 			togglePlayPause,
 			play,
 			pause,

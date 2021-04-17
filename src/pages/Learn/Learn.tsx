@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { Prompt } from 'react-router';
 import styles from './Learn.module.scss';
 import { ErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary';
@@ -11,9 +10,7 @@ import { MostRecent } from '../../components/MostRecent/MostRecent';
 import { TextCondensed } from './TextCondensed/TextCondensed';
 import { TextLoading } from '../../components/TextLoading/TextLoading';
 import { Copyright } from '../../components/Copyright/Copyright';
-import { UtilityConfig } from 'app/types';
 import { useAudioContext } from 'hooks/useAudioContext';
-import { useFirebaseContext } from 'hooks/useFirebaseContext';
 import { useAppSelector } from 'store/store';
 
 
@@ -22,7 +19,7 @@ export default () => {
 		window.scrollTo(0, 0);
 	}, []);
 
-	const { audio: audioElement, handleKeyPress } = useAudioContext();
+	const { textAudioRef, handleKeyPress } = useAudioContext();
 	const { book, chapter, error, loading, showCondensed, body } = useAppSelector(s => s.text);
 
 	let textComponent = null;
@@ -54,7 +51,7 @@ export default () => {
 					message={() => {
 						//Pause textAudio when navigating away from Home
 						console.log('Leaving Home page. Pausing textAudio.');
-						if (audioElement.readyState >= 2) audioElement.pause();
+						if (textAudioRef.current.readyState >= 2) textAudioRef.current.pause();
 						return true;
 					}}
 				/>

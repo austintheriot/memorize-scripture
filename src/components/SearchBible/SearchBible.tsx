@@ -63,9 +63,10 @@ export const SearchBible = () => {
 	//Redux State:
 	const dispatch = useDispatch();
 	const { book, chapter, numberOfChapters } = useAppSelector((s) => s.search);
-	const { audio: audioElement } = useAudioContext();
+	const { textAudioRef } = useAudioContext();
+
 	const utilityConfig: UtilityConfig = {
-		audioElement,
+		audioElement: textAudioRef.current,
 		dispatch,
 		analytics,
 	};
