@@ -3,46 +3,38 @@ import { useRef, useState } from 'react';
 const ERROR_UNSUPPORTED = 'Your browser does not support recording audio. ' +
   'Try using the latest version of Chrome on a desktop computer.';
 
-enum RecordingStatesEnum {
-  INACTIVE = 'inactive',
-  RECORDING = 'recording',
-  PAUSED = 'paused',
-}
+export type RecordingStates = MediaRecorder['state'];
 
-enum BrowserSupportEnum {
-  SUPPORTED = 'supported',
-  NOT_SUPPORTED = 'notSupported',
-  UNKNOWN = 'unknown',
-}
+export type BrowserSupport = 'supported' | 'notSupported' | 'unknown';
 
 export const useAudioRecorder = () => {
   const mediaRecorder = useRef<MediaRecorder | undefined>();
   const chunks = useRef<Blob[]>([]);
   const stream = useRef<MediaStream | undefined>();
-  const [supported, setIsSupported] = useState(BrowserSupportEnum.UNKNOWN);
+  const [supported, setIsSupported] = useState<BrowserSupport>('unknown');
   const [url, setUrl] = useState('');
-  const [recordingState, setRecordingState] = useState<RecordingState | undefined>(RecordingStatesEnum.INACTIVE);
+  const [recordingState, setRecordingState] = useState<RecordingState | undefined>('inactive');
 
   const initializeStream = async () => {
     try {
       if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
         alert(ERROR_UNSUPPORTED);
-        setIsSupported(BrowserSupportEnum.NOT_SUPPORTED);
+        setIsSupported('notSupported');
       } else {
         stream.current = await navigator.mediaDevices.getUserMedia({ audio: true });
-        setIsSupported(BrowserSupportEnum.SUPPORTED);
+        setIsSupported('supported');
       }
     } catch (error) {
       console.log(error);
-      setIsSupported(BrowserSupportEnum.NOT_SUPPORTED);
+      setIsSupported('notSupported');
       alert(ERROR_UNSUPPORTED);
     }
   }
 
   const record = async () => {
-    if (supported === BrowserSupportEnum.NOT_SUPPORTED) return alert(ERROR_UNSUPPORTED);
+    if (supported === 'notSupported') return alert(ERROR_UNSUPPORTED);
     if (!stream.current || !mediaRecorder.current) await initializeStream();
-    if (mediaRecorder.current?.state === RecordingStatesEnum.RECORDING) return;
+    if (mediaRecorder.current?.state === 'recording') return;
     if (!stream.current) return alert('Could not get local stream from mic/camera');
     chunks.current = [];
 
@@ -81,9 +73,9 @@ export const useAudioRecorder = () => {
   }
 
   const stop = () => {
-    if (supported === BrowserSupportEnum.NOT_SUPPORTED) return alert(ERROR_UNSUPPORTED);
+    if (supported === 'notSupported') return alert(ERROR_UNSUPPORTED);
     if (mediaRecorder.current) {
-      if (mediaRecorder.current.state === RecordingStatesEnum.INACTIVE) return;
+      if (mediaRecorder.current.state === 'inactive') return;
       mediaRecorder.current.stop();
       if (stream.current) { 
         stream.current.getTracks().forEach(track => track.stop()); 
@@ -99,7 +91,5 @@ export const useAudioRecorder = () => {
     url,
     recordingState,
     supported,
-    BrowserSupportEnum,
-    RecordingStatesEnum,
   }
 }
