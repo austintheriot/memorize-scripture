@@ -1,80 +1,110 @@
 //State
-import {
-	audioSettingsLoaded,
-	audioInitialized,
-} from '../store/audioSlice';
+import { audioSettingsLoaded, audioInitialized } from '../store/audioSlice';
 import { textInitialized, textSettingsLoaded } from '../store/textSlice';
 import {
 	addToTextArray,
 	getMostRecentText,
 	splitTitleIntoBookAndChapter,
 	getUserSettings,
-} from './storage';
+} from '../utils/storageUtils';
 import { UtilityConfig } from './types';
 import { Psalm23 } from './Psalm23';
 import { searchInitialized } from '../store/searchSlice';
+import {
+	getLocalStorage,
+	removeLocalStorage,
+	setLocalStorage,
+	localStorageVersion,
+	DEFAULT_CLICKED_LINE,
+	DEFAULT_SHOW_CONDENSED,
+	DEFAULT_TEXTS,
+} from 'utils/storageUtils';
+import { AppDispatch } from 'store/store';
 
-const initializeUserSettings = (config: UtilityConfig) => {
+const initializeUserSettings = (dispatch: AppDispatch) => {
 	//Loading textAudio playback rate
 	console.log(`Initializing user's settings.`);
 	const { targetSpeed, showCondensed } = getUserSettings();
-	config.dispatch(audioSettingsLoaded(targetSpeed));
-	config.dispatch(textSettingsLoaded(showCondensed));
+	dispatch(audioSettingsLoaded(targetSpeed));
+	dispatch(textSettingsLoaded(showCondensed));
 };
 
+/**
+ * Updates Redux state with updated list of chapters,
+ * the most recently used text, and the proper URL to load audio.
+ */
 const updateStateWithInitializedValues = (
 	title: string,
 	body: string,
-	config: UtilityConfig
+	dispatch: AppDispatch,
 ) => {
 	const { book, chapter } = splitTitleIntoBookAndChapter(title);
 	//Search State
-	config.dispatch(searchInitialized({ book, chapter }));
+	dispatch(searchInitialized({ book, chapter }));
 	//Text State
-	config.dispatch(
+	dispatch(
 		textInitialized({
 			book,
 			chapter,
 			body,
-		})
+		}),
 	);
 	//Audio State
-	config.dispatch(audioInitialized({ book, chapter }));
+	dispatch(audioInitialized({ book, chapter }));
 };
 
-export const initializeMostRecentPassage = (config: UtilityConfig) => {
+/**
+ * Searches local storage for the most recently stored passage. 
+ * If none is found, chooses Psalm 23.
+ */
+export const initializeMostRecentPassage = (dispatch: AppDispatch) => {
 	console.log('Searching storage for most recent book and chapter.');
 	const { title, body } = getMostRecentText();
 	if (title && body) {
 		console.log(`${title} is the most recent text accessed.`);
-		updateStateWithInitializedValues(title, body, config);
+		updateStateWithInitializedValues(title, body, dispatch);
 	} else {
 		console.log(
-			'A most recent book and chapter do not exist in local storage.'
+			'A most recent book and chapter do not exist in local storage.',
 		);
 		console.log(`Leaving Psalm 23 as initialized passage.`);
 		addToTextArray('Psalms 23', Psalm23);
 	}
 };
 
-/* Wipes any faulty local storage settings from previous versions */
+/**
+ * Checks local storage for the version storage and also checks for any faulty values.
+ * If any problems occur, resets local storage.
+ */
 const initLocalStorage = () => {
 	console.log('Initializing local storage and checking for errors');
 	try {
-		window.localStorage.removeItem('recent');
-		const clickedLine = window.localStorage.getItem('clickedLine');
-		if (isNaN(Number(clickedLine)))
-			window.localStorage.setItem('clickedLine', '-1');
-		const showCondensed = window.localStorage.getItem('showCondensed');
-		if (showCondensed !== 'true' && showCondensed !== 'false')
-			window.localStorage.setItem('showCondensed', 'false');
-		const texts = window.localStorage.getItem('texts');
-		if (texts === 'null' || texts === 'undefined')
-			window.localStorage.setItem('texts', `[{title: '', body: ''}]`);
-		if (texts !== null && typeof JSON.parse(texts) !== 'object')
-			window.localStorage.setItem('texts', `[{title: '', body: ''}]`);
-		if (texts !== null && texts.includes('+'))
-			window.localStorage.setItem('texts', `[{title: '', body: ''}]`);
+		const returnedLocalStorageVersion = getLocalStorage('localStorageVersion');
+		if (returnedLocalStorageVersion !== localStorageVersion) {
+			console.log(`Local storage version ${returnedLocalStorageVersion} does not match ` + 
+			`app's storage version ${localStorageVersion}. Clearing and re-initializing local storage.`);
+			window.localStorage.clear();
+			setLocalStorage('clickedLine', DEFAULT_CLICKED_LINE);
+			setLocalStorage('showCondensed', DEFAULT_SHOW_CONDENSED);
+			setLocalStorage('texts', DEFAULT_TEXTS);
+			return;
+		}
+
+		removeLocalStorage('recent');
+
+		const clickedLine = getLocalStorage('clickedLine');
+		if (clickedLine === null || isNaN(Number(clickedLine)))
+			setLocalStorage('clickedLine', DEFAULT_CLICKED_LINE);
+
+		const showCondensed = getLocalStorage('showCondensed');
+		if (showCondensed === null || typeof showCondensed !== 'boolean') {
+			setLocalStorage('showCondensed', DEFAULT_SHOW_CONDENSED);
+		}
+		
+		const texts = getLocalStorage('texts') as any;
+		if (texts === null || (texts !== null && texts.includes('+'))) {
+			setLocalStorage('texts', DEFAULT_TEXTS);
+		}
 	} catch (err) {
 		console.log(err);
 		console.log('Error detected in local storage. Clearing local storage');
@@ -82,8 +112,8 @@ const initLocalStorage = () => {
 	}
 };
 
-export const initializeApp = (config: UtilityConfig) => {
+export const initializeApp = (dispatch: AppDispatch) => {
 	initLocalStorage();
-	initializeUserSettings(config);
-	initializeMostRecentPassage(config);
+	initializeUserSettings(dispatch);
+	initializeMostRecentPassage(dispatch);
 };

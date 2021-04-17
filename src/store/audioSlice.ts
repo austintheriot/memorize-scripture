@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { splitTitleIntoBookAndChapter } from '../app/storage';
+import { BibleBook } from 'pages/Learn/bible';
+import { splitTitleIntoBookAndChapter } from '../utils/storageUtils';
 
 export interface AudioState {
 	url: string;
@@ -19,11 +20,11 @@ const initialState: AudioState = {
 	speed: 1,
 }
 
-const createNewUrl = (book: string, chapter: string): string => {
+const createNewUrl = (book: BibleBook, chapter: string): string => {
 	return `https://audio.esv.org/hw/mq/${book} ${chapter}.mp3`;
 };
 
-const updateAudio = (draft: AudioState, book: string, chapter: string) => {
+const updateAudio = (draft: AudioState, book: BibleBook, chapter: string) => {
 	const newUrl = createNewUrl(book, chapter);
 	if (draft.url !== newUrl) {
 		draft.url = newUrl;
@@ -41,12 +42,12 @@ export const audioSlice = createSlice({
 			draft.speed = action.payload;
 		},
 		audioInitialized: (
-			draft, action: { payload: { book: string; chapter: string } }
+			draft, action: { payload: { book: BibleBook; chapter: string } }
 		) => {
 			updateAudio(draft, action.payload.book, action.payload.chapter);
 		},
 		audioFileChanged: (
-			draft, action: { payload: { book: string; chapter: string } }
+			draft, action: { payload: { book: BibleBook; chapter: string } }
 		) => {
 			updateAudio(draft, action.payload.book, action.payload.chapter);
 		},

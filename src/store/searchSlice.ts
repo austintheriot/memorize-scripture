@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { bookChapters } from '../pages/Learn/bible';
+import { BibleBook, bookChapters } from '../pages/Learn/bible';
 
 export interface SearchState {
-	book: string;
+	book: BibleBook;
 	chapter: string;
 	numberOfChapters: number;
 }
@@ -19,19 +19,29 @@ export const searchSlice = createSlice({
 	reducers: {
 		searchInitialized: (
 			draft,
-			action: { payload: { book: string; chapter: string } },
+			action: { payload: { book: BibleBook ; chapter: string } },
 		) => {
 			draft.book = action.payload.book;
 			draft.chapter = action.payload.chapter;
-			const newNumberOfChapters = bookChapters[action.payload.book];
+			/* For now, afaik, const assertions can be used as index types */
+			const copyBook = action.payload.book as string;
+			const copyBookChapters: {
+				[key: string]: number;
+			} = bookChapters as any;
+			const newNumberOfChapters = copyBookChapters[copyBook];
 			draft.numberOfChapters = newNumberOfChapters;
 		},
 		bookSelected: (
 			draft,
-			action: { payload: { bookString: string; chapter: string } },
+			action: { payload: { bookString: BibleBook; chapter: string } },
 		) => {
 			draft.book = action.payload.bookString;
-			const newNumberOfChapters = bookChapters[action.payload.bookString]; //get chapter numbers
+			/* For now, afaik, const assertions can be used as index types */
+			const copyBookString = action.payload.bookString as string;
+			const copyBookChapters: {
+				[key: string]: number;
+			} = bookChapters as any;
+			const newNumberOfChapters = copyBookChapters[copyBookString]; //get chapter numbers
 			draft.numberOfChapters = newNumberOfChapters;
 			if (Number(action.payload.chapter) <= newNumberOfChapters) return;
 			draft.chapter = '1';

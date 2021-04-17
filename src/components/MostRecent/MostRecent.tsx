@@ -8,7 +8,7 @@ import { textMostRecentPassageClicked } from '../../store/textSlice';
 import styles from './MostRecent.module.scss';
 
 //Utilities
-import { addToTextArray, getTextArray } from '../../app/storage';
+import { addToTextArray, getTextArray } from '../../utils/storageUtils';
 import { audioMostRecentPassageClicked } from 'store/audioSlice';
 import { useFirebaseContext } from 'hooks/useFirebaseContext';
 

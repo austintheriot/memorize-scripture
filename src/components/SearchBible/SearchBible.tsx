@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useDispatch } from 'react-redux';
 import {
 	bookSelected,
@@ -19,8 +19,8 @@ import Select from '@material-ui/core/Select';
 import searchIcon from '../../icons/search.svg';
 
 //Utilities
-import { bookTitles } from '../../pages/Learn/bible';
-import { getTextBody, addToTextArray } from '../../app/storage';
+import { BibleBook, bookTitles } from '../../pages/Learn/bible';
+import { getTextBody, addToTextArray } from '../../utils/storageUtils';
 
 //types
 import { UtilityConfig } from '../../app/types';
@@ -77,10 +77,8 @@ export const SearchBible = () => {
 			value: unknown;
 		}>
 	) => {
-		const bookString = e.target.value;
-		if (typeof bookString === 'string') {
-			dispatch(bookSelected({ bookString, chapter: chapter })); //set book name
-		}
+		const bookString = e.target.value as BibleBook;
+		dispatch(bookSelected({ bookString, chapter: chapter })); //set book name
 	};
 
 	const handleChapterChange = (

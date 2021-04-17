@@ -2,18 +2,19 @@ import { createSlice } from '@reduxjs/toolkit';
 import { UtilityConfig } from '../app/types';
 import { Psalm23, Psalm23Split, Psalm23Condensed } from '../app/Psalm23';
 import { breakFullTextIntoLines, condenseText } from '../app/condense';
-import { splitTitleIntoBookAndChapter, addToTextArray } from '../app/storage';
+import { splitTitleIntoBookAndChapter, addToTextArray } from '../utils/storageUtils';
 
 
 import axios from 'axios';
 import { ESVApiKey } from '../app/config';
 import { audioFileChanged } from './audioSlice';
 import { AppDispatch } from './store';
+import { BibleBook } from 'pages/Learn/bible';
 
 export interface TextState {
 	loading: boolean;
 	error: boolean;
-	book: string;
+	book: BibleBook;
 	chapter: string;
 	body: string;
 	split: readonly string[];
@@ -30,7 +31,7 @@ export interface TextState {
 const initialState: TextState = {
 	loading: false,
 	error: false,
-	book: 'Psalm',
+	book: 'Psalms',
 	chapter: '23',
 	body: Psalm23,
 	split: Psalm23Split,
@@ -46,9 +47,9 @@ const initialState: TextState = {
 
 const updateTextState = (
 	draft: TextState,
-	action: { payload: { book: string; chapter: string; body: string } }
+	action: { payload: { book: BibleBook; chapter: string; body: string } }
 ) => {
-	draft.book = action.payload.book === 'Psalms' ? 'Psalm' : action.payload.book;
+	draft.book = action.payload.book;
 	draft.chapter = action.payload.chapter;
 	draft.body = action.payload.body;
 	const lineBrokenText = breakFullTextIntoLines(action.payload.body);
@@ -68,7 +69,7 @@ export const textSlice = createSlice({
 		},
 		textInitialized: (
 			draft,
-			action: { payload: { book: string; chapter: string; body: string } }
+			action: { payload: { book: BibleBook; chapter: string; body: string } }
 		) => {
 			draft.error = false;
 			updateTextState(draft, action);
@@ -91,7 +92,7 @@ export const textSlice = createSlice({
 		},
 		textRetrievedFromLocalStorage: (
 			draft,
-			action: { payload: { book: string; chapter: string; body: string } }
+			action: { payload: { book: BibleBook; chapter: string; body: string } }
 		) => {
 			draft.clickedLine = -1;
 			draft.error = false;
@@ -104,7 +105,7 @@ export const textSlice = createSlice({
 		},
 		textFetchSucceeded: (
 			draft,
-			action: { payload: { book: string; chapter: string; body: string } }
+			action: { payload: { book: BibleBook; chapter: string; body: string } }
 		) => {
 			draft.loading = false;
 			updateTextState(draft, action);
@@ -158,7 +159,7 @@ export const {
 } = textSlice.actions;
 
 export const fetchTextFromESVAPI = (
-	book: string,
+	book: BibleBook,
 	chapter: string,
 	config: UtilityConfig
 ) => (dispatch: AppDispatch) => {
@@ -197,7 +198,7 @@ export const fetchTextFromESVAPI = (
 			const body = response.data.passages[0];
 			dispatch(
 				textFetchSucceeded({
-					book: book === 'Psalms' ? 'Psalm' : book,
+					book,
 					chapter,
 					body,
 				})

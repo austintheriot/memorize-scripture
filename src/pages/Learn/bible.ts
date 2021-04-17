@@ -1,6 +1,4 @@
-interface BookChapters {
-	[book: string]: number;
-}
+import { ValueOf } from "utils/typeUtils";
 
 export const bookTitles = [
 	'Genesis',
@@ -69,9 +67,9 @@ export const bookTitles = [
 	'3 John',
 	'Jude',
 	'Revelation',
-];
+] as const;
 
-export const bookChapters: BookChapters = {
+export const bookChapters = {
 	Genesis: 50,
 	Exodus: 40,
 	Leviticus: 27,
@@ -138,4 +136,6 @@ export const bookChapters: BookChapters = {
 	'3 John': 1,
 	Jude: 1,
 	Revelation: 22,
-};
+} as const;
+
+export type BibleBook = ValueOf<typeof bookTitles>;

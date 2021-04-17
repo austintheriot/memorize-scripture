@@ -28,20 +28,13 @@ const Tools = lazy(() => import('./pages/Tools/Tools'));
 function App() {
 	useRouteAnalytics();
 	const url = useAppSelector((state) => state.audio.url);
-	const { analytics } = useFirebaseContext();
 	const dispatch = useDispatch();
 	const closeMenu = () => dispatch(outsideOfMenuClicked());
 	const { textAudioRef } = useAudioContext();
 
-	const utilityConfig: UtilityConfig = {
-		audioElement: textAudioRef.current,
-		dispatch,
-		analytics,
-	};
-
 	useEffect(() => {
 		serviceWorker.unregister();
-		initializeApp(utilityConfig);
+		initializeApp(dispatch);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 

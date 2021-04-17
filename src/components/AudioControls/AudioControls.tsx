@@ -16,7 +16,7 @@ import loadingIcon from 'icons/loading.svg';
 import errorIcon from 'icons/error.svg';
 
 //Utilities
-import { storeShowCondensed } from '../../app/storage';
+import { storeShowCondensed } from '../../utils/storageUtils';
 import { useAudioContext } from 'hooks/useAudioContext';
 import { useFirebaseContext } from 'hooks/useFirebaseContext';
 import { useAppSelector } from 'store/store';

@@ -1,4 +1,4 @@
-import { storePlaySpeed } from 'app/storage';
+import { storePlaySpeed } from 'utils/storageUtils';
 import React, { KeyboardEvent, MutableRefObject, useCallback, useContext, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 //State

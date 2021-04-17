@@ -26,7 +26,8 @@
 		"react-router-dom": "^5.2.0",
 		"react-scripts": "3.4.3",
 		"react-scroll": "^1.8.1",
-		"redux": "^4.0.5"
+		"redux": "^4.0.5",
+		"ts-toolbelt": "^9.6.0"
 	},
 	"scripts": {
 		"start": "react-scripts start",
