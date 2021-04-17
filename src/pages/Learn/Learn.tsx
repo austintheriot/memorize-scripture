@@ -1,18 +1,7 @@
-import React, { useEffect, useContext } from 'react';
-
-//App State
-import { FirebaseContext } from '../../app/firebaseContext';
-import { AudioContext } from '../../app/audioContext';
-import { useSelector, useDispatch } from 'react-redux';
-import { selectText } from '../../app/textSlice';
-
-//Routing
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { Prompt } from 'react-router';
-
-//Styles
 import styles from './Learn.module.scss';
-
-//Custom components
 import { ErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary';
 import { AudioControls } from '../../components/AudioControls/AudioControls';
 import { SmallSpacer } from '../../components/Spacers/Spacers';
@@ -20,34 +9,45 @@ import { Footer } from '../../components/Footer/Footer';
 import { SearchBible } from '../../components/SearchBible/SearchBible';
 import { MostRecent } from '../../components/MostRecent/MostRecent';
 import { TextCondensed } from './TextCondensed/TextCondensed';
-
-//Utilities
 import { TextLoading } from '../../components/TextLoading/TextLoading';
 import { Copyright } from '../../components/Copyright/Copyright';
 import { UtilityConfig } from 'app/types';
-import { handleKeyPress } from 'app/audioCommands';
+import { useAudioContext } from 'hooks/useAudioContext';
+import { useFirebaseContext } from 'hooks/useFirebaseContext';
+import { useAppSelector } from 'store/store';
 
-//types
 
 export default () => {
 	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, []);
 
-	const { analytics } = useContext(FirebaseContext);
-	const audioElement = useContext(AudioContext);
-	const dispatch = useDispatch();
-	const text = useSelector(selectText);
-	const config: UtilityConfig = {
-		audioElement,
-		dispatch,
-		analytics,
-	};
+	const { audio: audioElement, handleKeyPress } = useAudioContext();
+	const { book, chapter, error, loading, showCondensed, body } = useAppSelector(s => s.text);
+
+	let textComponent = null;
+	if (error) {
+		textComponent = (
+			<p className={styles.errorMessage}>
+				Sorry, there was an error loading this passage.
+			</p>
+		)
+	} else if (loading) {
+		textComponent = <TextLoading />;
+	} else if (showCondensed) {
+		textComponent = <TextCondensed />;
+	} else {
+		textComponent = (
+			<p className={styles.fullText} data-testid='text-original'>
+				{body}
+			</p>
+		)
+	}
 
 	return (
 		<ErrorBoundary>
 			<div
-				onKeyDown={(e) => handleKeyPress(e, config)}
+				onKeyDown={handleKeyPress}
 				tabIndex={0}
 				className={styles.LearnContainer}>
 				<Prompt
@@ -64,28 +64,10 @@ export default () => {
 					<MostRecent />
 				</div>
 				<h2>
-					{text.book} {text.chapter}
+					{book} {chapter}
 				</h2>
 				<div className={styles.textAreaContainer} data-testid='text-container'>
-					{
-						//Error
-						text.error ? (
-							<p className={styles.errorMessage}>
-								Sorry, there was an error loading this passage.
-							</p>
-						) : //Loading
-							text.loading ? (
-								<TextLoading />
-							) : //Condensed
-								text.showCondensed ? (
-									<TextCondensed />
-								) : (
-										//Original
-										<p className={styles.fullText} data-testid='text-original'>
-											{text.body}
-										</p>
-									)
-					}
+					{textComponent}
 				</div>
 				<SmallSpacer />
 				<Copyright />

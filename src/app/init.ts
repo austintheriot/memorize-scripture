@@ -1,25 +1,18 @@
 //State
 import {
-	canPlayEvent,
-	pauseEvent,
-	playEvent,
-	errorEvent,
-	playingEvent,
-	timeupdateEvent,
-	ratechangeEvent,
 	audioSettingsLoaded,
 	audioInitialized,
-} from './audioSlice';
-import { textInitialized, textSettingsLoaded } from './textSlice';
+} from '../store/audioSlice';
+import { textInitialized, textSettingsLoaded } from '../store/textSlice';
 import {
 	addToTextArray,
 	getMostRecentText,
 	splitTitleIntoBookAndChapter,
 	getUserSettings,
 } from './storage';
-import { UtilityConfig, AudioState } from './types';
+import { UtilityConfig } from './types';
 import { Psalm23 } from './Psalm23';
-import { searchInitialized } from './searchSlice';
+import { searchInitialized } from '../store/searchSlice';
 
 const initializeUserSettings = (config: UtilityConfig) => {
 	//Loading textAudio playback rate
@@ -93,51 +86,4 @@ export const initializeApp = (config: UtilityConfig) => {
 	initLocalStorage();
 	initializeUserSettings(config);
 	initializeMostRecentPassage(config);
-};
-
-export const prepareAudioForPlayback = (
-	textAudio: HTMLAudioElement,
-	audioState: AudioState,
-	config: UtilityConfig
-) => {
-	textAudio.load(); //(necessary on mobile
-	textAudio.pause();
-	textAudio.currentTime = 0;
-	textAudio.playbackRate = audioState.speed; //load textAudio settings
-
-	//loaded enough to play
-	textAudio.addEventListener('canplay', () => {
-		config.dispatch(canPlayEvent());
-	});
-	textAudio.addEventListener('pause', () => {
-		config.dispatch(pauseEvent());
-	});
-	textAudio.addEventListener('play', () => {
-		config.dispatch(playEvent());
-	});
-	textAudio.addEventListener('error', () => {
-		config.dispatch(errorEvent());
-	});
-	//not enough data
-	textAudio.addEventListener('waiting', () => {
-		//No action currently selected for this event
-	});
-	//ready to play after waiting
-	textAudio.addEventListener('playing', () => {
-		config.dispatch(playingEvent());
-	});
-	//textAudio is over
-	textAudio.addEventListener('ended', () => {
-		textAudio.pause();
-		textAudio.currentTime = 0;
-	});
-	//as time is updated
-	textAudio.addEventListener('timeupdate', () => {
-		const targetPosition = textAudio.currentTime / textAudio.duration;
-		config.dispatch(timeupdateEvent(targetPosition));
-	});
-	//when speed is changed
-	textAudio.addEventListener('ratechange', () => {
-		config.dispatch(ratechangeEvent(textAudio.playbackRate));
-	});
 };

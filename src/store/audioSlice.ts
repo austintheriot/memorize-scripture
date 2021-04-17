@@ -1,0 +1,131 @@
+import { createSlice } from '@reduxjs/toolkit';
+import { splitTitleIntoBookAndChapter } from '../app/storage';
+
+export interface AudioState {
+	url: string;
+	hasError: boolean;
+	isReady: boolean;
+	isPlaying: boolean;
+	position: number;
+	speed: number;
+}
+
+const initialState: AudioState = {
+	url: 'https://audio.esv.org/hw/mq/Psalm23.mp3',
+	hasError: false,
+	isReady: false,
+	isPlaying: false,
+	position: 0,
+	speed: 1,
+}
+
+const createNewUrl = (book: string, chapter: string): string => {
+	return `https://audio.esv.org/hw/mq/${book} ${chapter}.mp3`;
+};
+
+const updateAudio = (audio: AudioState, book: string, chapter: string) => {
+	const newUrl = createNewUrl(book, chapter);
+	if (audio.url !== newUrl) {
+		audio.url = newUrl;
+		audio.isPlaying = false;
+		audio.hasError = false;
+		audio.position = 0;
+	}
+};
+
+export const audioSlice = createSlice({
+	name: 'audio',
+	initialState,
+	reducers: {
+		audioSettingsLoaded: (draft, action: { payload: number }) => {
+			draft.speed = action.payload;
+		},
+		audioInitialized: (
+			draft, action: { payload: { book: string; chapter: string } }
+		) => {
+			updateAudio(draft, action.payload.book, action.payload.chapter);
+		},
+		audioFileChanged: (
+			draft, action: { payload: { book: string; chapter: string } }
+		) => {
+			updateAudio(draft, action.payload.book, action.payload.chapter);
+		},
+		audioMostRecentPassageClicked: (draft, action: { payload: string }) => {
+			const { book, chapter } = splitTitleIntoBookAndChapter(action.payload);
+			updateAudio(draft, book, chapter);
+		},
+		canPlayEvent: (draft) => {
+			draft.isReady = true;
+		},
+		pauseEvent: (draft) => {
+			draft.isPlaying = false;
+		},
+		playEvent: (draft) => {
+			draft.isPlaying = true;
+		},
+		errorEvent: (draft) => {
+			draft.hasError = true;
+		},
+		playingEvent: (draft) => {
+			draft.isReady = true;
+		},
+		timeupdateEvent: (draft, action: { payload: number }) => {
+			draft.position = action.payload;
+		},
+		ratechangeEvent: (draft, action: { payload: number }) => {
+			draft.speed = action.payload;
+		},
+		rewindButtonClicked: (draft, action) => {
+			draft.position = action.payload;
+		},
+		forwardButtonClicked: (draft, action) => {
+			draft.position = action.payload;
+		},
+		progressBarClicked: (draft, action) => {
+			draft.position = action.payload;
+		},
+		speedButtonClicked: (draft, action) => {
+			draft.speed = action.payload;
+		},
+		playButtonClicked: (draft) => {
+			draft.isPlaying = true;
+		},
+		pauseButtonClicked: (draft) => {
+			draft.isPlaying = false;
+		},
+		spacebarPressed: (draft) => {
+			draft.isPlaying = !draft.isPlaying;
+		},
+		leftArrowPressed: (draft, action) => {
+			draft.position = action.payload;
+		},
+		rightArrowPressed: (draft, action) => {
+			draft.position = action.payload;
+		},
+	},
+});
+
+export const {
+	audioSettingsLoaded,
+	audioInitialized,
+	audioFileChanged,
+	audioMostRecentPassageClicked,
+	canPlayEvent,
+	pauseEvent,
+	playEvent,
+	errorEvent,
+	playingEvent,
+	timeupdateEvent,
+	ratechangeEvent,
+	rewindButtonClicked,
+	forwardButtonClicked,
+	progressBarClicked,
+	speedButtonClicked,
+	playButtonClicked,
+	pauseButtonClicked,
+	spacebarPressed,
+	leftArrowPressed,
+	rightArrowPressed,
+} = audioSlice.actions;
+
+export default audioSlice.reducer;

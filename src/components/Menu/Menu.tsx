@@ -6,13 +6,14 @@ import { Link } from 'react-router-dom';
 import chiRho from '../../images/chirho-light.svg';
 
 //Menu State
-import { useSelector, useDispatch } from 'react-redux';
-import { selectApp, navLinkClicked } from '../../app/appSlice';
+import { useDispatch } from 'react-redux';
+import { navLinkClicked } from '../../store/appSlice';
 import { ExternalLink } from '../Links/ExternalLink';
+import { useAppSelector } from 'store/store';
 
 export const Menu = () => {
 	const dispatch = useDispatch();
-	const app = useSelector(selectApp);
+	const { menuIsOpen } = useAppSelector((state) => state.app)
 
 	const closeMenu = () => {
 		dispatch(navLinkClicked());
@@ -21,7 +22,7 @@ export const Menu = () => {
 	return (
 		<nav
 			data-testid='menu'
-			className={[styles.nav, app.menuIsOpen ? styles.menuOpen : ''].join(' ')}>
+			className={[styles.nav, menuIsOpen ? styles.menuOpen : ''].join(' ')}>
 			<ExternalLink to='https://memorizescripture.org'>
 				<img
 					src={chiRho}

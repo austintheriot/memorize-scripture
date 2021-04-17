@@ -1,27 +1,17 @@
-// test-utils.js
 import React from 'react';
 import { render } from '@testing-library/react';
-
-//Firebase Config
-import { app, FirebaseContext, analytics } from '../app/firebaseContext';
-
-//Redux
 import { Provider } from 'react-redux';
-import store from '../app/store';
+import store from '../store/store';
 import { MemoryRouter } from 'react-router-dom';
-
-const firebaseContext = {
-	app,
-	analytics,
-};
+import { FirebaseProvider } from 'hooks/useFirebaseContext';
 
 const AllTheProviders = ({ children }: any) => {
 	return (
-		<FirebaseContext.Provider value={firebaseContext}>
+		<FirebaseProvider>
 			<Provider store={store}>
 				<MemoryRouter>{children}</MemoryRouter>
 			</Provider>
-		</FirebaseContext.Provider>
+		</FirebaseProvider>
 	);
 };
 

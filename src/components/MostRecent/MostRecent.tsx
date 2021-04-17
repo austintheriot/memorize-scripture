@@ -1,19 +1,19 @@
 import React, { useContext, useRef } from 'react';
 
 //App State
-import { FirebaseContext } from '../../app/firebaseContext';
 import { useDispatch } from 'react-redux';
-import { textMostRecentPassageClicked } from '../../app/textSlice';
+import { textMostRecentPassageClicked } from '../../store/textSlice';
 
 //Styles
 import styles from './MostRecent.module.scss';
 
 //Utilities
 import { addToTextArray, getTextArray } from '../../app/storage';
-import { audioMostRecentPassageClicked } from 'app/audioSlice';
+import { audioMostRecentPassageClicked } from 'store/audioSlice';
+import { useFirebaseContext } from 'hooks/useFirebaseContext';
 
 export const MostRecent = () => {
-	const { analytics } = useContext(FirebaseContext);
+	const { analytics } = useFirebaseContext();
 	const dispatch = useDispatch();
 	const details = useRef<HTMLDetailsElement | null>(null);
 

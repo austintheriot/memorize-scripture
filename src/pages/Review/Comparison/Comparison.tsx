@@ -1,17 +1,10 @@
 import React from 'react';
 import styles from './Comparison.module.scss';
-
-//App State
-import { useSelector } from 'react-redux';
-import { selectText } from '../../../app/textSlice';
-
 import { ErrorBoundary } from '../../../components/ErrorBoundary/ErrorBoundary';
+import { useAppSelector } from 'store/store';
 
 export const Comparison = () => {
-	const text = useSelector(selectText);
-
-	const input = text.reviewInput;
-	const bible = text.body;
+	const { reviewInput: input, body: bible } = useAppSelector((state) => state.text);
 	const bibleCondensed = bible.split(/[^A-Za-z0-9_]/).join('');
 	const length = Math.max(bible.length, input.length);
 	const textArray: JSX.Element[] = [];
@@ -128,9 +121,9 @@ export const Comparison = () => {
 				? 0
 				: //do not divide by zero
 				input.length - neutral === 0
-				? Math.round((correct / input.length) * 100)
-				: //normal calculation, given ideal conditions
-				  Math.round((correct / (input.length - neutral)) * 1000) / 10;
+					? Math.round((correct / input.length) * 100)
+					: //normal calculation, given ideal conditions
+					Math.round((correct / (input.length - neutral)) * 1000) / 10;
 
 		totalPercentCorrect =
 			Math.round((correct / bibleCondensed.length) * 1000) / 10;
@@ -152,10 +145,10 @@ export const Comparison = () => {
 						Your corrected text will appear here
 					</p>
 				) : (
-					<p className={styles.resultsP} data-testid='filledin-results'>
-						{textArray}
-					</p>
-				)}
+						<p className={styles.resultsP} data-testid='filledin-results'>
+							{textArray}
+						</p>
+					)}
 			</div>
 			<h3 className={styles.statsLabel}>Stats:</h3>
 			<section className={styles.statsContainer}>

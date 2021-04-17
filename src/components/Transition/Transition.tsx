@@ -1,17 +1,15 @@
 import React from 'react';
 import styles from './Transition.module.scss';
-
-import { useSelector } from 'react-redux';
-import { selectApp } from '../../app/appSlice';
+import { useAppSelector } from 'store/store';
 
 export const Transition = (props: any) => {
-	const app = useSelector(selectApp);
+	const { menuIsOpen } = useAppSelector(s => s.app);
 
 	return (
 		<div
 			className={[
 				styles.Transition,
-				app.menuIsOpen ? styles.menuOpen : '',
+				menuIsOpen ? styles.menuOpen : '',
 			].join(' ')}>
 			{props.children}
 		</div>

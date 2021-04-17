@@ -1,43 +1,40 @@
-import React, { useContext } from 'react';
-import { FirebaseContext } from '../../../app/firebaseContext';
-
-//App State
-import { useSelector, useDispatch } from 'react-redux';
-import { selectText, splitTextClicked } from '../../../app/textSlice';
-
-//Styles
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import { splitTextClicked } from '../../../store/textSlice';
 import styles from './TextCondensed.module.scss';
+import { useAppSelector } from 'store/store';
+import { useFirebaseContext } from 'hooks/useFirebaseContext';
 
 export const TextCondensed = () => {
-	const { analytics } = useContext(FirebaseContext);
+	const { analytics } = useFirebaseContext();
 	const dispatch = useDispatch();
-	const text = useSelector(selectText);
+	const { condensed, split, clickedLine } = useAppSelector((state) => state.text);
 
 	const handleSplitTextClick = (
 		e: React.MouseEvent<HTMLParagraphElement, MouseEvent>,
 		i: number
 	) => {
 		analytics.logEvent('condensed_line_clicked', {
-			clickedLine: text.clickedLine === i ? -1 : text.clickedLine,
+			clickedLine: clickedLine === i ? -1 : clickedLine,
 		});
-		if (text.clickedLine === i) return dispatch(splitTextClicked(-1));
+		if (clickedLine === i) return dispatch(splitTextClicked(-1));
 		dispatch(splitTextClicked(i));
 	};
 
 	return (
 		<>
-			{text.condensed.map((line, i) => {
+			{condensed.map((line, i) => {
 				return (
 					<p
 						data-testid='text-condensed'
 						key={line + i.toString()}
 						className={
-							text.clickedLine === i ? styles.splitLine : styles.condensedLine
+							clickedLine === i ? styles.splitLine : styles.condensedLine
 						}
 						onClick={(e: React.MouseEvent<HTMLParagraphElement, MouseEvent>) =>
 							handleSplitTextClick(e, i)
 						}>
-						{text.clickedLine === i ? text.split[i] : text.condensed[i]}
+						{clickedLine === i ? split[i] : condensed[i]}
 					</p>
 				);
 			})}

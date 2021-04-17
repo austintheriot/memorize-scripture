@@ -1,13 +1,9 @@
 import React, { useContext } from 'react';
-
-import { AudioContext } from '../../app/audioContext';
-import { FirebaseContext } from '../../app/firebaseContext';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
-	selectSearch,
 	bookSelected,
 	chapterSelected,
-} from '../../app/searchSlice';
+} from '../../store/searchSlice';
 
 //Styles
 import styles from './SearchBible.module.scss';
@@ -31,8 +27,11 @@ import { UtilityConfig } from '../../app/types';
 import {
 	textRetrievedFromLocalStorage,
 	fetchTextFromESVAPI,
-} from '../../app/textSlice';
-import { audioFileChanged } from 'app/audioSlice';
+} from '../../store/textSlice';
+import { audioFileChanged } from 'store/audioSlice';
+import { useAppSelector } from 'store/store';
+import { useAudioContext } from 'hooks/useAudioContext';
+import { useFirebaseContext } from 'hooks/useFirebaseContext';
 
 const useStyles = makeStyles((theme) => ({
 	formControl: {
@@ -56,15 +55,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const SearchBible = () => {
-	const { analytics } = useContext(FirebaseContext);
+	const { analytics } = useFirebaseContext();
 
 	//Material UI Styling:
 	const classes = useStyles();
 
 	//Redux State:
 	const dispatch = useDispatch();
-	const search = useSelector(selectSearch);
-	const audioElement = useContext(AudioContext);
+	const { book, chapter, numberOfChapters } = useAppSelector((s) => s.search);
+	const { audio: audioElement } = useAudioContext();
 	const utilityConfig: UtilityConfig = {
 		audioElement,
 		dispatch,
@@ -79,7 +78,7 @@ export const SearchBible = () => {
 	) => {
 		const bookString = e.target.value;
 		if (typeof bookString === 'string') {
-			dispatch(bookSelected({ bookString, chapter: search.chapter })); //set book name
+			dispatch(bookSelected({ bookString, chapter: chapter })); //set book name
 		}
 	};
 
@@ -97,7 +96,7 @@ export const SearchBible = () => {
 	const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		e.preventDefault();
 		//Check local storage
-		const title = `${search.book} ${search.chapter}`;
+		const title = `${book} ${chapter}`;
 		console.log(`Checking local storage for ${title}`);
 		//try to retrieve text body from local storage
 		let body = getTextBody(title);
@@ -105,31 +104,31 @@ export const SearchBible = () => {
 			console.log(`Retrieved body of ${title} from local storage`);
 			dispatch(
 				textRetrievedFromLocalStorage({
-					book: search.book,
-					chapter: search.chapter,
+					book: book,
+					chapter: chapter,
 					body,
 				})
 			);
 			dispatch(
-				audioFileChanged({ book: search.book, chapter: search.chapter })
+				audioFileChanged({ book: book, chapter: chapter })
 			);
 			addToTextArray(title, body);
 			analytics.logEvent('fetched_text_from_local_storage', {
-				searchBook: search.book,
-				searchChapter: search.chapter,
-				title: `${search.book} ${search.chapter}`,
+				searchBook: book,
+				searchChapter: chapter,
+				title: `${book} ${chapter}`,
 			});
 		} else {
 			//If it does not exist in local storage, make an API call, and store the returned text
 			console.log(`${title} not found in local storage`);
 			console.log('Making a call to the ESV API');
-			dispatch(fetchTextFromESVAPI(search.book, search.chapter, utilityConfig));
+			dispatch(fetchTextFromESVAPI(book, chapter, utilityConfig));
 		}
 	};
 
 	//create chapter input options based on book of the bible
 	let chapterArray = [];
-	for (let i = 1; i <= search.numberOfChapters; i++) {
+	for (let i = 1; i <= numberOfChapters; i++) {
 		chapterArray.push(i);
 	}
 	chapterArray = chapterArray.map((el) => (
@@ -148,7 +147,7 @@ export const SearchBible = () => {
 					className={classes.select}
 					labelId='bible-book'
 					data-testid='select-book'
-					value={search.book}
+					value={book}
 					onChange={handleBookChange}>
 					{bookTitles.map((bookString) => (
 						<MenuItem value={bookString} key={bookString}>
@@ -165,7 +164,7 @@ export const SearchBible = () => {
 					className={classes.select}
 					labelId='bible-chapter'
 					data-testid='select-chapter'
-					value={search.chapter}
+					value={chapter}
 					onChange={handleChapterChange}>
 					{chapterArray}
 				</Select>

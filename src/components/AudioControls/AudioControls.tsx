@@ -1,21 +1,9 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import styles from './AudioControls.module.scss';
 
 //State
-import { FirebaseContext } from 'app/firebaseContext';
-import { AudioContext } from 'app/audioContext';
-import { useSelector, useDispatch } from 'react-redux';
-import { selectAudioSettings } from 'app/audioSlice';
-import {
-	play,
-	pause,
-	rewind,
-	forward,
-	beginning,
-	position,
-	speed,
-} from 'app/audioCommands';
-import { selectText, viewChangeButtonClicked } from 'app/textSlice';
+import { useDispatch } from 'react-redux';
+import { viewChangeButtonClicked } from 'store/textSlice';
 
 //Custom icons
 import flipIcon from 'icons/flip.svg';
@@ -29,59 +17,64 @@ import errorIcon from 'icons/error.svg';
 
 //Utilities
 import { storeShowCondensed } from '../../app/storage';
-import { UtilityConfig } from 'app/types';
+import { useAudioContext } from 'hooks/useAudioContext';
+import { useFirebaseContext } from 'hooks/useFirebaseContext';
+import { useAppSelector } from 'store/store';
 
-export const AudioControls = () => {
+interface Props {
+	type?: 'review' | 'learn';
+}
+
+export const AudioControls = ({ type = 'learn' }: Props) => {
 	const dispatch = useDispatch();
-	const audioSettings = useSelector(selectAudioSettings);
-	const text = useSelector(selectText);
-	const audioElement = useContext(AudioContext);
-	const { analytics } = useContext(FirebaseContext);
-
-	const config: UtilityConfig = {
-		audioElement,
-		analytics,
-		dispatch,
-	};
+	const { speed: audioSpeed, position: audioPosition,
+		hasError, isReady, isPlaying } = useAppSelector((state) => state.audio);
+	const { showCondensed } = useAppSelector((state) => state.text);
+	const { play, pause, rewind, forward,
+		speed, position, beginning } = useAudioContext();
+	const { analytics } = useFirebaseContext();
+	// const {
+	// 	recordingState, record, stop, url
+	// } = useAudioRecorder();
 
 	const handlePlay = () => {
 		analytics.logEvent('play_button_clicked');
-		play(config);
+		play();
 	};
 
 	const handlePause = () => {
 		analytics.logEvent('pause_buton_clicked');
-		pause(config);
+		pause();
 	};
 
 	const handleRewind = () => {
 		analytics.logEvent('back_button_clicked');
-		rewind(config);
+		rewind();
 	};
 
 	const handleForward = () => {
 		analytics.logEvent('forward_button_clicked');
-		forward(config);
+		forward();
 	};
 
 	const handleBeginning = () => {
 		analytics.logEvent('beginning_button_clicked');
-		beginning(config);
+		beginning();
 	};
 
 	const handleAudioPositionChange = (
 		e: React.ChangeEvent<HTMLInputElement>
 	) => {
 		const targetTime: number = Number(e.currentTarget.value);
-		position(config, targetTime);
+		position(targetTime);
 		analytics.logEvent('progress_bar_clicked', {
 			targetTime,
 		});
 	};
 
 	const handleSpeedChange = () => {
-		const targetSpeed = Math.max((audioSettings.speed + 0.25) % 2.25, 0.5);
-		speed(config, targetSpeed);
+		const targetSpeed = Math.max((audioSpeed + 0.25) % 2.25, 0.5);
+		speed(targetSpeed);
 		analytics.logEvent('speed_button_clicked', {
 			targetSpeed,
 		});
@@ -89,9 +82,9 @@ export const AudioControls = () => {
 
 	const handleViewChange = () => {
 		analytics.logEvent('flip_view_button_clicked', {
-			showCondensed: text.showCondensed,
+			showCondensed: showCondensed,
 		});
-		const targetShowCondensed = !text.showCondensed;
+		const targetShowCondensed = !showCondensed;
 		dispatch(viewChangeButtonClicked(targetShowCondensed));
 		storeShowCondensed(targetShowCondensed);
 	};
@@ -107,12 +100,12 @@ export const AudioControls = () => {
 				min='0'
 				max='1'
 				step='0.000000001'
-				value={audioSettings.position.toString()}
+				value={audioPosition.toString()}
 				onChange={handleAudioPositionChange}
 			/>
 			<div
 				className={styles.progressIndicator}
-				style={{ width: `${audioSettings.position * 100}%` }}
+				style={{ width: `${audioPosition * 100}%` }}
 			/>
 
 			{/* BUTTON CONTAINER */}
@@ -123,7 +116,7 @@ export const AudioControls = () => {
 					data-testid='speed'
 					className={styles.playSpeedButton}
 					onMouseDown={handleSpeedChange}>
-					<p className={styles.icon}>x{audioSettings.speed}</p>
+					<p className={styles.icon}>x{audioSpeed}</p>
 				</button>
 				<button
 					aria-label='beginning'
@@ -152,7 +145,7 @@ export const AudioControls = () => {
 				</button>
 
 				{/* PLAY BUTTON */}
-				{audioSettings.hasError ? (
+				{hasError ? (
 					/* HAS ERROR */
 					<button
 						data-info='error'
@@ -162,8 +155,8 @@ export const AudioControls = () => {
 						disabled={true}>
 						<img src={errorIcon} alt={'loading'} className={styles.icon} />
 					</button>
-				) : audioSettings.isReady ? (
-					audioSettings.isPlaying ? (
+				) : isReady ? (
+					isPlaying ? (
 						/* NO ERROR, IS READY AND PLAYING */
 						<button
 							aria-label='pause'
@@ -205,7 +198,7 @@ export const AudioControls = () => {
 				</button>
 				<button
 					aria-label={
-						text.showCondensed ? 'show original text' : 'show condensed text'
+						showCondensed ? 'show original text' : 'show condensed text'
 					}
 					data-testid='flip'
 					data-info='change view'

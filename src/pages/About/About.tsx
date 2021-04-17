@@ -1,6 +1,5 @@
 import React, { useEffect, useContext } from 'react';
 import styles from './About.module.scss';
-import { FirebaseContext } from '../../app/firebaseContext';
 import { Link } from 'react-router-dom';
 
 //animated scroll library
@@ -21,9 +20,10 @@ import loadingIcon from '../../icons/loading.svg';
 import errorIcon from '../../icons/error.svg';
 import flipIcon from '../../icons/flip.svg';
 import { Footer } from '../../components/Footer/Footer';
+import { useFirebaseContext } from 'hooks/useFirebaseContext';
 
 export default () => {
-	const { analytics } = useContext(FirebaseContext);
+	const { analytics } = useFirebaseContext()
 	const scrollToTop = () => {
 		scroll.scrollToTop({ smooth: true, duration: 500 });
 		analytics.logEvent('back_to_top_button_pressed');

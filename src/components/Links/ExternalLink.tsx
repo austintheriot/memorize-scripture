@@ -1,12 +1,12 @@
+import { useFirebaseContext } from 'hooks/useFirebaseContext';
 import React, { useContext, useRef } from 'react';
-import { FirebaseContext } from '../../app/firebaseContext';
 
 export const ExternalLink = (props: {
 	children: string | JSX.Element;
 	to: string;
 	className?: string;
 }) => {
-	const { analytics } = useContext(FirebaseContext);
+	const { analytics } = useFirebaseContext();
 	const anchor = useRef<HTMLAnchorElement | null>(null);
 
 	const handleClick = (
