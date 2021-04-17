@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import styles from './Controls.module.scss';
+import styles from './AudioControls.module.scss';
 
 //State
 import { FirebaseContext } from 'app/firebaseContext';
@@ -31,7 +31,7 @@ import errorIcon from 'icons/error.svg';
 import { storeShowCondensed } from '../../app/storage';
 import { UtilityConfig } from 'app/types';
 
-export const Controls = () => {
+export const AudioControls = () => {
 	const dispatch = useDispatch();
 	const audioSettings = useSelector(selectAudioSettings);
 	const text = useSelector(selectText);
@@ -174,27 +174,27 @@ export const Controls = () => {
 							<img src={pauseIcon} alt={'pause'} className={styles.icon} />
 						</button>
 					) : (
-						/* NO ERROR, IS READY AND PAUSED */
-						<button
-							aria-label='play'
-							data-info='play'
-							data-testid='play'
-							className={styles.buttons}
-							onMouseDown={handlePlay}>
-							<img src={playIcon} alt={'play'} className={styles.icon} />
-						</button>
-					)
+							/* NO ERROR, IS READY AND PAUSED */
+							<button
+								aria-label='play'
+								data-info='play'
+								data-testid='play'
+								className={styles.buttons}
+								onMouseDown={handlePlay}>
+								<img src={playIcon} alt={'play'} className={styles.icon} />
+							</button>
+						)
 				) : (
-					/* NO ERROR, IS NOT READY (LOADING) */
-					<button
-						data-info='loading'
-						aria-label='loading'
-						data-testid='loading'
-						className={styles.buttons}
-						disabled={true}>
-						<img src={loadingIcon} alt={'loading'} className={styles.loading} />
-					</button>
-				)}
+							/* NO ERROR, IS NOT READY (LOADING) */
+							<button
+								data-info='loading'
+								aria-label='loading'
+								data-testid='loading'
+								className={styles.buttons}
+								disabled={true}>
+								<img src={loadingIcon} alt={'loading'} className={styles.loading} />
+							</button>
+						)}
 				<button
 					data-info='forward 5s'
 					aria-label='forward'

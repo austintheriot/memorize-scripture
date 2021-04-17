@@ -14,7 +14,7 @@ import styles from './Learn.module.scss';
 
 //Custom components
 import { ErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary';
-import { Controls } from '../../components/Controls/Controls';
+import { AudioControls } from '../../components/AudioControls/AudioControls';
 import { SmallSpacer } from '../../components/Spacers/Spacers';
 import { Footer } from '../../components/Footer/Footer';
 import { SearchBible } from '../../components/SearchBible/SearchBible';
@@ -74,23 +74,23 @@ export default () => {
 								Sorry, there was an error loading this passage.
 							</p>
 						) : //Loading
-						text.loading ? (
-							<TextLoading />
-						) : //Condensed
-						text.showCondensed ? (
-							<TextCondensed />
-						) : (
-							//Original
-							<p className={styles.fullText} data-testid='text-original'>
-								{text.body}
-							</p>
-						)
+							text.loading ? (
+								<TextLoading />
+							) : //Condensed
+								text.showCondensed ? (
+									<TextCondensed />
+								) : (
+										//Original
+										<p className={styles.fullText} data-testid='text-original'>
+											{text.body}
+										</p>
+									)
 					}
 				</div>
 				<SmallSpacer />
 				<Copyright />
 				<Footer />
-				<Controls />
+				<AudioControls />
 			</div>
 		</ErrorBoundary>
 	);
