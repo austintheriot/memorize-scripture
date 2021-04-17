@@ -10,6 +10,7 @@ import { ESVApiKey } from '../app/config';
 import { audioFileChanged } from './audioSlice';
 import { AppDispatch } from './store';
 import { BibleBook } from 'pages/Learn/bible';
+import { Analytics } from 'hooks/useFirebaseContext';
 
 export interface TextState {
 	loading: boolean;
@@ -161,13 +162,13 @@ export const {
 export const fetchTextFromESVAPI = (
 	book: BibleBook,
 	chapter: string,
-	config: UtilityConfig
+	analytics: Analytics,
 ) => (dispatch: AppDispatch) => {
 	dispatch(textBeingFetchedFromAPI());
 
 	const title = `${book} ${chapter}`;
 	console.log(`Fetching draft body file of ${title} from ESV API`);
-	config.analytics.logEvent('fetched_text_from_ESV_API', {
+	analytics.logEvent('fetched_text_from_ESV_API', {
 		book,
 		chapter,
 		title,

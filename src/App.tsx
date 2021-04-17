@@ -9,14 +9,13 @@ import { MenuButton } from './components/MenuButton/MenuButton';
 import { Transition } from './components/Transition/Transition';
 import { ServiceWorkerMessages } from './components/ServiceWorkerMessages/ServiceWorkerMessages';
 import { initializeApp } from './app/init';
-import { UtilityConfig } from './app/types';
 import { Loading } from './components/Loading/Loading';
 import { AudioProvider, useAudioContext } from 'hooks/useAudioContext';
 import { Provider as StoreProvider } from 'react-redux';
 import store, { useAppSelector } from './store/store';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ErrorBoundary } from 'components/ErrorBoundary/ErrorBoundary';
-import { FirebaseProvider, useFirebaseContext } from 'hooks/useFirebaseContext';
+import { FirebaseProvider } from 'hooks/useFirebaseContext';
 import { useRouteAnalytics } from 'hooks/useRouteAnalytics';
 
 const Learn = lazy(() => import('./pages/Learn/Learn'));

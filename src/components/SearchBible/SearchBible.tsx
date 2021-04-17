@@ -4,33 +4,21 @@ import {
 	bookSelected,
 	chapterSelected,
 } from '../../store/searchSlice';
-
-//Styles
 import styles from './SearchBible.module.scss';
-
-//Material UI Components
 import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-
-//Custom components
 import searchIcon from '../../icons/search.svg';
-
-//Utilities
 import { BibleBook, bookTitles } from '../../pages/Learn/bible';
 import { getTextBody, addToTextArray } from '../../utils/storageUtils';
-
-//types
-import { UtilityConfig } from '../../app/types';
 import {
 	textRetrievedFromLocalStorage,
 	fetchTextFromESVAPI,
 } from '../../store/textSlice';
 import { audioFileChanged } from 'store/audioSlice';
 import { useAppSelector } from 'store/store';
-import { useAudioContext } from 'hooks/useAudioContext';
 import { useFirebaseContext } from 'hooks/useFirebaseContext';
 
 const useStyles = makeStyles((theme) => ({
@@ -63,13 +51,6 @@ export const SearchBible = () => {
 	//Redux State:
 	const dispatch = useDispatch();
 	const { book, chapter, numberOfChapters } = useAppSelector((s) => s.search);
-	const { textAudioRef } = useAudioContext();
-
-	const utilityConfig: UtilityConfig = {
-		audioElement: textAudioRef.current,
-		dispatch,
-		analytics,
-	};
 
 	const handleBookChange = (
 		e: React.ChangeEvent<{
@@ -121,7 +102,7 @@ export const SearchBible = () => {
 			//If it does not exist in local storage, make an API call, and store the returned text
 			console.log(`${title} not found in local storage`);
 			console.log('Making a call to the ESV API');
-			dispatch(fetchTextFromESVAPI(book, chapter, utilityConfig));
+			dispatch(fetchTextFromESVAPI(book, chapter, analytics));
 		}
 	};
 

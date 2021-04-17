@@ -7,6 +7,7 @@ import 'firebase/analytics';
 
 export const app = firebase.initializeApp(firebaseConfig);
 export const analytics = firebase.analytics(app);
+export type Analytics = typeof analytics;
 export const FirebaseContext = createContext({
   app,
   analytics,
