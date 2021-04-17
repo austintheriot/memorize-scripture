@@ -1,49 +1,42 @@
 import { BibleBook } from "pages/Learn/bible";
+import { Psalm23 } from 'app/Psalm23';
+
 
 export const localStorageVersion = '1.0.0' as const;
-export type TextsObject = { title: string; body: string };
-export type TextsArray = TextsObject[];
-export type LocalStorageKeys =
-	| 'clickedLine'
-	| 'showCondensed'
-	| 'texts'
-	| 'recent'
-	| 'localStorageVersion'
-	| 'speed';
-export type LocalStorageValues<
-	key extends LocalStorageKeys
-> = key extends 'clickedLine'
-	? number
-	: key extends 'showCondensed'
-	? boolean
-	: key extends 'texts'
-	? TextsArray
-	: key extends 'localStorageVersion'
-	? string
-	: key extends 'speed'
-	? number
-	: never;
-
-
 export const DEFAULT_LOCAL_STORAGE_VERSION = localStorageVersion;
 export const DEFAULT_CLICKED_LINE = -1 as const;
 export const DEFAULT_SHOW_CONDENSED = false as const;
-export const DEFAULT_TEXTS = [{ title: '', body: '' }];
+export const DEFAULT_TEXTS = [{ title: 'Psalm 23', body: Psalm23 }];
 export const DEFAULT_SPEED = 1 as const;
 
-export type LocalStorageDefaults<
-	key extends LocalStorageKeys
-> = key extends 'clickedLine'
-	? typeof DEFAULT_CLICKED_LINE
-	: key extends 'showCondensed'
-	? typeof DEFAULT_SHOW_CONDENSED
-	: key extends 'texts'
-	? typeof DEFAULT_TEXTS
-	: key extends 'localStorageVersion'
-	? typeof DEFAULT_LOCAL_STORAGE_VERSION
-	: key extends 'speed'
-	? typeof DEFAULT_SPEED
-	: never;
+export type TextsObject = { title: string; body: string };
+export type TextsArray = TextsObject[];
+
+/**
+ * Used to type check the actual values assigned to local storage as default.
+ */
+interface LocalStorageDefaults {
+	clickedLine: typeof DEFAULT_CLICKED_LINE,
+	showCondensed: typeof DEFAULT_SHOW_CONDENSED,
+	texts: typeof DEFAULT_TEXTS,
+	recent: undefined,
+	localStorageVersion: typeof DEFAULT_LOCAL_STORAGE_VERSION,
+	speed: typeof DEFAULT_SPEED,
+}
+
+/**
+ * More general types that can be returned from local storage.
+ */
+interface LocalStorageTypes {
+	clickedLine: number,
+	showCondensed: boolean,
+	texts: TextsArray,
+	recent: undefined,
+	localStorageVersion: string,
+	speed: number,
+}
+type LocalStorageKeys = keyof LocalStorageDefaults;
+type LocalStorageValues<K extends LocalStorageKeys = LocalStorageKeys> = LocalStorageTypes[K];
 
 export const removeLocalStorage = (key: LocalStorageKeys) => {
 	window.localStorage.removeItem(key);
@@ -51,7 +44,7 @@ export const removeLocalStorage = (key: LocalStorageKeys) => {
 
 export type SetLocalStorage = <K extends LocalStorageKeys>(
 	key: K,
-	value: LocalStorageValues<K>,
+	value: LocalStorageTypes[K],
 ) => void;
 export const setLocalStorage: SetLocalStorage = (key, value) => {
 	console.log(`Storing ${key} as ${value} in local storage`);
@@ -73,10 +66,10 @@ export const getLocalStorage: GetLocalStorage = (key) => {
 	}
 };
 
-export type GetLocalStorageValueAndLog = <K extends LocalStorageKeys>(
-	key: K, defaultValue: LocalStorageDefaults<K>
-) => LocalStorageValues<K> | LocalStorageDefaults<K>;
-export const getLocalStorageValueAndLog: GetLocalStorageValueAndLog = (key, defaultValue) => {
+export type GetLocalStorageAndLog = <K extends LocalStorageKeys>(
+	key: K, defaultValue: LocalStorageDefaults[K]
+) => LocalStorageValues<K>;
+export const getLocalStorageValueAndLog: GetLocalStorageAndLog = (key, defaultValue) => {
 	console.log(`Retrieving ${key} from local storage`);
 	const value = getLocalStorage(key) || defaultValue;
 	console.log(`localStorage: ${key} = ${value}`);
@@ -159,7 +152,8 @@ export const getTextBody = (title: string): string => {
 
 /**
  * Saves a chapter title and the body of its text in local storage.
- * If passage is alreadty in local storage, moves the passage to most recent.
+ * If passage is alreadty in local storage, moves the passage to 
+ * the most recent position.
  */
 export const addToTextArray = (title: string, body: string) => {
 	console.log(
