@@ -1,4 +1,3 @@
-//State
 import { audioSettingsLoaded, audioInitialized } from '../store/audioSlice';
 import { textInitialized, textSettingsLoaded } from '../store/textSlice';
 import {
@@ -7,7 +6,6 @@ import {
 	splitTitleIntoBookAndChapter,
 	getUserSettings,
 } from '../utils/storageUtils';
-import { UtilityConfig } from './types';
 import { Psalm23 } from './Psalm23';
 import { searchInitialized } from '../store/searchSlice';
 import {
@@ -21,6 +19,10 @@ import {
 } from 'utils/storageUtils';
 import { AppDispatch } from 'store/store';
 
+/**
+ * Gets any of the user's preferences that are saved in local storage.
+ * Moves those settings into Redux.
+ */
 const initializeUserSettings = (dispatch: AppDispatch) => {
 	//Loading textAudio playback rate
 	console.log(`Initializing user's settings.`);

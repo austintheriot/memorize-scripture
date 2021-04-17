@@ -1,7 +1,6 @@
 import { BibleBook } from "pages/Learn/bible";
 import { Psalm23 } from 'app/Psalm23';
 
-
 export const localStorageVersion = '1.0.0' as const;
 export const DEFAULT_LOCAL_STORAGE_VERSION = localStorageVersion;
 export const DEFAULT_CLICKED_LINE = -1 as const;
@@ -80,14 +79,10 @@ export const getPlaySpeed = () => getLocalStorageValueAndLog('speed', DEFAULT_SP
 export const getShowCondensed = () => getLocalStorageValueAndLog('showCondensed', DEFAULT_SHOW_CONDENSED);
 export const getTextArray = () => getLocalStorageValueAndLog('texts', DEFAULT_TEXTS);
 export const getMostRecentText = () => getTextArray()[0];
-export const getUserSettings = () => {
-	const targetSpeed = getPlaySpeed();
-	const showCondensed = getShowCondensed();
-	return {
-		targetSpeed,
-		showCondensed,
-	};
-};
+export const getUserSettings = () => ({
+	targetSpeed: getPlaySpeed(),
+	showCondensed: getShowCondensed(),
+});
 
 export const storePlaySpeed = (speed: number) => setLocalStorage('speed', speed);
 export const storeShowCondensed = (boolean: boolean) => setLocalStorage('showCondensed', boolean);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from 'utils/test-utils';
+import { render, screen } from 'utils/testUtils';
 import userEvent from '@testing-library/user-event';
 import Review from './Review';
 import { Psalm23 } from 'app/Psalm23';
