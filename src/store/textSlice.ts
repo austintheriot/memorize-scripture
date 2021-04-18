@@ -2,8 +2,10 @@ import { createSlice } from '@reduxjs/toolkit';
 import { UtilityConfig } from '../app/types';
 import { Psalm23, Psalm23Split, Psalm23Condensed } from '../app/Psalm23';
 import { breakFullTextIntoLines, condenseText } from '../app/condense';
-import { splitTitleIntoBookAndChapter, addToTextArray } from '../utils/storageUtils';
-
+import {
+	splitTitleIntoBookAndChapter,
+	addToTextArray,
+} from '../utils/storageUtils';
 
 import axios from 'axios';
 import { ESVApiKey } from '../app/config';
@@ -44,11 +46,11 @@ const initialState: TextState = {
 	condenseToolOutput: [''],
 	copied: false,
 	copiedError: false,
-}
+};
 
 const updateTextState = (
 	draft: TextState,
-	action: { payload: { book: BibleBook; chapter: string; body: string } }
+	action: { payload: { book: BibleBook; chapter: string; body: string } },
 ) => {
 	draft.book = action.payload.book;
 	draft.chapter = action.payload.chapter;
@@ -70,18 +72,21 @@ export const textSlice = createSlice({
 		},
 		textInitialized: (
 			draft,
-			action: { payload: { book: BibleBook; chapter: string; body: string } }
+			action: { payload: { book: BibleBook; chapter: string; body: string } },
 		) => {
 			draft.error = false;
 			updateTextState(draft, action);
 		},
 		textMostRecentPassageClicked: (
 			draft,
-			action: { payload: { title: string; body: string } }
+			action: { payload: { title: string; body: string } },
 		) => {
 			draft.error = false;
 			const splitTitle = splitTitleIntoBookAndChapter(action.payload.title);
-			if (draft.book === splitTitle.book && draft.chapter === splitTitle.chapter)
+			if (
+				draft.book === splitTitle.book &&
+				draft.chapter === splitTitle.chapter
+			)
 				return;
 			updateTextState(draft, {
 				payload: {
@@ -93,7 +98,7 @@ export const textSlice = createSlice({
 		},
 		textRetrievedFromLocalStorage: (
 			draft,
-			action: { payload: { book: BibleBook; chapter: string; body: string } }
+			action: { payload: { book: BibleBook; chapter: string; body: string } },
 		) => {
 			draft.clickedLine = -1;
 			draft.error = false;
@@ -106,7 +111,7 @@ export const textSlice = createSlice({
 		},
 		textFetchSucceeded: (
 			draft,
-			action: { payload: { book: BibleBook; chapter: string; body: string } }
+			action: { payload: { book: BibleBook; chapter: string; body: string } },
 		) => {
 			draft.loading = false;
 			updateTextState(draft, action);
@@ -129,7 +134,7 @@ export const textSlice = createSlice({
 			draft.copiedError = false;
 			draft.condenseToolInput = action.payload;
 			draft.condenseToolOutput = condenseText(
-				breakFullTextIntoLines(action.payload)
+				breakFullTextIntoLines(action.payload),
 			);
 		},
 		condensedTextCopiedSuccess: (draft) => {
@@ -163,8 +168,8 @@ export const fetchTextFromESVAPI = (
 	book: BibleBook,
 	chapter: string,
 	analytics: Analytics,
-) => (dispatch: AppDispatch) => {
-	dispatch(textBeingFetchedFromAPI());
+) => async (dispatch: AppDispatch) => {
+	console.log(dispatch(textBeingFetchedFromAPI()));
 
 	const title = `${book} ${chapter}`;
 	console.log(`Fetching draft body file of ${title} from ESV API`);
@@ -188,30 +193,27 @@ export const fetchTextFromESVAPI = (
 		'&indent-poetry-lines=5' +
 		'&include-short-copyright=false';
 
-	axios
-		.get(textURL, {
+	try {
+		const response = await axios.get(textURL, {
 			headers: {
 				Authorization: ESVApiKey,
 			},
-		})
-		.then((response) => {
-			console.log(`Text body of ${title} received from ESV API`);
-			const body = response.data.passages[0];
-			dispatch(
-				textFetchSucceeded({
-					book,
-					chapter,
-					body,
-				})
-			);
-			dispatch(audioFileChanged({ book, chapter }));
-			addToTextArray(title, body);
-		})
-		.catch((error) => {
-			console.log(error);
-			dispatch(textFetchFailed());
 		});
-	};
-
+		console.log(`Text body of ${title} received from ESV API`);
+		const body = response.data.passages[0];
+		dispatch(
+			textFetchSucceeded({
+				book,
+				chapter,
+				body,
+			}),
+		);
+		dispatch(audioFileChanged({ book, chapter }));
+		addToTextArray(title, body);
+	} catch (error) {
+		console.log(error);
+		dispatch(textFetchFailed());
+	}
+};
 
 export default textSlice.reducer;
