@@ -61,7 +61,7 @@ export default () => {
 					<MostRecent />
 				</div>
 				<h2>
-					{book} {chapter}
+					{`${book}`.replace('Psalms', 'Psalm')} {chapter}
 				</h2>
 				<div className={styles.textAreaContainer} data-testid='text-container'>
 					{textComponent}
