@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useMemo, useRef } from 'react';
 
 //App State
 import { useDispatch } from 'react-redux';
@@ -38,16 +38,18 @@ export const MostRecent = () => {
 		});
 	};
 
+	const mostRecent = useMemo(() => getTextArray(), []);
+
 	return (
 		<details
 			className={styles.mostRecentContainer}
 			ref={details}
 			data-testid='most-recent-details'>
 			<summary data-testid='most-recent-summary'>Most Recent:</summary>
-			{getTextArray()[0].title ? (
+			{mostRecent[0].title ? (
 				<>
 					<ul className={styles.mostRecentList}>
-						{getTextArray().map((el) => (
+						{mostRecent.map((el) => (
 							<li key={el.title} className={styles.mostRecentListItem}>
 								<button
 									aria-label='recent passage'

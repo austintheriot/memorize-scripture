@@ -62,16 +62,8 @@ const updateStateWithInitializedValues = (
 export const initializeMostRecentPassage = (dispatch: AppDispatch) => {
 	console.log('Searching storage for most recent book and chapter.');
 	const { title, body } = getMostRecentText();
-	if (title && body) {
-		console.log(`${title} is the most recent text accessed.`);
-		updateStateWithInitializedValues(title, body, dispatch);
-	} else {
-		console.log(
-			'A most recent book and chapter do not exist in local storage.',
-		);
-		console.log(`Leaving Psalm 23 as initialized passage.`);
-		addToTextArray('Psalms 23', Psalm23);
-	}
+	console.log(`${title} is the most recent text accessed.`);
+	updateStateWithInitializedValues(title, body, dispatch);
 };
 
 /**

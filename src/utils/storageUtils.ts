@@ -5,7 +5,7 @@ export const localStorageVersion = '1.0.0' as const;
 export const DEFAULT_LOCAL_STORAGE_VERSION = localStorageVersion;
 export const DEFAULT_CLICKED_LINE = -1 as const;
 export const DEFAULT_SHOW_CONDENSED = false as const;
-export const DEFAULT_TEXTS = [{ title: 'Psalm 23', body: Psalm23 }];
+export const DEFAULT_TEXTS = [{ title: 'Psalms 23', body: Psalm23 }];
 export const DEFAULT_SPEED = 1 as const;
 
 export type TextsObject = { title: string; body: string };
@@ -69,9 +69,9 @@ export type GetLocalStorageAndLog = <K extends LocalStorageKeys>(
 	key: K, defaultValue: LocalStorageDefaults[K]
 ) => LocalStorageValues<K>;
 export const getLocalStorageValueAndLog: GetLocalStorageAndLog = (key, defaultValue) => {
-	console.log(`Retrieving ${key} from local storage`);
+	console.log(`Retrieving key "${key}" from local storage`);
 	const value = getLocalStorage(key) || defaultValue;
-	console.log(`localStorage: ${key} = ${value}`);
+	console.log(`localStorage: "${key}" = "${JSON.stringify(value)}"`);
 	return value;
 }
 
