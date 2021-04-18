@@ -96,49 +96,46 @@ export default () => {
 		setMessage('');
 	};
 
-	const sendSubmission = async () => {
-		const response = await fetch(
-			'https://us-central1-austins-email-server.cloudfunctions.net/sendEmail/contactForm',
-			{
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
+	const sendSubmission = async () => ((await fetch(
+		'https://us-central1-austins-email-server.cloudfunctions.net/sendEmail/contactForm',
+		{
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				Name: '',
+				Email: email,
+				Message: message,
+				_private: {
+					key: emailAPIKey,
 				},
-				body: JSON.stringify({
-					Name: '',
-					Email: email,
-					Message: message,
-					_private: {
-						key: emailAPIKey,
-					},
-				}),
-			}
-		);
-		return response.json();
-	};
+			}),
+		}
+	)).json());
 
-	const submit = () => {
+	const submit = async () => {
 		disableElements(true);
 		setUserMessage('Sending message...');
-		sendSubmission()
-			.then((data) => {
-				disableElements(false);
-				if (data.error) {
-					setUserMessage(
-						'Sorry, there was an error processing your message. Please try again later.'
-					);
-				} else {
-					console.log(data);
-					clearInputs();
-					setUserMessage('Your message was successfully received!');
-				}
-			})
-			.catch((error) => {
-				console.error(error);
+		try {
+			const data = await sendSubmission()
+			disableElements(false);
+			if (data.error) {
 				setUserMessage(
 					'Sorry, there was an error processing your message. Please try again later.'
 				);
-			});
+			} else {
+				console.log(data);
+				clearInputs();
+				setUserMessage('Your message was successfully received!');
+			}
+		}
+		catch (error) {
+			console.error(error);
+			setUserMessage(
+				'Sorry, there was an error processing your message. Please try again later.'
+			);
+		}
 	};
 
 	const handleSubmit = (e: React.FormEvent) => {

@@ -31,16 +31,14 @@ export default () => {
 		}
 	};
 
-	const copyToClipboard = () => {
-		clipboard.writeText(condenseToolOutput.join('\n')).then(
-			() => {
-				dispatch(condensedTextCopiedSuccess());
-			},
-			(err) => {
-				console.log(err);
-				dispatch(condensedTextCopiedFail());
-			}
-		);
+	const copyToClipboard = async () => {
+		try {
+			await clipboard.writeText(condenseToolOutput.join('\n'))
+			dispatch(condensedTextCopiedSuccess());
+		} catch (err) {
+			console.log(err);
+			dispatch(condensedTextCopiedFail());
+		}
 	};
 
 	return (
