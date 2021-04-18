@@ -244,3 +244,38 @@
 		transform: rotate(360deg);
 	}
 }
+
+.recordingContainer {
+	position: absolute;
+	height: 60px;
+	width: 60px;
+	left: 50%;
+	top: 0;
+	transform: translate(-50%, -100%);
+	border-radius: 50% 50% 0 0;
+
+	&,
+	div {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	div {
+		height: 48px;
+		width: 48px;
+		background: white;
+		border-radius: 50%;
+
+		button {
+			height: 46px;
+			width: 46px;
+			background: black;
+			border-radius: 50%;
+			outline: 0;
+			border: 0;
+		}
+	}
+
+	background: green;
+}

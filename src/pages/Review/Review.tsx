@@ -9,8 +9,8 @@ import { SearchBible } from '../../components/SearchBible/SearchBible';
 import { MostRecent } from '../../components/MostRecent/MostRecent';
 import { Copyright } from '../../components/Copyright/Copyright';
 import { Comparison } from './Comparison/Comparison';
-import { BibleAudioControls } from 'components/BibleAudioControls/BibleAudioControls';
 import { useAppSelector } from 'store/store';
+import { RecordedAudioControls } from 'components/RecordedAudioControls/RecordedAudioControls';
 
 export default () => {
 	const dispatch = useDispatch();
@@ -62,7 +62,7 @@ export default () => {
 			<SmallSpacer />
 			<Copyright />
 			<Footer />
-			<BibleAudioControls type="review" />
+			<RecordedAudioControls />
 		</ErrorBoundary>
 	);
 };

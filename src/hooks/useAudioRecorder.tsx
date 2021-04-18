@@ -1,4 +1,4 @@
-import React, { KeyboardEvent, MutableRefObject, useCallback, useEffect } from 'react';
+import React, { KeyboardEvent, MutableRefObject, useCallback, useContext, useEffect } from 'react';
 import { createContext, ReactNode, useRef, useState } from 'react';
 import { useFirebaseContext } from './useFirebaseContext';
 import useStateIfMounted from './useStateIfMounted';
@@ -337,3 +337,8 @@ export const RecordedAudioProvider = ({
     </RecordedAudioContext.Provider>
   );
 };
+
+export const useRecordedAudio = () => {
+  return useContext(RecordedAudioContext);
+};
+

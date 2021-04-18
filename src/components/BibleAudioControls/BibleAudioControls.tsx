@@ -15,11 +15,7 @@ import { useBibleAudio } from 'hooks/useBibleAudio';
 import { useFirebaseContext } from 'hooks/useFirebaseContext';
 import { useAppSelector } from 'store/store';
 
-interface Props {
-	type?: 'review' | 'learn';
-}
-
-export const BibleAudioControls = ({ type = 'learn' }: Props) => {
+export const BibleAudioControls = () => {
 	const dispatch = useDispatch();
 	const { speed: audioSpeed, position: audioPosition,
 		hasError, isReady, isPlaying } = useAppSelector((state) => state.bibleAudio);

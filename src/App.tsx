@@ -17,6 +17,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { ErrorBoundary } from 'components/ErrorBoundary/ErrorBoundary';
 import { FirebaseProvider } from 'hooks/useFirebaseContext';
 import { useRouteAnalytics } from 'hooks/useRouteAnalytics';
+import { RecordedAudioProvider, useRecordedAudio } from 'hooks/useAudioRecorder';
 
 const Learn = lazy(() => import('./pages/Learn/Learn'));
 const Review = lazy(() => import('./pages/Review/Review'));
@@ -26,7 +27,8 @@ const Tools = lazy(() => import('./pages/Tools/Tools'));
 
 function App() {
 	useRouteAnalytics();
-	const url = useAppSelector((state) => state.bibleAudio.url);
+	const bibleAudioUrl = useAppSelector((state) => state.bibleAudio.url);
+	const { url: recordedAudioUrl, recordedAudioRef } = useRecordedAudio();
 	const dispatch = useDispatch();
 	const closeMenu = () => dispatch(outsideOfMenuClicked());
 	const { bibleAudioRef } = useBibleAudio();
@@ -44,7 +46,8 @@ function App() {
 					<Suspense fallback={Loading()}>
 						<MenuButton />
 						<Menu />
-						<audio src={url} ref={bibleAudioRef} />
+						<audio src={bibleAudioUrl} ref={bibleAudioRef} />
+						<audio src={recordedAudioUrl} ref={recordedAudioRef} />
 						<div onClick={closeMenu}>
 							<ServiceWorkerMessages />
 							<Switch>
@@ -70,9 +73,11 @@ const AppWithContext = () => {
 			<FirebaseProvider>
 				<StoreProvider store={store}>
 					<BibleAudioProvider>
-						<Router>
-							<App />
-						</Router>
+						<RecordedAudioProvider>
+							<Router>
+								<App />
+							</Router>
+						</RecordedAudioProvider>
 					</BibleAudioProvider>
 				</StoreProvider>
 			</FirebaseProvider>
