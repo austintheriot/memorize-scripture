@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './BibleAudioControls.module.scss';
+import styles from './RecordedAudioControls.module.scss';
 import { useDispatch } from 'react-redux';
 import { viewChangeButtonClicked } from 'store/textSlice';
 import flipIcon from 'icons/flip.svg';
@@ -19,7 +19,7 @@ interface Props {
 	type?: 'review' | 'learn';
 }
 
-export const BibleAudioControls = ({ type = 'learn' }: Props) => {
+export const RecordedAudioControls = ({ type = 'learn' }: Props) => {
 	const dispatch = useDispatch();
 	const { speed: audioSpeed, position: audioPosition,
 		hasError, isReady, isPlaying } = useAppSelector((state) => state.bibleAudio);
@@ -27,6 +27,9 @@ export const BibleAudioControls = ({ type = 'learn' }: Props) => {
 	const { play, pause, rewind, forward,
 		speed, position, beginning } = useBibleAudio();
 	const { analytics } = useFirebaseContext();
+	// const {
+	// 	recordingState, record, stop, url
+	// } = useAudioRecorder();
 
 	const handlePlay = () => {
 		analytics.logEvent('play_button_clicked');

@@ -1,5 +1,5 @@
 import { storePlaySpeed } from 'utils/storageUtils';
-import React, { KeyboardEvent, MutableRefObject, useCallback, useContext, useEffect, useRef } from 'react';
+import React, { KeyboardEvent, MutableRefObject, ReactNode, useCallback, useContext, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 //State
 import {
@@ -50,7 +50,7 @@ export const BibleAudioContext = React.createContext<BibleAudioContextType>({
 	handleKeyPress: () => { },
 });
 
-export const BibleAudioProvider = ({ children }: { children: any }) => {
+export const BibleAudioProvider = ({ children }: { children: ReactNode }) => {
 	const dispatch = useDispatch();
 	const audioSpeed = useAppSelector((state) => state.bibleAudio.speed);
 	const { analytics } = useFirebaseContext();
