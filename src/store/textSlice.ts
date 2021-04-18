@@ -175,7 +175,7 @@ export const fetchTextFromESVAPI = (
 	});
 
 	const textURL =
-		'https://api.esv.org/v3/passage/draft/?' +
+		'https://api.esv.org/v3/passage/text/?' +
 		`q=${title}` +
 		'&include-passage-references=false' +
 		'&include-verse-numbers=false' +
@@ -211,6 +211,7 @@ export const fetchTextFromESVAPI = (
 			console.log(error);
 			dispatch(textFetchFailed());
 		});
-};
+	};
+
 
 export default textSlice.reducer;
