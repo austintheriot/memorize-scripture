@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Prompt } from 'react-router';
 import styles from './Learn.module.scss';
 import { ErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary';
-import { AudioControls } from '../../components/AudioControls/AudioControls';
+import { BibleAudioControls } from '../../components/BibleAudioControls/BibleAudioControls';
 import { SmallSpacer } from '../../components/Spacers/Spacers';
 import { Footer } from '../../components/Footer/Footer';
 import { SearchBible } from '../../components/SearchBible/SearchBible';
@@ -10,7 +10,7 @@ import { MostRecent } from '../../components/MostRecent/MostRecent';
 import { TextCondensed } from './TextCondensed/TextCondensed';
 import { TextLoading } from '../../components/TextLoading/TextLoading';
 import { Copyright } from '../../components/Copyright/Copyright';
-import { useAudioContext } from 'hooks/useAudioContext';
+import { useBibleAudio } from 'hooks/useBibleAudio';
 import { useAppSelector } from 'store/store';
 
 
@@ -19,7 +19,7 @@ export default () => {
 		window.scrollTo(0, 0);
 	}, []);
 
-	const { textAudioRef, handleKeyPress } = useAudioContext();
+	const { bibleAudioRef, handleKeyPress } = useBibleAudio();
 	const { book, chapter, error, loading, showCondensed, body } = useAppSelector(s => s.text);
 
 	let textComponent = null;
@@ -51,7 +51,7 @@ export default () => {
 					message={() => {
 						//Pause textAudio when navigating away from Home
 						console.log('Leaving Home page. Pausing textAudio.');
-						if (textAudioRef.current.readyState >= 2) textAudioRef.current.pause();
+						if (bibleAudioRef.current.readyState >= 2) bibleAudioRef.current.pause();
 						return true;
 					}}
 				/>
@@ -69,7 +69,7 @@ export default () => {
 				<SmallSpacer />
 				<Copyright />
 				<Footer />
-				<AudioControls />
+				<BibleAudioControls />
 			</div>
 		</ErrorBoundary>
 	);

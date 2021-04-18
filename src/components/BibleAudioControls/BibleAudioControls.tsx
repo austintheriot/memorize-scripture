@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './AudioControls.module.scss';
+import styles from './BibleAudioControls.module.scss';
 
 //State
 import { useDispatch } from 'react-redux';
@@ -17,7 +17,7 @@ import errorIcon from 'icons/error.svg';
 
 //Utilities
 import { storeShowCondensed } from '../../utils/storageUtils';
-import { useAudioContext } from 'hooks/useAudioContext';
+import { useBibleAudio } from 'hooks/useBibleAudio';
 import { useFirebaseContext } from 'hooks/useFirebaseContext';
 import { useAppSelector } from 'store/store';
 
@@ -25,13 +25,13 @@ interface Props {
 	type?: 'review' | 'learn';
 }
 
-export const AudioControls = ({ type = 'learn' }: Props) => {
+export const BibleAudioControls = ({ type = 'learn' }: Props) => {
 	const dispatch = useDispatch();
 	const { speed: audioSpeed, position: audioPosition,
-		hasError, isReady, isPlaying } = useAppSelector((state) => state.audio);
+		hasError, isReady, isPlaying } = useAppSelector((state) => state.bibleAudio);
 	const { showCondensed } = useAppSelector((state) => state.text);
 	const { play, pause, rewind, forward,
-		speed, position, beginning } = useAudioContext();
+		speed, position, beginning } = useBibleAudio();
 	const { analytics } = useFirebaseContext();
 	// const {
 	// 	recordingState, record, stop, url

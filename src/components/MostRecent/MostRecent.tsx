@@ -9,7 +9,7 @@ import styles from './MostRecent.module.scss';
 
 //Utilities
 import { addToTextArray, getTextArray } from '../../utils/storageUtils';
-import { audioMostRecentPassageClicked } from 'store/audioSlice';
+import { audioMostRecentPassageClicked } from 'store/bibleAudioSlice';
 import { useFirebaseContext } from 'hooks/useFirebaseContext';
 
 export const MostRecent = () => {

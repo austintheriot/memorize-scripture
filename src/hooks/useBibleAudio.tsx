@@ -17,13 +17,13 @@ import {
 	rightArrowPressed,
 	progressBarClicked,
 	speedButtonClicked,
-} from 'store/audioSlice';
+} from 'store/bibleAudioSlice';
 import { useAppSelector } from 'store/store';
 import { useFirebaseContext } from './useFirebaseContext';
 const psalm23 = require('audio/Psalm23.mp3');
 
-interface AudioContextType {
-	textAudioRef: MutableRefObject<HTMLAudioElement>,
+interface BibleAudioContextType {
+	bibleAudioRef: MutableRefObject<HTMLAudioElement>,
 	togglePlayPause: () => void,
 	play: () => void,
 	pause: () => void,
@@ -37,8 +37,8 @@ interface AudioContextType {
 
 
 // audio context value when no provider given
-export const AudioContext = React.createContext<AudioContextType>({
-	textAudioRef: { current: new Audio(psalm23) },
+export const BibleAudioContext = React.createContext<BibleAudioContextType>({
+	bibleAudioRef: { current: new Audio(psalm23) },
 	togglePlayPause: () => { },
 	play: () => { },
 	pause: () => { },
@@ -50,140 +50,140 @@ export const AudioContext = React.createContext<AudioContextType>({
 	handleKeyPress: () => { },
 });
 
-export const AudioProvider = ({ children }: { children: any }) => {
+export const BibleAudioProvider = ({ children }: { children: any }) => {
 	const dispatch = useDispatch();
-	const audioSpeed = useAppSelector((state) => state.audio.speed);
+	const audioSpeed = useAppSelector((state) => state.bibleAudio.speed);
 	const { analytics } = useFirebaseContext();
-	const textAudioRef = useRef(new Audio(psalm23));
-	const { url } = useAppSelector(state => state.audio)
-	const textAudio = textAudioRef.current;
+	const bibleAudioRef = useRef(new Audio(psalm23));
+	const { url } = useAppSelector(state => state.bibleAudio)
+	const bibleAudio = bibleAudioRef.current;
 
 	const prepareAudioForPlayback = useCallback(() => {
-		textAudio.load(); // necessary on mobile
-		textAudio.pause();
-		textAudio.currentTime = 0;
-		textAudio.playbackRate = audioSpeed; //load textAudio settings
+		bibleAudio.load(); // necessary on mobile
+		bibleAudio.pause();
+		bibleAudio.currentTime = 0;
+		bibleAudio.playbackRate = audioSpeed; //load bibleAudio settings
 
 		//loaded enough to play
-		textAudio.addEventListener('canplay', () => {
+		bibleAudio.addEventListener('canplay', () => {
 			dispatch(canPlayEvent());
 		});
-		textAudio.addEventListener('pause', () => {
+		bibleAudio.addEventListener('pause', () => {
 			dispatch(pauseEvent());
 		});
-		textAudio.addEventListener('play', () => {
+		bibleAudio.addEventListener('play', () => {
 			dispatch(playEvent());
 		});
-		textAudio.addEventListener('error', () => {
+		bibleAudio.addEventListener('error', () => {
 			dispatch(errorEvent());
 		});
 		//not enough data
-		textAudio.addEventListener('waiting', () => {
+		bibleAudio.addEventListener('waiting', () => {
 			//No action currently selected for this event
 		});
 		//ready to play after waiting
-		textAudio.addEventListener('playing', () => {
+		bibleAudio.addEventListener('playing', () => {
 			dispatch(playingEvent());
 		});
-		//textAudio is over
-		textAudio.addEventListener('ended', () => {
-			textAudio.pause();
-			textAudio.currentTime = 0;
+		//bibleAudio is over
+		bibleAudio.addEventListener('ended', () => {
+			bibleAudio.pause();
+			bibleAudio.currentTime = 0;
 		});
 		//as time is updated
-		textAudio.addEventListener('timeupdate', () => {
-			const targetPosition = textAudio.currentTime / textAudio.duration;
+		bibleAudio.addEventListener('timeupdate', () => {
+			const targetPosition = bibleAudio.currentTime / bibleAudio.duration;
 			dispatch(timeupdateEvent(targetPosition));
 		});
 		//when speed is changed
-		textAudio.addEventListener('ratechange', () => {
-			dispatch(ratechangeEvent(textAudio.playbackRate));
+		bibleAudio.addEventListener('ratechange', () => {
+			dispatch(ratechangeEvent(bibleAudio.playbackRate));
 		});
-	}, [audioSpeed, textAudio, dispatch]);
+	}, [audioSpeed, bibleAudio, dispatch]);
 
 	/**
 	 * Plays audio if audio is paused.
 	 * Pauses audio if audio is playing.
 	 */
 	const togglePlayPause = useCallback(() => {
-		if (textAudio.readyState < 2) return;
-		if (textAudio.paused) {
-			textAudio.play();
+		if (bibleAudio.readyState < 2) return;
+		if (bibleAudio.paused) {
+			bibleAudio.play();
 		} else {
-			textAudio.pause();
+			bibleAudio.pause();
 		}
 		dispatch(spacebarPressed());
-	}, [textAudio, dispatch]);
+	}, [bibleAudio, dispatch]);
 
 	/**
 	 * Plays audio if audio is ready to be interacted with.
 	 */
 	const play = useCallback(() => {
-		if (textAudio.readyState < 2) return;
-		textAudio.play();
+		if (bibleAudio.readyState < 2) return;
+		bibleAudio.play();
 		dispatch(playButtonClicked());
-	}, [textAudio, dispatch]);
+	}, [bibleAudio, dispatch]);
 
 	/**
 	 * Pauses audio if audio is ready to be interacted with.
 	 */
 	const pause = useCallback(() => {
-		if (textAudio.readyState < 2) return;
-		textAudio.pause();
+		if (bibleAudio.readyState < 2) return;
+		bibleAudio.pause();
 		dispatch(pauseButtonClicked());
-	}, [textAudio, dispatch]);
+	}, [bibleAudio, dispatch]);
 
 	/**
 	 * Rewinds audio if audio is ready to be interacted with.
 	 */
 	const rewind = useCallback(() => {
-		if (textAudio.readyState < 2) return;
-		const targetTime = Math.max(textAudio.currentTime - 5, 0);
-		dispatch(leftArrowPressed(targetTime / textAudio.duration));
-		textAudio.currentTime = targetTime;
-	}, [textAudio, dispatch]);
+		if (bibleAudio.readyState < 2) return;
+		const targetTime = Math.max(bibleAudio.currentTime - 5, 0);
+		dispatch(leftArrowPressed(targetTime / bibleAudio.duration));
+		bibleAudio.currentTime = targetTime;
+	}, [bibleAudio, dispatch]);
 
 	/**
 	 * Moves audio forward if audio is ready to be interacted with.
 	 */
 	const forward = useCallback(() => {
-		if (textAudio.readyState < 2) return;
+		if (bibleAudio.readyState < 2) return;
 		const targetTime = Math.min(
-			textAudio.currentTime + 5,
-			textAudio.duration - 0.01
+			bibleAudio.currentTime + 5,
+			bibleAudio.duration - 0.01
 		);
-		dispatch(rightArrowPressed(targetTime / textAudio.duration));
-		textAudio.currentTime = targetTime;
-	}, [textAudio, dispatch]);
+		dispatch(rightArrowPressed(targetTime / bibleAudio.duration));
+		bibleAudio.currentTime = targetTime;
+	}, [bibleAudio, dispatch]);
 
 	/**
 	 * Sends current position of audio to the beginning.
 	 */
 	const beginning = useCallback(() => {
-		if (textAudio.readyState < 2) return;
-		textAudio.currentTime = 0;
-	}, [textAudio]);
+		if (bibleAudio.readyState < 2) return;
+		bibleAudio.currentTime = 0;
+	}, [bibleAudio]);
 
 	/**
 	 * Moves current audio position to a designated time between 0 and 1
 	 * if audio is ready to be interacted with.
 	 */
 	const position = useCallback((targetTime: number) => {
-		if (textAudio.readyState < 2) return;
+		if (bibleAudio.readyState < 2) return;
 		dispatch(progressBarClicked(targetTime));
-		textAudio.currentTime = textAudio.duration * targetTime;
-	}, [textAudio.currentTime, textAudio.duration, textAudio.readyState, dispatch]);
+		bibleAudio.currentTime = bibleAudio.duration * targetTime;
+	}, [bibleAudio.currentTime, bibleAudio.duration, bibleAudio.readyState, dispatch]);
 
 	/**
 	 * Changes the current audio speed to the designated speed if audio 
 	 * is ready to be interacted with.
 	 */
 	const speed = useCallback((targetSpeed: number) => {
-		if (textAudio.readyState < 2) return;
-		textAudio.playbackRate = targetSpeed;
+		if (bibleAudio.readyState < 2) return;
+		bibleAudio.playbackRate = targetSpeed;
 		dispatch(speedButtonClicked(targetSpeed));
 		storePlaySpeed(targetSpeed);
-	}, [textAudio.playbackRate, textAudio.readyState, dispatch]);
+	}, [bibleAudio.playbackRate, bibleAudio.readyState, dispatch]);
 
 	/**
 	 * Enables toggling the audio on/off and rewinding/fast-forwarding
@@ -191,7 +191,7 @@ export const AudioProvider = ({ children }: { children: any }) => {
 	 */
 	const handleKeyPress = useCallback((e: KeyboardEvent<HTMLDivElement>) => {
 		const key = e.key;
-		if (textAudio.readyState < 2) return;
+		if (bibleAudio.readyState < 2) return;
 		if (key === ' ') {
 			e.preventDefault();
 			analytics.logEvent('space_bar_pressed');
@@ -205,7 +205,7 @@ export const AudioProvider = ({ children }: { children: any }) => {
 			analytics.logEvent('right_arrow_pressed');
 			forward();
 		}
-	}, [analytics, forward, rewind, textAudio.readyState, togglePlayPause])
+	}, [analytics, forward, rewind, bibleAudio.readyState, togglePlayPause])
 
 
 	useEffect(() => {
@@ -214,8 +214,8 @@ export const AudioProvider = ({ children }: { children: any }) => {
 	}, [url])
 
 	return (
-		<AudioContext.Provider value={{
-			textAudioRef,
+		<BibleAudioContext.Provider value={{
+			bibleAudioRef,
 			togglePlayPause,
 			play,
 			pause,
@@ -225,10 +225,10 @@ export const AudioProvider = ({ children }: { children: any }) => {
 			position,
 			speed,
 			handleKeyPress,
-		}}>{children}</AudioContext.Provider>
+		}}>{children}</BibleAudioContext.Provider>
 	);
 };
 
-export const useAudioContext = () => {
-	return useContext(AudioContext);
+export const useBibleAudio = () => {
+	return useContext(BibleAudioContext);
 };

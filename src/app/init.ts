@@ -1,12 +1,10 @@
-import { audioSettingsLoaded, audioInitialized } from '../store/audioSlice';
+import { audioSettingsLoaded, audioInitialized } from '../store/bibleAudioSlice';
 import { textInitialized, textSettingsLoaded } from '../store/textSlice';
 import {
-	addToTextArray,
 	getMostRecentText,
 	splitTitleIntoBookAndChapter,
 	getUserSettings,
 } from '../utils/storageUtils';
-import { Psalm23 } from './Psalm23';
 import { searchInitialized } from '../store/searchSlice';
 import {
 	getLocalStorage,
@@ -105,7 +103,6 @@ const initLocalStorage = () => {
 		window.localStorage.clear();
 	}
 };
-
 export const initializeApp = (dispatch: AppDispatch) => {
 	initLocalStorage();
 	initializeUserSettings(dispatch);

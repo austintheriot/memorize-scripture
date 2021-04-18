@@ -9,7 +9,7 @@ import { SearchBible } from '../../components/SearchBible/SearchBible';
 import { MostRecent } from '../../components/MostRecent/MostRecent';
 import { Copyright } from '../../components/Copyright/Copyright';
 import { Comparison } from './Comparison/Comparison';
-import { AudioControls } from 'components/AudioControls/AudioControls';
+import { BibleAudioControls } from 'components/BibleAudioControls/BibleAudioControls';
 import { useAppSelector } from 'store/store';
 
 export default () => {
@@ -62,7 +62,7 @@ export default () => {
 			<SmallSpacer />
 			<Copyright />
 			<Footer />
-			<AudioControls type="review" />
+			<BibleAudioControls type="review" />
 		</ErrorBoundary>
 	);
 };

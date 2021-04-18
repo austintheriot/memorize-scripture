@@ -17,7 +17,7 @@ import {
 	textRetrievedFromLocalStorage,
 	fetchTextFromESVAPI,
 } from '../../store/textSlice';
-import { audioFileChanged } from 'store/audioSlice';
+import { audioFileChanged } from 'store/bibleAudioSlice';
 import { useAppSelector } from 'store/store';
 import { useFirebaseContext } from 'hooks/useFirebaseContext';
 

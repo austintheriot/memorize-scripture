@@ -10,7 +10,7 @@ import { Transition } from './components/Transition/Transition';
 import { ServiceWorkerMessages } from './components/ServiceWorkerMessages/ServiceWorkerMessages';
 import { initializeApp } from './app/init';
 import { Loading } from './components/Loading/Loading';
-import { AudioProvider, useAudioContext } from 'hooks/useAudioContext';
+import { BibleAudioProvider, useBibleAudio } from 'hooks/useBibleAudio';
 import { Provider as StoreProvider } from 'react-redux';
 import store, { useAppSelector } from './store/store';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -26,10 +26,10 @@ const Tools = lazy(() => import('./pages/Tools/Tools'));
 
 function App() {
 	useRouteAnalytics();
-	const url = useAppSelector((state) => state.audio.url);
+	const url = useAppSelector((state) => state.bibleAudio.url);
 	const dispatch = useDispatch();
 	const closeMenu = () => dispatch(outsideOfMenuClicked());
-	const { textAudioRef } = useAudioContext();
+	const { bibleAudioRef } = useBibleAudio();
 
 	useEffect(() => {
 		serviceWorker.unregister();
@@ -44,7 +44,7 @@ function App() {
 					<Suspense fallback={Loading()}>
 						<MenuButton />
 						<Menu />
-						<audio src={url} ref={textAudioRef} />
+						<audio src={url} ref={bibleAudioRef} />
 						<div onClick={closeMenu}>
 							<ServiceWorkerMessages />
 							<Switch>
@@ -69,11 +69,11 @@ const AppWithContext = () => {
 		<ErrorBoundary>
 			<FirebaseProvider>
 				<StoreProvider store={store}>
-					<AudioProvider>
+					<BibleAudioProvider>
 						<Router>
 							<App />
 						</Router>
-					</AudioProvider>
+					</BibleAudioProvider>
 				</StoreProvider>
 			</FirebaseProvider>
 		</ErrorBoundary>

@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { BibleBook } from 'pages/Learn/bible';
 import { splitTitleIntoBookAndChapter } from '../utils/storageUtils';
 
-export interface AudioState {
+export interface BibleAudioState {
 	url: string;
 	hasError: boolean;
 	isReady: boolean;
@@ -11,7 +11,7 @@ export interface AudioState {
 	speed: number;
 }
 
-const initialState: AudioState = {
+const initialState: BibleAudioState = {
 	url: 'https://audio.esv.org/hw/mq/Psalm23.mp3',
 	hasError: false,
 	isReady: false,
@@ -24,7 +24,7 @@ const createNewUrl = (book: BibleBook, chapter: string): string => {
 	return `https://audio.esv.org/hw/mq/${book} ${chapter}.mp3`;
 };
 
-const updateAudio = (draft: AudioState, book: BibleBook, chapter: string) => {
+const updateAudio = (draft: BibleAudioState, book: BibleBook, chapter: string) => {
 	const newUrl = createNewUrl(book, chapter);
 	if (draft.url !== newUrl) {
 		draft.url = newUrl;
@@ -34,8 +34,8 @@ const updateAudio = (draft: AudioState, book: BibleBook, chapter: string) => {
 	}
 };
 
-export const audioSlice = createSlice({
-	name: 'audio',
+export const bibleAudioSlice = createSlice({
+	name: 'bibleAudio',
 	initialState,
 	reducers: {
 		audioSettingsLoaded: (draft, action: { payload: number }) => {
@@ -127,6 +127,6 @@ export const {
 	spacebarPressed,
 	leftArrowPressed,
 	rightArrowPressed,
-} = audioSlice.actions;
+} = bibleAudioSlice.actions;
 
-export default audioSlice.reducer;
+export default bibleAudioSlice.reducer;

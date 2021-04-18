@@ -9,7 +9,7 @@ import {
 
 import axios from 'axios';
 import { ESVApiKey } from '../app/config';
-import { audioFileChanged } from './audioSlice';
+import { audioFileChanged } from './bibleAudioSlice';
 import { AppDispatch } from './store';
 import { BibleBook } from 'pages/Learn/bible';
 import { Analytics } from 'hooks/useFirebaseContext';
