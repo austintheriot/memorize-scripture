@@ -9,7 +9,8 @@ import forwardIcon from 'icons/forward.svg';
 import loadingIcon from 'icons/loading.svg';
 import errorIcon from 'icons/error.svg';
 import { useFirebaseContext } from 'hooks/useFirebaseContext';
-import { useRecordedAudio } from 'hooks/useAudioRecorder';
+import { useRecordedAudio } from 'hooks/useRecordedAudio';
+import { statefulClasses } from 'utils/conditionalClasses';
 
 export const RecordedAudioControls = () => {
 	const { analytics } = useFirebaseContext();
@@ -84,12 +85,25 @@ export const RecordedAudioControls = () => {
 		// storeShowCondensed(targetShowCondensed);
 	};
 
+	console.log({ recordingState })
+	console.log(statefulClasses([
+		styles.recordingButton,
+		[styles.recording, recordingState === 'recording']
+	]))
+
 	return (
 		<div className={styles.Controls}>
 			{/* RECORDING CONTROLS  */}
 			<div className={styles.recordingContainer}>
 				<div>
-					<button className={ } />
+					<button className={statefulClasses([
+						styles.recordingButton,
+						[styles.recording, recordingState === 'recording']
+					])}
+						onClick={() => {
+							if (recordingState === 'recording') stopRecording();
+							else startRecording();
+						}} />
 				</div>
 			</div>
 

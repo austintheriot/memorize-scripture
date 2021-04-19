@@ -253,6 +253,7 @@
 	top: 0;
 	transform: translate(-50%, -100%);
 	border-radius: 50% 50% 0 0;
+	background-color: var(--dark);
 
 	&,
 	div {
@@ -264,23 +265,25 @@
 	div {
 		height: 48px;
 		width: 48px;
-		background: white;
 		border-radius: 50%;
-
-		button {
-			height: 100%;
-			width: 100%;
-			background: black;
-			border-radius: 50%;
-			outline: 0;
-			border: 0;
-		}
+		background-color: var(--dark);
+		border: 1px solid var(--light);
 	}
+}
 
-	background: green;
+.recordingButton {
+	transition: 0.2s;
+	height: calc(100% - 10px);
+	width: calc(100% - 10px);
+	background: red;
+	border-radius: 50%;
+	outline: 0;
+	border: 0;
+	cursor: pointer;
 }
 
 .recording {
-	height: 80%;
-	width: 80%;
+	border-radius: 5px;
+	height: 60%;
+	width: 60%;
 }

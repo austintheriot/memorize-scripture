@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect } from 'react';
 import styles from './About.module.scss';
 import { Link } from 'react-router-dom';
 
@@ -22,7 +22,7 @@ import flipIcon from '../../icons/flip.svg';
 import { Footer } from '../../components/Footer/Footer';
 import { useFirebaseContext } from 'hooks/useFirebaseContext';
 
-export default () => {
+export const About = () => {
 	const { analytics } = useFirebaseContext()
 	const scrollToTop = () => {
 		scroll.scrollToTop({ smooth: true, duration: 500 });
@@ -538,3 +538,5 @@ export default () => {
 		</ErrorBoundary>
 	);
 };
+
+export default About;

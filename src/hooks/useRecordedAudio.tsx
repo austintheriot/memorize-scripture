@@ -109,7 +109,7 @@ export const RecordedAudioProvider = ({
     chunks.current = [];
 
     /* use the stream */
-    console.log('Start recording...');
+    console.log('starting recording');
     mediaRecorder.current = new MediaRecorder(stream.current);
 
     mediaRecorder.current.ondataavailable = (e) => {
@@ -148,6 +148,7 @@ export const RecordedAudioProvider = ({
     if (supported === 'notSupported') return alert(ERROR_UNSUPPORTED);
     if (mediaRecorder.current) {
       if (mediaRecorder.current.state === 'inactive') return;
+      console.log('stopping recording');
       mediaRecorder.current.stop();
       if (stream.current) {
         stream.current.getTracks().forEach((track) => track.stop());

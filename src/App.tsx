@@ -17,7 +17,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { ErrorBoundary } from 'components/ErrorBoundary/ErrorBoundary';
 import { FirebaseProvider } from 'hooks/useFirebaseContext';
 import { useRouteAnalytics } from 'hooks/useRouteAnalytics';
-import { RecordedAudioProvider, useRecordedAudio } from 'hooks/useAudioRecorder';
+import { RecordedAudioProvider, useRecordedAudio } from 'hooks/useRecordedAudio';
 
 const Learn = lazy(() => import('./pages/Learn/Learn'));
 const Review = lazy(() => import('./pages/Review/Review'));
