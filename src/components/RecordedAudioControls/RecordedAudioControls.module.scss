@@ -268,8 +268,8 @@
 		border-radius: 50%;
 
 		button {
-			height: 46px;
-			width: 46px;
+			height: 100%;
+			width: 100%;
 			background: black;
 			border-radius: 50%;
 			outline: 0;
@@ -278,4 +278,9 @@
 	}
 
 	background: green;
+}
+
+.recording {
+	height: 80%;
+	width: 80%;
 }

@@ -89,7 +89,7 @@ export const RecordedAudioControls = () => {
 			{/* RECORDING CONTROLS  */}
 			<div className={styles.recordingContainer}>
 				<div>
-					<button />
+					<button className={ } />
 				</div>
 			</div>
 
