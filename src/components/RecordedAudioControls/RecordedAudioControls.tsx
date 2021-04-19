@@ -15,7 +15,6 @@ import { statefulClasses } from 'utils/conditionalClasses';
 export const RecordedAudioControls = () => {
 	const { analytics } = useFirebaseContext();
 	const {
-		url,
 		recordingState,
 		startRecording,
 		stopRecording,
@@ -32,6 +31,11 @@ export const RecordedAudioControls = () => {
 		setAudioPosition,
 		setAudioSpeed,
 	} = useRecordedAudio();
+	console.log({
+		hasError,
+		isReady,
+		isPlaying,
+	})
 
 	const handlePlay = () => {
 		analytics.logEvent('play_button_clicked');
@@ -85,11 +89,7 @@ export const RecordedAudioControls = () => {
 		// storeShowCondensed(targetShowCondensed);
 	};
 
-	console.log({ recordingState })
-	console.log(statefulClasses([
-		styles.recordingButton,
-		[styles.recording, recordingState === 'recording']
-	]))
+	const playButtonsDisabled = recordingState === 'recording' || recordingState === 'paused';
 
 	return (
 		<div className={styles.Controls}>
@@ -118,6 +118,7 @@ export const RecordedAudioControls = () => {
 				step="0.000000001"
 				value={audioPosition.toString()}
 				onChange={handleAudioPositionChange}
+				disabled={playButtonsDisabled}
 			/>
 			<div
 				className={styles.progressIndicator}
@@ -132,6 +133,7 @@ export const RecordedAudioControls = () => {
 					data-testid="speed"
 					className={styles.playSpeedButton}
 					onMouseDown={handleSpeedChange}
+					disabled={playButtonsDisabled}
 				>
 					<p className={styles.icon}>x{audioSpeed}</p>
 				</button>
@@ -141,6 +143,7 @@ export const RecordedAudioControls = () => {
 					data-testid="beginning"
 					className={styles.buttons}
 					onMouseDown={handleBeginning}
+					disabled={playButtonsDisabled}
 				>
 					<img
 						src={beginningIcon}
@@ -155,6 +158,7 @@ export const RecordedAudioControls = () => {
 					data-testid="rewind"
 					className={styles.buttons}
 					onMouseDown={handleRewind}
+					disabled={playButtonsDisabled}
 				>
 					<img
 						src={rewindIcon}
@@ -184,6 +188,7 @@ export const RecordedAudioControls = () => {
 							data-testid="pause"
 							className={styles.buttons}
 							onMouseDown={handlePause}
+							disabled={playButtonsDisabled}
 						>
 							<img src={pauseIcon} alt={'pause'} className={styles.icon} />
 						</button>
@@ -195,6 +200,7 @@ export const RecordedAudioControls = () => {
 								data-testid="play"
 								className={styles.buttons}
 								onMouseDown={handlePlay}
+								disabled={playButtonsDisabled}
 							>
 								<img src={playIcon} alt={'play'} className={styles.icon} />
 							</button>
@@ -217,6 +223,7 @@ export const RecordedAudioControls = () => {
 					data-testid="forward"
 					className={styles.buttons}
 					onMouseDown={handleForward}
+					disabled={playButtonsDisabled}
 				>
 					<img src={forwardIcon} alt={'forward 5s'} className={styles.icon} />
 				</button>

@@ -186,6 +186,10 @@
 	flex: none;
 	justify-content: center;
 	align-items: center;
+
+	&:disabled .icon {
+		opacity: 50%;
+	}
 }
 
 @media (min-width: 800px) {
@@ -211,6 +215,7 @@
 }
 
 .icon {
+	transition: opacity 0.2s;
 	margin: 0;
 	padding: 0;
 	height: 20px;

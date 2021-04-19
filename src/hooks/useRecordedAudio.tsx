@@ -1,7 +1,14 @@
-import React, { KeyboardEvent, MutableRefObject, useCallback, useContext, useEffect } from 'react';
+import React, {
+  KeyboardEvent,
+  MutableRefObject,
+  useCallback,
+  useContext,
+  useEffect,
+} from 'react';
 import { createContext, ReactNode, useRef, useState } from 'react';
 import { useFirebaseContext } from './useFirebaseContext';
 import useStateIfMounted from './useStateIfMounted';
+const psalm23 = require('audio/Psalm23.mp3');
 
 const ERROR_UNSUPPORTED =
   'Your browser does not support recording audio. ' +
@@ -11,9 +18,9 @@ export type RecordingStates = MediaRecorder['state'];
 
 export type BrowserSupport = 'supported' | 'notSupported' | 'unknown';
 
-interface RecordedAudioContext {
+interface RecordedAudioContextType {
   url: string;
-  recordedAudioRef: MutableRefObject<HTMLAudioElement>,
+  recordedAudioRef: MutableRefObject<HTMLAudioElement>;
   recordingState: RecordingStates;
   supported: BrowserSupport;
   hasError: boolean;
@@ -23,21 +30,21 @@ interface RecordedAudioContext {
   speed: number;
   startRecording: () => void;
   stopRecording: () => void;
-  togglePlayPause: () => void,
-  play: () => void,
-  pause: () => void,
-  rewind: () => void,
-  forward: () => void,
-  beginning: () => void,
-  setAudioPosition: (targetTime: number) => void,
-  setAudioSpeed: (targetSpeed: number) => void,
-  handleKeyPress: (e: KeyboardEvent<HTMLDivElement>) => void,
+  togglePlayPause: () => void;
+  play: () => void;
+  pause: () => void;
+  rewind: () => void;
+  forward: () => void;
+  beginning: () => void;
+  setAudioPosition: (targetTime: number) => void;
+  setAudioSpeed: (targetSpeed: number) => void;
+  handleKeyPress: (e: KeyboardEvent<HTMLDivElement>) => void;
 }
 
 // audio context value when no provider given
-export const RecordedAudioContext = createContext<RecordedAudioContext>({
+export const RecordedAudioContext = createContext<RecordedAudioContextType>({
   url: '',
-  recordedAudioRef: { current: new Audio('') },
+  recordedAudioRef: { current: new Audio(psalm23) },
   recordingState: 'inactive',
   supported: 'unknown',
   hasError: false,
@@ -69,13 +76,15 @@ export const RecordedAudioProvider = ({
   const stream = useRef<MediaStream | undefined>();
   const [supported, setIsSupported] = useState<BrowserSupport>('unknown');
   const [url, setUrl] = useState('');
-  const [recordingState, setRecordingState] = useState<RecordingState>('inactive');
+  const [recordingState, setRecordingState] = useState<RecordingState>(
+    'inactive',
+  );
   const [hasError, setHasError] = useStateIfMounted(false);
   const [isReady, setIsReady] = useStateIfMounted(false);
   const [isPlaying, setIsPlaying] = useStateIfMounted(false);
   const [speed, setSpeed] = useStateIfMounted(1);
   const [position, setPosition] = useStateIfMounted(0);
-  const recordedAudioRef = useRef(new Audio(''));
+  const recordedAudioRef = useRef(new Audio(psalm23));
   const recordedAudio = recordedAudioRef.current;
 
   /**
@@ -104,8 +113,15 @@ export const RecordedAudioProvider = ({
     if (supported === 'notSupported') return alert(ERROR_UNSUPPORTED);
     if (!stream.current || !mediaRecorder.current) await initializeStream();
     if (mediaRecorder.current?.state === 'recording') return;
-    if (!stream.current)
+    if (!stream.current) {
       return alert('Could not get local stream from mic/camera');
+    }
+
+    recordedAudio.pause();
+    recordedAudio.currentTime = 0;
+    setHasError(false);
+    setIsReady(false);
+
     chunks.current = [];
 
     /* use the stream */
@@ -113,7 +129,10 @@ export const RecordedAudioProvider = ({
     mediaRecorder.current = new MediaRecorder(stream.current);
 
     mediaRecorder.current.ondataavailable = (e) => {
-      if (e.data.size > 0) chunks.current.push(e.data);
+      if (e.data.size > 0) {
+        console.log('Pushing chunks: ', e.data.size);
+        chunks.current.push(e.data);
+      }
     };
 
     mediaRecorder.current.onerror = (e) => {
@@ -126,10 +145,11 @@ export const RecordedAudioProvider = ({
 
     mediaRecorder.current.onstop = function () {
       setRecordingState(mediaRecorder.current?.state || 'inactive');
-      const recording = new Blob(chunks.current, {
-        type: mediaRecorder.current?.mimeType,
-      });
-      setUrl(URL.createObjectURL(recording));
+      const recording = new Blob(chunks.current);
+      console.log('Creating recording from blobs: ', recording);
+      const url = URL.createObjectURL(recording);
+      console.log('Setting new url: ', url);
+      setUrl(url);
     };
 
     mediaRecorder.current.onpause = () => {
@@ -159,10 +179,12 @@ export const RecordedAudioProvider = ({
   };
 
   const prepareAudioForPlayback = useCallback(() => {
+    console.log('Preparing audio for playback');
     recordedAudio.load(); // necessary on mobile
+    console.log(recordedAudio);
     recordedAudio.pause();
     recordedAudio.currentTime = 0;
-    recordedAudio.playbackRate = 1; //load recordedAudio settings
+    recordedAudio.playbackRate = speed;
 
     //loaded enough to play
     recordedAudio.addEventListener('canplay', () => {
@@ -174,7 +196,8 @@ export const RecordedAudioProvider = ({
     recordedAudio.addEventListener('play', () => {
       setIsPlaying(true);
     });
-    recordedAudio.addEventListener('error', () => {
+    recordedAudio.addEventListener('error', (e) => {
+      console.error('Audio experienced an error: ', e);
       setHasError(true);
     });
     //not enough data
@@ -193,14 +216,21 @@ export const RecordedAudioProvider = ({
     //as time is updated
     recordedAudio.addEventListener('timeupdate', () => {
       const targetPosition = recordedAudio.currentTime / recordedAudio.duration;
-      setPosition(targetPosition)
+      setPosition(targetPosition);
     });
     //when speed is changed
     recordedAudio.addEventListener('ratechange', () => {
       setSpeed(recordedAudio.playbackRate);
     });
-  }, [recordedAudio, setHasError, setIsReady,
-    setIsPlaying, setPosition, setSpeed]);
+  }, [
+    recordedAudio,
+    setHasError,
+    setIsReady,
+    setIsPlaying,
+    setPosition,
+    setSpeed,
+    speed,
+  ]);
 
   /**
    * Plays audio if audio is paused.
@@ -240,7 +270,6 @@ export const RecordedAudioProvider = ({
     if (recordedAudio.readyState < 2) return;
     const targetTime = Math.max(recordedAudio.currentTime - 5, 0);
     recordedAudio.currentTime = targetTime;
-
   }, [recordedAudio]);
 
   /**
@@ -250,7 +279,7 @@ export const RecordedAudioProvider = ({
     if (recordedAudio.readyState < 2) return;
     const targetTime = Math.min(
       recordedAudio.currentTime + 5,
-      recordedAudio.duration - 0.01
+      recordedAudio.duration - 0.01,
     );
     recordedAudio.currentTime = targetTime;
   }, [recordedAudio]);
@@ -267,47 +296,55 @@ export const RecordedAudioProvider = ({
    * Moves current audio position to a designated time between 0 and 1
    * if audio is ready to be interacted with.
    */
-  const setAudioPosition = useCallback((targetTime: number) => {
-    if (recordedAudio.readyState < 2) return;
-    recordedAudio.currentTime = recordedAudio.duration * targetTime;
-  }, [recordedAudio.currentTime, recordedAudio.duration, recordedAudio.readyState]);
+  const setAudioPosition = useCallback(
+    (targetTime: number) => {
+      if (recordedAudio.readyState < 2) return;
+      recordedAudio.currentTime = recordedAudio.duration * targetTime;
+    },
+    [recordedAudio],
+  );
 
   /**
-   * Changes the current audio speed to the designated speed if audio 
+   * Changes the current audio speed to the designated speed if audio
    * is ready to be interacted with.
    */
-  const setAudioSpeed = useCallback((targetSpeed: number) => {
-    if (recordedAudio.readyState < 2) return;
-    recordedAudio.playbackRate = targetSpeed;
-  }, [recordedAudio.playbackRate, recordedAudio.readyState]);
+  const setAudioSpeed = useCallback(
+    (targetSpeed: number) => {
+      if (recordedAudio.readyState < 2) return;
+      recordedAudio.playbackRate = targetSpeed;
+    },
+    [recordedAudio],
+  );
 
   /**
    * Enables toggling the audio on/off and rewinding/fast-forwarding
    * via keyboard navigation if audio is ready to be interacted with.
    */
-  const handleKeyPress = useCallback((e: KeyboardEvent<HTMLDivElement>) => {
-    const key = e.key;
-    if (recordedAudio.readyState < 2) return;
-    if (key === ' ') {
-      e.preventDefault();
-      analytics.logEvent('space_bar_pressed');
-      togglePlayPause();
-    }
-    if (key === 'ArrowLeft') {
-      analytics.logEvent('left_arrow_pressed');
-      rewind();
-    }
-    if (key === 'ArrowRight') {
-      analytics.logEvent('right_arrow_pressed');
-      forward();
-    }
-  }, [analytics, forward, rewind, recordedAudio.readyState, togglePlayPause])
-
+  const handleKeyPress = useCallback(
+    (e: KeyboardEvent<HTMLDivElement>) => {
+      const key = e.key;
+      if (recordedAudio.readyState < 2) return;
+      if (key === ' ') {
+        e.preventDefault();
+        analytics.logEvent('space_bar_pressed');
+        togglePlayPause();
+      }
+      if (key === 'ArrowLeft') {
+        analytics.logEvent('left_arrow_pressed');
+        rewind();
+      }
+      if (key === 'ArrowRight') {
+        analytics.logEvent('right_arrow_pressed');
+        forward();
+      }
+    },
+    [analytics, forward, rewind, recordedAudio.readyState, togglePlayPause],
+  );
 
   useEffect(() => {
     prepareAudioForPlayback();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [url])
+  }, [url]);
 
   return (
     <RecordedAudioContext.Provider
@@ -342,4 +379,3 @@ export const RecordedAudioProvider = ({
 export const useRecordedAudio = () => {
   return useContext(RecordedAudioContext);
 };
-
