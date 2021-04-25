@@ -10,7 +10,7 @@ import loadingIcon from 'icons/loading.svg';
 import errorIcon from 'icons/error.svg';
 import { useFirebaseContext } from 'hooks/useFirebaseContext';
 import { useRecordedAudio } from 'hooks/useRecordedAudio';
-import { statefulClasses } from 'utils/conditionalClasses';
+import { conditionalStyles } from 'utils/conditionalStyles';
 
 export const RecordedAudioControls = () => {
 	const { analytics } = useFirebaseContext();
@@ -96,7 +96,7 @@ export const RecordedAudioControls = () => {
 			{/* RECORDING CONTROLS  */}
 			<div className={styles.recordingContainer}>
 				<div>
-					<button className={statefulClasses([
+					<button className={conditionalStyles([
 						styles.recordingButton,
 						[styles.recording, recordingState === 'recording']
 					])}

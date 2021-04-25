@@ -1,0 +1,60 @@
+.InputContainer {
+	position: relative;
+	display: block;
+	height: 4.5rem;
+	max-width: 400px;
+}
+
+.Input {
+  font-size: 1rem;
+  background-color: var(--background);
+  color: var(--light);
+	border: 0.15rem solid;
+	border-radius: '0.5rem';
+  box-sizing: 'border-box';
+  height: 3.5rem;
+	width: '100%';
+	transition: background-color 0.2s;
+  border-color: var(--darker);
+  border-radius: 3px;
+  box-shadow: none;
+  padding: 1rem 0.75rem 0.1rem 0.75rem;
+	&:hover {
+    background-color: var(--toggleLight);
+  }
+	&:focus {
+    outline: 0;
+		border-color: var(--pop);
+	}
+}
+
+.InputError {
+  border-color: 'red';
+}
+
+.Label {
+	position: absolute;
+	display: block;
+	left: 0.6rem;
+	transition: all 0.1s;
+	text-align: left;
+	min-width: max-content;
+	border-radius: 5px;
+  padding: 0.1rem 0.3rem;
+}
+
+//label down
+.Input:placeholder-shown ~ .Label {
+	color: var(--light);
+  top: 1.1rem;
+	font-size: 1rem;
+}
+
+//Label up
+.Input:focus ~ .Label,
+.Input:not(:placeholder-shown) ~ .Label {
+	z-index: 1;
+	color: var(--light);
+	font-size: 0.75rem;
+	top: 0.4rem;
+}

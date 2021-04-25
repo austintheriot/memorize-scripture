@@ -1,20 +1,18 @@
 .form {
-	width: max-content;
 	display: flex;
-	flex: none;
 	flex-wrap: wrap;
-	align-items: flex-end;
+	align-items: start;
 	justify-content: center;
+	width: 90%
 }
 
-.search {
+.searchButton {
 	height: 42px;
 	position: relative;
 	width: 3rem;
 	display: block;
 	border: none;
 	outline: none;
-	margin: 0;
 	text-decoration: none;
 	background-color: var(--dark);
 	color: var(--light);
@@ -25,9 +23,8 @@
 	box-shadow: none;
 	padding: 0.75rem;
 	border-radius: 1px;
-	margin: 2px;
+	margin: 8px 8px 0;
 	font-size: 1rem;
-	border-bottom: 1px solid #111111;
 
 	&:active {
 		background-color: var(--background);

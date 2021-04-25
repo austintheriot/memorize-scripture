@@ -1,13 +1,6 @@
-import React, { ChangeEvent, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { ChangeEvent, useCallback } from 'react';
 import styles from './SearchBible.module.scss';
-import {
-	BibleBook,
-	bookTitles,
-	bookTitlesAndChapters,
-	Chapter,
-	Title,
-} from '../../pages/Learn/bible';
+import { BibleBook, bookTitles, Chapter, Title } from '../../pages/Learn/bible';
 import { getTextBody, addToTextArray } from '../../utils/storageUtils';
 import {
 	textRetrievedFromLocalStorage,
@@ -16,114 +9,117 @@ import {
 import searchIcon from '../../icons/search.svg';
 import { audioFileChanged } from 'store/bibleAudioSlice';
 import { useFirebaseContext } from 'hooks/useFirebaseContext';
+import { useAppDispatch, useAppSelector } from 'store/store';
+import {
+	bookSelector,
+	chaptersArraySelector,
+	chapterSelector,
+	setBook,
+	setChapter,
+} from 'store/searchSlice';
 import useStateIfMounted from 'hooks/useStateIfMounted';
-import { isNumeric } from 'utils/isNumeric';
+import { validateBookAndChapter } from 'utils/validation';
+import Input from 'components/Input/Input';
 
 export const SearchBible = () => {
+	const dispatch = useAppDispatch();
 	const { analytics } = useFirebaseContext();
-	const [book, setBook] = useStateIfMounted('Psalms');
-	const [chapter, setChapter] = useStateIfMounted('23');
-	const numberOfChapters = useMemo(() => {
-		if (!(book in bookTitlesAndChapters)) return 0;
-		return bookTitlesAndChapters[book as BibleBook];
-	}, [book]);
-	const chaptersArray = useMemo(() => {
-		return new Array(numberOfChapters)
-			.fill(null)
-			.map((el, i) => `${i + 1}`) as Chapter[];
-	}, [numberOfChapters]);
+	const book = useAppSelector(bookSelector);
+	const chapter = useAppSelector(chapterSelector);
+	const chaptersArray = useAppSelector(chaptersArraySelector);
+	const [message, setMessage] = useStateIfMounted('');
 
-	const dispatch = useDispatch();
+	const clearError = () => setMessage('');
 
-	const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-		e.preventDefault();
+	const handleSubmit = useCallback(
+		(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+			e.preventDefault();
 
-		if (!(book in bookTitlesAndChapters)) return;
-		if (
-			!chapter ||
-			!isNumeric(chapter) ||
-			!chaptersArray.includes(chapter as `${number}`)
-		)
-			return;
+			if (validateBookAndChapter(book, chapter)) {
+				return setMessage('Please provide a valid book and chapter.');
+			}
 
-		/* @todo: provide error message here
-		 *****************************************************
-		 *****************************************************
-		 *****************************************************
-		 *****************************************************
-		 *****************************************************
-		 */
+			const validBook = book as BibleBook;
+			const validChapter = chapter as Chapter;
 
-		const selectedBook = book as BibleBook;
-		const selectedChapter = chapter as Chapter;
-
-		//Check local storage
-		const title = `${selectedBook} ${selectedChapter}` as Title;
-		console.log(`Checking local storage for ${title}`);
-		//try to retrieve text body from local storage
-		let body = getTextBody(title);
-		if (body) {
-			console.log(`Retrieved body of ${title} from local storage`);
-			dispatch(
-				textRetrievedFromLocalStorage({
-					book: selectedBook,
-					chapter: selectedChapter,
-					body,
-				}),
-			);
-			dispatch(
-				audioFileChanged({ book: selectedBook, chapter: selectedChapter }),
-			);
-			addToTextArray(title, body);
-			analytics.logEvent('fetched_text_from_local_storage', {
-				searchBook: selectedBook,
-				searchChapter: selectedChapter,
-				title: `${book} ${selectedChapter}`,
-			});
-		} else {
-			//If it does not exist in local storage, make an API call, and store the returned text
-			console.log(`${title} not found in local storage`);
-			console.log('Making a call to the ESV API');
-			dispatch(fetchTextFromESVAPI(selectedBook, selectedChapter, analytics));
-		}
-	};
+			//Check local storage
+			const title = `${validBook} ${validChapter}` as Title;
+			console.log(`Checking local storage for ${title}`);
+			//try to retrieve text body from local storage
+			let body = getTextBody(title);
+			if (body) {
+				console.log(`Retrieved body of ${title} from local storage`);
+				dispatch(
+					textRetrievedFromLocalStorage({
+						book: validBook,
+						chapter: validChapter,
+						body,
+					}),
+				);
+				dispatch(audioFileChanged({ book: validBook, chapter: validChapter }));
+				addToTextArray(title, body);
+				analytics.logEvent('fetched_text_from_local_storage', {
+					searchBook: validBook,
+					searchChapter: validChapter,
+					title: `${book} ${validChapter}`,
+				});
+			} else {
+				//If it does not exist in local storage, make an API call, and store the returned text
+				console.log(`${title} not found in local storage`);
+				console.log('Making a call to the ESV API');
+				dispatch(fetchTextFromESVAPI(validBook, validChapter, analytics));
+			}
+		},
+		[analytics, book, chapter, setMessage, dispatch],
+	);
 
 	return (
 		<form className={styles.form}>
-			<label htmlFor="book">Book</label>
-			<input
+			<Input
+				label="Book"
 				id="book"
 				list="book-list"
 				value={book}
-				onChange={(e: ChangeEvent<HTMLInputElement>) => setBook(e.target.value)}
-			></input>
-			<datalist id="book-list">
-				{bookTitles.map((book) => (
-					<option key={book} value={book} />
-				))}
-			</datalist>
-			<label htmlFor="chapter">Chapter</label>
-			<input
+				onChange={(e: ChangeEvent<HTMLInputElement>) => {
+					clearError();
+					dispatch(setBook(e.target.value));
+				}}
+				onFocus={clearError}
+			>
+				<datalist id="book-list">
+					{bookTitles.map((book) => (
+						<option key={book} value={book} />
+					))}
+				</datalist>
+			</Input>
+
+			<Input
+				label="Chapter"
 				value={chapter}
 				id="chapter"
 				list="chapter-list"
-				onChange={(e: ChangeEvent<HTMLInputElement>) =>
-					setChapter(e.target.value)
-				}
-			></input>
-			<datalist id="chapter-list">
-				{chaptersArray.map((chapter) => (
-					<option value={chapter} key={chapter} />
-				))}
-			</datalist>
+				onChange={(e: ChangeEvent<HTMLInputElement>) => {
+					clearError();
+					dispatch(setChapter(e.target.value));
+				}}
+				onFocus={clearError}
+			>
+				<datalist id="chapter-list">
+					{chaptersArray.map((chapter) => (
+						<option value={chapter} key={chapter} />
+					))}
+				</datalist>
+			</Input>
+
 			<button
-				className={styles.search}
+				className={styles.searchButton}
 				onClick={handleSubmit}
 				aria-label={'Search'}
 				data-testid="search"
 			>
 				<img src={searchIcon} alt="search" className={styles.searchIcon} />
 			</button>
+			<p>{message}</p>
 		</form>
 	);
 };
