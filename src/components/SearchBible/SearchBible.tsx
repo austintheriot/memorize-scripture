@@ -1,80 +1,64 @@
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-import {
-	bookSelected,
-	chapterSelected,
-} from '../../store/searchSlice';
 import styles from './SearchBible.module.scss';
-import { makeStyles } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import searchIcon from '../../icons/search.svg';
-import { BibleBook, bookTitles, Chapter, Title } from '../../pages/Learn/bible';
+import {
+	BibleBook,
+	bookTitles,
+	bookTitlesAndChapters,
+	Chapter,
+	Title,
+} from '../../pages/Learn/bible';
 import { getTextBody, addToTextArray } from '../../utils/storageUtils';
 import {
 	textRetrievedFromLocalStorage,
 	fetchTextFromESVAPI,
 } from '../../store/textSlice';
+import searchIcon from '../../icons/search.svg';
 import { audioFileChanged } from 'store/bibleAudioSlice';
-import { useAppSelector } from 'store/store';
 import { useFirebaseContext } from 'hooks/useFirebaseContext';
-
-const useStyles = makeStyles((theme) => ({
-	formControl: {
-		margin: theme.spacing(0.25),
-	},
-	selectEmpty: {
-		marginTop: theme.spacing(2),
-	},
-	iconButton: {
-		width: 'max-content',
-	},
-	label: {
-		color: 'var(--light)',
-	},
-	select: {
-		padding: '0.25rem 1rem',
-		backgroundColor: 'var(--dark)',
-		color: 'var(--light)',
-		fontSize: '1.1rem',
-	},
-}));
+import useStateIfMounted from 'hooks/useStateIfMounted';
+import { isNumeric } from 'utils/isNumeric';
 
 export const SearchBible = () => {
 	const { analytics } = useFirebaseContext();
+	const [book, setBook] = useStateIfMounted('Psalms');
+	const [chapter, setChapter] = useStateIfMounted('23');
+	const numberOfChapters = useMemo(() => {
+		if (!(book in bookTitlesAndChapters)) return 0;
+		return bookTitlesAndChapters[book as BibleBook];
+	}, [book]);
+	const chaptersArray = useMemo(() => {
+		return new Array(numberOfChapters)
+			.fill(null)
+			.map((el, i) => `${i + 1}`) as Chapter[];
+	}, [numberOfChapters]);
 
-	//Material UI Styling:
-	const classes = useStyles();
-
-	//Redux State:
 	const dispatch = useDispatch();
-	const { book, chapter, numberOfChapters } = useAppSelector((s) => s.search);
-
-	const handleBookChange = (
-		e: ChangeEvent<{
-			name?: string | undefined;
-			value: unknown;
-		}>
-	) => {
-		const bookString = e.target.value as BibleBook;
-		dispatch(bookSelected({ bookString, chapter: chapter })); //set book name
-	};
-
-	const handleChapterChange = (
-		e: ChangeEvent<{
-			name?: string | undefined;
-			value: unknown;
-		}>
-	) => {
-		dispatch(chapterSelected(e.target.value as Chapter));
-	};
 
 	const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		e.preventDefault();
+
+		if (!(book in bookTitlesAndChapters)) return;
+		if (
+			!chapter ||
+			!isNumeric(chapter) ||
+			!chaptersArray.includes(chapter as `${number}`)
+		)
+			return;
+
+		/* @todo: provide error message here
+		 *****************************************************
+		 *****************************************************
+		 *****************************************************
+		 *****************************************************
+		 *****************************************************
+		 */
+
+		const selectedBook = book as BibleBook;
+		const selectedChapter = chapter as Chapter;
+
 		//Check local storage
-		const title = `${book} ${chapter}` as Title;
+		const title = `${selectedBook} ${selectedChapter}` as Title;
 		console.log(`Checking local storage for ${title}`);
 		//try to retrieve text body from local storage
 		let body = getTextBody(title);
@@ -82,77 +66,63 @@ export const SearchBible = () => {
 			console.log(`Retrieved body of ${title} from local storage`);
 			dispatch(
 				textRetrievedFromLocalStorage({
-					book: book,
-					chapter: chapter,
+					book: selectedBook,
+					chapter: selectedChapter,
 					body,
-				})
+				}),
 			);
 			dispatch(
-				audioFileChanged({ book: book, chapter: chapter })
+				audioFileChanged({ book: selectedBook, chapter: selectedChapter }),
 			);
 			addToTextArray(title, body);
 			analytics.logEvent('fetched_text_from_local_storage', {
-				searchBook: book,
-				searchChapter: chapter,
-				title: `${book} ${chapter}`,
+				searchBook: selectedBook,
+				searchChapter: selectedChapter,
+				title: `${book} ${selectedChapter}`,
 			});
 		} else {
 			//If it does not exist in local storage, make an API call, and store the returned text
 			console.log(`${title} not found in local storage`);
 			console.log('Making a call to the ESV API');
-			dispatch(fetchTextFromESVAPI(book, chapter, analytics));
+			dispatch(fetchTextFromESVAPI(selectedBook, selectedChapter, analytics));
 		}
 	};
 
-	//create chapter input options based on book of the bible
-	let chapterArray = [];
-	for (let i = 1; i <= numberOfChapters; i++) {
-		chapterArray.push(i);
-	}
-	chapterArray = chapterArray.map((el) => (
-		<MenuItem value={el.toString()} key={el} data-testid={el}>
-			{el}
-		</MenuItem>
-	));
-
 	return (
 		<form className={styles.form}>
-			<FormControl className={classes.formControl}>
-				<InputLabel id='bible-book' className={classes.label}>
-					Book
-				</InputLabel>
-				<Select
-					className={classes.select}
-					labelId='bible-book'
-					data-testid='select-book'
-					value={book}
-					onChange={handleBookChange}>
-					{bookTitles.map((bookString) => (
-						<MenuItem value={bookString} key={bookString}>
-							{bookString}
-						</MenuItem>
-					))}
-				</Select>
-			</FormControl>
-			<FormControl className={classes.formControl}>
-				<InputLabel id='bible-chapter' className={classes.label}>
-					Chapter
-				</InputLabel>
-				<Select
-					className={classes.select}
-					labelId='bible-chapter'
-					data-testid='select-chapter'
-					value={chapter}
-					onChange={handleChapterChange}>
-					{chapterArray}
-				</Select>
-			</FormControl>
+			<label htmlFor="book">Book</label>
+			<input
+				id="book"
+				list="book-list"
+				value={book}
+				onChange={(e: ChangeEvent<HTMLInputElement>) => setBook(e.target.value)}
+			></input>
+			<datalist id="book-list">
+				{bookTitles.map((book) => (
+					<option key={book} value={book} />
+				))}
+			</datalist>
+			<label htmlFor="chapter">Chapter</label>
+			<input
+				value={chapter}
+				id="chapter"
+				list="chapter-list"
+				onChange={(e: ChangeEvent<HTMLInputElement>) =>
+					setChapter(e.target.value)
+				}
+			></input>
+			<datalist id="chapter-list">
+				{chaptersArray.map((chapter) => (
+					<option value={chapter} key={chapter} />
+				))}
+			</datalist>
 			<button
 				className={styles.search}
 				onClick={handleSubmit}
 				aria-label={'Search'}
-				data-testid='search'>
-				<img src={searchIcon} alt='search' className={styles.searchIcon} />
+				data-testid="search"
+			>
+				<img src={searchIcon} alt="search" className={styles.searchIcon} />
 			</button>
 		</form>
 	);
