@@ -1,14 +1,14 @@
-import { BibleBook } from "pages/Learn/bible";
+import { BibleBook, Chapter, Title } from "pages/Learn/bible";
 import { Psalm23 } from 'app/Psalm23';
 
 export const localStorageVersion = '1.0.0' as const;
 export const DEFAULT_LOCAL_STORAGE_VERSION = localStorageVersion;
 export const DEFAULT_CLICKED_LINE = -1 as const;
 export const DEFAULT_SHOW_CONDENSED = false as const;
-export const DEFAULT_TEXTS = [{ title: 'Psalms 23', body: Psalm23 }];
+export const DEFAULT_TEXTS = [{ title: 'Psalms 23' as Title, body: Psalm23 }];
 export const DEFAULT_SPEED = 1 as const;
 
-export type TextsObject = { title: string; body: string };
+export type TextsObject = { title: Title; body: string };
 export type TextsArray = TextsObject[];
 
 /**
@@ -88,20 +88,20 @@ export const storePlaySpeed = (speed: number) => setLocalStorage('speed', speed)
 export const storeShowCondensed = (boolean: boolean) => setLocalStorage('showCondensed', boolean);
 
 export const splitTitleIntoBookAndChapter = (
-	title: string,
+	title: Title,
 ): {
 	book: BibleBook;
-	chapter: string;
+	chapter: Chapter;
 } => {
-	const wordArray = title.split(' ');
+	const wordArray = title.split(' ') as [string, string, Chapter] | [string, Chapter];
 	const book = wordArray.slice(0, wordArray.length - 1).join(' ') as BibleBook;
-	const chapter = wordArray[wordArray.length - 1];
+	const chapter = `${wordArray[wordArray.length - 1]}` as Chapter;
 	return { book, chapter };
 };
 
 const shiftArrayByOne = (
 	originalArray: TextsArray,
-	title: string,
+	title: Title,
 	body: string,
 ): TextsArray => {
 	try {
@@ -115,7 +115,7 @@ const shiftArrayByOne = (
 		return array;
 	} catch (err) {
 		console.log(err);
-		return [{ title: '', body: '' }];
+		return DEFAULT_TEXTS;
 	}
 };
 
@@ -130,7 +130,7 @@ const movePassageToFrontOfArray = (title: string): TextsArray | typeof DEFAULT_T
 		return array;
 	} catch (err) {
 		console.log(err);
-		return [{ title: '', body: '' }];
+		return DEFAULT_TEXTS;
 	}
 };
 
@@ -150,7 +150,7 @@ export const getTextBody = (title: string): string => {
  * If passage is alreadty in local storage, moves the passage to 
  * the most recent position.
  */
-export const addToTextArray = (title: string, body: string) => {
+export const addToTextArray = (title: Title, body: string) => {
 	console.log(
 		`Checking if ${title} text body already exists in local storage array`,
 	);
@@ -166,11 +166,11 @@ export const addToTextArray = (title: string, body: string) => {
 			`Adding ${title} text body to local storage array as most recent`,
 		);
 		const textArray = getTextArray();
-		let shiftedArray: TextsArray = [{ title: '', body: '' }];
+		let shiftedArray: TextsArray = [];
 
-		//no true item has been added yet
-		if (textArray.length === 1 && textArray[0].title === '') {
-			shiftedArray[0] = { title, body };
+		//no item has been added yet
+		if (textArray.length === 0) {
+			shiftedArray.push({ title, body });
 		}
 	
 		//other, real items have been added

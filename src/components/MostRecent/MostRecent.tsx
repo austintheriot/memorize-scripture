@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
 
 //App State
 import { useDispatch } from 'react-redux';
@@ -8,7 +8,7 @@ import { textMostRecentPassageClicked } from '../../store/textSlice';
 import styles from './MostRecent.module.scss';
 
 //Utilities
-import { addToTextArray, getTextArray } from '../../utils/storageUtils';
+import { addToTextArray, getTextArray, TextsObject } from '../../utils/storageUtils';
 import { audioMostRecentPassageClicked } from 'store/bibleAudioSlice';
 import { useFirebaseContext } from 'hooks/useFirebaseContext';
 
@@ -17,14 +17,9 @@ export const MostRecent = () => {
 	const dispatch = useDispatch();
 	const details = useRef<HTMLDetailsElement | null>(null);
 
-	interface TextObject {
-		title: string;
-		body: string;
-	}
-
 	const handleClickRecent = (
 		e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-		{ title, body }: TextObject
+		{ title, body }: TextsObject
 	) => {
 		//Text State
 		dispatch(textMostRecentPassageClicked({ title, body }));

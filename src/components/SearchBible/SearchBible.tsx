@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { useDispatch } from 'react-redux';
 import {
 	bookSelected,
@@ -11,7 +11,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import searchIcon from '../../icons/search.svg';
-import { BibleBook, bookTitles } from '../../pages/Learn/bible';
+import { BibleBook, bookTitles, Chapter, Title } from '../../pages/Learn/bible';
 import { getTextBody, addToTextArray } from '../../utils/storageUtils';
 import {
 	textRetrievedFromLocalStorage,
@@ -53,7 +53,7 @@ export const SearchBible = () => {
 	const { book, chapter, numberOfChapters } = useAppSelector((s) => s.search);
 
 	const handleBookChange = (
-		e: React.ChangeEvent<{
+		e: ChangeEvent<{
 			name?: string | undefined;
 			value: unknown;
 		}>
@@ -63,20 +63,18 @@ export const SearchBible = () => {
 	};
 
 	const handleChapterChange = (
-		e: React.ChangeEvent<{
+		e: ChangeEvent<{
 			name?: string | undefined;
 			value: unknown;
 		}>
 	) => {
-		if (typeof e.target.value === 'string') {
-			dispatch(chapterSelected(e.target.value));
-		}
+		dispatch(chapterSelected(e.target.value as Chapter));
 	};
 
 	const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		e.preventDefault();
 		//Check local storage
-		const title = `${book} ${chapter}`;
+		const title = `${book} ${chapter}` as Title;
 		console.log(`Checking local storage for ${title}`);
 		//try to retrieve text body from local storage
 		let body = getTextBody(title);

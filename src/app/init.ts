@@ -16,6 +16,7 @@ import {
 	DEFAULT_TEXTS,
 } from 'utils/storageUtils';
 import { AppDispatch } from 'store/store';
+import { Title } from 'pages/Learn/bible';
 
 /**
  * Gets any of the user's preferences that are saved in local storage.
@@ -34,7 +35,7 @@ const initializeUserSettings = (dispatch: AppDispatch) => {
  * the most recently used text, and the proper URL to load audio.
  */
 const updateStateWithInitializedValues = (
-	title: string,
+	title: Title,
 	body: string,
 	dispatch: AppDispatch,
 ) => {

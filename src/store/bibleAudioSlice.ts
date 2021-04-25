@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { BibleBook } from 'pages/Learn/bible';
+import { BibleBook, Title } from 'pages/Learn/bible';
 import { splitTitleIntoBookAndChapter } from '../utils/storageUtils';
 
 export interface BibleAudioState {
@@ -51,7 +51,7 @@ export const bibleAudioSlice = createSlice({
 		) => {
 			updateAudio(draft, action.payload.book, action.payload.chapter);
 		},
-		audioMostRecentPassageClicked: (draft, action: { payload: string }) => {
+		audioMostRecentPassageClicked: (draft, action: { payload: Title }) => {
 			const { book, chapter } = splitTitleIntoBookAndChapter(action.payload);
 			updateAudio(draft, book, chapter);
 		},

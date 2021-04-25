@@ -11,7 +11,7 @@ import axios from 'axios';
 import { ESVApiKey } from '../app/config';
 import { audioFileChanged } from './bibleAudioSlice';
 import { AppDispatch } from './store';
-import { BibleBook } from 'pages/Learn/bible';
+import { BibleBook, Chapter, Title } from 'pages/Learn/bible';
 import { Analytics } from 'hooks/useFirebaseContext';
 
 export interface TextState {
@@ -79,7 +79,7 @@ export const textSlice = createSlice({
 		},
 		textMostRecentPassageClicked: (
 			draft,
-			action: { payload: { title: string; body: string } },
+			action: { payload: { title: Title; body: string } },
 		) => {
 			draft.error = false;
 			const splitTitle = splitTitleIntoBookAndChapter(action.payload.title);
@@ -166,12 +166,12 @@ export const {
 
 export const fetchTextFromESVAPI = (
 	book: BibleBook,
-	chapter: string,
+	chapter: Chapter,
 	analytics: Analytics,
 ) => async (dispatch: AppDispatch) => {
 	console.log(dispatch(textBeingFetchedFromAPI()));
 
-	const title = `${book} ${chapter}`;
+	const title = `${book} ${chapter}` as Title;
 	console.log(`Fetching draft body file of ${title} from ESV API`);
 	analytics.logEvent('fetched_text_from_ESV_API', {
 		book,
