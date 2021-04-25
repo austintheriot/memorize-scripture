@@ -6,9 +6,11 @@ import React, {
   useEffect,
 } from 'react';
 import { createContext, ReactNode, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useFirebaseContext } from './useFirebaseContext';
+import usePrevious from './usePrevious';
 import useStateIfMounted from './useStateIfMounted';
-const psalm23 = require('audio/Psalm23.mp3');
+import psalm23 from 'audio/Psalm23.mp3';
 
 const ERROR_UNSUPPORTED =
   'Your browser does not support recording audio. ' +
@@ -70,6 +72,8 @@ export const RecordedAudioProvider = ({
 }: {
   children: ReactNode;
 }) => {
+  const location = useLocation();
+  const prevLocation = usePrevious(location);
   const { analytics } = useFirebaseContext();
   const mediaRecorder = useRef<MediaRecorder | undefined>();
   const chunks = useRef<Blob[]>([]);
@@ -125,7 +129,7 @@ export const RecordedAudioProvider = ({
     chunks.current = [];
 
     /* use the stream */
-    console.log('starting recording');
+    console.log('Starting recording');
     mediaRecorder.current = new MediaRecorder(stream.current);
 
     mediaRecorder.current.ondataavailable = (e) => {
@@ -164,11 +168,11 @@ export const RecordedAudioProvider = ({
     mediaRecorder.current.start(1000);
   };
 
-  const stopRecording = () => {
+  const stopRecording = useCallback(() => {
     if (supported === 'notSupported') return alert(ERROR_UNSUPPORTED);
     if (mediaRecorder.current) {
       if (mediaRecorder.current.state === 'inactive') return;
-      console.log('stopping recording');
+      console.log('Stopping recording');
       mediaRecorder.current.stop();
       if (stream.current) {
         stream.current.getTracks().forEach((track) => track.stop());
@@ -176,12 +180,11 @@ export const RecordedAudioProvider = ({
         stream.current = undefined;
       }
     }
-  };
+  }, [supported]);
 
   const prepareAudioForPlayback = useCallback(() => {
     console.log('Preparing audio for playback');
     recordedAudio.load(); // necessary on mobile
-    console.log(recordedAudio);
     recordedAudio.pause();
     recordedAudio.currentTime = 0;
     recordedAudio.playbackRate = speed;
@@ -345,6 +348,19 @@ export const RecordedAudioProvider = ({
     prepareAudioForPlayback();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url]);
+
+  useEffect(() => {
+    if (location !== prevLocation) {
+      if (mediaRecorder.current?.state === 'recording') {
+        console.log('Location changed while recording. Stopping recording.')
+        stopRecording();
+      }
+      if (!recordedAudioRef.current?.paused) {
+        console.log('Location changed while playing audio. Pausing audio playback.')
+        pause();
+      }
+    }
+  }, [location, prevLocation, pause, stopRecording]);
 
   return (
     <RecordedAudioContext.Provider

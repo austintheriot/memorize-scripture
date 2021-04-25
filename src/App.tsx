@@ -70,17 +70,17 @@ function App() {
 const AppWithContext = () => {
 	return (
 		<ErrorBoundary>
-			<FirebaseProvider>
-				<StoreProvider store={store}>
-					<BibleAudioProvider>
-						<RecordedAudioProvider>
-							<Router>
+			<Router>
+				<FirebaseProvider>
+					<StoreProvider store={store}>
+						<BibleAudioProvider>
+							<RecordedAudioProvider>
 								<App />
-							</Router>
-						</RecordedAudioProvider>
-					</BibleAudioProvider>
-				</StoreProvider>
-			</FirebaseProvider>
+							</RecordedAudioProvider>
+						</BibleAudioProvider>
+					</StoreProvider>
+				</FirebaseProvider>
+			</Router>
 		</ErrorBoundary>
 	)
 }

@@ -20,7 +20,7 @@ import {
 } from 'store/bibleAudioSlice';
 import { useAppSelector } from 'store/store';
 import { useFirebaseContext } from './useFirebaseContext';
-const psalm23 = require('audio/Psalm23.mp3');
+import psalm23 from 'audio/Psalm23.mp3';
 
 interface BibleAudioContextType {
 	bibleAudioRef: MutableRefObject<HTMLAudioElement>,
