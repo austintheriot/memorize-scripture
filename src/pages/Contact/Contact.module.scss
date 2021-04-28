@@ -1,6 +1,6 @@
 .h1 {
 	margin: 75px auto 2rem;
-	border-bottom: 1px solid var(--dark);
+	border-bottom: 1px solid var(--primary_20);
 	width: 80%;
 	max-width: 400px;
 }
@@ -29,7 +29,7 @@
 
 .userMessage {
 	text-align: center;
-	color: var(--light);
+	color: var(--primary_100);
 }
 
 .submit {
@@ -37,16 +37,16 @@
 	margin: 2rem auto;
 
 	&:focus {
-		outline: 1px solid var(--light);
+		outline: 1px solid var(--primary_100);
 		outline-offset: 5px;
 	}
 }
 
 .disabled {
 	pointer-events: none;
-	color: var(--background);
+	color: var(--primary_30);
 
 	&:focus {
-		background-color: var(--darker);
+		background-color: var(--primary_10);
 	}
 }

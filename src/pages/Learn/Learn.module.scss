@@ -7,13 +7,14 @@
 
 .h1 {
 	margin: 75px auto;
-	border-bottom: 1px solid var(--dark);
+	border-bottom: 1px solid var(--primary_20);
 	width: 80%;
 	max-width: 400px;
 }
 
 .searchContainer {
-	width: max-content;
+	width: 100%;
+	max-width: 600px;
 	margin: 50px auto 75px;
 }
 

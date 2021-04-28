@@ -5,8 +5,8 @@
 	border: none;
 	outline: none;
 	text-decoration: none;
-	background-color: var(--dark);
-	color: var(--light);
+	background-color: var(--primary_20);
+	color: var(--primary_100);
 	cursor: pointer;
 	text-align: center;
 	-webkit-appearance: none;
@@ -22,7 +22,7 @@
 	height: 45px;
 
 	&:active {
-		background-color: var(--toggleLight);
+		background-color: var(--primary_40);
 	}
 
 	transition: transform 0.1s ease-out;
@@ -39,7 +39,7 @@
 	width: 70%;
 	left: 15%;
 	border-radius: 5px;
-	background-color: var(--light);
+	background-color: var(--primary_100);
 
 	transition: transform 0.3s;
 }

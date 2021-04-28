@@ -15,8 +15,8 @@
 	border-radius: 3px;
 	overflow-x: auto;
 
-	background: var(--background);
-	border: 1px solid var(--dark);
+	background: var(--primary_30);
+	border: 1px solid var(--primary_20);
 }
 
 .resultsP {
@@ -30,7 +30,7 @@
 }
 
 .correct {
-	color: var(--light);
+	color: var(--primary_100);
 }
 
 .incorrect {
@@ -49,8 +49,8 @@
 	max-width: 600px;
 	margin: 1rem auto 2rem;
 	padding: 1rem;
-	background: var(--background);
-	border: 1px solid var(--dark);
+	background: var(--primary_30);
+	border: 1px solid var(--primary_20);
 
 	p {
 		margin: 0.4rem 0;

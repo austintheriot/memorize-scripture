@@ -14,7 +14,7 @@ import { useBibleAudio } from 'hooks/useBibleAudio';
 import { useAppSelector } from 'store/store';
 
 
-export default () => {
+const Learn = () => {
 	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, []);
@@ -74,3 +74,5 @@ export default () => {
 		</ErrorBoundary>
 	);
 };
+
+export default Learn;

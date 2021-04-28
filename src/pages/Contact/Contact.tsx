@@ -24,14 +24,14 @@ const useStyles = makeStyles((theme) => ({
 		width: 'max-content',
 	},
 	label: {
-		color: 'var(--light)',
+		color: 'var(--primary_100)',
 		zIndex: 1,
 		left: '0.6rem',
 	},
 	input: {
 		padding: '1rem 1rem',
-		backgroundColor: 'var(--dark)',
-		color: 'var(--light)',
+		backgroundColor: 'var(--primary_20)',
+		color: 'var(--primary_100)',
 		fontSize: '1.1rem',
 	},
 }));

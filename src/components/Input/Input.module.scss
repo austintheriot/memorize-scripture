@@ -7,24 +7,24 @@
 
 .Input {
   font-size: 1rem;
-  background-color: var(--background);
-  color: var(--light);
+  background-color: var(--primary_30);
+  color: var(--primary_100);
 	border: 0.15rem solid;
 	border-radius: '0.5rem';
   box-sizing: 'border-box';
   height: 3.5rem;
 	width: '100%';
-	transition: background-color 0.2s;
-  border-color: var(--darker);
+	transition: background-color 0.2s, border-color 0.2s;
+  border-color: var(--primary_10);
   border-radius: 3px;
   box-shadow: none;
-  padding: 1rem 0.75rem 0.1rem 0.75rem;
+	padding: 1rem 0.75rem 0.1rem 0.75rem;
 	&:hover {
-    background-color: var(--toggleLight);
+    background-color: var(--primary_40);
   }
 	&:focus {
     outline: 0;
-		border-color: var(--pop);
+		border-color: var(--primary_60);
 	}
 }
 
@@ -45,7 +45,7 @@
 
 //label down
 .Input:placeholder-shown ~ .Label {
-	color: var(--light);
+	color: var(--primary_100);
   top: 1.1rem;
 	font-size: 1rem;
 }
@@ -54,7 +54,7 @@
 .Input:focus ~ .Label,
 .Input:not(:placeholder-shown) ~ .Label {
 	z-index: 1;
-	color: var(--light);
+	color: var(--primary_100);
 	font-size: 0.75rem;
 	top: 0.4rem;
 }

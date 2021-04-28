@@ -2,8 +2,15 @@
 	display: flex;
 	flex-wrap: wrap;
 	align-items: start;
-	justify-content: center;
-	width: 90%
+	justify-content: space-evenly;
+	width: 90%;
+	max-width: 90%;
+	margin: 2rem auto;
+
+	& > * {
+		margin-left: 0.2rem;
+		margin-right: 0.2rem;
+	}
 }
 
 .searchButton {
@@ -14,8 +21,8 @@
 	border: none;
 	outline: none;
 	text-decoration: none;
-	background-color: var(--dark);
-	color: var(--light);
+	background-color: var(--primary_20);
+	color: var(--primary_100);
 	cursor: pointer;
 	text-align: center;
 	-webkit-appearance: none;
@@ -27,10 +34,10 @@
 	font-size: 1rem;
 
 	&:active {
-		background-color: var(--background);
+		background-color: var(--primary_30);
 	}
 	&:focus {
-		outline: 1px dotted var(--light);
+		outline: 1px dotted var(--primary_100);
 	}
 
 	display: flex;

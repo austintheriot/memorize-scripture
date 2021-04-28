@@ -1,6 +1,6 @@
 .h1 {
 	margin: 75px auto 50px;
-	border-bottom: 1px solid var(--dark);
+	border-bottom: 1px solid var(--primary_20);
 	width: 80%;
 	max-width: 400px;
 }
@@ -17,8 +17,8 @@
 	position: block;
 	overflow-y: hidden;
 	resize: none;
-	background: var(--dark);
-	color: var(--light);
+	background: var(--primary_20);
+	color: var(--primary_100);
 	outline: none;
 	border: 1px solid transparent;
 	border-radius: 3px;
@@ -44,10 +44,10 @@
 	width: 200px;
 
 	&:disabled {
-		color: var(--toggleLight);
+		color: var(--primary_40);
 	}
 	&:disabled:active {
-		background-color: var(--dark);
+		background-color: var(--primary_20);
 	}
 }
 
@@ -61,8 +61,8 @@
 	border-radius: 3px;
 	overflow-x: auto;
 
-	background: var(--background);
-	border: 1px solid var(--dark);
+	background: var(--primary_30);
+	border: 1px solid var(--primary_20);
 }
 
 .condensedPlaceholder {

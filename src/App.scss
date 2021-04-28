@@ -9,11 +9,18 @@ html {
 	margin: 0;
 	box-sizing: border-box;
 
-	--light: #d9d9d9;
-	--toggleLight: #404040;
-	--background: #333533;
-	--dark: #242423;
-	--darker: #202020;
+	--primary_100: #f1f1f1;
+	--primary_90: #dbdbdb;
+	--primary_80: #b8b8b8;
+	--primary_70: #868686;
+	--primary_60: #5f5f5f;
+	--primary_50: #494949;
+	--primary_40: #404040;
+	--primary_30: #333533;
+	--primary_20: #242423;
+	--primary_10: #202020;
+	--primary_0: #000000;
+
 	--pop: #2f42bc;
 
 	--h1: 2rem;
@@ -90,8 +97,8 @@ p {
 	outline: none;
 	margin: 0;
 	text-decoration: none;
-	background-color: var(--dark);
-	color: var(--light);
+	background-color: var(--primary_20);
+	color: var(--primary_100);
 	cursor: pointer;
 	text-align: center;
 	-webkit-appearance: none;
@@ -103,10 +110,10 @@ p {
 	font-size: 1.1rem;
 
 	&:active {
-		background-color: var(--toggleLight);
+		background-color: var(--primary_40);
 	}
 	&:focus {
-		outline: 1px dotted var(--light);
+		outline: 1px dotted var(--primary_100);
 	}
 }
 
