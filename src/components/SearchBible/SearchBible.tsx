@@ -36,7 +36,8 @@ export const SearchBible = () => {
 			e.preventDefault();
 
 			if (validateBookAndChapter(book, chapter)) {
-				return setMessage('Please provide a valid book and chapter.');
+				setMessage('Please provide a valid book and chapter.');
+				return;
 			}
 
 			const validBook = book as BibleBook;
@@ -119,7 +120,7 @@ export const SearchBible = () => {
 			>
 				<img src={searchIcon} alt="search" className={styles.searchIcon} />
 			</button>
-			<p>{message}</p>
+		{!!message &&	<p className={styles.message}>{message}</p>}
 		</form>
 	);
 };
