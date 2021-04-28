@@ -12,6 +12,12 @@
 		margin-left: 0.2rem;
 		margin-right: 0.2rem;
 	}
+
+	@media (max-width: 500px){
+		flex-direction: column;
+		align-items: center;
+		justify-content: space-evenly;
+	}
 }
 
 .searchButton {
