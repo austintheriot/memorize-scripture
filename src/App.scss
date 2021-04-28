@@ -84,6 +84,31 @@ p {
 	line-height: 1.5rem;
 }
 
+/* shows focus ring or underline for keyboard users
+See FocusRing.tsx & FocusLine.tsx */
+button, a, summary {
+	position: relative;
+	&:focus {
+		outline: 0;
+		.focus-ring {
+			opacity: 1;
+			top: -0.25rem;
+			left: -0.25rem;
+			width: calc(100% + 0.5rem);
+			height: calc(100% + 0.5rem);
+			border: 2px solid var(--pop);
+		}
+		.focus-line {
+			opacity: 1;
+			top: -0.25rem;
+			left: -0.25rem;
+			width: calc(100% + 0.5rem);
+			height: calc(100% + 0.5rem);
+			border-bottom: 2px solid var(--pop);
+		}
+	}
+}
+
 .App {
 	outline: none;
 	&:focus {
@@ -113,7 +138,7 @@ p {
 		background-color: var(--primary_40);
 	}
 	&:focus {
-		outline: 1px dotted var(--primary_100);
+		outline: 0;
 	}
 }
 

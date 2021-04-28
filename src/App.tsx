@@ -17,7 +17,11 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { ErrorBoundary } from 'components/ErrorBoundary/ErrorBoundary';
 import { FirebaseProvider } from 'hooks/useFirebaseContext';
 import { useRouteAnalytics } from 'hooks/useRouteAnalytics';
-import { RecordedAudioProvider, useRecordedAudio } from 'hooks/useRecordedAudio';
+import {
+	RecordedAudioProvider,
+	useRecordedAudio,
+} from 'hooks/useRecordedAudio';
+import { IsKeyboardUserContextProvider } from 'hooks/useIsKeyboardUser';
 
 const Learn = lazy(() => import('./pages/Learn/Learn'));
 const Review = lazy(() => import('./pages/Review/Review'));
@@ -40,7 +44,7 @@ function App() {
 	}, []);
 
 	return (
-		<div className='App'>
+		<div className="App">
 			<ErrorBoundary>
 				<Transition>
 					<Suspense fallback={Loading()}>
@@ -51,12 +55,12 @@ function App() {
 						<div onClick={closeMenu}>
 							<ServiceWorkerMessages />
 							<Switch>
-								<Route exact path='/learn' component={Learn} />
-								<Route exact path='/review' component={Review} />
-								<Route exact path='/tools' component={Tools} />
-								<Route exact path='/about' component={About} />
-								<Route exact path='/contact' component={Contact} />
-								<Route path='/' component={Learn} />
+								<Route exact path="/learn" component={Learn} />
+								<Route exact path="/review" component={Review} />
+								<Route exact path="/tools" component={Tools} />
+								<Route exact path="/about" component={About} />
+								<Route exact path="/contact" component={Contact} />
+								<Route path="/" component={Learn} />
 							</Switch>
 						</div>
 					</Suspense>
@@ -66,7 +70,6 @@ function App() {
 	);
 }
 
-
 const AppWithContext = () => {
 	return (
 		<ErrorBoundary>
@@ -75,14 +78,16 @@ const AppWithContext = () => {
 					<StoreProvider store={store}>
 						<BibleAudioProvider>
 							<RecordedAudioProvider>
-								<App />
+								<IsKeyboardUserContextProvider>
+									<App />
+								</IsKeyboardUserContextProvider>
 							</RecordedAudioProvider>
 						</BibleAudioProvider>
 					</StoreProvider>
 				</FirebaseProvider>
 			</Router>
 		</ErrorBoundary>
-	)
-}
+	);
+};
 
 export { AppWithContext as default };

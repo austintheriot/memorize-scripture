@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import styles from './About.module.scss';
-import { Link } from 'react-router-dom';
 
 //animated scroll library
 import { animateScroll as scroll } from 'react-scroll';
@@ -21,6 +20,8 @@ import errorIcon from '../../icons/error.svg';
 import flipIcon from '../../icons/flip.svg';
 import { Footer } from '../../components/Footer/Footer';
 import { useFirebaseContext } from 'hooks/useFirebaseContext';
+import FocusRing from 'components/FocusRing/FocusRing';
+import { InternalLink } from 'components/Links/InternalLink';
 
 export const About = () => {
 	const { analytics } = useFirebaseContext()
@@ -91,6 +92,7 @@ export const About = () => {
 					onClick={scrollToTop}
 					className={['button', styles.button].join(' ')}>
 					Back to Top
+						<FocusRing />
 				</button>
 
 				<section id='intro'>
@@ -151,12 +153,12 @@ export const About = () => {
 					<h2>App Controls</h2>
 					<p>
 						Here's quick rundown of the various buttons you can find on the{' '}
-						<Link to='/'>Learn</Link> page of the app.
+						<InternalLink to='/'>Learn</InternalLink> page of the app.
 					</p>
 					<div className={styles.tipWrapper}>
 						<p>
 							Tip: You may click on any condensed line on the{' '}
-							<Link to='/'>Learn</Link> page of the app to quickly reveal the
+							<InternalLink to='/'>Learn</InternalLink> page of the app to quickly reveal the
 							full text.
 						</p>
 					</div>
@@ -448,7 +450,7 @@ export const About = () => {
 						than to learn new passages.
 					</p>
 					<p>
-						On the <Link to='/review'>Review Page</Link>, you can test your
+						On the <InternalLink to='/review'>Review Page</InternalLink>, you can test your
 						knowledge of a passage by typing it into the Input box. The tester
 						only grades the letters you type, ignoring punctuation,
 						capitalization, line breaks, and spaces. This is so that you can
@@ -495,7 +497,7 @@ export const About = () => {
 						are interested in contributing to this project, have questions,
 						comments, suggestions, bug reports, or if you're just interested in
 						chatting, please don't hesitate to contact me via the{' '}
-						<Link to='/contact'>Contact</Link> page on this website, and I'll
+						<InternalLink to='/contact'>Contact</InternalLink> page on this website, and I'll
 						get back to you shortly. Additionally, I can be reached via my{' '}
 						<ExternalLink to='https://austintheriot.com/contact'>
 							website

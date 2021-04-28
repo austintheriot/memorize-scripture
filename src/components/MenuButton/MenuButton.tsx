@@ -5,6 +5,7 @@ import styles from './MenuButton.module.scss';
 import { useDispatch } from 'react-redux';
 import { menuButtonClicked } from '../../store/appSlice';
 import { useAppSelector } from 'store/store';
+import FocusRing from 'components/FocusRing/FocusRing';
 
 export const MenuButton = () => {
 	const dispatch = useDispatch();
@@ -34,6 +35,7 @@ export const MenuButton = () => {
 				className={[styles.span3, menuIsOpen ? styles.span3Open : ''].join(
 					' '
 				)}></span>
+			<FocusRing />
 		</button>
 	);
 };

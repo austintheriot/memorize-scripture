@@ -21,8 +21,8 @@
 }
 
 .searchButton {
-	height: 42px;
 	position: relative;
+	height: 42px;
 	width: 3rem;
 	display: block;
 	border: none;
@@ -44,7 +44,7 @@
 		background-color: var(--primary_30);
 	}
 	&:focus {
-		outline: 1px dotted var(--primary_100);
+		outline: 0;
 	}
 
 	display: flex;

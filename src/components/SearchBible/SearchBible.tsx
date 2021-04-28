@@ -20,6 +20,7 @@ import {
 import useStateIfMounted from 'hooks/useStateIfMounted';
 import { validateBookAndChapter } from 'utils/validation';
 import Input from 'components/Input/Input';
+import FocusRing from 'components/FocusRing/FocusRing';
 
 export const SearchBible = () => {
 	const dispatch = useAppDispatch();
@@ -119,6 +120,7 @@ export const SearchBible = () => {
 				data-testid="search"
 			>
 				<img src={searchIcon} alt="search" className={styles.searchIcon} />
+				<FocusRing />
 			</button>
 		{!!message &&	<p className={styles.message}>{message}</p>}
 		</form>

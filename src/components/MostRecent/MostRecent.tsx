@@ -11,6 +11,7 @@ import styles from './MostRecent.module.scss';
 import { addToTextArray, getTextArray, TextsObject } from '../../utils/storageUtils';
 import { audioMostRecentPassageClicked } from 'store/bibleAudioSlice';
 import { useFirebaseContext } from 'hooks/useFirebaseContext';
+import FocusRing from 'components/FocusRing/FocusRing';
 
 export const MostRecent = () => {
 	const { analytics } = useFirebaseContext();
@@ -40,22 +41,23 @@ export const MostRecent = () => {
 			className={styles.mostRecentContainer}
 			ref={details}
 			data-testid='most-recent-details'>
-			<summary data-testid='most-recent-summary'>Most Recent:</summary>
+			<summary data-testid='most-recent-summary'>
+				Most Recent:
+				<FocusRing />
+				</summary>
 			{mostRecent[0].title ? (
-				<>
-					<ul className={styles.mostRecentList}>
-						{mostRecent.map((el) => (
-							<li key={el.title} className={styles.mostRecentListItem}>
-								<button
-									aria-label='recent passage'
-									className={['button', styles.listButton].join(' ')}
-									onClick={(e) => handleClickRecent(e, el)}>
-									{el.title}
-								</button>
-							</li>
-						))}
-					</ul>
-				</>
+				<ul className={styles.mostRecentList}>
+				{mostRecent.map((el) => (
+					<li key={el.title} className={styles.mostRecentListItem}>
+						<button
+							aria-label='recent passage'
+							className={['button', styles.listButton].join(' ')}
+							onClick={(e) => handleClickRecent(e, el)}>
+							{el.title}
+						</button>
+					</li>
+				))}
+			</ul>
 			) : null}
 		</details>
 	);

@@ -45,7 +45,6 @@ const Learn = () => {
 		<ErrorBoundary>
 			<div
 				onKeyDown={handleKeyPress}
-				tabIndex={0}
 				className={styles.LearnContainer}>
 				<Prompt
 					message={() => {

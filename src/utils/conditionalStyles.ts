@@ -10,5 +10,8 @@ type ConditionalStyles = (...any: StateClassArray[]) => string;
  * If no condtion is supplied, the classname is kept.
  */
 export const conditionalStyles: ConditionalStyles = (array) =>
-  array.filter((el) => !Array.isArray(el) || el[1] === undefined || el[1])
-    .map((el) => !Array.isArray(el) ? el : el[0]).join(' ');
+  array.filter((el) => typeof el === 'string' || (Array.isArray(el) && (el[1] === undefined || el[1])))
+    .map((el) => {
+      if (typeof el === 'string') return el;
+      else return el[0];
+    }).join(' ');

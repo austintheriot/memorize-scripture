@@ -12,7 +12,7 @@ import { Comparison } from './Comparison/Comparison';
 import { useAppSelector } from 'store/store';
 import { RecordedAudioControls } from 'components/RecordedAudioControls/RecordedAudioControls';
 
-export default () => {
+const Review = () => {
 	const dispatch = useDispatch();
 	const { book, chapter, reviewInput } = useAppSelector((state) => state.text);
 	const textarea = useRef<HTMLTextAreaElement | null>(null);
@@ -66,3 +66,5 @@ export default () => {
 		</ErrorBoundary>
 	);
 };
+
+export default Review;

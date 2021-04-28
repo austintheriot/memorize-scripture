@@ -1,11 +1,15 @@
+import FocusLine from 'components/FocusLine/FocusLine';
 import { useFirebaseContext } from 'hooks/useFirebaseContext';
-import React, { useContext, useRef } from 'react';
+import React, { FC, useRef } from 'react';
+import { conditionalStyles } from 'utils/conditionalStyles';
+import styles from './Links.module.scss';
 
-export const ExternalLink = (props: {
-	children: string | JSX.Element;
+interface Props {
 	to: string;
 	className?: string;
-}) => {
+}
+
+export const ExternalLink: FC<Props> = ({children = null, to, className = ''}) => {
 	const { analytics } = useFirebaseContext();
 	const anchor = useRef<HTMLAnchorElement | null>(null);
 
@@ -22,12 +26,16 @@ export const ExternalLink = (props: {
 
 	return (
 		<a
-			href={props.to}
+			href={to}
 			ref={anchor}
 			onClick={(e) => handleClick(e, anchor)}
 			rel='noreferrer noopener'
-			className={props.className || ''}>
-			{props.children}
+			className={conditionalStyles([
+				styles.Link,
+				className,
+			])}>
+			{children}
+			<FocusLine />
 		</a>
 	);
 };

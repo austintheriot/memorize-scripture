@@ -12,7 +12,7 @@ interface Props {
 export const Message = ({ message, show, handleHide }: Props) => {
 	return (
 		<div className={[styles.Message, show ? '' : styles.hideMessage].join(' ')}>
-			<CloseButton onClick={handleHide} />
+			<CloseButton onClick={handleHide} show={show} />
 			<p>{message}</p>
 		</div>
 	);
