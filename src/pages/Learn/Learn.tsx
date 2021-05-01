@@ -15,10 +15,6 @@ import { useAppSelector } from 'store/store';
 
 
 const Learn = () => {
-	useEffect(() => {
-		window.scrollTo(0, 0);
-	}, []);
-
 	const { bibleAudioRef, handleKeyPress } = useBibleAudio();
 	const { book, chapter, error, loading, showCondensed, body } = useAppSelector(s => s.text);
 

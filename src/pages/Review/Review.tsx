@@ -17,10 +17,6 @@ const Review = () => {
 	const { book, chapter, reviewInput } = useAppSelector((state) => state.text);
 	const textarea = useRef<HTMLTextAreaElement | null>(null);
 
-	useEffect(() => {
-		window.scrollTo(0, 0);
-	}, []);
-
 	const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		e.preventDefault();
 		const textareaValue = e.currentTarget.value;

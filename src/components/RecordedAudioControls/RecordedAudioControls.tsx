@@ -11,6 +11,7 @@ import errorIcon from 'icons/error.svg';
 import { useFirebaseContext } from 'hooks/useFirebaseContext';
 import { useRecordedAudio } from 'hooks/useRecordedAudio';
 import { conditionalStyles } from 'utils/conditionalStyles';
+import FocusRing from 'components/FocusRing/FocusRing';
 
 export const RecordedAudioControls = () => {
 	const { analytics } = useFirebaseContext();
@@ -103,7 +104,9 @@ export const RecordedAudioControls = () => {
 						onClick={() => {
 							if (recordingState === 'recording') stopRecording();
 							else startRecording();
-						}} />
+						}} >
+						<FocusRing rounded />
+						</button>
 				</div>
 			</div>
 
@@ -136,6 +139,7 @@ export const RecordedAudioControls = () => {
 					disabled={playButtonsDisabled}
 				>
 					<p className={styles.icon}>x{audioSpeed}</p>
+					<FocusRing />
 				</button>
 				<button
 					aria-label="beginning"
@@ -150,6 +154,7 @@ export const RecordedAudioControls = () => {
 						alt={'go to beginning'}
 						className={styles.icon}
 					/>
+					<FocusRing />
 				</button>
 
 				<button
@@ -165,6 +170,7 @@ export const RecordedAudioControls = () => {
 						alt={'back 5 seconds'}
 						className={styles.icon}
 					/>
+					<FocusRing />
 				</button>
 
 				{/* PLAY BUTTON */}
@@ -178,6 +184,7 @@ export const RecordedAudioControls = () => {
 						disabled={true}
 					>
 						<img src={errorIcon} alt={'loading'} className={styles.icon} />
+						<FocusRing />
 					</button>
 				) : isReady ? (
 					isPlaying ? (
@@ -190,7 +197,8 @@ export const RecordedAudioControls = () => {
 							onMouseDown={handlePause}
 							disabled={playButtonsDisabled}
 						>
-							<img src={pauseIcon} alt={'pause'} className={styles.icon} />
+								<img src={pauseIcon} alt={'pause'} className={styles.icon} />
+								<FocusRing />
 						</button>
 					) : (
 							/* NO ERROR, IS READY AND PAUSED */
@@ -202,7 +210,8 @@ export const RecordedAudioControls = () => {
 								onMouseDown={handlePlay}
 								disabled={playButtonsDisabled}
 							>
-								<img src={playIcon} alt={'play'} className={styles.icon} />
+									<img src={playIcon} alt={'play'} className={styles.icon} />
+									<FocusRing />
 							</button>
 						)
 				) : (
@@ -215,6 +224,7 @@ export const RecordedAudioControls = () => {
 								disabled={true}
 							>
 								<img src={loadingIcon} alt={'loading'} className={styles.loading} />
+								<FocusRing />
 							</button>
 						)}
 				<button
@@ -226,6 +236,7 @@ export const RecordedAudioControls = () => {
 					disabled={playButtonsDisabled}
 				>
 					<img src={forwardIcon} alt={'forward 5s'} className={styles.icon} />
+					<FocusRing />
 				</button>
 				<button
 					data-testid="flip"
@@ -234,6 +245,7 @@ export const RecordedAudioControls = () => {
 					onMouseDown={handleViewChange}
 				>
 					<img src={flipIcon} alt={'change view'} className={styles.icon} />
+					<FocusRing />
 				</button>
 			</div>
 		</div>

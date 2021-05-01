@@ -7,11 +7,11 @@ import { ExternalLink } from '../Links/ExternalLink';
 export const Footer = () => {
 	return (
 		<footer className={styles.Footer}>
-			<ExternalLink to='https://memorizescripture.org'>
+			<ExternalLink to="https://memorizescripture.org" focus="ring">
 				<img
 					src={chiRho}
-					alt='Memorize Scripture Logo: Chi Rho'
-					className='ChiRho'
+					alt="Memorize Scripture Logo: Chi Rho"
+					className="ChiRho"
 				/>
 			</ExternalLink>
 		</footer>

@@ -1,29 +1,39 @@
 import FocusLine from 'components/FocusLine/FocusLine';
-import React, { FC, useRef } from 'react';
+import useIsKeyboardUser from 'hooks/useIsKeyboardUser';
+import React, { FC, MouseEvent, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { conditionalStyles } from 'utils/conditionalStyles';
 import styles from './Links.module.scss';
 
 interface Props {
 	to: string;
+	children?: ReactNode;
 	className?: string;
+	tabIndex?: -1 | 0;
+	onClick?: (e: MouseEvent<HTMLAnchorElement>) => void;
 }
 
 export const InternalLink: FC<Props> = ({
-	children = null,
 	to,
+	children = null,
 	className = '',
+	tabIndex,
+	...rest
 }) => {
-	const linkRef = useRef<HTMLAnchorElement | null>(null);
+	const isKeyboardUser = useIsKeyboardUser();
 
 	return (
 		<Link
-			ref={linkRef}
 			to={to}
-			className={conditionalStyles([styles.Link, className])}
+			className={conditionalStyles([
+				styles.Link,
+				[styles.LinkFocus, isKeyboardUser],
+				className,
+			])}
+			tabIndex={tabIndex}
+			{...rest}
 		>
 			{children}
-			<FocusLine />
 		</Link>
 	);
 };

@@ -36,10 +36,6 @@ export const About = () => {
 		});
 	};
 
-	useEffect(() => {
-		window.scrollTo(0, 0);
-	}, []);
-
 	let listItemCounter = 1;
 
 	return (

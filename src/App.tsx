@@ -3,7 +3,7 @@ import * as serviceWorker from './serviceWorker';
 import './App.scss';
 import { useDispatch } from 'react-redux';
 import { outsideOfMenuClicked } from './store/appSlice';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, useLocation } from 'react-router-dom';
 import { Menu } from './components/Menu/Menu';
 import { MenuButton } from './components/MenuButton/MenuButton';
 import { Transition } from './components/Transition/Transition';
@@ -36,6 +36,11 @@ function App() {
 	const dispatch = useDispatch();
 	const closeMenu = () => dispatch(outsideOfMenuClicked());
 	const { bibleAudioRef } = useBibleAudio();
+	const location = useLocation();
+
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, [location]);
 
 	useEffect(() => {
 		serviceWorker.unregister();

@@ -11,9 +11,15 @@
 	background-color: var(--primary_20);
 	transition: transform 0.1s ease-out;
 
+	.chiRhoLink {
+		display: block;
+		width: fit-content;
+		height: fit-content;
+		margin: 50px auto;
+	}
+
 	img {
 		display: block;
-		margin: 50px auto;
 	}
 }
 

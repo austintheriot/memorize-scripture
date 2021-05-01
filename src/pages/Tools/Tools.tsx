@@ -12,11 +12,7 @@ import { Footer } from '../../components/Footer/Footer';
 import * as clipboard from 'clipboard-polyfill/text';
 import { useAppSelector } from 'store/store';
 
-export default () => {
-	useEffect(() => {
-		window.scrollTo(0, 0);
-	}, []);
-
+const Tools =  () => {
 	const { condenseToolOutput, copiedError, copied, condenseToolInput } = useAppSelector((state) => state.text);
 	const dispatch = useDispatch();
 	const textarea = useRef<HTMLTextAreaElement | null>(null);
@@ -85,3 +81,5 @@ export default () => {
 		</>
 	);
 };
+
+export default Tools;

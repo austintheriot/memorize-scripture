@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default () => {
+const Contact =  () => {
 	const classes = useStyles();
 	const [email, setEmail] = useState('');
 	const [emailHasErrors, setEmailHasErrors] = useState(false);
@@ -48,10 +48,6 @@ export default () => {
 
 	const [buttonDisabled, setButtonDisabled] = useState(false);
 	const [userMessage, setUserMessage] = useState('');
-
-	useEffect(() => {
-		window.scrollTo(0, 0);
-	}, []);
 
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement>,
@@ -217,3 +213,5 @@ export default () => {
 		</ErrorBoundary>
 	);
 };
+
+export default Contact;

@@ -54,6 +54,7 @@ export const MostRecent = () => {
 							className={['button', styles.listButton].join(' ')}
 							onClick={(e) => handleClickRecent(e, el)}>
 							{el.title}
+							<FocusRing />
 						</button>
 					</li>
 				))}
