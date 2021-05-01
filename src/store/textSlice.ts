@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { UtilityConfig } from '../app/types';
 import { Psalm23, Psalm23Split, Psalm23Condensed } from '../app/Psalm23';
 import { breakFullTextIntoLines, condenseText } from '../app/condense';
 import {

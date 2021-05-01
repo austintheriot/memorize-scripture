@@ -1,6 +1,5 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit';
 import { BibleBook, bookTitlesAndChapters, Chapter } from '../pages/Learn/bible';
-import { AppState } from './appSlice';
 import { RootState } from './store';
 
 export interface SearchState {

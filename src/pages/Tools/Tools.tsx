@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import styles from './Tools.module.scss';
 
 import { useDispatch } from 'react-redux';

@@ -172,7 +172,7 @@ export const BibleAudioProvider = ({ children }: { children: ReactNode }) => {
 		if (bibleAudio.readyState < 2) return;
 		dispatch(progressBarClicked(targetTime));
 		bibleAudio.currentTime = bibleAudio.duration * targetTime;
-	}, [bibleAudio.currentTime, bibleAudio.duration, bibleAudio.readyState, dispatch]);
+	}, [bibleAudio, dispatch]);
 
 	/**
 	 * Changes the current audio speed to the designated speed if audio 
@@ -183,7 +183,7 @@ export const BibleAudioProvider = ({ children }: { children: ReactNode }) => {
 		bibleAudio.playbackRate = targetSpeed;
 		dispatch(speedButtonClicked(targetSpeed));
 		storePlaySpeed(targetSpeed);
-	}, [bibleAudio.playbackRate, bibleAudio.readyState, dispatch]);
+	}, [bibleAudio, dispatch]);
 
 	/**
 	 * Enables toggling the audio on/off and rewinding/fast-forwarding

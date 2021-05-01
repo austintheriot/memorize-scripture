@@ -5,34 +5,11 @@ import styles from './Contact.module.scss';
 import Input from 'components/Input/Input';
 
 import { emailAPIKey } from '../../app/config';
-import { makeStyles } from '@material-ui/core/styles';
 
 import { ErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary';
 import { Footer } from '../../components/Footer/Footer';
 import { validateEmail } from 'utils/validation';
-
-const useStyles = makeStyles((theme) => ({
-	formControl: {
-		margin: theme.spacing(0.25),
-	},
-	selectEmpty: {
-		marginTop: theme.spacing(2),
-	},
-	iconButton: {
-		width: 'max-content',
-	},
-	label: {
-		color: 'var(--primary_100)',
-		zIndex: 1,
-		left: '0.6rem',
-	},
-	input: {
-		padding: '1rem 1rem',
-		backgroundColor: 'var(--primary_20)',
-		color: 'var(--primary_100)',
-		fontSize: '1.1rem',
-	},
-}));
+import FocusRing from 'components/FocusRing/FocusRing';
 
 const Contact = () => {
 	const [email, setEmail] = useState('');
@@ -147,6 +124,7 @@ const Contact = () => {
 						onChange={handleMessageChange}
 						onFocus={handleFocus}
 						disabled={messageDisabled}
+						componentStyles={styles.InputComponentStyles}
 					/>
 					<p className={styles.userMessage}>{userMessage}</p>
 					<button
@@ -159,6 +137,7 @@ const Contact = () => {
 						].join(' ')}
 					>
 						Submit
+							<FocusRing />
 					</button>
 				</form>
 				<Footer />

@@ -1,4 +1,3 @@
-import FocusLine from 'components/FocusLine/FocusLine';
 import FocusRing from 'components/FocusRing/FocusRing';
 import { useFirebaseContext } from 'hooks/useFirebaseContext';
 import useIsKeyboardUser from 'hooks/useIsKeyboardUser';

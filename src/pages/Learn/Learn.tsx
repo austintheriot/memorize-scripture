@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Prompt } from 'react-router';
 import styles from './Learn.module.scss';
 import { ErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary';

@@ -27,6 +27,10 @@
 	margin: auto;
 }
 
+.InputComponentStyles {
+	margin-top: 1rem;
+}
+
 .userMessage {
 	text-align: center;
 	color: var(--primary_100);
@@ -35,12 +39,7 @@
 
 .submit {
 	border-radius: 3px;
-	margin: 2rem auto;
-
-	&:focus {
-		outline: 1px solid var(--primary_100);
-		outline-offset: 5px;
-	}
+	margin: 0 auto;
 }
 
 .disabled {

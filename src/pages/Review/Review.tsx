@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { userEnteredReviewInput } from '../../store/textSlice';
 import styles from './Review.module.scss';

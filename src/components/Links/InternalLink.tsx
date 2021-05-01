@@ -1,4 +1,3 @@
-import FocusLine from 'components/FocusLine/FocusLine';
 import useIsKeyboardUser from 'hooks/useIsKeyboardUser';
 import React, { FC, MouseEvent, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
