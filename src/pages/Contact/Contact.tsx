@@ -10,6 +10,7 @@ import { ErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary';
 import { Footer } from '../../components/Footer/Footer';
 import { validateEmail } from 'utils/validation';
 import FocusRing from 'components/FocusRing/FocusRing';
+import Textarea from 'components/Textarea/Textarea';
 
 const Contact = () => {
 	const [email, setEmail] = useState('');
@@ -23,7 +24,7 @@ const Contact = () => {
 
 	const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) =>
 		setEmail(e.target.value);
-	const handleMessageChange = (e: ChangeEvent<HTMLInputElement>) =>
+	const handleMessageChange = (e: ChangeEvent<HTMLTextAreaElement>) =>
 		setMessage(e.target.value);
 	const handleFocus = () => setUserMessage('');
 
@@ -117,8 +118,9 @@ const Contact = () => {
 						validateOnBlur
 						validateOnChange={false}
 					/>
-					<Input
+					<Textarea
 						value={message}
+						rows={4}
 						id="message"
 						label="Message"
 						onChange={handleMessageChange}
@@ -126,7 +128,7 @@ const Contact = () => {
 						disabled={messageDisabled}
 						componentStyles={styles.InputComponentStyles}
 					/>
-					<p className={styles.userMessage}>{userMessage}</p>
+					{userMessage && <p className={styles.userMessage}>{userMessage}</p>}
 					<button
 						aria-label="submit"
 						disabled={buttonDisabled}

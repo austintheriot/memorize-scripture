@@ -28,18 +28,19 @@
 }
 
 .InputComponentStyles {
-	margin-top: 1rem;
+	margin-top: 0.5rem;
+	margin-bottom: 0.5rem;
 }
 
 .userMessage {
 	text-align: center;
 	color: var(--primary_100);
-	margin: 0.5rem auto;
+	margin: 0 auto 2rem;
 }
 
 .submit {
 	border-radius: 3px;
-	margin: 0 auto;
+	margin: 0rem auto;
 }
 
 .disabled {
