@@ -87,6 +87,7 @@ export const SearchBible = () => {
 					dispatch(setBook(e.target.value));
 				}}
 				onFocus={clearError}
+				componentStyles={styles.InputComponentStyles}
 			>
 				<datalist id="book-list">
 					{bookTitles.map((book) => (
@@ -105,6 +106,7 @@ export const SearchBible = () => {
 					dispatch(setChapter(e.target.value));
 				}}
 				onFocus={clearError}
+				componentStyles={styles.InputComponentStyles}
 			>
 				<datalist id="chapter-list">
 					{chaptersArray.map((chapter) => (
