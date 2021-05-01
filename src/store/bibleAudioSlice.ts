@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { BibleBook, Title } from 'pages/Learn/bible';
+import { BibleBook, Title } from 'pages/Memorize/bible';
 import { splitTitleIntoBookAndChapter } from '../utils/storageUtils';
 
 export interface BibleAudioState {

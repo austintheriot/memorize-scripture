@@ -23,7 +23,7 @@ import {
 } from 'hooks/useRecordedAudio';
 import { IsKeyboardUserContextProvider } from 'hooks/useIsKeyboardUser';
 
-const Learn = lazy(() => import('./pages/Learn/Learn'));
+const Memorize = lazy(() => import('./pages/Memorize/Memorize'));
 const Review = lazy(() => import('./pages/Review/Review'));
 const About = lazy(() => import('./pages/About/About'));
 const Contact = lazy(() => import('./pages/Contact/Contact'));
@@ -60,12 +60,12 @@ function App() {
 						<div onClick={closeMenu}>
 							<ServiceWorkerMessages />
 							<Switch>
-								<Route exact path="/learn" component={Learn} />
+								<Route exact path="/memorize" component={Memorize} />
 								<Route exact path="/review" component={Review} />
 								<Route exact path="/tools" component={Tools} />
 								<Route exact path="/about" component={About} />
 								<Route exact path="/contact" component={Contact} />
-								<Route path="/" component={Learn} />
+								<Route path="/" component={Memorize} />
 							</Switch>
 						</div>
 					</Suspense>

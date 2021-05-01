@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useCallback } from 'react';
 import styles from './SearchBible.module.scss';
-import { BibleBook, bookTitles, Chapter, Title } from '../../pages/Learn/bible';
+import { BibleBook, bookTitles, Chapter, Title } from '../../pages/Memorize/bible';
 import { getTextBody, addToTextArray } from '../../utils/storageUtils';
 import {
 	textRetrievedFromLocalStorage,

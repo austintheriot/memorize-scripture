@@ -60,18 +60,7 @@ export const Menu = () => {
 						onClick={closeMenu}
 						data-testid="learn"
 					>
-						Learn
-					</InternalLink>
-				</li>
-				<li className={styles.li}>
-					<InternalLink
-						to="/review"
-						tabIndex={tabbable}
-						className={styles.link}
-						onClick={closeMenu}
-						data-testid="review"
-					>
-						Review
+						Memorize
 					</InternalLink>
 				</li>
 				<li className={styles.li}>

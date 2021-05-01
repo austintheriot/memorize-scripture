@@ -1,4 +1,4 @@
-import { BibleBook, bookTitlesAndChapters } from 'pages/Learn/bible';
+import { BibleBook, bookTitlesAndChapters } from 'pages/Memorize/bible';
 import { isNumeric } from './isNumeric';
 
 const EMAIL_ERROR_GENERIC = 'Please provide a valid email';

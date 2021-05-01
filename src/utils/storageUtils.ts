@@ -1,4 +1,4 @@
-import { BibleBook, Chapter, Title } from "pages/Learn/bible";
+import { BibleBook, Chapter, Title } from "pages/Memorize/bible";
 import { Psalm23 } from 'app/Psalm23';
 
 export const localStorageVersion = '1.0.0' as const;

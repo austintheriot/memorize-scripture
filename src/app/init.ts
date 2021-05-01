@@ -16,7 +16,7 @@ import {
 	DEFAULT_TEXTS,
 } from 'utils/storageUtils';
 import { AppDispatch } from 'store/store';
-import { Title } from 'pages/Learn/bible';
+import { Title } from 'pages/Memorize/bible';
 
 /**
  * Gets any of the user's preferences that are saved in local storage.

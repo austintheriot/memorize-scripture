@@ -1,8 +1,7 @@
 import React from 'react';
 import { Prompt } from 'react-router';
-import styles from './Learn.module.scss';
+import styles from './Memorize.module.scss';
 import { ErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary';
-import { BibleAudioControls } from '../../components/BibleAudioControls/BibleAudioControls';
 import { SmallSpacer } from '../../components/Spacers/Spacers';
 import { Footer } from '../../components/Footer/Footer';
 import { SearchBible } from '../../components/SearchBible/SearchBible';
@@ -12,9 +11,10 @@ import { TextLoading } from '../../components/TextLoading/TextLoading';
 import { Copyright } from '../../components/Copyright/Copyright';
 import { useBibleAudio } from 'hooks/useBibleAudio';
 import { useAppSelector } from 'store/store';
+import { RecordedAudioControls } from 'components/RecordedAudioControls/RecordedAudioControls';
 
 
-const Learn = () => {
+const Memorize = () => {
 	const { bibleAudioRef, handleKeyPress } = useBibleAudio();
 	const { book, chapter, error, loading, showCondensed, body } = useAppSelector(s => s.text);
 
@@ -50,24 +50,21 @@ const Learn = () => {
 						return true;
 					}}
 				/>
-				<h1 className={styles.h1}>Learn</h1>
+				<h1 className={styles.h1}>{`${book}`.replace('Psalms', 'Psalm')} {chapter}</h1>
 				<div className={styles.searchContainer}>
 					<SearchBible />
 					<MostRecent />
 				</div>
-				<h2>
-					{`${book}`.replace('Psalms', 'Psalm')} {chapter}
-				</h2>
 				<div className={styles.textAreaContainer} data-testid='text-container'>
 					{textComponent}
 				</div>
 				<SmallSpacer />
 				<Copyright />
 				<Footer />
-				<BibleAudioControls />
+				<RecordedAudioControls />
 			</div>
 		</ErrorBoundary>
 	);
 };
 
-export default Learn;
+export default Memorize;

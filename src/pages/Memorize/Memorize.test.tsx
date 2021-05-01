@@ -1,18 +1,11 @@
 import React from 'react';
 import { render, screen } from 'utils/testUtils';
-import Learn from './Learn';
+import Learn from './Memorize';
 
 describe('<Learn/>', () => {
 	describe('Inner Components', () => {
 		test('Should render without crashing', () => {
 			render(<Learn />);
-		});
-
-		test('Should have title Learn', () => {
-			render(<Learn />);
-			expect(
-				screen.getByRole('heading', { name: /Learn/ })
-			).toBeInTheDocument();
 		});
 
 		test('Should render Psalm 23 title', () => {
