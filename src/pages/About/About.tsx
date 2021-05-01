@@ -149,12 +149,12 @@ export const About = () => {
 					<h2>App Controls</h2>
 					<p>
 						Here's quick rundown of the various buttons you can find on the{' '}
-						<InternalLink to='/'>Learn</InternalLink> page of the app.
+						<InternalLink to='/'>Memorize</InternalLink> page of the app.
 					</p>
 					<div className={styles.tipWrapper}>
 						<p>
 							Tip: You may click on any condensed line on the{' '}
-							<InternalLink to='/'>Learn</InternalLink> page of the app to quickly reveal the
+							<InternalLink to='/'>Memorize</InternalLink> page of the app to quickly reveal the
 							full text.
 						</p>
 					</div>
