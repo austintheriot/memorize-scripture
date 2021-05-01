@@ -72,9 +72,9 @@ const Contact = () => {
 						'Content-Type': 'application/json',
 					},
 					body: JSON.stringify({
-						Name: '',
-						Email: email,
-						Message: message,
+						name: '',
+						email: email,
+						message: message,
 						_private: {
 							key: emailAPIKey,
 						},
