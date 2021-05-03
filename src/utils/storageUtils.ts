@@ -46,9 +46,9 @@ export type SetLocalStorage = <K extends LocalStorageKeys>(
 	value: LocalStorageTypes[K],
 ) => void;
 export const setLocalStorage: SetLocalStorage = (key, value) => {
-	console.log(`Storing ${key} as ${value} in local storage`);
 	const keyString = JSON.stringify(key);
 	const valueString = JSON.stringify(value);
+	console.log(`Storing ${keyString} as ${valueString} in local storage`);
 	window.localStorage.setItem(keyString, valueString);
 };
 
@@ -57,8 +57,10 @@ export type GetLocalStorage = <K extends LocalStorageKeys>(
 ) => LocalStorageValues<K> | null;
 export const getLocalStorage: GetLocalStorage = (key) => {
 	try {
-		const stringValue = window.localStorage.getItem(key);
-		return stringValue ? JSON.parse(stringValue) : null;
+		// must stringify to key to match stringified version when it was set
+		const stringValue = window.localStorage.getItem(JSON.stringify(key));
+		console.log(`${stringValue} returned from localStorage`);
+		return typeof stringValue === 'string' ? JSON.parse(stringValue) : null; 
 	} catch (error) {
 		console.log(error);
 		return null;

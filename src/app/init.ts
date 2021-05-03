@@ -4,6 +4,7 @@ import {
 	getMostRecentText,
 	splitTitleIntoBookAndChapter,
 	getUserSettings,
+	DEFAULT_LOCAL_STORAGE_VERSION,
 } from '../utils/storageUtils';
 import { searchInitialized } from '../store/searchSlice';
 import {
@@ -77,6 +78,7 @@ const initLocalStorage = () => {
 			console.log(`Local storage version ${returnedLocalStorageVersion} does not match ` + 
 			`app's storage version ${localStorageVersion}. Clearing and re-initializing local storage.`);
 			window.localStorage.clear();
+			setLocalStorage('localStorageVersion', DEFAULT_LOCAL_STORAGE_VERSION);
 			setLocalStorage('clickedLine', DEFAULT_CLICKED_LINE);
 			setLocalStorage('showCondensed', DEFAULT_SHOW_CONDENSED);
 			setLocalStorage('texts', DEFAULT_TEXTS);
@@ -100,7 +102,6 @@ const initLocalStorage = () => {
 		}
 	} catch (err) {
 		console.log(err);
-		console.log('Error detected in local storage. Clearing local storage');
 		window.localStorage.clear();
 	}
 };
