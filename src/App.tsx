@@ -18,6 +18,10 @@ import { FirebaseProvider } from 'hooks/useFirebaseContext';
 import { useRouteAnalytics } from 'hooks/useRouteAnalytics';
 import { IsKeyboardUserContextProvider } from 'hooks/useIsKeyboardUser';
 import { AudioProvider, useAudio } from 'hooks/useAudio';
+import { conditionalStyles } from 'utils/conditionalStyles';
+import styles from './Themes.module.scss';
+import { ThemeProvider } from 'hooks/useTheme';
+import { useTheme } from 'hooks/useTheme';
 
 const Memorize = lazy(() => import('./pages/Memorize/Memorize'));
 const About = lazy(() => import('./pages/About/About'));
@@ -30,6 +34,7 @@ function App() {
 	const dispatch = useDispatch();
 	const closeMenu = () => dispatch(outsideOfMenuClicked());
 	const location = useLocation();
+	const {theme} = useTheme();
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
@@ -42,7 +47,14 @@ function App() {
 	}, []);
 
 	return (
-		<div className="App">
+		<div
+			className={conditionalStyles([
+				styles.ThemeGeneral,
+				[styles.ThemeDark, theme === 'dark'],
+				[styles.ThemeLight, theme === 'light'],
+				'App',
+			])}
+		>
 			<ErrorBoundary>
 				<Transition>
 					<Suspense fallback={Loading()}>
@@ -69,17 +81,19 @@ function App() {
 const AppWithContext = () => {
 	return (
 		<ErrorBoundary>
-			<Router>
-				<FirebaseProvider>
-					<StoreProvider store={store}>
-						<AudioProvider>
-							<IsKeyboardUserContextProvider>
-								<App />
-							</IsKeyboardUserContextProvider>
-						</AudioProvider>
-					</StoreProvider>
-				</FirebaseProvider>
-			</Router>
+			<ThemeProvider>
+				<Router>
+					<FirebaseProvider>
+						<StoreProvider store={store}>
+							<AudioProvider>
+								<IsKeyboardUserContextProvider>
+									<App />
+								</IsKeyboardUserContextProvider>
+							</AudioProvider>
+						</StoreProvider>
+					</FirebaseProvider>
+				</Router>
+			</ThemeProvider>
 		</ErrorBoundary>
 	);
 };
