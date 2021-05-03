@@ -9,12 +9,12 @@ import forwardIcon from 'icons/forward.svg';
 import loadingIcon from 'icons/loading.svg';
 import errorIcon from 'icons/error.svg';
 import { useFirebaseContext } from 'hooks/useFirebaseContext';
-import { useRecordedAudio } from 'hooks/useRecordedAudio';
 import { conditionalStyles } from 'utils/conditionalStyles';
 import FocusRing from 'components/FocusRing/FocusRing';
 import { useAppDispatch, useAppSelector } from 'store/store';
 import { viewChangeButtonClicked } from 'store/textSlice';
 import { storeShowCondensed } from 'utils/storageUtils';
+import { useAudio } from 'hooks/useAudio';
 
 export const RecordedAudioControls = () => {
 	const { analytics } = useFirebaseContext();
@@ -35,12 +35,7 @@ export const RecordedAudioControls = () => {
 		beginning,
 		setAudioPosition,
 		setAudioSpeed,
-	} = useRecordedAudio();
-	console.log({
-		hasError,
-		isReady,
-		isPlaying,
-	});
+	} = useAudio();
 
 	const { showCondensed } = useAppSelector((state) => state.text);
 

@@ -10,18 +10,14 @@ import { Transition } from './components/Transition/Transition';
 import { ServiceWorkerMessages } from './components/ServiceWorkerMessages/ServiceWorkerMessages';
 import { initializeApp } from './app/init';
 import { Loading } from './components/Loading/Loading';
-import { BibleAudioProvider, useBibleAudio } from 'hooks/useBibleAudio';
 import { Provider as StoreProvider } from 'react-redux';
-import store, { useAppSelector } from './store/store';
+import store from './store/store';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ErrorBoundary } from 'components/ErrorBoundary/ErrorBoundary';
 import { FirebaseProvider } from 'hooks/useFirebaseContext';
 import { useRouteAnalytics } from 'hooks/useRouteAnalytics';
-import {
-	RecordedAudioProvider,
-	useRecordedAudio,
-} from 'hooks/useRecordedAudio';
 import { IsKeyboardUserContextProvider } from 'hooks/useIsKeyboardUser';
+import { AudioProvider, useAudio } from 'hooks/useAudio';
 
 const Memorize = lazy(() => import('./pages/Memorize/Memorize'));
 const Review = lazy(() => import('./pages/Review/Review'));
@@ -31,11 +27,9 @@ const Tools = lazy(() => import('./pages/Tools/Tools'));
 
 function App() {
 	useRouteAnalytics();
-	const bibleAudioUrl = useAppSelector((state) => state.bibleAudio.url);
-	const { url: recordedAudioUrl, recordedAudioRef } = useRecordedAudio();
+	const { url, audioRef } = useAudio();
 	const dispatch = useDispatch();
 	const closeMenu = () => dispatch(outsideOfMenuClicked());
-	const { bibleAudioRef } = useBibleAudio();
 	const location = useLocation();
 
 	useEffect(() => {
@@ -55,8 +49,7 @@ function App() {
 					<Suspense fallback={Loading()}>
 						<MenuButton />
 						<Menu />
-						<audio src={bibleAudioUrl} ref={bibleAudioRef} />
-						<audio src={recordedAudioUrl} ref={recordedAudioRef} />
+						<audio src={url} ref={audioRef} />
 						<div onClick={closeMenu}>
 							<ServiceWorkerMessages />
 							<Switch>
@@ -81,13 +74,11 @@ const AppWithContext = () => {
 			<Router>
 				<FirebaseProvider>
 					<StoreProvider store={store}>
-						<BibleAudioProvider>
-							<RecordedAudioProvider>
-								<IsKeyboardUserContextProvider>
-									<App />
-								</IsKeyboardUserContextProvider>
-							</RecordedAudioProvider>
-						</BibleAudioProvider>
+						<AudioProvider>
+							<IsKeyboardUserContextProvider>
+								<App />
+							</IsKeyboardUserContextProvider>
+						</AudioProvider>
 					</StoreProvider>
 				</FirebaseProvider>
 			</Router>

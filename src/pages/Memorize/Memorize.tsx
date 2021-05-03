@@ -1,5 +1,4 @@
 import React from 'react';
-import { Prompt } from 'react-router';
 import styles from './Memorize.module.scss';
 import { ErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary';
 import { SmallSpacer } from '../../components/Spacers/Spacers';
@@ -9,13 +8,13 @@ import { MostRecent } from '../../components/MostRecent/MostRecent';
 import { TextCondensed } from './TextCondensed/TextCondensed';
 import { TextLoading } from '../../components/TextLoading/TextLoading';
 import { Copyright } from '../../components/Copyright/Copyright';
-import { useBibleAudio } from 'hooks/useBibleAudio';
 import { useAppSelector } from 'store/store';
 import { RecordedAudioControls } from 'components/RecordedAudioControls/RecordedAudioControls';
+import { useAudio } from 'hooks/useAudio';
 
 
 const Memorize = () => {
-	const { bibleAudioRef, handleKeyPress } = useBibleAudio();
+	const { handleKeyPress } = useAudio();
 	const { book, chapter, error, loading, showCondensed, body } = useAppSelector(s => s.text);
 
 	let textComponent = null;
@@ -42,14 +41,6 @@ const Memorize = () => {
 			<div
 				onKeyDown={handleKeyPress}
 				className={styles.LearnContainer}>
-				<Prompt
-					message={() => {
-						//Pause textAudio when navigating away from Home
-						console.log('Leaving Home page. Pausing textAudio.');
-						if (bibleAudioRef.current.readyState >= 2) bibleAudioRef.current.pause();
-						return true;
-					}}
-				/>
 				<h1 className={styles.h1}>{`${book}`.replace('Psalms', 'Psalm')} {chapter}</h1>
 				<div className={styles.searchContainer}>
 					<SearchBible />
