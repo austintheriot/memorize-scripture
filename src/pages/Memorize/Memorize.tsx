@@ -52,6 +52,7 @@ const Memorize = () => {
 				<SmallSpacer />
 				<Copyright />
 				<Footer />
+				<SmallSpacer />
 				<AudioControls />
 			</div>
 		</ErrorBoundary>

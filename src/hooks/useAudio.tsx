@@ -82,7 +82,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 	const chunks = useRef<Blob[]>([]);
 	const stream = useRef<MediaStream | undefined>();
 	const [supported, setIsSupported] = useState<BrowserSupport>('unknown');
-	const [url, setUrl] = useState(bibleAudioUrl);
+	const [url, setUrl] = useState('');
 	const [recordingState, setRecordingState] = useState<RecordingState>(
 		'inactive',
 	);
@@ -225,15 +225,16 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 			audio.currentTime = 0;
 		});
 		//as time is updated
-		audio.addEventListener('timeupdate', () => {
-			const targetPosition = audio.currentTime / audio.duration;
+    audio.addEventListener('timeupdate', (e) => {
+      const targetPosition = audio.currentTime / audio.duration;
+      if (isNaN(targetPosition)) return;
 			setPosition(targetPosition);
 		});
 		//when speed is changed
 		audio.addEventListener('ratechange', () => {
 			setSpeed(audio.playbackRate);
 		});
-	}, [
+  }, [
 		audio,
 		setHasError,
 		setIsReady,
@@ -350,13 +351,20 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 	);
 
 	const deleteRecording = useCallback(() => {
-		pause();
+    pause();
+    setIsPlaying(false);
+    setIsReady(false);
+    setPosition(0);
 		stopRecording();
 		chunks.current = [];
 		setUrl(bibleAudioUrl);
 		setUsingRecordedAudio(false);
-	}, [stopRecording, pause, setUrl, bibleAudioUrl, setUsingRecordedAudio]);
+  }, [setPosition, stopRecording, pause, setUrl, setIsPlaying,
+    bibleAudioUrl, setIsReady, setUsingRecordedAudio]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => setUrl(bibleAudioUrl), [setUrl]);
+  
 	useEffect(() => {
 		prepareAudioForPlayback();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -376,8 +384,6 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 			}
 		}
 	}, [location, prevLocation, pause, stopRecording]);
-
-	console.log({ url });
 
 	return (
 		<AudioContext.Provider

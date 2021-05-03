@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useRef } from 'react';
 
 //App State
 import { useDispatch } from 'react-redux';
@@ -34,7 +34,7 @@ export const MostRecent = () => {
 		});
 	};
 
-	const mostRecent = useMemo(() => getTextArray(), []);
+	const mostRecent = getTextArray();
 
 	return (
 		<details

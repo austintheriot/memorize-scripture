@@ -35,6 +35,8 @@ export const AudioControls = () => {
 		beginning,
 		setAudioPosition,
 		setAudioSpeed,
+		deleteRecording,
+		usingRecordedAudio,
 	} = useAudio();
 
 	const { showCondensed } = useAppSelector((state) => state.text);
@@ -94,6 +96,9 @@ export const AudioControls = () => {
 	const playButtonsDisabled =
 		recordingState === 'recording' || recordingState === 'paused';
 
+	const showDeleteRecordingButton =
+		recordingState === 'inactive' && usingRecordedAudio;
+	
 	return (
 		<div className={styles.Controls}>
 			{/* RECORDING CONTROLS  */}
@@ -103,12 +108,16 @@ export const AudioControls = () => {
 						className={conditionalStyles([
 							styles.recordingButton,
 							[styles.recording, recordingState === 'recording'],
+							[styles.deleteRecording, showDeleteRecordingButton],
 						])}
 						onClick={() => {
-							if (recordingState === 'recording') stopRecording();
+							if (showDeleteRecordingButton) deleteRecording();
+							else if (recordingState === 'recording') stopRecording();
 							else startRecording();
 						}}
 					>
+						<span />
+						<span />
 						<FocusRing rounded />
 					</button>
 				</div>
