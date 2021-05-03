@@ -9,7 +9,7 @@ import { TextCondensed } from './TextCondensed/TextCondensed';
 import { TextLoading } from '../../components/TextLoading/TextLoading';
 import { Copyright } from '../../components/Copyright/Copyright';
 import { useAppSelector } from 'store/store';
-import { RecordedAudioControls } from 'components/RecordedAudioControls/RecordedAudioControls';
+import { AudioControls } from 'components/AudioControls/AudioControls';
 import { useAudio } from 'hooks/useAudio';
 
 
@@ -52,7 +52,7 @@ const Memorize = () => {
 				<SmallSpacer />
 				<Copyright />
 				<Footer />
-				<RecordedAudioControls />
+				<AudioControls />
 			</div>
 		</ErrorBoundary>
 	);

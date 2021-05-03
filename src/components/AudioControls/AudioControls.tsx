@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './RecordedAudioControls.module.scss';
+import styles from './AudioControls.module.scss';
 import flipIcon from 'icons/flip.svg';
 import beginningIcon from 'icons/beginning.svg';
 import rewindIcon from 'icons/rewind.svg';
@@ -16,7 +16,7 @@ import { viewChangeButtonClicked } from 'store/textSlice';
 import { storeShowCondensed } from 'utils/storageUtils';
 import { useAudio } from 'hooks/useAudio';
 
-export const RecordedAudioControls = () => {
+export const AudioControls = () => {
 	const { analytics } = useFirebaseContext();
 	const dispatch = useAppDispatch();
 	const {
