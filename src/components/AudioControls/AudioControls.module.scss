@@ -188,7 +188,7 @@
 	align-items: center;
 
 	&:disabled .icon {
-		opacity: 50%;
+		opacity: 75%;
 	}
 }
 
@@ -292,14 +292,16 @@
 		background-color: transparent;
 	}
 
-	// red recording indicator center
-	// default state: full circle
+	/* red recording indicator center
+	default state: full circle */
 	span:nth-of-type(1),
 	span:nth-of-type(2) {
 		position: absolute;
 		display: block;
 		background: var(--red);
-		transition: 0.1s ease;
+		/* transitions do something wonky in Safari,
+		so disabling for now */
+		// transition: 0.1s;
 		pointer-events: none;
 		width: 100%;
 		height: 100%;

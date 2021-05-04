@@ -353,14 +353,15 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 	const deleteRecording = useCallback(() => {
     pause();
     setIsPlaying(false);
-    setIsReady(false);
+		setIsReady(false);
+		setHasError(false);
     setPosition(0);
 		stopRecording();
 		chunks.current = [];
 		setUrl(bibleAudioUrl);
 		setUsingRecordedAudio(false);
   }, [setPosition, stopRecording, pause, setUrl, setIsPlaying,
-    bibleAudioUrl, setIsReady, setUsingRecordedAudio]);
+    bibleAudioUrl, setIsReady, setUsingRecordedAudio, setHasError]);
 
 	useEffect(() => {
 		pause();
