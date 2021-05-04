@@ -1,3 +1,12 @@
+.TextButton {
+	background-color: transparent;
+	border: 0;
+	outline: 0;
+	box-shadow: none;
+	font-size: 1.1rem;
+	color: var(--primary_100);
+}
+
 //Broken, not condensed
 .splitLine {
 	text-align: left;

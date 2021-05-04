@@ -4,6 +4,8 @@ import { splitTextClicked } from '../../../store/textSlice';
 import styles from './TextCondensed.module.scss';
 import { useAppSelector } from 'store/store';
 import { useFirebaseContext } from 'hooks/useFirebaseContext';
+import FocusRing from 'components/FocusRing/FocusRing';
+import { conditionalStyles } from 'utils/conditionalStyles';
 
 export const TextCondensed = () => {
 	const { analytics } = useFirebaseContext();
@@ -11,7 +13,7 @@ export const TextCondensed = () => {
 	const { condensed, split, clickedLine } = useAppSelector((state) => state.text);
 
 	const handleSplitTextClick = (
-		e: React.MouseEvent<HTMLParagraphElement, MouseEvent>,
+		e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
 		i: number
 	) => {
 		analytics.logEvent('condensed_line_clicked', {
@@ -25,17 +27,20 @@ export const TextCondensed = () => {
 		<>
 			{condensed.map((line, i) => {
 				return (
-					<p
+					<button
 						data-testid='text-condensed'
 						key={line + i.toString()}
-						className={
-							clickedLine === i ? styles.splitLine : styles.condensedLine
-						}
-						onClick={(e: React.MouseEvent<HTMLParagraphElement, MouseEvent>) =>
+						className={conditionalStyles([
+							styles.TextButton,
+							[styles.splitLine, clickedLine === i],
+							[styles.condensedLine, clickedLine !== i],
+						])}
+						onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
 							handleSplitTextClick(e, i)
 						}>
 						{clickedLine === i ? split[i] : condensed[i]}
-					</p>
+						<FocusRing />
+					</button>
 				);
 			})}
 		</>
