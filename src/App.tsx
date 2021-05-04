@@ -2,7 +2,6 @@ import React, { useEffect, lazy, Suspense } from 'react';
 import * as serviceWorker from './serviceWorker';
 import './App.scss';
 import { useDispatch } from 'react-redux';
-import { outsideOfMenuClicked } from './store/appSlice';
 import { Route, Switch, useLocation } from 'react-router-dom';
 import { Menu } from './components/Menu/Menu';
 import { MenuButton } from './components/MenuButton/MenuButton';
@@ -32,7 +31,6 @@ function App() {
 	useRouteAnalytics();
 	const { url, audioRef } = useAudio();
 	const dispatch = useDispatch();
-	const closeMenu = () => dispatch(outsideOfMenuClicked());
 	const location = useLocation();
 	const {theme} = useTheme();
 
@@ -61,7 +59,6 @@ function App() {
 						<MenuButton />
 						<Menu />
 						<audio src={url} ref={audioRef} />
-						<div onClick={closeMenu}>
 							<ServiceWorkerMessages />
 							<Switch>
 								<Route exact path="/memorize" component={Memorize} />
@@ -70,7 +67,6 @@ function App() {
 								<Route exact path="/contact" component={Contact} />
 								<Route path="/" component={Memorize} />
 							</Switch>
-						</div>
 					</Suspense>
 				</Transition>
 			</ErrorBoundary>

@@ -2,11 +2,12 @@ import React, { useEffect, useRef } from 'react';
 import styles from './Menu.module.scss';
 import chiRho from '../../images/chirho-light.svg';
 import { useDispatch } from 'react-redux';
-import { navLinkClicked } from '../../store/appSlice';
+import { navLinkClicked, outsideOfMenuClicked } from '../../store/appSlice';
 import { ExternalLink } from '../Links/ExternalLink';
 import { useAppSelector } from 'store/store';
 import useIsKeyboardUser from 'hooks/useIsKeyboardUser';
 import { InternalLink } from 'components/Links/InternalLink';
+import useDetectOutsideClick from 'hooks/useDetectOutsideClick';
 
 export const Menu = () => {
 	const dispatch = useDispatch();
@@ -14,6 +15,7 @@ export const Menu = () => {
 	const firstElementRef = useRef<HTMLElement | null>(null);
 	const previousRef = useRef<Element | null>(null);
 	const isKeyboardUser = useIsKeyboardUser();
+	const menuRef = useDetectOutsideClick<HTMLElement>(() => menuIsOpen && dispatch(outsideOfMenuClicked()));
 
 	const closeMenu = () => {
 		dispatch(navLinkClicked());
@@ -35,6 +37,7 @@ export const Menu = () => {
 
 	return (
 		<nav
+			ref={menuRef}
 			tabIndex={-1}
 			data-testid="menu"
 			className={[styles.nav, menuIsOpen ? styles.menuOpen : ''].join(' ')}
