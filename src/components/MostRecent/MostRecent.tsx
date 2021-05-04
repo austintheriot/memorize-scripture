@@ -8,10 +8,10 @@ import { textMostRecentPassageClicked } from '../../store/textSlice';
 import styles from './MostRecent.module.scss';
 
 //Utilities
-import { addToTextArray, getTextArray, TextsObject } from '../../utils/storageUtils';
-import { audioMostRecentPassageClicked } from 'store/bibleAudioSlice';
+import { addToTextArray, getTextArray, splitTitleIntoBookAndChapter, TextsObject } from '../../utils/storageUtils';
 import { useFirebaseContext } from 'hooks/useFirebaseContext';
 import FocusRing from 'components/FocusRing/FocusRing';
+import { setAudioUrl } from 'store/searchSlice';
 
 export const MostRecent = () => {
 	const { analytics } = useFirebaseContext();
@@ -24,8 +24,10 @@ export const MostRecent = () => {
 	) => {
 		//Text State
 		dispatch(textMostRecentPassageClicked({ title, body }));
-		//Audio State State
-		dispatch(audioMostRecentPassageClicked(title));
+		//Audio State
+		const { book, chapter } = splitTitleIntoBookAndChapter(title);
+		dispatch(setAudioUrl({book, chapter}));
+		
 		addToTextArray(title, body);
 		if (details) details.current?.removeAttribute('open');
 		analytics.logEvent('clicked_most_recent', {

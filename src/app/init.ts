@@ -1,4 +1,3 @@
-import { audioSettingsLoaded, audioInitialized } from '../store/bibleAudioSlice';
 import { textInitialized, textSettingsLoaded } from '../store/textSlice';
 import {
 	getMostRecentText,
@@ -6,7 +5,7 @@ import {
 	getUserSettings,
 	DEFAULT_LOCAL_STORAGE_VERSION,
 } from '../utils/storageUtils';
-import { searchInitialized } from '../store/searchSlice';
+import { searchInitialized, setAudioUrl } from '../store/searchSlice';
 import {
 	getLocalStorage,
 	removeLocalStorage,
@@ -26,8 +25,7 @@ import { Title } from 'pages/Memorize/bible';
 const initializeUserSettings = (dispatch: AppDispatch) => {
 	//Loading textAudio playback rate
 	console.log(`Initializing user's settings.`);
-	const { targetSpeed, showCondensed } = getUserSettings();
-	dispatch(audioSettingsLoaded(targetSpeed));
+	const { showCondensed } = getUserSettings();
 	dispatch(textSettingsLoaded(showCondensed));
 };
 
@@ -52,7 +50,7 @@ const updateStateWithInitializedValues = (
 		}),
 	);
 	//Audio State
-	dispatch(audioInitialized({ book, chapter }));
+	dispatch(setAudioUrl({ book, chapter }));
 };
 
 /**

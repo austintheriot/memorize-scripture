@@ -98,7 +98,7 @@ export const AudioControls = () => {
 
 	const showDeleteRecordingButton =
 		recordingState === 'inactive' && usingRecordedAudio;
-	
+
 	return (
 		<div className={styles.Controls}>
 			{/* RECORDING CONTROLS  */}
@@ -115,6 +115,13 @@ export const AudioControls = () => {
 							else if (recordingState === 'recording') stopRecording();
 							else startRecording();
 						}}
+						aria-label={
+							showDeleteRecordingButton
+								? 'delete recording'
+								: recordingState === 'recording'
+								? 'stop recording'
+								: 'start recording'
+						}
 					>
 						<span />
 						<span />

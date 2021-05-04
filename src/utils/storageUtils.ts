@@ -6,7 +6,6 @@ export const DEFAULT_LOCAL_STORAGE_VERSION = localStorageVersion;
 export const DEFAULT_CLICKED_LINE = -1 as const;
 export const DEFAULT_SHOW_CONDENSED = false as const;
 export const DEFAULT_TEXTS = [{ title: 'Psalms 23' as Title, body: Psalm23 }];
-export const DEFAULT_SPEED = 1 as const;
 
 export type TextsObject = { title: Title; body: string };
 export type TextsArray = TextsObject[];
@@ -20,7 +19,6 @@ interface LocalStorageDefaults {
 	texts: typeof DEFAULT_TEXTS,
 	recent: undefined,
 	localStorageVersion: typeof DEFAULT_LOCAL_STORAGE_VERSION,
-	speed: typeof DEFAULT_SPEED,
 }
 
 /**
@@ -32,7 +30,6 @@ interface LocalStorageTypes {
 	texts: TextsArray,
 	recent: undefined,
 	localStorageVersion: string,
-	speed: number,
 }
 type LocalStorageKeys = keyof LocalStorageDefaults;
 type LocalStorageValues<K extends LocalStorageKeys = LocalStorageKeys> = LocalStorageTypes[K];
@@ -48,7 +45,6 @@ export type SetLocalStorage = <K extends LocalStorageKeys>(
 export const setLocalStorage: SetLocalStorage = (key, value) => {
 	const keyString = JSON.stringify(key);
 	const valueString = JSON.stringify(value);
-	console.log(`Storing ${keyString} as ${valueString} in local storage`);
 	window.localStorage.setItem(keyString, valueString);
 };
 
@@ -59,7 +55,6 @@ export const getLocalStorage: GetLocalStorage = (key) => {
 	try {
 		// must stringify to key to match stringified version when it was set
 		const stringValue = window.localStorage.getItem(JSON.stringify(key));
-		console.log(`${stringValue} returned from localStorage`);
 		return typeof stringValue === 'string' ? JSON.parse(stringValue) : null; 
 	} catch (error) {
 		console.log(error);
@@ -71,22 +66,17 @@ export type GetLocalStorageAndLog = <K extends LocalStorageKeys>(
 	key: K, defaultValue: LocalStorageDefaults[K]
 ) => LocalStorageValues<K>;
 export const getLocalStorageValueAndLog: GetLocalStorageAndLog = (key, defaultValue) => {
-	console.log(`Retrieving key "${key}" from local storage`);
 	const value = getLocalStorage(key) || defaultValue;
-	console.log(`localStorage: "${key}" = "${JSON.stringify(value)}"`);
 	return value;
 }
 
-export const getPlaySpeed = () => getLocalStorageValueAndLog('speed', DEFAULT_SPEED);
 export const getShowCondensed = () => getLocalStorageValueAndLog('showCondensed', DEFAULT_SHOW_CONDENSED);
 export const getTextArray = () => getLocalStorageValueAndLog('texts', DEFAULT_TEXTS);
 export const getMostRecentText = () => getTextArray()[0];
 export const getUserSettings = () => ({
-	targetSpeed: getPlaySpeed(),
 	showCondensed: getShowCondensed(),
 });
 
-export const storePlaySpeed = (speed: number) => setLocalStorage('speed', speed);
 export const storeShowCondensed = (boolean: boolean) => setLocalStorage('showCondensed', boolean);
 
 export const splitTitleIntoBookAndChapter = (
@@ -149,7 +139,7 @@ export const getTextBody = (title: string): string => {
 
 /**
  * Saves a chapter title and the body of its text in local storage.
- * If passage is alreadty in local storage, moves the passage to 
+ * If passage is already in local storage, moves the passage to 
  * the most recent position.
  */
 export const addToTextArray = (title: Title, body: string) => {

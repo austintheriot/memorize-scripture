@@ -8,10 +8,10 @@ import {
 
 import axios from 'axios';
 import { ESVApiKey } from '../app/config';
-import { audioFileChanged } from './bibleAudioSlice';
 import { AppDispatch } from './store';
 import { BibleBook, Chapter, Title } from 'pages/Memorize/bible';
 import { Analytics } from 'hooks/useFirebaseContext';
+import { setAudioUrl } from './searchSlice';
 
 export interface TextState {
 	loading: boolean;
@@ -207,7 +207,7 @@ export const fetchTextFromESVAPI = (
 				body,
 			}),
 		);
-		dispatch(audioFileChanged({ book, chapter }));
+		dispatch(setAudioUrl({ book, chapter }));
 		addToTextArray(title, body);
 	} catch (error) {
 		console.log(error);

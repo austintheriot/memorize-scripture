@@ -7,7 +7,6 @@ import {
 	fetchTextFromESVAPI,
 } from '../../store/textSlice';
 import searchIcon from '../../icons/search.svg';
-import { audioFileChanged } from 'store/bibleAudioSlice';
 import { useFirebaseContext } from 'hooks/useFirebaseContext';
 import { useAppDispatch, useAppSelector } from 'store/store';
 import {
@@ -16,6 +15,7 @@ import {
 	chapterSelector,
 	setBook,
 	setChapter,
+	setAudioUrl,
 } from 'store/searchSlice';
 import useStateIfMounted from 'hooks/useStateIfMounted';
 import { validateBookAndChapter } from 'utils/validation';
@@ -58,7 +58,7 @@ export const SearchBible = () => {
 						body,
 					}),
 				);
-				dispatch(audioFileChanged({ book: validBook, chapter: validChapter }));
+				dispatch(setAudioUrl({ book: validBook, chapter: validChapter }));
 				addToTextArray(title, body);
 				analytics.logEvent('fetched_text_from_local_storage', {
 					searchBook: validBook,

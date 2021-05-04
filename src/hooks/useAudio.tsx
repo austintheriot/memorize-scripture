@@ -74,7 +74,7 @@ export const AudioContext = createContext<AudioContextType>({
 });
 
 export const AudioProvider = ({ children }: { children: ReactNode }) => {
-	const bibleAudioUrl = useAppSelector((state) => state.bibleAudio.url);
+	const bibleAudioUrl = useAppSelector((state) => state.search.audioUrl);
 	const location = useLocation();
 	const prevLocation = usePrevious(location);
 	const { analytics } = useFirebaseContext();
@@ -261,8 +261,8 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 	 * Plays audio if audio is ready to be interacted with.
 	 */
 	const play = useCallback(() => {
-		if (audio.readyState < 2 || !audio.paused) return;
-		audio.play();
+		if (audio.readyState < 2) return;
+		if (audio.paused) audio.play();
 		setIsPlaying(true);
 	}, [audio, setIsPlaying]);
 
@@ -270,8 +270,8 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 	 * Pauses audio if audio is ready to be interacted with.
 	 */
 	const pause = useCallback(() => {
-		if (audio.readyState < 2 || audio.paused) return;
-		audio.pause();
+		if (audio.readyState < 2) return;
+		if (!audio.paused) audio.pause();
 		setIsPlaying(false);
 	}, [audio, setIsPlaying]);
 
@@ -362,8 +362,14 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
   }, [setPosition, stopRecording, pause, setUrl, setIsPlaying,
     bibleAudioUrl, setIsReady, setUsingRecordedAudio]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => setUrl(bibleAudioUrl), [setUrl]);
+	useEffect(() => {
+		pause();
+		stopRecording();
+		setUrl(bibleAudioUrl);
+		setIsPlaying(false);
+		setPosition(0);
+	}, [pause, bibleAudioUrl, setUrl,
+		setIsPlaying, stopRecording, setPosition]);
   
 	useEffect(() => {
 		prepareAudioForPlayback();

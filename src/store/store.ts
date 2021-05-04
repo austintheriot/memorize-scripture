@@ -1,7 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import textReducer from 'store/textSlice';
 import searchReducer from 'store/searchSlice';
-import audioReducer from 'store/bibleAudioSlice';
 import appReducer from 'store/appSlice';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
@@ -10,7 +9,6 @@ const store = configureStore({
 		app: appReducer,
 		text: textReducer,
 		search: searchReducer,
-		bibleAudio: audioReducer,
 	}
 });
 
