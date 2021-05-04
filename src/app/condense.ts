@@ -40,8 +40,8 @@ const findItemIndexes = (
 					continue;
 				}
 				//if the item is found, search for the nearest next space
-				const tinystring = substring.substr(subStringIndex);
-				const indexOfNextSpace = tinystring.indexOf(' ');
+				const tinyString = substring.substr(subStringIndex);
+				const indexOfNextSpace = tinyString.indexOf(' ');
 				itemIndexes.push(startingIndex + subStringIndex + indexOfNextSpace);
 			}
 		}
@@ -113,7 +113,7 @@ const findClosestPrimaryPunctuation = (
 	return findClosest(string, findPrimaryPunctuationIndexes, i, characterCount);
 };
 
-const findClosestSecondayPunctuation = (
+const findClosestSecondaryPunctuation = (
 	string: string,
 	i: number,
 	characterCount: number
@@ -139,13 +139,13 @@ const findBestBreakPoint = (
 	primaryPunctuationDistance: number,
 	secondaryPunctuationDistance: number
 ) => {
-	//prioritize primary puncutation, then secondary punctuation, and then spaces
+	//prioritize primary punctuation, then secondary punctuation, and then spaces
 	const i: number = string.length - 1;
 	const characterCount: number = string.length;
 	let searchParams: [string, number, number] = [string, i, characterCount];
 
 	let primaryPunctuation = findClosestPrimaryPunctuation(...searchParams);
-	let secondaryPunctuation = findClosestSecondayPunctuation(...searchParams);
+	let secondaryPunctuation = findClosestSecondaryPunctuation(...searchParams);
 	let spaces = findClosestSpaces(...searchParams);
 
 	return primaryPunctuation.smallestDistanceFromCenter <
