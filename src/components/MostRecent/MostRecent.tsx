@@ -16,7 +16,8 @@ import { setAudioUrl } from 'store/searchSlice';
 export const MostRecent = () => {
 	const { analytics } = useFirebaseContext();
 	const dispatch = useDispatch();
-	const details = useRef<HTMLDetailsElement | null>(null);
+	const detailsRef = useRef<HTMLDetailsElement | null>(null);
+	const summaryRef = useRef<HTMLElement | null>(null);
 
 	const handleClickRecent = (
 		e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -29,7 +30,9 @@ export const MostRecent = () => {
 		dispatch(setAudioUrl({book, chapter}));
 		
 		addToTextArray(title, body);
-		if (details) details.current?.removeAttribute('open');
+		
+		summaryRef.current?.focus();
+		detailsRef.current?.removeAttribute('open');
 		analytics.logEvent('clicked_most_recent', {
 			title,
 			body,
@@ -41,9 +44,9 @@ export const MostRecent = () => {
 	return (
 		<details
 			className={styles.mostRecentContainer}
-			ref={details}
+			ref={detailsRef}
 			data-testid='most-recent-details'>
-			<summary data-testid='most-recent-summary'>
+			<summary data-testid='most-recent-summary' ref={summaryRef}>
 				Most Recent:
 				<FocusRing />
 				</summary>
