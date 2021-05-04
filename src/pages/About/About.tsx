@@ -1,30 +1,27 @@
 import React from 'react';
 import styles from './About.module.scss';
-
-//animated scroll library
 import { animateScroll as scroll } from 'react-scroll';
-
-//custom components
 import { ErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary';
 import { ScrollLink } from '../../components/Links/ScrollLink';
 import { ExternalLink } from '../../components/Links/ExternalLink';
-
-//Custom icons
-import beginningIcon from '../../icons/beginning.svg';
-import rewindIcon from '../../icons/rewind.svg';
-import playIcon from '../../icons/play.svg';
-import pauseIcon from '../../icons/pause.svg';
-import forwardIcon from '../../icons/forward.svg';
-import loadingIcon from '../../icons/loading.svg';
-import errorIcon from '../../icons/error.svg';
-import flipIcon from '../../icons/flip.svg';
+import beginningIcon from 'icons/beginning.svg';
+import rewindIcon from 'icons/rewind.svg';
+import playIcon from 'icons/play.svg';
+import pauseIcon from 'icons/pause.svg';
+import forwardIcon from 'icons/forward.svg';
+import loadingIcon from 'icons/loading.svg';
+import errorIcon from 'icons/error.svg';
+import flipIcon from 'icons/flip.svg';
 import { Footer } from '../../components/Footer/Footer';
 import { useFirebaseContext } from 'hooks/useFirebaseContext';
 import FocusRing from 'components/FocusRing/FocusRing';
 import { InternalLink } from 'components/Links/InternalLink';
+import RecordingButton from 'images/record.png';
+import StopRecordingButton from 'images/stop-recording.png';
+import DeleteRecordingButton from 'images/delete-recording.png';
 
 export const About = () => {
-	const { analytics } = useFirebaseContext()
+	const { analytics } = useFirebaseContext();
 	const scrollToTop = () => {
 		scroll.scrollToTop({ smooth: true, duration: 500 });
 		analytics.logEvent('back_to_top_button_pressed');
@@ -45,39 +42,40 @@ export const About = () => {
 				<nav className={styles.tableOfContents}>
 					<ul>
 						<li className={styles.tableOfContentsLI}>
-							<ScrollLink to='intro' onClick={handleNavLinkClick}>
+							<ScrollLink to="intro" onClick={handleNavLinkClick}>
 								Intro
 							</ScrollLink>
 						</li>
 						<li className={styles.tableOfContentsLI}>
-							<ScrollLink to='app-controls' onClick={handleNavLinkClick}>
+							<ScrollLink to="app-controls" onClick={handleNavLinkClick}>
 								App Controls
 							</ScrollLink>
 						</li>
 						<li className={styles.tableOfContentsLI}>
-							<ScrollLink to='app-installation' onClick={handleNavLinkClick}>
+							<ScrollLink to="app-installation" onClick={handleNavLinkClick}>
 								App Installation
 							</ScrollLink>
 						</li>
 						<li className={styles.tableOfContentsLI}>
-							<ScrollLink to='how-to-memorize' onClick={handleNavLinkClick}>
+							<ScrollLink to="how-to-memorize" onClick={handleNavLinkClick}>
 								How to Memorize
 							</ScrollLink>
 						</li>
 						<li className={styles.tableOfContentsLI}>
 							<ScrollLink
-								to='how-this-technique-works'
-								onClick={handleNavLinkClick}>
+								to="how-this-technique-works"
+								onClick={handleNavLinkClick}
+							>
 								How This Technique Works
 							</ScrollLink>
 						</li>
 						<li className={styles.tableOfContentsLI}>
-							<ScrollLink to='how-to-review' onClick={handleNavLinkClick}>
+							<ScrollLink to="how-to-review" onClick={handleNavLinkClick}>
 								How To Review
 							</ScrollLink>
 						</li>
 						<li className={styles.tableOfContentsLI}>
-							<ScrollLink to='contact' onClick={handleNavLinkClick}>
+							<ScrollLink to="contact" onClick={handleNavLinkClick}>
 								Contact
 							</ScrollLink>
 						</li>
@@ -86,12 +84,13 @@ export const About = () => {
 
 				<button
 					onClick={scrollToTop}
-					className={['button', styles.button].join(' ')}>
+					className={['button', styles.button].join(' ')}
+				>
 					Back to Top
-						<FocusRing />
+					<FocusRing />
 				</button>
 
-				<section id='intro'>
+				<section id="intro">
 					<h2>Intro</h2>
 					<p>
 						The art of memory has been a fascination of mine for a long time.
@@ -119,7 +118,7 @@ export const About = () => {
 
 					<p>
 						I first stumbled on the idea of condensing a text to memorize it via{' '}
-						<ExternalLink to='http://www.productivity501.com/how-to-memorize-verbatim-text/294/'>
+						<ExternalLink to="http://www.productivity501.com/how-to-memorize-verbatim-text/294/">
 							this article
 						</ExternalLink>{' '}
 						by Mark Shead. After finding the article, I began implementing the
@@ -128,7 +127,7 @@ export const About = () => {
 						And that's my end goal for this app: to facilitate the extended
 						memorization of God's Word. This same technique is also used by a
 						few other scripture memory softwares (
-						<ExternalLink to='https://www.memverse.com/'>
+						<ExternalLink to="https://www.memverse.com/">
 							memverse.com
 						</ExternalLink>{' '}
 						for example), but I hope to offer a more mobile-friendly,
@@ -138,30 +137,31 @@ export const About = () => {
 
 					<p>
 						This app has been created with the permission of the creators of the{' '}
-						<ExternalLink to='https://www.esv.org/'>
+						<ExternalLink to="https://www.esv.org/">
 							English Standard Bible (ESV)
 						</ExternalLink>
 						, from which all Bible quotes are drawn, unless otherwise indicated.
 					</p>
 				</section>
 
-				<section id='app-controls'>
+				<section id="app-controls">
 					<h2>App Controls</h2>
 					<p>
 						Here's quick rundown of the various buttons you can find on the{' '}
-						<InternalLink to='/'>Memorize</InternalLink> page of the app.
+						<InternalLink to="/">Memorize</InternalLink> page of the app.
 					</p>
 					<div className={styles.tipWrapper}>
 						<p>
 							Tip: You may click on any condensed line on the{' '}
-							<InternalLink to='/'>Memorize</InternalLink> page of the app to quickly reveal the
-							full text.
+							<InternalLink to="/">Memorize</InternalLink> page of the app to
+							quickly reveal the full text.
 						</p>
 					</div>
 					<p>
 						<button
 							disabled={true}
-							className={['button', styles.appControls].join(' ')}>
+							className={['button', styles.appControls].join(' ')}
+						>
 							<img
 								src={flipIcon}
 								alt={'example button: flip text view'}
@@ -173,7 +173,8 @@ export const About = () => {
 					<p>
 						<button
 							disabled={true}
-							className={['button', styles.appControls].join(' ')}>
+							className={['button', styles.appControls].join(' ')}
+						>
 							<img
 								src={beginningIcon}
 								alt={'example button: go to beginning'}
@@ -185,7 +186,8 @@ export const About = () => {
 					<p>
 						<button
 							disabled={true}
-							className={['button', styles.appControls].join(' ')}>
+							className={['button', styles.appControls].join(' ')}
+						>
 							<img
 								src={rewindIcon}
 								alt={'example button: back 5 seconds'}
@@ -197,7 +199,8 @@ export const About = () => {
 					<p>
 						<button
 							disabled={true}
-							className={['button', styles.appControls].join(' ')}>
+							className={['button', styles.appControls].join(' ')}
+						>
 							<img
 								src={playIcon}
 								alt={'example button: play audio'}
@@ -209,7 +212,8 @@ export const About = () => {
 					<p>
 						<button
 							disabled={true}
-							className={['button', styles.appControls].join(' ')}>
+							className={['button', styles.appControls].join(' ')}
+						>
 							<img
 								src={pauseIcon}
 								alt={'example button: pause audio'}
@@ -221,7 +225,8 @@ export const About = () => {
 					<p>
 						<button
 							disabled={true}
-							className={['button', styles.appControls].join(' ')}>
+							className={['button', styles.appControls].join(' ')}
+						>
 							<img
 								src={loadingIcon}
 								alt={'example button: audio loading'}
@@ -233,7 +238,8 @@ export const About = () => {
 					<p>
 						<button
 							disabled={true}
-							className={['button', styles.appControls].join(' ')}>
+							className={['button', styles.appControls].join(' ')}
+						>
 							<img
 								src={errorIcon}
 								alt={'example button: audio error'}
@@ -245,7 +251,8 @@ export const About = () => {
 					<p>
 						<button
 							disabled={true}
-							className={['button', styles.appControls].join(' ')}>
+							className={['button', styles.appControls].join(' ')}
+						>
 							<img
 								src={forwardIcon}
 								alt={'example button: forward 5s'}
@@ -255,16 +262,44 @@ export const About = () => {
 						Fast-forward audio 5 seconds.
 					</p>
 					<p>
+						You may record yourself by clicking the recording button{' '}
+						<img
+							src={RecordingButton}
+							alt="recording button"
+							className={styles.RecordingButtonImages}
+						/>
+						. Stop recording by pressing the stop recording button{' '}
+						<img
+							src={StopRecordingButton}
+							alt="stop recording button"
+							className={styles.RecordingButtonImages}
+						/>
+						. You can then listen to yourself and check your recitation accuracy
+						by using the same play/pause controls that you see above. Once
+						you're done, press the{' '}
+						<img
+							src={DeleteRecordingButton}
+							alt="delete recording button"
+							className={styles.RecordingButtonImages}
+						/>{' '}
+						button to delete your recording and return to listening to the Bible
+						audio.
+					</p>
+					<p>
+						Note: this website will <strong>never</strong> save, transmit, or
+						otherwise store or share your recorded audio data.
+					</p>
+					<p>
 						Lastly, you can tap anywhere along the blue audio indicator to skip
 						to a particular position in the audio.
 					</p>
 				</section>
 
-				<section id='app-installation'>
+				<section id="app-installation">
 					<h2>App Installation</h2>
 					<p>
 						By default, this app is available for offline use by visiting{' '}
-						<ExternalLink to='https://memorizescripture.org/'>
+						<ExternalLink to="https://memorizescripture.org/">
 							https://memorizescripture.org/
 						</ExternalLink>{' '}
 						in your browser, even without an internet connection (as long as
@@ -283,7 +318,7 @@ export const About = () => {
 					<p className={styles.miniHeading}>Android Users:</p>
 					<p>
 						Launch Chrome for Android and open{' '}
-						<ExternalLink to='https://memorizescripture.org/'>
+						<ExternalLink to="https://memorizescripture.org/">
 							https://memorizescripture.org/
 						</ExternalLink>
 						. Tap the menu button and tap Add to Home Screen. You’ll be able to
@@ -293,7 +328,7 @@ export const About = () => {
 					<p className={styles.miniHeading}>iPhone, iPad, &amp; iPod Users:</p>
 					<p>
 						Launch Safari and go to{' '}
-						<ExternalLink to='https://memorizescripture.org/'>
+						<ExternalLink to="https://memorizescripture.org/">
 							https://memorizescripture.org/
 						</ExternalLink>
 						. Tap the Share button on the browser’s toolbar (the rectangle with
@@ -312,7 +347,7 @@ export const About = () => {
 					</p>
 				</section>
 
-				<section id='how-to-memorize'>
+				<section id="how-to-memorize">
 					<h2>How to Memorize</h2>
 					<p>
 						If you've never tried to memorize an extended passage of scripture
@@ -366,7 +401,8 @@ export const About = () => {
 							<li
 								style={{
 									listStyle: 'none',
-								}}>
+								}}
+							>
 								<ul>
 									<li>
 										Look only at the condensed text while you listen to the
@@ -417,12 +453,12 @@ export const About = () => {
 						repetition).
 					</p>
 				</section>
-				<section id='how-this-technique-works'>
+				<section id="how-this-technique-works">
 					<h2>How This Technique Works</h2>
 					<p>
 						This process works well for most people because of a psychological
 						principle called{' '}
-						<ExternalLink to='https://en.wikipedia.org/wiki/Chunking_(psychology)'>
+						<ExternalLink to="https://en.wikipedia.org/wiki/Chunking_(psychology)">
 							"chunking"
 						</ExternalLink>
 						, in which individual pieces of information are grouped together
@@ -436,7 +472,7 @@ export const About = () => {
 						verses rather than as individual words.
 					</p>
 				</section>
-				<section id='how-to-review'>
+				<section id="how-to-review">
 					<h2>How To Review</h2>
 					<p>
 						Once the text is memorized, it's important to regularly review what
@@ -446,34 +482,17 @@ export const About = () => {
 						than to learn new passages.
 					</p>
 					<p>
-						On the <InternalLink to='/review'>Review Page</InternalLink>, you can test your
-						knowledge of a passage by typing it into the Input box. The tester
-						only grades the letters you type, ignoring punctuation,
-						capitalization, line breaks, and spaces. This is so that you can
-						more easily test yourself by using your phone's speech-to-text
-						feature, if available. Most mobile phones should allow you to use
-						this feature to speak the passage while your phone transcribes the
-						text into the input box, instead of having to manually type the
-						passage.
-					</p>
-					<p>
-						An alternative is to simply record yourself speaking the passage
-						from memory. Then listen to the recording and check that you've
-						spoken it accurately by looking at the original text. I hope to add
-						this feature to the app as a built-in option in the near feature.
-					</p>
-					<p>
-						I typically review individual chapters of a book at a time with the
-						audio method, which takes around 5-10 minutes per day. Additionally,
-						whenever I'm driving, I often practice reciting an entire book
-						(without looking at the app) or I recite along with an audio bible
-						to ensure I'm not making any mistakes.{' '}
-						<em>Please don't try to use this app while driving!</em>
+						On the <InternalLink to="/memorize">Memorize Page</InternalLink>,
+						you can test your knowledge of a passage by recording yourself. When
+						you're done speaking the passage, listen to the recording while
+						looking at the passage to see how closely you recited it. For bonus
+						practice speak it once more while you listen to yourself to
+						reinforce the passage even further.
 					</p>
 					<p>
 						One of the most efficient ways that I have found to time my reviews
 						is by using a spaced repetition flash card system, such as{' '}
-						<ExternalLink to='https://apps.ankiweb.net/'>Anki</ExternalLink> to
+						<ExternalLink to="https://apps.ankiweb.net/">Anki</ExternalLink> to
 						remind me when a passage is due for review. Although it's possible
 						to implement this type of system with pen-and-paper flashcards, Anki
 						saves <em>a lot</em> of time in the long run, especially when
@@ -486,31 +505,32 @@ export const About = () => {
 						day!).
 					</p>
 				</section>
-				<section id='contact'>
+				<section id="contact">
 					<h2>Contact</h2>
 					<p>
 						I hope you find this app to be a blessing in your faith life. If you
 						are interested in contributing to this project, have questions,
 						comments, suggestions, bug reports, or if you're just interested in
 						chatting, please don't hesitate to contact me via the{' '}
-						<InternalLink to='/contact'>Contact</InternalLink> page on this website, and I'll
-						get back to you shortly. Additionally, I can be reached via my{' '}
-						<ExternalLink to='https://austintheriot.com/contact'>
+						<InternalLink to="/contact">Contact</InternalLink> page on this
+						website, and I'll get back to you shortly. Additionally, I can be
+						reached via my{' '}
+						<ExternalLink to="https://austintheriot.com/contact">
 							website
 						</ExternalLink>
 						,{' '}
-						<ExternalLink to='https://www.linkedin.com/in/austinmtheriot/'>
+						<ExternalLink to="https://www.linkedin.com/in/austinmtheriot/">
 							LinkedIn
 						</ExternalLink>
 						, or by{' '}
-						<ExternalLink to='mailto:austinmtheriot@gmail.com?subject=Scripture Memorization App'>
+						<ExternalLink to="mailto:austinmtheriot@gmail.com?subject=Scripture Memorization App">
 							emailing me directly
 						</ExternalLink>
 						.
 					</p>
 					<p>
 						Checkout out the{' '}
-						<ExternalLink to='https://github.com/austintheriot/memorize-scripture'>
+						<ExternalLink to="https://github.com/austintheriot/memorize-scripture">
 							GitHub repository
 						</ExternalLink>{' '}
 						for this project.
@@ -524,7 +544,7 @@ export const About = () => {
 				</section>
 				<section className={styles.copyright}>
 					<p>Originally published October 22, 2020.</p>
-					<p>Last updated November 9, 2020.</p>
+					<p>Last updated May 3, 2021.</p>
 					<p>
 						{'Copyright '}&#169;
 						{` ${new Date().getFullYear()}, Austin Theriot.`}
