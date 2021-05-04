@@ -32,8 +32,8 @@ function App() {
 	const { url, audioRef } = useAudio();
 	const dispatch = useDispatch();
 	const location = useLocation();
-	const {theme} = useTheme();
-
+	const { theme } = useTheme();
+	
 	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, [location]);

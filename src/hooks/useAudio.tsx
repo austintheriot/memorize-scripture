@@ -134,8 +134,33 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 
 		chunks.current = [];
 
-		/* ser up media recorder from stream */
+		/* set up media recorder from stream */
 		console.log('Starting recording');
+
+		// try converting this to for correct audio mimeType?
+		// let options = {
+		// 	mimeType: AUDIO_MIME_TYPE,
+		// };
+		// if (typeof MediaRecorder.isTypeSupported === 'function') {
+		// 	if (MediaRecorder.isTypeSupported('video/webm;codecs=vp9')) {
+		// 		options = { mimeType: 'video/webm;codecs=vp9' };
+		// 	} else if (MediaRecorder.isTypeSupported('video/webm;codecs=h264')) {
+		// 		options = { mimeType: 'video/webm;codecs=h264' };
+		// 	} else if (MediaRecorder.isTypeSupported('video/webm')) {
+		// 		options = { mimeType: 'video/webm' };
+		// 	} else if (MediaRecorder.isTypeSupported('video/mp4')) {
+		// 		//Safari 14.0.2 has an EXPERIMENTAL version of MediaRecorder enabled by default
+		// 		options = { mimeType: 'video/mp4' };
+		// 	}
+		// 	console.log('Using ' + options.mimeType);
+		// 	mediaRecorder.current = new MediaRecorder(stream.current, options);
+		// } else {
+		// 	console.log(
+		// 		'isTypeSupported is not supported, using default codecs for browser',
+		// 	);
+		// 	mediaRecorder.current = new MediaRecorder(stream.current);
+		// }
+
 		mediaRecorder.current = new MediaRecorder(stream.current);
 
 		mediaRecorder.current.ondataavailable = (e) => {
@@ -155,7 +180,9 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 
 		mediaRecorder.current.onstop = function () {
 			setRecordingState(mediaRecorder.current?.state || 'inactive');
-			const recording = new Blob(chunks.current);
+			const recording = new Blob(chunks.current, {
+				type: mediaRecorder.current?.mimeType,
+			});
 			console.log('Creating recording from blobs: ', recording);
 			const url = URL.createObjectURL(recording);
 			console.log('Setting new url: ', url);
@@ -189,7 +216,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 		}
 	}, [supported, setUsingRecordedAudio]);
 
-  const prepareAudioForPlayback = useCallback(() => {
+	const prepareAudioForPlayback = useCallback(() => {
 		console.log('Preparing audio for playback');
 		audio.load(); // necessary on mobile
 		audio.pause();
@@ -197,44 +224,60 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 		audio.playbackRate = speed;
 
 		//loaded enough to play
-		audio.addEventListener('canplay', () => {
-			setIsReady(true);
-		});
-		audio.addEventListener('pause', () => {
-			setIsPlaying(false);
-		});
-		audio.addEventListener('play', () => {
-			setIsPlaying(true);
-		});
-		audio.addEventListener('error', (e) => {
+		audio.oncanplay = () => setIsReady(true);
+		audio.onpause = () => setIsPlaying(false);
+		audio.onplay = () => setIsPlaying(true);
+		audio.onerror = (e) => {
 			console.error('Audio experienced an error: ', e);
 			setHasError(true);
-		});
+			let errorString = '';
+			let err = audio.error;
+			switch (err?.code) {
+				case MediaError.MEDIA_ERR_ABORTED:
+					errorString += 'The user canceled the audio.';
+					break;
+				case MediaError.MEDIA_ERR_NETWORK:
+					errorString += 'A network error occurred while fetching the audio.';
+					break;
+				case MediaError.MEDIA_ERR_DECODE:
+					errorString += 'An error occurred while decoding the audio.';
+					break;
+				case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
+					errorString +=
+						'The audio is missing or is in a format not supported by your browser.';
+					break;
+				default:
+					errorString += 'An unknown error occurred.';
+					break;
+			}
+
+			let message = err?.message;
+			if (message && message.length) {
+				errorString += ' ' + message;
+			}
+			console.log(errorString);
+		};
 		//not enough data
-		audio.addEventListener('waiting', () => {
+		audio.onwaiting = () => {
 			setIsReady(false);
 			setIsPlaying(false);
-		});
+		};
 		//ready to play after waiting
-		audio.addEventListener('playing', () => {
-			setIsReady(true);
-		});
+		audio.onplaying = () => setIsReady(true);
 		//audio is over
-		audio.addEventListener('ended', () => {
+		audio.onended = () => {
 			audio.pause();
 			audio.currentTime = 0;
-		});
+		};
 		//as time is updated
-    audio.addEventListener('timeupdate', (e) => {
-      const targetPosition = audio.currentTime / audio.duration;
-      if (isNaN(targetPosition)) return;
+		audio.ontimeupdate = (e) => {
+			const targetPosition = audio.currentTime / audio.duration;
+			if (isNaN(targetPosition)) return;
 			setPosition(targetPosition);
-		});
+		};
 		//when speed is changed
-		audio.addEventListener('ratechange', () => {
-			setSpeed(audio.playbackRate);
-		});
-  }, [
+		audio.onratechange = () => setSpeed(audio.playbackRate);
+	}, [
 		audio,
 		setHasError,
 		setIsReady,
@@ -351,17 +394,26 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 	);
 
 	const deleteRecording = useCallback(() => {
-    pause();
-    setIsPlaying(false);
+		pause();
+		setIsPlaying(false);
 		setIsReady(false);
 		setHasError(false);
-    setPosition(0);
+		setPosition(0);
 		stopRecording();
 		chunks.current = [];
 		setUrl(bibleAudioUrl);
 		setUsingRecordedAudio(false);
-  }, [setPosition, stopRecording, pause, setUrl, setIsPlaying,
-    bibleAudioUrl, setIsReady, setUsingRecordedAudio, setHasError]);
+	}, [
+		setPosition,
+		stopRecording,
+		pause,
+		setUrl,
+		setIsPlaying,
+		bibleAudioUrl,
+		setIsReady,
+		setUsingRecordedAudio,
+		setHasError,
+	]);
 
 	useEffect(() => {
 		pause();
@@ -369,9 +421,9 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 		setUrl(bibleAudioUrl);
 		setIsPlaying(false);
 		setPosition(0);
-	}, [pause, bibleAudioUrl, setUrl,
-		setIsPlaying, stopRecording, setPosition]);
-  
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [bibleAudioUrl]);
+
 	useEffect(() => {
 		prepareAudioForPlayback();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -390,7 +442,8 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 				pause();
 			}
 		}
-	}, [location, prevLocation, pause, stopRecording]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [location, prevLocation]);
 
 	return (
 		<AudioContext.Provider
