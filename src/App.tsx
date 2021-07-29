@@ -33,7 +33,7 @@ function App() {
 	const dispatch = useDispatch();
 	const location = useLocation();
 	const { theme } = useTheme();
-	
+
 	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, [location]);
@@ -59,18 +59,16 @@ function App() {
 						<MenuButton />
 						<Menu />
 						<audio ref={audioRef}>
-							<source
-								type="audio/mp4"
-								src={url} />
+							<source src={url} />
 						</audio>
-							<ServiceWorkerMessages />
-							<Switch>
-								<Route exact path="/memorize" component={Memorize} />
-								<Route exact path="/tools" component={Tools} />
-								<Route exact path="/about" component={About} />
-								<Route exact path="/contact" component={Contact} />
-								<Route path="/" component={Memorize} />
-							</Switch>
+						<ServiceWorkerMessages />
+						<Switch>
+							<Route exact path="/memorize" component={Memorize} />
+							<Route exact path="/tools" component={Tools} />
+							<Route exact path="/about" component={About} />
+							<Route exact path="/contact" component={Contact} />
+							<Route path="/" component={Memorize} />
+						</Switch>
 					</Suspense>
 				</Transition>
 			</ErrorBoundary>

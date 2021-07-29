@@ -83,9 +83,8 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 	const stream = useRef<MediaStream | undefined>();
 	const [supported, setIsSupported] = useState<BrowserSupport>('unknown');
 	const [url, setUrl] = useState('');
-	const [recordingState, setRecordingState] = useState<RecordingState>(
-		'inactive',
-	);
+	const [recordingState, setRecordingState] =
+		useState<RecordingState>('inactive');
 	const [hasError, setHasError] = useStateIfMounted(false);
 	const [isReady, setIsReady] = useStateIfMounted(false);
 	const [isPlaying, setIsPlaying] = useStateIfMounted(false);
@@ -137,9 +136,23 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 		/* set up media recorder from stream */
 		console.log('Starting recording');
 
-		mediaRecorder.current = new MediaRecorder(stream.current, {
-			mimeType: 'audio/mp4',
-		});
+		let options = { mimeType: 'audio/mpeg' };
+		if (typeof MediaRecorder.isTypeSupported == 'function') {
+			if (MediaRecorder.isTypeSupported('audio/mp3')) {
+				options = { mimeType: 'audio/mp3' };
+			} else if (MediaRecorder.isTypeSupported('audio/mp4')) {
+				options = { mimeType: 'audio/mp4' };
+			} else if (MediaRecorder.isTypeSupported('audio/ogg')) {
+				options = { mimeType: 'audio/ogg' };
+			}
+			console.log('MediaRecorder mimeType: ', options?.mimeType);
+			mediaRecorder.current = new MediaRecorder(stream.current, options);
+		} else {
+			console.log(
+				'isTypeSupported is not supported, using default codecs for browser',
+			);
+			mediaRecorder.current = new MediaRecorder(stream.current);
+		}
 
 		mediaRecorder.current.ondataavailable = (e) => {
 			if (e.data.size > 0) {
@@ -213,7 +226,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 		audio.onplay = () => setIsPlaying(true);
 		audio.onstalled = (e) => {
 			console.warn('Audio stalled: ', e);
-		}
+		};
 		audio.onerror = (e) => {
 			console.trace();
 			console.error('Audio experienced an error: ', e);
