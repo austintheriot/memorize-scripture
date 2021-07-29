@@ -137,31 +137,9 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 		/* set up media recorder from stream */
 		console.log('Starting recording');
 
-		// try converting this to for correct audio mimeType?
-		// let options = {
-		// 	mimeType: AUDIO_MIME_TYPE,
-		// };
-		// if (typeof MediaRecorder.isTypeSupported === 'function') {
-		// 	if (MediaRecorder.isTypeSupported('video/webm;codecs=vp9')) {
-		// 		options = { mimeType: 'video/webm;codecs=vp9' };
-		// 	} else if (MediaRecorder.isTypeSupported('video/webm;codecs=h264')) {
-		// 		options = { mimeType: 'video/webm;codecs=h264' };
-		// 	} else if (MediaRecorder.isTypeSupported('video/webm')) {
-		// 		options = { mimeType: 'video/webm' };
-		// 	} else if (MediaRecorder.isTypeSupported('video/mp4')) {
-		// 		//Safari 14.0.2 has an EXPERIMENTAL version of MediaRecorder enabled by default
-		// 		options = { mimeType: 'video/mp4' };
-		// 	}
-		// 	console.log('Using ' + options.mimeType);
-		// 	mediaRecorder.current = new MediaRecorder(stream.current, options);
-		// } else {
-		// 	console.log(
-		// 		'isTypeSupported is not supported, using default codecs for browser',
-		// 	);
-		// 	mediaRecorder.current = new MediaRecorder(stream.current);
-		// }
-
-		mediaRecorder.current = new MediaRecorder(stream.current);
+		mediaRecorder.current = new MediaRecorder(stream.current, {
+			mimeType: 'audio/mp4',
+		});
 
 		mediaRecorder.current.ondataavailable = (e) => {
 			if (e.data.size > 0) {
@@ -202,7 +180,6 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 	};
 
 	const stopRecording = useCallback(() => {
-		debugger;
 		if (supported === 'notSupported') return alert(ERROR_UNSUPPORTED);
 		if (mediaRecorder.current) {
 			if (mediaRecorder.current.state === 'inactive') return;
@@ -219,11 +196,17 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 
 	const prepareAudioForPlayback = useCallback(() => {
 		console.log('Preparing audio for playback');
+		console.log('prepareAudioForPlayback: Audio: ', audio);
+		console.log('prepareAudioForPlayback: audio.load');
 		audio.load(); // necessary on mobile
+		console.log('prepareAudioForPlayback: audio.pause');
 		audio.pause();
+		console.log('prepareAudioForPlayback: audio.currentTime = 0');
 		audio.currentTime = 0;
+		console.log('prepareAudioForPlayback: audio.playbackRate = speed');
 		audio.playbackRate = speed;
 
+		console.log('prepareAudioForPlayback: adding listeners');
 		//loaded enough to play
 		audio.oncanplay = () => setIsReady(true);
 		audio.onpause = () => setIsPlaying(false);
@@ -232,6 +215,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 			console.warn('Audio stalled: ', e);
 		}
 		audio.onerror = (e) => {
+			console.trace();
 			console.error('Audio experienced an error: ', e);
 			setHasError(true);
 			let errorString = '';

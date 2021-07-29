@@ -58,7 +58,11 @@ function App() {
 					<Suspense fallback={Loading()}>
 						<MenuButton />
 						<Menu />
-						<audio src={url} ref={audioRef} />
+						<audio ref={audioRef}>
+							<source
+								type="audio/mp4"
+								src={url} />
+						</audio>
 							<ServiceWorkerMessages />
 							<Switch>
 								<Route exact path="/memorize" component={Memorize} />
