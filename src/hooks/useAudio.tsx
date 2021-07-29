@@ -202,6 +202,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 	};
 
 	const stopRecording = useCallback(() => {
+		debugger;
 		if (supported === 'notSupported') return alert(ERROR_UNSUPPORTED);
 		if (mediaRecorder.current) {
 			if (mediaRecorder.current.state === 'inactive') return;
@@ -227,6 +228,9 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 		audio.oncanplay = () => setIsReady(true);
 		audio.onpause = () => setIsPlaying(false);
 		audio.onplay = () => setIsPlaying(true);
+		audio.onstalled = (e) => {
+			console.warn('Audio stalled: ', e);
+		}
 		audio.onerror = (e) => {
 			console.error('Audio experienced an error: ', e);
 			setHasError(true);
