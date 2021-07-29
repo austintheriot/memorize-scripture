@@ -231,8 +231,12 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 			console.error('Audio experienced an error: ', e);
 			setHasError(true);
 			let errorString = '';
-			let err = audio.error;
-			switch (err?.code) {
+			let audioError = audio.error;
+			console.log('Audio: ', audio);
+			console.log('Audio error: ', audio.error);
+			console.log('Error code: ', audioError?.code);
+			console.log('Error message: ', audioError?.message);
+			switch (audioError?.code) {
 				case MediaError.MEDIA_ERR_ABORTED:
 					errorString += 'The user canceled the audio.';
 					break;
@@ -250,12 +254,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 					errorString += 'An unknown error occurred.';
 					break;
 			}
-
-			let message = err?.message;
-			if (message && message.length) {
-				errorString += ' ' + message;
-			}
-			console.log(errorString);
+			console.log('Error String: ', errorString);
 		};
 		//not enough data
 		audio.onwaiting = () => {
