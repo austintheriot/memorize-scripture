@@ -1,79 +1,103 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import styles from './Menu.module.scss';
-
-import { Link } from 'react-router-dom';
-
 import chiRho from '../../images/chirho-light.svg';
-
-//Menu State
-import { useSelector, useDispatch } from 'react-redux';
-import { selectApp, navLinkClicked } from '../../app/appSlice';
+import { useDispatch } from 'react-redux';
+import { navLinkClicked, outsideOfMenuClicked } from '../../store/appSlice';
 import { ExternalLink } from '../Links/ExternalLink';
+import { useAppSelector } from 'store/store';
+import useIsKeyboardUser from 'hooks/useIsKeyboardUser';
+import { InternalLink } from 'components/Links/InternalLink';
+import useDetectOutsideClick from 'hooks/useDetectOutsideClick';
 
 export const Menu = () => {
 	const dispatch = useDispatch();
-	const app = useSelector(selectApp);
+	const { menuIsOpen } = useAppSelector((state) => state.app);
+	const firstElementRef = useRef<HTMLElement | null>(null);
+	const previousRef = useRef<Element | null>(null);
+	const isKeyboardUser = useIsKeyboardUser();
+	const menuRef = useDetectOutsideClick<HTMLElement>(() => menuIsOpen && dispatch(outsideOfMenuClicked()));
 
 	const closeMenu = () => {
 		dispatch(navLinkClicked());
 	};
 
+	useEffect(() => {
+		if (isKeyboardUser) {
+			if (menuIsOpen) {
+				previousRef.current = document.activeElement;
+				firstElementRef.current?.focus();
+			} else {
+				(previousRef.current as HTMLElement)?.focus();
+			}
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [menuIsOpen]);
+
+	const tabbable = menuIsOpen ? 0 : -1;
+
 	return (
 		<nav
-			data-testid='menu'
-			className={[styles.nav, app.menuIsOpen ? styles.menuOpen : ''].join(' ')}>
-			<ExternalLink to='https://memorizescripture.org'>
+			ref={menuRef}
+			tabIndex={-1}
+			data-testid="menu"
+			className={[styles.nav, menuIsOpen ? styles.menuOpen : ''].join(' ')}
+		>
+			<ExternalLink
+				to="https://memorizescripture.org"
+				tabIndex={tabbable}
+				focus="ring"
+				className={styles.chiRhoLink}
+			>
 				<img
 					src={chiRho}
-					alt='Memorize Scripture Logo: Chi Rho'
-					className='ChiRho'
+					alt="Memorize Scripture Logo: Chi Rho"
+					className="ChiRho"
 				/>
 			</ExternalLink>
 			<ul className={styles.ul}>
 				<li className={styles.li}>
-					<Link
-						to='/'
+					<InternalLink
+						to="/"
+						tabIndex={tabbable}
 						className={styles.link}
 						onClick={closeMenu}
-						data-testid='learn'>
-						Learn
-					</Link>
+						data-testid="learn"
+					>
+						Memorize
+					</InternalLink>
 				</li>
 				<li className={styles.li}>
-					<Link
-						to='/review'
+					<InternalLink
+						to="/tools"
+						tabIndex={tabbable}
 						className={styles.link}
 						onClick={closeMenu}
-						data-testid='review'>
-						Review
-					</Link>
-				</li>
-				<li className={styles.li}>
-					<Link
-						to='/tools'
-						className={styles.link}
-						onClick={closeMenu}
-						data-testid='tools'>
+						data-testid="tools"
+					>
 						Tools
-					</Link>
+					</InternalLink>
 				</li>
 				<li className={styles.li}>
-					<Link
-						to='/about'
+					<InternalLink
+						to="/about"
+						tabIndex={tabbable}
 						className={styles.link}
 						onClick={closeMenu}
-						data-testid='about'>
+						data-testid="about"
+					>
 						About
-					</Link>
+					</InternalLink>
 				</li>
 				<li className={styles.li}>
-					<Link
-						to='/contact'
+					<InternalLink
+						tabIndex={tabbable}
+						to="/contact"
 						className={styles.link}
 						onClick={closeMenu}
-						data-testid='contact'>
+						data-testid="contact"
+					>
 						Contact
-					</Link>
+					</InternalLink>
 				</li>
 			</ul>
 		</nav>

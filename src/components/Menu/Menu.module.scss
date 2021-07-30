@@ -8,12 +8,18 @@
 	left: 100%;
 	width: 150px;
 	height: 100vh;
-	background-color: var(--dark);
+	background-color: var(--primary_20);
 	transition: transform 0.1s ease-out;
+
+	.chiRhoLink {
+		display: block;
+		width: fit-content;
+		height: fit-content;
+		margin: 50px auto;
+	}
 
 	img {
 		display: block;
-		margin: 50px auto;
 	}
 }
 
@@ -31,7 +37,7 @@
 .link {
 	font-size: var(--body);
 	margin: 0;
-	color: var(--light);
+	color: var(--primary_100);
 	text-decoration: none;
 
 	&:hover {

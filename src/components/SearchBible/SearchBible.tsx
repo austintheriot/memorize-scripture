@@ -1,182 +1,130 @@
-import React, { useContext } from 'react';
-
-import { AudioContext } from '../../app/audioContext';
-import { FirebaseContext } from '../../app/firebaseContext';
-import { useSelector, useDispatch } from 'react-redux';
-import {
-	selectSearch,
-	bookSelected,
-	chapterSelected,
-} from '../../app/searchSlice';
-
-//Styles
+import React, { ChangeEvent, FormEvent, useCallback } from 'react';
 import styles from './SearchBible.module.scss';
-
-//Material UI Components
-import { makeStyles } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-
-//Custom components
-import searchIcon from '../../icons/search.svg';
-
-//Utilities
-import { bookTitles } from '../../pages/Learn/bible';
-import { getTextBody, addToTextArray } from '../../app/storage';
-
-//types
-import { UtilityConfig } from '../../app/types';
+import { BibleBook, bookTitles, Chapter, Title } from '../../pages/Memorize/bible';
+import { getTextBody, addToTextArray } from '../../utils/storageUtils';
 import {
 	textRetrievedFromLocalStorage,
 	fetchTextFromESVAPI,
-} from '../../app/textSlice';
-import { audioFileChanged } from 'app/audioSlice';
-
-const useStyles = makeStyles((theme) => ({
-	formControl: {
-		margin: theme.spacing(0.25),
-	},
-	selectEmpty: {
-		marginTop: theme.spacing(2),
-	},
-	iconButton: {
-		width: 'max-content',
-	},
-	label: {
-		color: 'var(--light)',
-	},
-	select: {
-		padding: '0.25rem 1rem',
-		backgroundColor: 'var(--dark)',
-		color: 'var(--light)',
-		fontSize: '1.1rem',
-	},
-}));
+} from '../../store/textSlice';
+import searchIcon from '../../icons/search.svg';
+import { useFirebaseContext } from 'hooks/useFirebaseContext';
+import { useAppDispatch, useAppSelector } from 'store/store';
+import {
+	bookSelector,
+	chaptersArraySelector,
+	chapterSelector,
+	setBook,
+	setChapter,
+	setAudioUrl,
+} from 'store/searchSlice';
+import useStateIfMounted from 'hooks/useStateIfMounted';
+import { validateBookAndChapter } from 'utils/validation';
+import Input from 'components/Input/Input';
+import FocusRing from 'components/FocusRing/FocusRing';
 
 export const SearchBible = () => {
-	const { analytics } = useContext(FirebaseContext);
+	const dispatch = useAppDispatch();
+	const { analytics } = useFirebaseContext();
+	const book = useAppSelector(bookSelector);
+	const chapter = useAppSelector(chapterSelector);
+	const chaptersArray = useAppSelector(chaptersArraySelector);
+	const [message, setMessage] = useStateIfMounted('');
 
-	//Material UI Styling:
-	const classes = useStyles();
+	const clearError = () => setMessage('');
 
-	//Redux State:
-	const dispatch = useDispatch();
-	const search = useSelector(selectSearch);
-	const audioElement = useContext(AudioContext);
-	const utilityConfig: UtilityConfig = {
-		audioElement,
-		dispatch,
-		analytics,
-	};
+	const handleSubmit = useCallback(
+		(e: FormEvent<HTMLFormElement | HTMLButtonElement>) => {
+			e.preventDefault();
 
-	const handleBookChange = (
-		e: React.ChangeEvent<{
-			name?: string | undefined;
-			value: unknown;
-		}>
-	) => {
-		const bookString = e.target.value;
-		if (typeof bookString === 'string') {
-			dispatch(bookSelected({ bookString, chapter: search.chapter })); //set book name
-		}
-	};
+			if (validateBookAndChapter(book, chapter)) {
+				setMessage('Please provide a valid book and chapter.');
+				return;
+			}
 
-	const handleChapterChange = (
-		e: React.ChangeEvent<{
-			name?: string | undefined;
-			value: unknown;
-		}>
-	) => {
-		if (typeof e.target.value === 'string') {
-			dispatch(chapterSelected(e.target.value));
-		}
-	};
+			const validBook = book as BibleBook;
+			const validChapter = chapter as Chapter;
 
-	const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-		e.preventDefault();
-		//Check local storage
-		const title = `${search.book} ${search.chapter}`;
-		console.log(`Checking local storage for ${title}`);
-		//try to retrieve text body from local storage
-		let body = getTextBody(title);
-		if (body) {
-			console.log(`Retrieved body of ${title} from local storage`);
-			dispatch(
-				textRetrievedFromLocalStorage({
-					book: search.book,
-					chapter: search.chapter,
-					body,
-				})
-			);
-			dispatch(
-				audioFileChanged({ book: search.book, chapter: search.chapter })
-			);
-			addToTextArray(title, body);
-			analytics.logEvent('fetched_text_from_local_storage', {
-				searchBook: search.book,
-				searchChapter: search.chapter,
-				title: `${search.book} ${search.chapter}`,
-			});
-		} else {
-			//If it does not exist in local storage, make an API call, and store the returned text
-			console.log(`${title} not found in local storage`);
-			console.log('Making a call to the ESV API');
-			dispatch(fetchTextFromESVAPI(search.book, search.chapter, utilityConfig));
-		}
-	};
-
-	//create chapter input options based on book of the bible
-	let chapterArray = [];
-	for (let i = 1; i <= search.numberOfChapters; i++) {
-		chapterArray.push(i);
-	}
-	chapterArray = chapterArray.map((el) => (
-		<MenuItem value={el.toString()} key={el} data-testid={el}>
-			{el}
-		</MenuItem>
-	));
+			//Check local storage
+			const title = `${validBook} ${validChapter}` as Title;
+			console.log(`Checking local storage for ${title}`);
+			//try to retrieve text body from local storage
+			let body = getTextBody(title);
+			if (body) {
+				console.log(`Retrieved body of ${title} from local storage`);
+				dispatch(
+					textRetrievedFromLocalStorage({
+						book: validBook,
+						chapter: validChapter,
+						body,
+					}),
+				);
+				dispatch(setAudioUrl({ book: validBook, chapter: validChapter }));
+				addToTextArray(title, body);
+				analytics.logEvent('fetched_text_from_local_storage', {
+					searchBook: validBook,
+					searchChapter: validChapter,
+					title: `${book} ${validChapter}`,
+				});
+			} else {
+				//If it does not exist in local storage, make an API call, and store the returned text
+				console.log(`${title} not found in local storage`);
+				console.log('Making a call to the ESV API');
+				dispatch(fetchTextFromESVAPI(validBook, validChapter, analytics));
+			}
+		},
+		[analytics, book, chapter, setMessage, dispatch],
+	);
 
 	return (
-		<form className={styles.form}>
-			<FormControl className={classes.formControl}>
-				<InputLabel id='bible-book' className={classes.label}>
-					Book
-				</InputLabel>
-				<Select
-					className={classes.select}
-					labelId='bible-book'
-					data-testid='select-book'
-					value={search.book}
-					onChange={handleBookChange}>
-					{bookTitles.map((bookString) => (
-						<MenuItem value={bookString} key={bookString}>
-							{bookString}
-						</MenuItem>
+		<form className={styles.form} onSubmit={handleSubmit}>
+			<Input
+				label="Book"
+				id="book"
+				list="book-list"
+				value={book}
+				onChange={(e: ChangeEvent<HTMLInputElement>) => {
+					clearError();
+					dispatch(setBook(e.target.value));
+				}}
+				onFocus={clearError}
+				componentStyles={styles.InputComponentStyles}
+			>
+				<datalist id="book-list">
+					{bookTitles.map((book) => (
+						<option key={book} value={book} />
 					))}
-				</Select>
-			</FormControl>
-			<FormControl className={classes.formControl}>
-				<InputLabel id='bible-chapter' className={classes.label}>
-					Chapter
-				</InputLabel>
-				<Select
-					className={classes.select}
-					labelId='bible-chapter'
-					data-testid='select-chapter'
-					value={search.chapter}
-					onChange={handleChapterChange}>
-					{chapterArray}
-				</Select>
-			</FormControl>
+				</datalist>
+			</Input>
+
+			<Input
+				label="Chapter"
+				value={chapter}
+				id="chapter"
+				list="chapter-list"
+				onChange={(e: ChangeEvent<HTMLInputElement>) => {
+					clearError();
+					dispatch(setChapter(e.target.value));
+				}}
+				onFocus={clearError}
+				componentStyles={styles.InputComponentStyles}
+			>
+				<datalist id="chapter-list">
+					{chaptersArray.map((chapter) => (
+						<option value={chapter} key={chapter} />
+					))}
+				</datalist>
+			</Input>
+
 			<button
-				className={styles.search}
+				className={styles.searchButton}
 				onClick={handleSubmit}
 				aria-label={'Search'}
-				data-testid='search'>
-				<img src={searchIcon} alt='search' className={styles.searchIcon} />
+				data-testid="search"
+			>
+				<img src={searchIcon} alt="search" className={styles.searchIcon} />
+				<FocusRing />
 			</button>
+		{!!message &&	<p className={styles.message}>{message}</p>}
 		</form>
 	);
 };

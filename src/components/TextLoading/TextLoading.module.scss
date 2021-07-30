@@ -13,9 +13,9 @@
 		opacity: 0.15;
 
 		background: linear-gradient(
-			var(--toggleLight),
-			var(--light),
-			var(--toggleLight)
+			var(--primary_40),
+			var(--primary_100),
+			var(--primary_40)
 		);
 		background-size: 1000% 1000%;
 		animation: shimmer 10s linear infinite normal;

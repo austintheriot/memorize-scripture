@@ -1,4 +1,5 @@
 .CloseButton {
+	position: relative;
 	width: 30px;
 	height: 30px;
 	display: flex;
@@ -18,7 +19,7 @@
 	width: 15px;
 	left: 50%;
 	top: 50%;
-	background-color: var(--light);
+	background-color: var(--primary_100);
 }
 
 .span1 {

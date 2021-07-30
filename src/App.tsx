@@ -1,103 +1,101 @@
-import React, { useEffect, useContext, lazy, Suspense, useRef } from 'react';
-
+import React, { useEffect, lazy, Suspense } from 'react';
 import * as serviceWorker from './serviceWorker';
-
-//App
 import './App.scss';
-
-//State
-import { FirebaseContext } from './app/firebaseContext';
-import { AudioContext } from './app/audioContext';
-import { useSelector, useDispatch } from 'react-redux';
-import { outsideOfMenuClicked } from './app/appSlice';
-import { selectAudioSettings } from './app/audioSlice';
-
-//Routing
+import { useDispatch } from 'react-redux';
 import { Route, Switch, useLocation } from 'react-router-dom';
-
-//Components
 import { Menu } from './components/Menu/Menu';
 import { MenuButton } from './components/MenuButton/MenuButton';
 import { Transition } from './components/Transition/Transition';
 import { ServiceWorkerMessages } from './components/ServiceWorkerMessages/ServiceWorkerMessages';
-
-//Utilities
-import { prepareAudioForPlayback, initializeApp } from './app/init';
-
-//types
-import { UtilityConfig } from './app/types';
-
-//Pages
+import { initializeApp } from './app/init';
 import { Loading } from './components/Loading/Loading';
+import { Provider as StoreProvider } from 'react-redux';
+import store from './store/store';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { ErrorBoundary } from 'components/ErrorBoundary/ErrorBoundary';
+import { FirebaseProvider } from 'hooks/useFirebaseContext';
+import { useRouteAnalytics } from 'hooks/useRouteAnalytics';
+import { IsKeyboardUserContextProvider } from 'hooks/useIsKeyboardUser';
+import { AudioProvider, useAudio } from 'hooks/useAudio';
+import { conditionalStyles } from 'utils/conditionalStyles';
+import styles from './Themes.module.scss';
+import { ThemeProvider } from 'hooks/useTheme';
+import { useTheme } from 'hooks/useTheme';
 
-const Learn = lazy(() => import('./pages/Learn/Learn'));
-const Review = lazy(() => import('./pages/Review/Review'));
+const Memorize = lazy(() => import('./pages/Memorize/Memorize'));
 const About = lazy(() => import('./pages/About/About'));
 const Contact = lazy(() => import('./pages/Contact/Contact'));
 const Tools = lazy(() => import('./pages/Tools/Tools'));
 
-export default function App() {
-	const audioState = useSelector(selectAudioSettings);
-
-	const { analytics } = useContext(FirebaseContext);
+function App() {
+	useRouteAnalytics();
+	const { url, mimeType, audioRef } = useAudio();
 	const dispatch = useDispatch();
-
-	const closeMenu = () => {
-		dispatch(outsideOfMenuClicked());
-	};
-
-	const audioElement = useRef<HTMLAudioElement>(
-		new Audio(require('audio/Psalm23.mp3'))
-	);
-
-	const utilityConfig: UtilityConfig = {
-		audioElement: audioElement.current,
-		dispatch,
-		analytics,
-	};
-
 	const location = useLocation();
+	const { theme } = useTheme();
 
 	useEffect(() => {
-		analytics.logEvent('page_view', {
-			page_path: location.pathname,
-			page_location: window.location.href,
-		});
-	}, [analytics, location]);
+		window.scrollTo(0, 0);
+	}, [location]);
 
 	useEffect(() => {
-		serviceWorker.register();
-		initializeApp(utilityConfig);
+		serviceWorker.unregister();
+		initializeApp(dispatch);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	useEffect(() => {
-		prepareAudioForPlayback(audioElement.current, audioState, utilityConfig);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [audioState.url]);
-
 	return (
-		<div className='App'>
-			<AudioContext.Provider value={audioElement.current}>
+		<div
+			className={conditionalStyles([
+				styles.ThemeGeneral,
+				[styles.ThemeDark, theme === 'dark'],
+				[styles.ThemeLight, theme === 'light'],
+				'App',
+			])}
+		>
+			<ErrorBoundary>
 				<Transition>
 					<Suspense fallback={Loading()}>
 						<MenuButton />
 						<Menu />
-						<audio src={audioState.url} ref={audioElement} />
-						<div onClick={closeMenu}>
-							<ServiceWorkerMessages />
-							<Switch>
-								<Route exact path='/learn' component={Learn} />
-								<Route exact path='/review' component={Review} />
-								<Route exact path='/tools' component={Tools} />
-								<Route exact path='/about' component={About} />
-								<Route exact path='/contact' component={Contact} />
-								<Route path='/' component={Learn} />
-							</Switch>
-						</div>
+						<audio ref={audioRef}>
+							{/* The <source /> element is required for Safari.
+							Only specify a mimeType for recordings */}
+							<source {...(mimeType && { type: mimeType })} src={url} />
+						</audio>
+						<ServiceWorkerMessages />
+						<Switch>
+							<Route exact path="/memorize" component={Memorize} />
+							<Route exact path="/tools" component={Tools} />
+							<Route exact path="/about" component={About} />
+							<Route exact path="/contact" component={Contact} />
+							<Route path="/" component={Memorize} />
+						</Switch>
 					</Suspense>
 				</Transition>
-			</AudioContext.Provider>
+			</ErrorBoundary>
 		</div>
 	);
 }
+
+const AppWithContext = () => {
+	return (
+		<ErrorBoundary>
+			<ThemeProvider>
+				<Router>
+					<FirebaseProvider>
+						<StoreProvider store={store}>
+							<AudioProvider>
+								<IsKeyboardUserContextProvider>
+									<App />
+								</IsKeyboardUserContextProvider>
+							</AudioProvider>
+						</StoreProvider>
+					</FirebaseProvider>
+				</Router>
+			</ThemeProvider>
+		</ErrorBoundary>
+	);
+};
+
+export { AppWithContext as default };

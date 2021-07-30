@@ -8,22 +8,6 @@ html {
 	padding: 0;
 	margin: 0;
 	box-sizing: border-box;
-
-	--light: #d9d9d9;
-	--toggleLight: #404040;
-	--background: #333533;
-	--dark: #242423;
-	--darker: #202020;
-	--pop: #2f42bc;
-
-	--h1: 2rem;
-	--h2: 1.75rem;
-	--h3: 1.5rem;
-	--h4: 1.3rem;
-	--h5: 1.25rem;
-	--h6: 1.2rem;
-	--body: 1.1rem;
-
 	font-family: 'Open Sans', sans-serif;
 }
 
@@ -77,6 +61,31 @@ p {
 	line-height: 1.5rem;
 }
 
+/* shows focus ring or underline for keyboard users
+See FocusRing.tsx & FocusLine.tsx */
+button, a, summary {
+	position: relative;
+	&:focus {
+		outline: 0;
+		.focus-ring {
+			opacity: 1;
+			top: -0.25rem;
+			left: -0.25rem;
+			width: calc(100% + 0.5rem);
+			height: calc(100% + 0.5rem);
+			border: 2px solid var(--pop);
+		}
+		.focus-line {
+			opacity: 1;
+			top: -0.25rem;
+			left: -0.25rem;
+			width: calc(100% + 0.5rem);
+			height: calc(100% + 0.5rem);
+			border-bottom: 2px solid var(--pop);
+		}
+	}
+}
+
 .App {
 	outline: none;
 	&:focus {
@@ -90,8 +99,8 @@ p {
 	outline: none;
 	margin: 0;
 	text-decoration: none;
-	background-color: var(--dark);
-	color: var(--light);
+	background-color: var(--primary_20);
+	color: var(--primary_100);
 	cursor: pointer;
 	text-align: center;
 	-webkit-appearance: none;
@@ -103,10 +112,10 @@ p {
 	font-size: 1.1rem;
 
 	&:active {
-		background-color: var(--toggleLight);
+		background-color: var(--primary_40);
 	}
 	&:focus {
-		outline: 1px dotted var(--light);
+		outline: 0;
 	}
 }
 

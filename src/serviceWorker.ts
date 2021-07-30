@@ -1,9 +1,9 @@
-import store from './app/store';
+import store from './store/store';
 import {
 	serviceWorkerInstalled,
 	updateAvailable,
 	noInternetConnection,
-} from './app/appSlice';
+} from './store/appSlice';
 
 const isLocalhost = Boolean(
 	window.location.hostname === 'localhost' ||

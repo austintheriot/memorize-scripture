@@ -4,11 +4,11 @@
 		max-width: 600px;
 		text-align: left;
 		margin: 75px auto 0 auto;
-		border-bottom: 1px solid var(--darker);
+		border-bottom: 1px solid var(--primary_10);
 	}
 
 	h2 {
-		border-bottom: 1px solid var(--darker);
+		border-bottom: 1px solid var(--primary_10);
 		text-align: left;
 		width: 80%;
 		max-width: 600px;
@@ -27,7 +27,7 @@
 
 	a {
 		text-decoration: underline;
-		color: var(--light);
+		color: var(--primary_100);
 		cursor: pointer;
 	}
 
@@ -37,7 +37,7 @@
 		width: 60%;
 		max-width: 600px;
 		min-width: min-content;
-		background-color: var(--darker);
+		background-color: var(--primary_10);
 		padding: 1rem;
 
 		p {
@@ -88,7 +88,7 @@
 	max-width: 600px;
 	margin: 1rem auto;
 	padding: 1rem;
-	border: 1px solid var(--darker);
+	border: 1px solid var(--primary_10);
 }
 
 .tableOfContents {
@@ -106,7 +106,7 @@
 }
 
 .copyright {
-	border-top: 1px solid var(--darker);
+	border-top: 1px solid var(--primary_10);
 	width: 80%;
 	max-width: 600px;
 	margin: 4rem auto;
@@ -133,8 +133,14 @@
 	}
 
 	&:active {
-		background-color: var(--dark);
+		background-color: var(--primary_20);
 	}
+}
+
+.RecordingButtonImages {
+	display: inline-block;
+	height: 3rem;
+	width: auto;
 }
 
 .button {
@@ -143,6 +149,8 @@
 	position: sticky;
 	top: 20px;
 	border-radius: 3px;
+	// sit above links
+	z-index: 1;
 }
 
 .indent {

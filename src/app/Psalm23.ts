@@ -22,9 +22,9 @@ you anoint my head with oil;
 Surely goodness and mercy shall follow me
      all the days of my life,
 and I shall dwell in the house of the LORD
-		 forever.`;
+		 forever.` as const;
 
-export const Psalm23Split: string[] = [
+export const Psalm23Split = [
 	'A Psalm of David.',
 	'',
 	'     The LORD is my shepherd; I shall not want.',
@@ -53,9 +53,9 @@ export const Psalm23Split: string[] = [
 	'     ',
 	'',
 	'',
-];
+] as const;
 
-export const Psalm23Condensed: string[] = [
+export const Psalm23Condensed = [
 	'APoD.',
 	'',
 	'TLims;isnw.',
@@ -84,4 +84,4 @@ export const Psalm23Condensed: string[] = [
 	'',
 	'',
 	'',
-];
+] as const;

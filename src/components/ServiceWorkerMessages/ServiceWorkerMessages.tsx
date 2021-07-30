@@ -1,17 +1,17 @@
 import React from 'react';
 import { Message } from '../Message/Message';
 
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
-	selectApp,
 	offlineMessageClosed,
 	updateMessageClosed,
 	installedMessageClosed,
-} from '../../app/appSlice';
+} from '../../store/appSlice';
+import { useAppSelector } from 'store/store';
 
 export const ServiceWorkerMessages = () => {
 	const dispatch = useDispatch();
-	const appState = useSelector(selectApp);
+	const { showIsOffline, showCloseTabs, showAppIsInstalled } = useAppSelector((s) => s.app);
 
 	return (
 		<>
@@ -19,21 +19,21 @@ export const ServiceWorkerMessages = () => {
 				message={
 					'App is running in offline mode. You may access your 5 most recently viewed chapters.'
 				}
-				show={appState.showIsOffline}
+				show={showIsOffline}
 				handleHide={() => dispatch(offlineMessageClosed())}
 			/>
 			<Message
 				message={
 					'A new update is available. Update will install automatically once all existing tabs are closed.'
 				}
-				show={appState.showCloseTabs}
+				show={showCloseTabs}
 				handleHide={() => dispatch(updateMessageClosed())}
 			/>
 			<Message
 				message={
 					'This app works offline! You may view your 5 most recent chapters without an internet connection.'
 				}
-				show={appState.showAppIsInstalled}
+				show={showAppIsInstalled}
 				handleHide={() => dispatch(installedMessageClosed())}
 			/>
 		</>
