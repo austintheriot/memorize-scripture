@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useCallback } from 'react';
+import React, { ChangeEvent, FormEvent, useCallback } from 'react';
 import styles from './SearchBible.module.scss';
 import { BibleBook, bookTitles, Chapter, Title } from '../../pages/Memorize/bible';
 import { getTextBody, addToTextArray } from '../../utils/storageUtils';
@@ -33,7 +33,7 @@ export const SearchBible = () => {
 	const clearError = () => setMessage('');
 
 	const handleSubmit = useCallback(
-		(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+		(e: FormEvent<HTMLFormElement | HTMLButtonElement>) => {
 			e.preventDefault();
 
 			if (validateBookAndChapter(book, chapter)) {
@@ -76,7 +76,7 @@ export const SearchBible = () => {
 	);
 
 	return (
-		<form className={styles.form}>
+		<form className={styles.form} onSubmit={handleSubmit}>
 			<Input
 				label="Book"
 				id="book"
