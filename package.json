@@ -36,7 +36,7 @@
 		"test:cy": "cy:run",
 		"test:cy-open": "start-server-and-test start http://localhost:3000 \"cypress open\"",
 		"test:cy-run": "start-server-and-test start http://localhost:3000 \"cypress run\"",
-		"test": "npm-run-all -p test:jest test:cy-run",
+		"test": "npm-run-all -p tsc test:jest test:cy-run",
 		"eject": "react-scripts eject",
 		"prepare": "husky install"
 	},

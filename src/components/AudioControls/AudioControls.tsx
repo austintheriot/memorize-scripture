@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styles from './AudioControls.module.scss';
 import flipIcon from 'icons/flip.svg';
 import beginningIcon from 'icons/beginning.svg';
@@ -40,31 +40,40 @@ export const AudioControls = () => {
 	} = useAudio();
 
 	const { showCondensed } = useAppSelector((state) => state.text);
+	const playButtonsDisabled = recordingState === 'recording' || recordingState === 'paused';
+	const showDeleteRecordingButton = recordingState === 'inactive' && usingRecordedAudio;
 
-	const handlePlay = () => {
+	const handleRecord = useCallback(() => {
+		analytics.logEvent('recording_button_clicked');
+		if (showDeleteRecordingButton) deleteRecording();
+		else if (recordingState === 'recording') stopRecording();
+		else startRecording();
+	}, [analytics, deleteRecording, recordingState, showDeleteRecordingButton, startRecording, stopRecording])
+
+	const handlePlay = useCallback(() => {
 		analytics.logEvent('play_button_clicked');
 		play();
-	};
+	}, [analytics, play]);
 
-	const handlePause = () => {
+	const handlePause = useCallback(() => {
 		analytics.logEvent('pause_button_clicked');
 		pause();
-	};
+	}, [analytics, pause]);
 
-	const handleRewind = () => {
+	const handleRewind = useCallback(() => {
 		analytics.logEvent('back_button_clicked');
 		rewind();
-	};
+	}, [analytics, rewind]);
 
-	const handleForward = () => {
+	const handleForward = useCallback(() => {
 		analytics.logEvent('forward_button_clicked');
 		forward();
-	};
+	}, [analytics, forward]);
 
-	const handleBeginning = () => {
+	const handleBeginning = useCallback(() => {
 		analytics.logEvent('beginning_button_clicked');
 		beginning();
-	};
+	}, [analytics, beginning]);
 
 	const handleAudioPositionChange = (
 		e: React.ChangeEvent<HTMLInputElement>,
@@ -76,28 +85,22 @@ export const AudioControls = () => {
 		});
 	};
 
-	const handleSpeedChange = () => {
+	const handleSpeedChange = useCallback(() => {
 		const targetSpeed = Math.max((audioSpeed + 0.25) % 2.25, 0.5);
 		setAudioSpeed(targetSpeed);
 		analytics.logEvent('speed_button_clicked', {
 			targetSpeed,
 		});
-	};
+	}, [analytics, audioSpeed, setAudioSpeed]);
 
-	const handleViewChange = () => {
+	const handleViewChange = useCallback(() => {
 		analytics.logEvent('flip_view_button_clicked', {
 			showCondensed: showCondensed,
 		});
 		const targetShowCondensed = !showCondensed;
 		dispatch(viewChangeButtonClicked(targetShowCondensed));
 		storeShowCondensed(targetShowCondensed);
-	};
-
-	const playButtonsDisabled =
-		recordingState === 'recording' || recordingState === 'paused';
-
-	const showDeleteRecordingButton =
-		recordingState === 'inactive' && usingRecordedAudio;
+	}, [analytics, dispatch, showCondensed]);
 
 	return (
 		<div className={styles.Controls}>
@@ -110,17 +113,13 @@ export const AudioControls = () => {
 							[styles.recording, recordingState === 'recording'],
 							[styles.deleteRecording, showDeleteRecordingButton],
 						])}
-						onClick={() => {
-							if (showDeleteRecordingButton) deleteRecording();
-							else if (recordingState === 'recording') stopRecording();
-							else startRecording();
-						}}
+						onClick={handleRecord}
 						aria-label={
 							showDeleteRecordingButton
 								? 'delete recording'
 								: recordingState === 'recording'
-								? 'stop recording'
-								: 'start recording'
+									? 'stop recording'
+									: 'start recording'
 						}
 					>
 						<span />
