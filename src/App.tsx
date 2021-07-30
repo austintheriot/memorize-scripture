@@ -59,7 +59,8 @@ function App() {
 						<MenuButton />
 						<Menu />
 						<audio ref={audioRef}>
-							{/* Only specify a mimeType for recordings */}
+							{/* The <source /> element is required for Safari.
+							Only specify a mimeType for recordings */}
 							<source {...(mimeType && { type: mimeType })} src={url} />
 						</audio>
 						<ServiceWorkerMessages />

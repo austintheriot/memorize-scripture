@@ -24,7 +24,7 @@ export type BrowserSupport = 'supported' | 'notSupported' | 'unknown';
 
 interface AudioContextType {
 	url: string;
-	mimeType: MediaRecorderOptions['mimeType'] | undefined,
+	mimeType: MediaRecorderOptions['mimeType'] | undefined;
 	audioRef: MutableRefObject<HTMLAudioElement>;
 	recordingState: RecordingStates;
 	supported: BrowserSupport;
@@ -93,7 +93,9 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 	const [speed, setSpeed] = useStateIfMounted(1);
 	const [position, setPosition] = useStateIfMounted(0);
 	const [usingRecordedAudio, setUsingRecordedAudio] = useStateIfMounted(false);
-	const [mimeType, setMimeType] = useStateIfMounted<MediaRecorderOptions['mimeType'] | undefined>(undefined);
+	const [mimeType, setMimeType] = useStateIfMounted<
+		MediaRecorderOptions['mimeType'] | undefined
+	>(undefined);
 	const audioRef = useRef(new Audio(psalm23));
 	const audio = audioRef.current;
 
@@ -139,8 +141,8 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 		/* set up media recorder from stream */
 		console.log('Starting recording');
 
-		/* Chrome does NOT want a mimeType supported -- it chooses a mimeType by default.
-		However, Safari WANTS a mimeType offered: "audio/mp4" typically */
+		/* Chrome does NOT want a mimeType specified -- it chooses a mimeType by default.
+		However, Safari WANTS a mimeType specified: typically "audio/mp4" */
 		let options;
 		if (typeof MediaRecorder.isTypeSupported == 'function') {
 			if (MediaRecorder.isTypeSupported('audio/mp3')) {
@@ -152,12 +154,12 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 			} else {
 				options = undefined;
 			}
-			console.log('MediaRecorder mimeType: ', options?.mimeType);
+			console.log('MediaRecorder mimeType:', options?.mimeType || 'browser default');
 			setMimeType(options?.mimeType);
 			mediaRecorder.current = new MediaRecorder(stream.current, options);
 		} else {
 			console.log(
-				'isTypeSupported is not supported, using default codecs for browser',
+				'isTypeSupported is not supported, using default mimeType for browser',
 			);
 			mediaRecorder.current = new MediaRecorder(stream.current);
 		}
@@ -182,7 +184,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 			const recording = new Blob(chunks.current, {
 				type: mediaRecorder.current?.mimeType,
 			});
-			console.log('Creating recording from blobs: ', recording);
+			console.log('Recording Blob created from chunks: ', recording);
 			const url = URL.createObjectURL(recording);
 			console.log('Setting new url: ', url);
 			setUrl(url);
@@ -217,17 +219,11 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 
 	const prepareAudioForPlayback = useCallback(() => {
 		console.log('Preparing audio for playback');
-		console.log('prepareAudioForPlayback: Audio: ', audio);
-		console.log('prepareAudioForPlayback: audio.load');
 		audio.load(); // necessary on mobile
-		console.log('prepareAudioForPlayback: audio.pause');
 		audio.pause();
-		console.log('prepareAudioForPlayback: audio.currentTime = 0');
 		audio.currentTime = 0;
-		console.log('prepareAudioForPlayback: audio.playbackRate = speed');
 		audio.playbackRate = speed;
 
-		console.log('prepareAudioForPlayback: adding listeners');
 		//loaded enough to play
 		audio.oncanplay = () => setIsReady(true);
 		audio.onpause = () => setIsPlaying(false);
@@ -241,10 +237,16 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 			setHasError(true);
 			let errorString = '';
 			let audioError = audio.error;
-			console.log('Audio: ', audio);
-			console.log('Audio error: ', audio.error);
-			console.log('Error code: ', audioError?.code);
-			console.log('Error message: ', audioError?.message);
+			console.log(
+				'Audio: ',
+				audio,
+				'Audio error: ',
+				audio.error,
+				'Error code: ',
+				audioError?.code,
+				'Error message: ',
+				audioError?.message,
+			);
 			switch (audioError?.code) {
 				case MediaError.MEDIA_ERR_ABORTED:
 					errorString += 'The user canceled the audio.';
