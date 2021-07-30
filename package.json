@@ -32,11 +32,13 @@
 	"scripts": {
 		"start": "react-scripts start",
 		"build": "react-scripts build",
-		"test": "react-scripts test",
+		"test:jest": "react-scripts test --watchAll=false",
+		"test:cy": "cy:run",
+		"test:cy-open": "start-server-and-test start http://localhost:3000 \"cypress open\"",
+		"test:cy-run": "start-server-and-test start http://localhost:3000 \"cypress run\"",
+		"test": "npm-run-all -p test:jest test:cy-run",
 		"eject": "react-scripts eject",
-		"cy:open": "start-server-and-test start http://localhost:3000 \"cypress open\"",
-		"cy:run": "start-server-and-test start http://localhost:3000 \"cypress run\"",
-		"cy": "cy:run"
+		"prepare": "husky install"
 	},
 	"eslintConfig": {
 		"extends": "react-app"
@@ -60,6 +62,8 @@
 		"@types/react-redux": "^7.1.9",
 		"@types/redux": "^3.6.0",
 		"@types/redux-thunk": "^2.1.0",
+		"husky": "^7.0.0",
+		"npm-run-all": "^4.1.5",
 		"redux-devtools": "^3.7.0",
 		"start-server-and-test": "^1.12.1",
 		"ts-jest": "^26.4.4",
