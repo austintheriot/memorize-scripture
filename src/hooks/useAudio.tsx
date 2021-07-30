@@ -24,6 +24,7 @@ export type BrowserSupport = 'supported' | 'notSupported' | 'unknown';
 
 interface AudioContextType {
 	url: string;
+	mimeType: MediaRecorderOptions['mimeType'] | undefined,
 	audioRef: MutableRefObject<HTMLAudioElement>;
 	recordingState: RecordingStates;
 	supported: BrowserSupport;
@@ -50,6 +51,7 @@ interface AudioContextType {
 // audio context value when no provider given
 export const AudioContext = createContext<AudioContextType>({
 	url: '',
+	mimeType: 'audio/mpeg',
 	audioRef: { current: new Audio(psalm23) },
 	recordingState: 'inactive',
 	supported: 'unknown',
@@ -91,6 +93,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 	const [speed, setSpeed] = useStateIfMounted(1);
 	const [position, setPosition] = useStateIfMounted(0);
 	const [usingRecordedAudio, setUsingRecordedAudio] = useStateIfMounted(false);
+	const [mimeType, setMimeType] = useStateIfMounted<MediaRecorderOptions['mimeType'] | undefined>(undefined);
 	const audioRef = useRef(new Audio(psalm23));
 	const audio = audioRef.current;
 
@@ -136,7 +139,9 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 		/* set up media recorder from stream */
 		console.log('Starting recording');
 
-		let options = { mimeType: 'audio/mpeg' };
+		/* Chrome does NOT want a mimeType supported -- it chooses a mimeType by default.
+		However, Safari WANTS a mimeType offered: "audio/mp4" typically */
+		let options;
 		if (typeof MediaRecorder.isTypeSupported == 'function') {
 			if (MediaRecorder.isTypeSupported('audio/mp3')) {
 				options = { mimeType: 'audio/mp3' };
@@ -144,8 +149,11 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 				options = { mimeType: 'audio/mp4' };
 			} else if (MediaRecorder.isTypeSupported('audio/ogg')) {
 				options = { mimeType: 'audio/ogg' };
+			} else {
+				options = undefined;
 			}
 			console.log('MediaRecorder mimeType: ', options?.mimeType);
+			setMimeType(options?.mimeType);
 			mediaRecorder.current = new MediaRecorder(stream.current, options);
 		} else {
 			console.log(
@@ -398,6 +406,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 		setIsPlaying(false);
 		setIsReady(false);
 		setHasError(false);
+		setMimeType('');
 		setPosition(0);
 		stopRecording();
 		chunks.current = [];
@@ -405,6 +414,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 		setUsingRecordedAudio(false);
 	}, [
 		setPosition,
+		setMimeType,
 		stopRecording,
 		pause,
 		setUrl,
@@ -453,6 +463,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 				stopRecording,
 				deleteRecording,
 				url,
+				mimeType,
 				recordingState,
 				supported,
 				hasError,

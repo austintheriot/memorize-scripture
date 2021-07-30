@@ -29,7 +29,7 @@ const Tools = lazy(() => import('./pages/Tools/Tools'));
 
 function App() {
 	useRouteAnalytics();
-	const { url, audioRef } = useAudio();
+	const { url, mimeType, audioRef } = useAudio();
 	const dispatch = useDispatch();
 	const location = useLocation();
 	const { theme } = useTheme();
@@ -59,7 +59,8 @@ function App() {
 						<MenuButton />
 						<Menu />
 						<audio ref={audioRef}>
-							<source src={url} />
+							{/* Only specify a mimeType for recordings */}
+							<source {...(mimeType && { type: mimeType })} src={url} />
 						</audio>
 						<ServiceWorkerMessages />
 						<Switch>
