@@ -544,7 +544,7 @@ export const About = () => {
 				</section>
 				<section className={styles.copyright}>
 					<p>Originally published October 22, 2020.</p>
-					<p>Last updated May 3, 2021.</p>
+					<p>Last updated July 29, 2021.</p>
 					<p>
 						{'Copyright '}&#169;
 						{` ${new Date().getFullYear()}, Austin Theriot.`}
