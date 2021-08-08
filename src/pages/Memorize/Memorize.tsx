@@ -14,7 +14,6 @@ import { useAudio } from 'hooks/useAudio';
 
 
 const Memorize = () => {
-	const { handleKeyPress } = useAudio();
 	const { book, chapter, error, loading, showCondensed, body } = useAppSelector(s => s.text);
 
 	let textComponent = null;
@@ -39,7 +38,6 @@ const Memorize = () => {
 	return (
 		<ErrorBoundary>
 			<div
-				onKeyDown={handleKeyPress}
 				className={styles.LearnContainer}>
 				<h1 className={styles.h1}>{`${book}`.replace('Psalms', 'Psalm')} {chapter}</h1>
 				<div className={styles.searchContainer}>

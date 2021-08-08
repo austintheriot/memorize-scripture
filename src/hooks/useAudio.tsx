@@ -7,7 +7,6 @@ import React, {
 } from 'react';
 import { createContext, ReactNode, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useFirebaseContext } from './useFirebaseContext';
 import usePrevious from './usePrevious';
 import useStateIfMounted from './useStateIfMounted';
 import psalm23 from 'audio/Psalm23.mp3';
@@ -45,7 +44,6 @@ interface AudioContextType {
 	beginning: () => void;
 	setAudioPosition: (targetTime: number) => void;
 	setAudioSpeed: (targetSpeed: number) => void;
-	handleKeyPress: (e: KeyboardEvent<HTMLDivElement>) => void;
 }
 
 // audio context value when no provider given
@@ -72,14 +70,12 @@ export const AudioContext = createContext<AudioContextType>({
 	beginning: () => {},
 	setAudioPosition: () => {},
 	setAudioSpeed: () => {},
-	handleKeyPress: () => {},
 });
 
 export const AudioProvider = ({ children }: { children: ReactNode }) => {
 	const bibleAudioUrl = useAppSelector((state) => state.search.audioUrl);
 	const location = useLocation();
 	const prevLocation = usePrevious(location);
-	const { analytics } = useFirebaseContext();
 	const mediaRecorder = useRef<MediaRecorder | undefined>();
 	const chunks = useRef<Blob[]>([]);
 	const stream = useRef<MediaStream | undefined>();
@@ -378,31 +374,6 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 		[audio],
 	);
 
-	/**
-	 * Enables toggling the audio on/off and rewinding/fast-forwarding
-	 * via keyboard navigation if audio is ready to be interacted with.
-	 */
-	const handleKeyPress = useCallback(
-		(e: KeyboardEvent<HTMLDivElement>) => {
-			const key = e.key;
-			if (audio.readyState < 2) return;
-			if (key === ' ') {
-				e.preventDefault();
-				analytics.logEvent('space_bar_pressed');
-				togglePlayPause();
-			}
-			if (key === 'ArrowLeft') {
-				analytics.logEvent('left_arrow_pressed');
-				rewind();
-			}
-			if (key === 'ArrowRight') {
-				analytics.logEvent('right_arrow_pressed');
-				forward();
-			}
-		},
-		[analytics, forward, rewind, audio.readyState, togglePlayPause],
-	);
-
 	const deleteRecording = useCallback(() => {
 		pause();
 		setIsPlaying(false);
@@ -482,7 +453,6 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 				beginning,
 				setAudioPosition,
 				setAudioSpeed,
-				handleKeyPress,
 			}}
 		>
 			<ErrorBoundary>{children}</ErrorBoundary>
