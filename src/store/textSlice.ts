@@ -163,56 +163,56 @@ export const {
 	condensedTextCopiedFail,
 } = textSlice.actions;
 
-export const fetchTextFromESVAPI = (
-	book: BibleBook,
-	chapter: Chapter,
-	analytics: Analytics,
-) => async (dispatch: AppDispatch) => {
-	console.log(dispatch(textBeingFetchedFromAPI()));
+export const fetchTextFromESVAPI =
+	(book: BibleBook, chapter: Chapter, analytics?: Analytics) =>
+	async (dispatch: AppDispatch) => {
+		console.log(dispatch(textBeingFetchedFromAPI()));
 
-	const title = `${book} ${chapter}` as Title;
-	console.log(`Fetching draft body file of ${title} from ESV API`);
-	analytics.logEvent('fetched_text_from_ESV_API', {
-		book,
-		chapter,
-		title,
-	});
-
-	const textURL =
-		'https://api.esv.org/v3/passage/text/?' +
-		`q=${title}` +
-		'&include-passage-references=false' +
-		'&include-verse-numbers=false' +
-		'&include-first-verse-numbers=false' +
-		'&include-footnotes=false' +
-		'&include-footnote-body=false' +
-		'&include-headings=false' +
-		'&include-selahs=false' +
-		'&indent-paragraphs=10' +
-		'&indent-poetry-lines=5' +
-		'&include-short-copyright=false';
-
-	try {
-		const response = await axios.get(textURL, {
-			headers: {
-				Authorization: ESVApiKey,
-			},
-		});
-		console.log(`Text body of ${title} received from ESV API`);
-		const body = response.data.passages[0];
-		dispatch(
-			textFetchSucceeded({
+		const title = `${book} ${chapter}` as Title;
+		console.log(`Fetching draft body file of ${title} from ESV API`);
+		if (analytics) {
+			analytics.logEvent('fetched_text_from_ESV_API', {
 				book,
 				chapter,
-				body,
-			}),
-		);
-		dispatch(setAudioUrl({ book, chapter }));
-		addToTextArray(title, body);
-	} catch (error) {
-		console.log(error);
-		dispatch(textFetchFailed());
-	}
-};
+				title,
+			});
+		}
+
+		const textURL =
+			'https://api.esv.org/v3/passage/text/?' +
+			`q=${title}` +
+			'&include-passage-references=false' +
+			'&include-verse-numbers=false' +
+			'&include-first-verse-numbers=false' +
+			'&include-footnotes=false' +
+			'&include-footnote-body=false' +
+			'&include-headings=false' +
+			'&include-selahs=false' +
+			'&indent-paragraphs=10' +
+			'&indent-poetry-lines=5' +
+			'&include-short-copyright=false';
+
+		try {
+			const response = await axios.get(textURL, {
+				headers: {
+					Authorization: ESVApiKey,
+				},
+			});
+			console.log(`Text body of ${title} received from ESV API`);
+			const body = response.data.passages[0];
+			dispatch(
+				textFetchSucceeded({
+					book,
+					chapter,
+					body,
+				}),
+			);
+			dispatch(setAudioUrl({ book, chapter }));
+			addToTextArray(title, body);
+		} catch (error) {
+			console.log(error);
+			dispatch(textFetchFailed());
+		}
+	};
 
 export default textSlice.reducer;

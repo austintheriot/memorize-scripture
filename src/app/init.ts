@@ -1,11 +1,20 @@
-import { textInitialized, textSettingsLoaded } from '../store/textSlice';
+import {
+	fetchTextFromESVAPI,
+	textInitialized,
+	textSettingsLoaded,
+} from '../store/textSlice';
 import {
 	getMostRecentText,
 	splitTitleIntoBookAndChapter,
 	getUserSettings,
 	DEFAULT_LOCAL_STORAGE_VERSION,
 } from '../utils/storageUtils';
-import { searchInitialized, setAudioUrl } from '../store/searchSlice';
+import {
+	searchInitialized,
+	setAudioUrl,
+	setBook,
+	setChapter,
+} from '../store/searchSlice';
 import {
 	getLocalStorage,
 	removeLocalStorage,
@@ -16,13 +25,15 @@ import {
 	DEFAULT_TEXTS,
 } from 'utils/storageUtils';
 import { AppDispatch } from 'store/store';
-import { Title } from 'pages/Memorize/bible';
+import { BibleBook, Chapter, Title } from 'pages/Memorize/bible';
+import { validateBookAndChapter } from 'utils/validation';
+import { batch } from 'react-redux';
 
 /**
  * Gets any of the user's preferences that are saved in local storage.
  * Moves those settings into Redux.
  */
-const initializeUserSettings = (dispatch: AppDispatch) => {
+const initializeUserSettings = () => (dispatch: AppDispatch) => {
 	//Loading textAudio playback rate
 	console.log(`Initializing user's settings.`);
 	const { showCondensed } = getUserSettings();
@@ -54,13 +65,38 @@ const updateStateWithInitializedValues = (
 };
 
 /**
- * Searches local storage for the most recently stored passage. 
+ * Searches local storage for the most recently stored passage.
  * If none is found, chooses Psalm 23.
  */
-export const initializeMostRecentPassage = (dispatch: AppDispatch) => {
+export const initializeMostRecentPassage = () => (dispatch: AppDispatch) => {
 	console.log('Searching storage for most recent book and chapter.');
 	const { title, body } = getMostRecentText();
 	console.log(`${title} is the most recent text accessed.`);
+
+	// check for any query parameters supplied
+	const queryParameters = new URL(window.location.href).searchParams;
+	const queryBook = queryParameters.get('book');
+	const queryChapter = queryParameters.get('chapter');
+	const error = validateBookAndChapter(queryBook, queryChapter);
+
+	if (queryBook && queryChapter) {
+		if (error) {
+			console.log('Query parameter book and/or chapter are not valid');
+		} else {
+			console.log('Fetching bible text using query parameters');
+			const validBook = queryBook as BibleBook;
+			const validChapter = queryChapter as Chapter;
+			batch(() => {
+				dispatch(setBook(validBook));
+				dispatch(setChapter(validChapter));
+			});
+			dispatch(fetchTextFromESVAPI(validBook, validChapter));
+			return;
+		}
+	}
+	console.log(
+		'No query parameters supplied or they were not valid. Using most recent text',
+	);
 	updateStateWithInitializedValues(title, body, dispatch);
 };
 
@@ -73,8 +109,10 @@ const initLocalStorage = () => {
 	try {
 		const returnedLocalStorageVersion = getLocalStorage('localStorageVersion');
 		if (returnedLocalStorageVersion !== localStorageVersion) {
-			console.log(`Local storage version ${returnedLocalStorageVersion} does not match ` + 
-			`app's storage version ${localStorageVersion}. Clearing and re-initializing local storage.`);
+			console.log(
+				`Local storage version ${returnedLocalStorageVersion} does not match ` +
+					`app's storage version ${localStorageVersion}. Clearing and re-initializing local storage.`,
+			);
 			window.localStorage.clear();
 			setLocalStorage('localStorageVersion', DEFAULT_LOCAL_STORAGE_VERSION);
 			setLocalStorage('clickedLine', DEFAULT_CLICKED_LINE);
@@ -93,7 +131,7 @@ const initLocalStorage = () => {
 		if (showCondensed === null || typeof showCondensed !== 'boolean') {
 			setLocalStorage('showCondensed', DEFAULT_SHOW_CONDENSED);
 		}
-		
+
 		const texts = getLocalStorage('texts') as any;
 		if (texts === null || (texts !== null && texts.includes('+'))) {
 			setLocalStorage('texts', DEFAULT_TEXTS);
@@ -103,8 +141,8 @@ const initLocalStorage = () => {
 		window.localStorage.clear();
 	}
 };
-export const initializeApp = (dispatch: AppDispatch) => {
+export const initializeApp = () => (dispatch: AppDispatch) => {
 	initLocalStorage();
-	initializeUserSettings(dispatch);
-	initializeMostRecentPassage(dispatch);
+	dispatch(initializeUserSettings());
+	dispatch(initializeMostRecentPassage());
 };

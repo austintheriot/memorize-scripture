@@ -40,7 +40,7 @@ function App() {
 
 	useEffect(() => {
 		serviceWorker.unregister();
-		initializeApp(dispatch);
+		dispatch(initializeApp());
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
