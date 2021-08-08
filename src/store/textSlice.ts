@@ -13,6 +13,8 @@ import { BibleBook, Chapter, Title } from 'pages/Memorize/bible';
 import { Analytics } from 'hooks/useFirebaseContext';
 import { setAudioUrl } from './searchSlice';
 
+export type CondensedState = 'plain' | 'condensed' | 'hidden';
+
 export interface TextState {
 	loading: boolean;
 	error: boolean;
@@ -21,7 +23,7 @@ export interface TextState {
 	body: string;
 	split: readonly string[];
 	condensed: readonly string[];
-	showCondensed: boolean;
+	condensedState: CondensedState;
 	clickedLine: number;
 	reviewInput: string;
 	condenseToolInput: string;
@@ -38,7 +40,7 @@ const initialState: TextState = {
 	body: Psalm23,
 	split: Psalm23Split,
 	condensed: Psalm23Condensed,
-	showCondensed: false,
+	condensedState: 'plain',
 	clickedLine: -1,
 	reviewInput: '',
 	condenseToolInput: '',
@@ -66,8 +68,16 @@ export const textSlice = createSlice({
 		userEnteredReviewInput: (draft, action: { payload: string }) => {
 			draft.reviewInput = action.payload;
 		},
-		textSettingsLoaded: (draft, action: { payload: boolean }) => {
-			draft.showCondensed = action.payload;
+		toggleCondensedTextView: (draft, action: { payload: CondensedState | undefined }) => {
+			if (action.payload !== undefined) {
+				draft.condensedState = action.payload;
+			} else if (draft.condensedState === 'plain') {
+				draft.condensedState = 'condensed';
+			} else if (draft.condensedState === 'condensed') {
+				draft.condensedState = 'hidden';
+			} else if (draft.condensedState === 'hidden') {
+				draft.condensedState = 'plain';
+			}
 		},
 		textInitialized: (
 			draft,
@@ -122,9 +132,6 @@ export const textSlice = createSlice({
 			draft.split = [''];
 			draft.condensed = [''];
 		},
-		viewChangeButtonClicked: (draft, action) => {
-			draft.showCondensed = action.payload;
-		},
 		splitTextClicked: (draft, action) => {
 			draft.clickedLine = action.payload;
 		},
@@ -149,14 +156,13 @@ export const textSlice = createSlice({
 
 export const {
 	userEnteredReviewInput,
-	textSettingsLoaded,
 	textInitialized,
 	textMostRecentPassageClicked,
 	textRetrievedFromLocalStorage,
 	textBeingFetchedFromAPI,
 	textFetchSucceeded,
 	textFetchFailed,
-	viewChangeButtonClicked,
+	toggleCondensedTextView,
 	splitTextClicked,
 	condenseToolInputChanged,
 	condensedTextCopiedSuccess,

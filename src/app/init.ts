@@ -1,7 +1,8 @@
 import {
+	CondensedState,
 	fetchTextFromESVAPI,
 	textInitialized,
-	textSettingsLoaded,
+	toggleCondensedTextView,
 } from '../store/textSlice';
 import {
 	getMostRecentText,
@@ -21,7 +22,7 @@ import {
 	setLocalStorage,
 	localStorageVersion,
 	DEFAULT_CLICKED_LINE,
-	DEFAULT_SHOW_CONDENSED,
+	DEFAULT_CONDENSED_STATE,
 	DEFAULT_TEXTS,
 } from 'utils/storageUtils';
 import { AppDispatch } from 'store/store';
@@ -36,8 +37,8 @@ import { batch } from 'react-redux';
 const initializeUserSettings = () => (dispatch: AppDispatch) => {
 	//Loading textAudio playback rate
 	console.log(`Initializing user's settings.`);
-	const { showCondensed } = getUserSettings();
-	dispatch(textSettingsLoaded(showCondensed));
+	const { condensedState } = getUserSettings();
+	if (condensedState) dispatch(toggleCondensedTextView(condensedState));
 };
 
 /**
@@ -77,7 +78,17 @@ export const initializeMostRecentPassage = () => (dispatch: AppDispatch) => {
 	const queryParameters = new URL(window.location.href).searchParams;
 	const queryBook = queryParameters.get('book');
 	const queryChapter = queryParameters.get('chapter');
+	const queryCondensedTextView = queryParameters.get('view');
 	const error = validateBookAndChapter(queryBook, queryChapter);
+
+	if (queryCondensedTextView) {
+		if (!['plain', 'condensed', 'hidden'].includes(queryCondensedTextView)) {
+			console.log('View query parameter is not valid, ignoring');
+		} else {
+			console.log('Setting condensed text view to view query parameter');
+			dispatch(toggleCondensedTextView(queryCondensedTextView as CondensedState));
+		}
+	}
 
 	if (queryBook && queryChapter) {
 		if (error) {
@@ -116,7 +127,7 @@ const initLocalStorage = () => {
 			window.localStorage.clear();
 			setLocalStorage('localStorageVersion', DEFAULT_LOCAL_STORAGE_VERSION);
 			setLocalStorage('clickedLine', DEFAULT_CLICKED_LINE);
-			setLocalStorage('showCondensed', DEFAULT_SHOW_CONDENSED);
+			setLocalStorage('condensedState', DEFAULT_CONDENSED_STATE);
 			setLocalStorage('texts', DEFAULT_TEXTS);
 			return;
 		}
@@ -127,9 +138,9 @@ const initLocalStorage = () => {
 		if (clickedLine === null || isNaN(Number(clickedLine)))
 			setLocalStorage('clickedLine', DEFAULT_CLICKED_LINE);
 
-		const showCondensed = getLocalStorage('showCondensed');
-		if (showCondensed === null || typeof showCondensed !== 'boolean') {
-			setLocalStorage('showCondensed', DEFAULT_SHOW_CONDENSED);
+		const condensedState = getLocalStorage('condensedState');
+		if (condensedState === null || typeof condensedState !== 'boolean') {
+			setLocalStorage('condensedState', DEFAULT_CONDENSED_STATE);
 		}
 
 		const texts = getLocalStorage('texts') as any;

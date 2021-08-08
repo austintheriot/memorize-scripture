@@ -10,11 +10,10 @@ import { TextLoading } from '../../components/TextLoading/TextLoading';
 import { Copyright } from '../../components/Copyright/Copyright';
 import { useAppSelector } from 'store/store';
 import { AudioControls } from 'components/AudioControls/AudioControls';
-import { useAudio } from 'hooks/useAudio';
 
 
 const Memorize = () => {
-	const { book, chapter, error, loading, showCondensed, body } = useAppSelector(s => s.text);
+	const { book, chapter, error, loading, condensedState, body } = useAppSelector(s => s.text);
 
 	let textComponent = null;
 	if (error) {
@@ -25,12 +24,18 @@ const Memorize = () => {
 		)
 	} else if (loading) {
 		textComponent = <TextLoading />;
-	} else if (showCondensed) {
+	} else if (condensedState === 'condensed') {
 		textComponent = <TextCondensed />;
-	} else {
+	} else if (condensedState === 'plain') {
 		textComponent = (
 			<p className={styles.fullText} data-testid='text-original'>
 				{body}
+			</p>
+		)
+	} else if (condensedState === 'hidden') {
+		textComponent = (
+			<p className={styles.fullText} data-testid='text-hidden'>
+				Text hidden
 			</p>
 		)
 	}

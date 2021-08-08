@@ -12,8 +12,8 @@ import { useFirebaseContext } from 'hooks/useFirebaseContext';
 import { conditionalStyles } from 'utils/conditionalStyles';
 import FocusRing from 'components/FocusRing/FocusRing';
 import { useAppDispatch, useAppSelector } from 'store/store';
-import { viewChangeButtonClicked } from 'store/textSlice';
-import { storeShowCondensed } from 'utils/storageUtils';
+import { toggleCondensedTextView } from 'store/textSlice';
+import { storeCondensedState } from 'utils/storageUtils';
 import { useAudio } from 'hooks/useAudio';
 
 export const AudioControls = () => {
@@ -39,7 +39,7 @@ export const AudioControls = () => {
 		usingRecordedAudio,
 	} = useAudio();
 
-	const { showCondensed } = useAppSelector((state) => state.text);
+	const { condensedState } = useAppSelector((state) => state.text);
 	const playButtonsDisabled = recordingState === 'recording' || recordingState === 'paused';
 	const showDeleteRecordingButton = recordingState === 'inactive' && usingRecordedAudio;
 
@@ -95,12 +95,10 @@ export const AudioControls = () => {
 
 	const handleViewChange = useCallback(() => {
 		analytics.logEvent('flip_view_button_clicked', {
-			showCondensed: showCondensed,
+			condensedState,
 		});
-		const targetShowCondensed = !showCondensed;
-		dispatch(viewChangeButtonClicked(targetShowCondensed));
-		storeShowCondensed(targetShowCondensed);
-	}, [analytics, dispatch, showCondensed]);
+		dispatch(toggleCondensedTextView());
+	}, [analytics, dispatch, condensedState]);
 
 	return (
 		<div className={styles.Controls}>

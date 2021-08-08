@@ -1,10 +1,11 @@
 import { BibleBook, Chapter, Title } from "pages/Memorize/bible";
 import { Psalm23 } from 'app/Psalm23';
+import { CondensedState } from "store/textSlice";
 
 export const localStorageVersion = '1.0.0' as const;
 export const DEFAULT_LOCAL_STORAGE_VERSION = localStorageVersion;
 export const DEFAULT_CLICKED_LINE = -1 as const;
-export const DEFAULT_SHOW_CONDENSED = false as const;
+export const DEFAULT_CONDENSED_STATE = 'plain' as const;
 export const DEFAULT_TEXTS = [{ title: 'Psalms 23' as Title, body: Psalm23 }];
 
 export type TextsObject = { title: Title; body: string };
@@ -15,7 +16,7 @@ export type TextsArray = TextsObject[];
  */
 interface LocalStorageDefaults {
 	clickedLine: typeof DEFAULT_CLICKED_LINE,
-	showCondensed: typeof DEFAULT_SHOW_CONDENSED,
+	condensedState: typeof DEFAULT_CONDENSED_STATE,
 	texts: typeof DEFAULT_TEXTS,
 	recent: undefined,
 	localStorageVersion: typeof DEFAULT_LOCAL_STORAGE_VERSION,
@@ -26,7 +27,7 @@ interface LocalStorageDefaults {
  */
 interface LocalStorageTypes {
 	clickedLine: number,
-	showCondensed: boolean,
+	condensedState: CondensedState,
 	texts: TextsArray,
 	recent: undefined,
 	localStorageVersion: string,
@@ -70,14 +71,14 @@ export const getLocalStorageValueAndLog: GetLocalStorageAndLog = (key, defaultVa
 	return value;
 }
 
-export const getShowCondensed = () => getLocalStorageValueAndLog('showCondensed', DEFAULT_SHOW_CONDENSED);
+export const getShowCondensed = () => getLocalStorageValueAndLog('condensedState', DEFAULT_CONDENSED_STATE);
 export const getTextArray = () => getLocalStorageValueAndLog('texts', DEFAULT_TEXTS);
 export const getMostRecentText = () => getTextArray()[0];
 export const getUserSettings = () => ({
-	showCondensed: getShowCondensed(),
+	condensedState: getShowCondensed(),
 });
 
-export const storeShowCondensed = (boolean: boolean) => setLocalStorage('showCondensed', boolean);
+export const storeCondensedState = (string: CondensedState) => setLocalStorage('condensedState', string);
 
 export const splitTitleIntoBookAndChapter = (
 	title: Title,
