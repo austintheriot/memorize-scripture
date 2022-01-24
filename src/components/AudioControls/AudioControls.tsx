@@ -13,7 +13,6 @@ import { conditionalStyles } from 'utils/conditionalStyles';
 import FocusRing from 'components/FocusRing/FocusRing';
 import { useAppDispatch, useAppSelector } from 'store/store';
 import { toggleCondensedTextView } from 'store/textSlice';
-import { storeCondensedState } from 'utils/storageUtils';
 import { useAudio } from 'hooks/useAudio';
 
 export const AudioControls = () => {

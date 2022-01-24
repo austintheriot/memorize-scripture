@@ -52,11 +52,6 @@ export const About = () => {
 							</ScrollLink>
 						</li>
 						<li className={styles.tableOfContentsLI}>
-							<ScrollLink to="app-installation" onClick={handleNavLinkClick}>
-								App Installation
-							</ScrollLink>
-						</li>
-						<li className={styles.tableOfContentsLI}>
 							<ScrollLink to="how-to-memorize" onClick={handleNavLinkClick}>
 								How to Memorize
 							</ScrollLink>
@@ -295,58 +290,6 @@ export const About = () => {
 					</p>
 				</section>
 
-				<section id="app-installation">
-					<h2>App Installation</h2>
-					<p>
-						By default, this app is available for offline use by visiting{' '}
-						<ExternalLink to="https://memorizescripture.org/">
-							https://memorizescripture.org/
-						</ExternalLink>{' '}
-						in your browser, even without an internet connection (as long as
-						you've visited the page once in the last year). Your last 5 most
-						recently accessed chapters are automatically saved and are available
-						for viewing anywhere and anytime.
-					</p>
-					<p>
-						For a more app-like experience on mobile devices and some desktop
-						devices, you can add this website to your home screen. This creates
-						an icon for the website, and when you open the webpage by tapping on
-						it, the app will open in standalone mode (no address bar or
-						navigation menu getting in the way), like a native app. See below
-						for instructions.
-					</p>
-					<p className={styles.miniHeading}>Android Users:</p>
-					<p>
-						Launch Chrome for Android and open{' '}
-						<ExternalLink to="https://memorizescripture.org/">
-							https://memorizescripture.org/
-						</ExternalLink>
-						. Tap the menu button and tap Add to Home Screen. You’ll be able to
-						enter a name for the shortcut and then Chrome will add it to your
-						home screen.
-					</p>
-					<p className={styles.miniHeading}>iPhone, iPad, &amp; iPod Users:</p>
-					<p>
-						Launch Safari and go to{' '}
-						<ExternalLink to="https://memorizescripture.org/">
-							https://memorizescripture.org/
-						</ExternalLink>
-						. Tap the Share button on the browser’s toolbar (the rectangle with
-						upward-pointing arrow). This can be found on the bar at the top of
-						the screen on an iPad, and on the bar at the bottom of the screen on
-						an iPhone or iPod Touch. Tap "Add to Home Screen". You'll be able to
-						name the shortcut, and then Safari will add the shortcut to your
-						home screen.
-					</p>
-					<p className={styles.miniHeading}>Desktop:</p>
-					<p>
-						When opened with Google Chrome, this app can be installed to the
-						desktop by clicking the "install" button at the top of the window to
-						the right of the address bar. If you don't see the word "install",
-						you might see a small plus sign instead.
-					</p>
-				</section>
-
 				<section id="how-to-memorize">
 					<h2>How to Memorize</h2>
 					<p>
@@ -544,7 +487,7 @@ export const About = () => {
 				</section>
 				<section className={styles.copyright}>
 					<p>Originally published October 22, 2020.</p>
-					<p>Last updated July 29, 2021.</p>
+					<p>Last updated January 24, 2022.</p>
 					<p>
 						{'Copyright '}&#169;
 						{` ${new Date().getFullYear()}, Austin Theriot.`}
