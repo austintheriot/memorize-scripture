@@ -39,7 +39,9 @@
 		"test:cy-run": "start-server-and-test start http://localhost:3000 \"cypress run\"",
 		"test": "npm-run-all -p test:tsc test:jest test:cy-run",
 		"eject": "react-scripts eject",
-		"prepare": "husky install"
+		"prepare": "husky install",
+		"deploy:staging": "npm run build && firebase deploy -P staging",
+		"deploy:prod": "npm run build && firebase deploy -P default"
 	},
 	"eslintConfig": {
 		"extends": "react-app"
