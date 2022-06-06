@@ -4,7 +4,7 @@ import styles from './Contact.module.scss';
 //Material UI
 import Input from 'components/Input/Input';
 
-import { emailAPIKey } from '../../app/config';
+import { emailAPIUrl } from '../../app/config';
 
 import { ErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary';
 import { Footer } from '../../components/Footer/Footer';
@@ -40,27 +40,23 @@ const Contact = () => {
 		setMessage('');
 	};
 
-	const sendSubmission = async () =>
-		(
-			await fetch(
-				'https://us-central1-austins-email-server.cloudfunctions.net/sendEmail/contactForm',
-				{
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify({
-						name: '',
-						email: email,
-						message: message,
-						_private: {
-							key: emailAPIKey,
-						},
-					}),
-				},
-			)
-		).json();
+	const WEBSITE_URL = 'memorizescripture.org';
 
+	const sendSubmission = async () =>
+	fetch(
+		emailAPIUrl,
+		{
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				email: email,
+				message: message,
+				website: WEBSITE_URL
+			}),
+		},
+	)
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -73,7 +69,7 @@ const Contact = () => {
 		try {
 			const data = await sendSubmission();
 			disableElements(false);
-			if (data.error) {
+			if (data.status !== 200) {
 				setUserMessage(
 					'Sorry, there was an error processing your message. Please try again later.',
 				);
