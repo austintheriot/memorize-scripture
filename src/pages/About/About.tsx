@@ -349,7 +349,7 @@ export const About = () => {
 							<aside className={styles.aside}>
 								While it is useful and spiritually beneficial to deeply study the passages
 								you memorize, don't get caught up on needing to understand "everything" about a
-								passage before you memorize it. As Christians, we spend all our whole lives growing
+								passage before you memorize it. As Christians, we spend all our whole life growing
 								to know and love God's Word more deeply, and that process doesn't <em>end</em> once you
 								memorize a verse or passage. In fact, it is really only the <em>beginning</em> of the
 								lifelong meditation you will continue do on the text—now with the words written on your heart.

@@ -1,4 +1,6 @@
 .About {
+	position: relative;
+
 	h1 {
 		width: 80%;
 		max-width: 600px;
@@ -84,13 +86,21 @@
 	max-width: 600px;
 	margin: 2rem auto;
 	line-height: 2rem;
-	background-color: var(--primary_40);
 	padding: 1rem;
-	border-radius: 5px;
+	border-top: 2px solid var(--primary_80);
 
 	blockquote {
-		border-left: 2px solid var(--primary_80);
 		background-color: var(--primary_20);
+		width: 100%;
+	}
+
+	// remove from document flow at high widths
+	@media (min-width: 1400px) {
+		position: absolute;
+		// keep aside just to the right of the main content
+		right: calc(((100vw - 800px) / 6) - 2rem);
+		width: calc(((100vw - 800px) / 2) - 2rem);
+		max-width: 400px;
 	}
 }
 
