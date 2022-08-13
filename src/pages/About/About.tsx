@@ -293,12 +293,21 @@ export const About = () => {
 				<section id="how-to-memorize">
 					<h2>How to Memorize</h2>
 					<p>
+						First, I want to mention that there are very few "rules" about memorizing.
+						People learn best in many different ways, and whatever is effective for you
+						and faithful to God is the "best" way to memorize. As you memorize
+						more and more, you'll find easier ways of doing things that work best for you.
+					</p>
+					<p>
+						That being said, here's <em>one</em> method that I have found useful.
+					</p>
+					<p>
 						If you've never tried to memorize an extended passage of scripture
 						before, or have only ever memorized a verse or two at a time, start
 						with a short Psalm that you like.
 					</p>
 					<p>
-						In this example, we'll practice by using Psalm 117, but feel free to
+						In this example, we'll practice by using Psalm 117 &#40;the shortest one&#41;, but feel free to
 						use whatever text you prefer:
 					</p>
 					<blockquote>
@@ -328,16 +337,32 @@ export const About = () => {
 					<div className={styles.olWrapper}>
 						<ol>
 							<li value={listItemCounter}>
-								Speak the entire (original) text out loud a few times, or listen
+								Speak the entire &#40;original&#41; text out loud a few times, or listen
 								to the audio version of the text a few times. Do this until you
-								feel like you have a strong sense of the overall meaning of the
+								feel like you have a sense of the overall meaning of the
 								passage as a whole.
 							</li>
 							<li value={++listItemCounter}>
 								Look up any unfamiliar words or the meaning of particular verses
-								that you don't understand. It's vital to understand what you
-								memorize and not just mindlessly cram it into your brain!
+								that you don't understand.
 							</li>
+							<aside className={styles.aside}>
+								While it is useful and spiritually beneficial to deeply study the passages
+								you memorize, don't get caught up on needing to understand "everything" about a
+								passage before you memorize it. As Christians, we spend all our whole lives growing
+								to know and love God's Word more deeply, and that process doesn't <em>end</em> once you
+								memorize a verse or passage. In fact, it is really only the <em>beginning</em> of the
+								lifelong meditation you will continue do on the text—now with the words written on your heart.
+
+								For an excellent article on the topic, see
+								{' '}
+								<a href="https://www.cc.lutherclassical.org/spring-2022/on-learning-by-heart/?utm_source=substack&utm_medium=email">
+									this article by Pastor Ryan Loeslie
+								</a>. He quotes the historian Heinrich von Treitschke,
+								<blockquote>
+									Also the church-hostile press acts very clever when it constantly rails against `dull memorization.` They believe wrongly. This worldly darkness of knowledge thoroughly forgets that even the mature man only partly understands religious truths. Only when he has first made a self-concerted effort to learn them himself can these religious truths be grasped firmly. Likewise, the sublime sayings of biblical wisdom survive in a receptive memory, even when they are not engaged. Then suddenly come temptations and tragedies of life, and they prove to be a comforting and edifying power.
+								</blockquote>
+							</aside>
 							<li value={++listItemCounter}>
 								Start with the first line. There are two primary methods:
 							</li>

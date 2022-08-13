@@ -78,6 +78,22 @@
 	}
 }
 
+.aside {
+	font-size: var(--body);
+	width: 90%;
+	max-width: 600px;
+	margin: 2rem auto;
+	line-height: 2rem;
+	background-color: var(--primary_40);
+	padding: 1rem;
+	border-radius: 5px;
+
+	blockquote {
+		border-left: 2px solid var(--primary_80);
+		background-color: var(--primary_20);
+	}
+}
+
 .miniHeading {
 	font-weight: 600;
 	margin-bottom: 1rem;
@@ -95,6 +111,7 @@
 	ul li {
 		padding: 12px 0;
 	}
+
 	a {
 		height: 48px;
 		text-decoration: none;
@@ -145,7 +162,8 @@
 
 .button {
 	margin: auto;
-	position: -webkit-sticky; /* Safari */
+	position: -webkit-sticky;
+	/* Safari */
 	position: sticky;
 	top: 20px;
 	border-radius: 3px;
