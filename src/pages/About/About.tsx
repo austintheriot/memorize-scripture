@@ -481,16 +481,7 @@ export const About = () => {
 						comments, suggestions, bug reports, or if you're just interested in
 						chatting, please don't hesitate to contact me via the{' '}
 						<InternalLink to="/contact">Contact</InternalLink> page on this
-						website, and I'll get back to you shortly. Additionally, I can be
-						reached via my{' '}
-						<ExternalLink to="https://austintheriot.com/contact">
-							website
-						</ExternalLink>
-						,{' '}
-						<ExternalLink to="https://www.linkedin.com/in/austinmtheriot/">
-							LinkedIn
-						</ExternalLink>
-						, or by{' '}
+						website, and I'll get back to you shortly. Additionally, I can be reached by{' '}
 						<ExternalLink to="mailto:austinmtheriot@gmail.com?subject=Scripture Memorization App">
 							emailing me directly
 						</ExternalLink>
@@ -512,7 +503,7 @@ export const About = () => {
 				</section>
 				<section className={styles.copyright}>
 					<p>Originally published October 22, 2020.</p>
-					<p>Last updated January 24, 2022.</p>
+					<p>Last updated August 13, 2022.</p>
 					<p>
 						{'Copyright '}&#169;
 						{` ${new Date().getFullYear()}, Austin Theriot.`}
