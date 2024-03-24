@@ -26,6 +26,7 @@
 		"react-scripts": "4.0.3",
 		"react-scroll": "^1.8.1",
 		"redux": "^4.0.5",
+		"sass": "^1.72.0",
 		"ts-toolbelt": "^9.6.0"
 	},
 	"scripts": {
@@ -65,7 +66,6 @@
 		"@types/redux": "^3.6.0",
 		"@types/redux-thunk": "^2.1.0",
 		"husky": "^7.0.0",
-		"node-sass": "^7.0.1",
 		"npm-run-all": "^4.1.5",
 		"redux-devtools": "^3.7.0",
 		"start-server-and-test": "^1.12.1",
