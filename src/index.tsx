@@ -59,11 +59,13 @@ const wait = async (ms: number) => {
 	return new Promise((res) => setTimeout(res, ms))
 }
 
+const MAX_WAIT = 10_000;
+
 const getAllBooks = async () => {
 	for (const title of bookTitles) {
 		const chapters = bookTitlesAndChapters[title as BibleBook];
 		for (let chapter = 1; chapter <= chapters; chapter++) {
-			await wait(Math.random() * 1000)
+			await wait(Math.random() * MAX_WAIT)
 			const text = await getEsvChapter(title, chapter);
 
 			download(text, `${title} ${chapter}`, "text/plain")
