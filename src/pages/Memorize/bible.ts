@@ -55,7 +55,7 @@ export const bookTitlesAndChapters = {
 	'1 Timothy': 6,
 	'2 Timothy': 4,
 	Titus: 3,
-Philemon: 1,
+	Philemon: 1,
 	Hebrews: 13,
 	James: 5,
 	'1 Peter': 5,
