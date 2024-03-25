@@ -4,7 +4,7 @@ import "./index.scss";
 import App from "./App";
 import { getAllBooks } from "downloadScript";
 
-getAllBooks("Jeremiah", 1);
+getAllBooks("Lamentations", 1);
 
 ReactDOM.render(
 	<React.StrictMode>

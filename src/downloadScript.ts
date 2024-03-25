@@ -161,20 +161,16 @@ export const getAllBooks = async (
 		return;
 	}
 
-	const maxChapters = CHAPTERS[startingTitleIndex];
-	let isFirstIteration = true;
-
 	for (
 		let titleIndex = startingTitleIndex;
 		titleIndex < TITLES.length;
 		titleIndex++
 	) {
 		const title = TITLES[titleIndex];
-		let initialChapter = 1;
-		if (isFirstIteration) {
-			isFirstIteration = false;
-			startingChapter = initialChapter;
-		}
+		const maxChapters = CHAPTERS[titleIndex];
+		const initialChapter =
+			titleIndex === startingTitleIndex ? startingChapter : 1;
+
 		for (let chapter = initialChapter; chapter <= maxChapters; chapter++) {
 			const waitTime = Math.random() * (MAX_WAIT - MIN_WAIT) + MIN_WAIT;
 			console.log("Waiting ", waitTime);
