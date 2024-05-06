@@ -7,7 +7,7 @@ import {
 	updateMessageClosed,
 	installedMessageClosed,
 } from '../../store/appSlice';
-import { useAppSelector } from 'store/store';
+import { useAppSelector } from "~/store/store";
 
 export const ServiceWorkerMessages = () => {
 	const dispatch = useDispatch();

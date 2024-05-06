@@ -1,22 +1,20 @@
-import React, { useCallback } from 'react';
-import styles from './AudioControls.module.scss';
-import flipIcon from 'icons/flip.svg';
-import beginningIcon from 'icons/beginning.svg';
-import rewindIcon from 'icons/rewind.svg';
-import pauseIcon from 'icons/pause.svg';
-import playIcon from 'icons/play.svg';
-import forwardIcon from 'icons/forward.svg';
-import loadingIcon from 'icons/loading.svg';
-import errorIcon from 'icons/error.svg';
-import { useFirebaseContext } from 'hooks/useFirebaseContext';
-import { conditionalStyles } from 'utils/conditionalStyles';
-import FocusRing from 'components/FocusRing/FocusRing';
-import { useAppDispatch, useAppSelector } from 'store/store';
-import { toggleCondensedTextView } from 'store/textSlice';
-import { useAudio } from 'hooks/useAudio';
+import React, { useCallback } from "react";
+import styles from "./AudioControls.module.scss";
+import flipIcon from "~/icons/flip.svg";
+import beginningIcon from "~/icons/beginning.svg";
+import rewindIcon from "~/icons/rewind.svg";
+import pauseIcon from "~/icons/pause.svg";
+import playIcon from "~/icons/play.svg";
+import forwardIcon from "~/icons/forward.svg";
+import loadingIcon from "~/icons/loading.svg";
+import errorIcon from "~/icons/error.svg";
+import { conditionalStyles } from "~/utils/conditionalStyles";
+import FocusRing from "~/components/FocusRing/FocusRing";
+import { useAppDispatch } from "~/store/store";
+import { toggleCondensedTextView } from "~/store/textSlice";
+import { useAudio } from "~/hooks/useAudio";
 
 export const AudioControls = () => {
-	const { analytics } = useFirebaseContext();
 	const dispatch = useAppDispatch();
 	const {
 		recordingState,
@@ -38,66 +36,58 @@ export const AudioControls = () => {
 		usingRecordedAudio,
 	} = useAudio();
 
-	const { condensedState } = useAppSelector((state) => state.text);
-	const playButtonsDisabled = recordingState === 'recording' || recordingState === 'paused';
-	const showDeleteRecordingButton = recordingState === 'inactive' && usingRecordedAudio;
+	const playButtonsDisabled =
+		recordingState === "recording" || recordingState === "paused";
+	const showDeleteRecordingButton =
+		recordingState === "inactive" && usingRecordedAudio;
 
 	const handleRecord = useCallback(() => {
-		analytics.logEvent('recording_button_clicked');
 		if (showDeleteRecordingButton) deleteRecording();
-		else if (recordingState === 'recording') stopRecording();
+		else if (recordingState === "recording") stopRecording();
 		else startRecording();
-	}, [analytics, deleteRecording, recordingState, showDeleteRecordingButton, startRecording, stopRecording])
+	}, [
+		deleteRecording,
+		recordingState,
+		showDeleteRecordingButton,
+		startRecording,
+		stopRecording,
+	]);
 
 	const handlePlay = useCallback(() => {
-		analytics.logEvent('play_button_clicked');
 		play();
-	}, [analytics, play]);
+	}, [play]);
 
 	const handlePause = useCallback(() => {
-		analytics.logEvent('pause_button_clicked');
 		pause();
-	}, [analytics, pause]);
+	}, [pause]);
 
 	const handleRewind = useCallback(() => {
-		analytics.logEvent('back_button_clicked');
 		rewind();
-	}, [analytics, rewind]);
+	}, [rewind]);
 
 	const handleForward = useCallback(() => {
-		analytics.logEvent('forward_button_clicked');
 		forward();
-	}, [analytics, forward]);
+	}, [forward]);
 
 	const handleBeginning = useCallback(() => {
-		analytics.logEvent('beginning_button_clicked');
 		beginning();
-	}, [analytics, beginning]);
+	}, [beginning]);
 
 	const handleAudioPositionChange = (
 		e: React.ChangeEvent<HTMLInputElement>,
 	) => {
 		const targetTime: number = Number(e.currentTarget.value);
 		setAudioPosition(targetTime);
-		analytics.logEvent('progress_bar_clicked', {
-			targetTime,
-		});
 	};
 
 	const handleSpeedChange = useCallback(() => {
 		const targetSpeed = Math.max((audioSpeed + 0.25) % 2.25, 0.5);
 		setAudioSpeed(targetSpeed);
-		analytics.logEvent('speed_button_clicked', {
-			targetSpeed,
-		});
-	}, [analytics, audioSpeed, setAudioSpeed]);
+	}, [audioSpeed, setAudioSpeed]);
 
 	const handleViewChange = useCallback(() => {
-		analytics.logEvent('flip_view_button_clicked', {
-			condensedState,
-		});
 		dispatch(toggleCondensedTextView());
-	}, [analytics, dispatch, condensedState]);
+	}, [dispatch]);
 
 	return (
 		<div className={styles.Controls}>
@@ -107,16 +97,16 @@ export const AudioControls = () => {
 					<button
 						className={conditionalStyles([
 							styles.recordingButton,
-							[styles.recording, recordingState === 'recording'],
+							[styles.recording, recordingState === "recording"],
 							[styles.deleteRecording, showDeleteRecordingButton],
 						])}
 						onClick={handleRecord}
 						aria-label={
 							showDeleteRecordingButton
-								? 'delete recording'
-								: recordingState === 'recording'
-									? 'stop recording'
-									: 'start recording'
+								? "delete recording"
+								: recordingState === "recording"
+									? "stop recording"
+									: "start recording"
 						}
 					>
 						<span />
@@ -167,7 +157,7 @@ export const AudioControls = () => {
 				>
 					<img
 						src={beginningIcon}
-						alt={'go to beginning'}
+						alt={"go to beginning"}
 						className={styles.icon}
 					/>
 					<FocusRing />
@@ -183,7 +173,7 @@ export const AudioControls = () => {
 				>
 					<img
 						src={rewindIcon}
-						alt={'back 5 seconds'}
+						alt={"back 5 seconds"}
 						className={styles.icon}
 					/>
 					<FocusRing />
@@ -199,7 +189,7 @@ export const AudioControls = () => {
 						className={styles.buttons}
 						disabled={true}
 					>
-						<img src={errorIcon} alt={'loading'} className={styles.icon} />
+						<img src={errorIcon} alt={"loading"} className={styles.icon} />
 						<FocusRing />
 					</button>
 				) : isReady ? (
@@ -213,7 +203,7 @@ export const AudioControls = () => {
 							onClick={handlePause}
 							disabled={playButtonsDisabled}
 						>
-							<img src={pauseIcon} alt={'pause'} className={styles.icon} />
+							<img src={pauseIcon} alt={"pause"} className={styles.icon} />
 							<FocusRing />
 						</button>
 					) : (
@@ -226,7 +216,7 @@ export const AudioControls = () => {
 							onClick={handlePlay}
 							disabled={playButtonsDisabled}
 						>
-							<img src={playIcon} alt={'play'} className={styles.icon} />
+							<img src={playIcon} alt={"play"} className={styles.icon} />
 							<FocusRing />
 						</button>
 					)
@@ -239,7 +229,7 @@ export const AudioControls = () => {
 						className={styles.buttons}
 						disabled={true}
 					>
-						<img src={loadingIcon} alt={'loading'} className={styles.loading} />
+						<img src={loadingIcon} alt={"loading"} className={styles.loading} />
 						<FocusRing />
 					</button>
 				)}
@@ -251,7 +241,7 @@ export const AudioControls = () => {
 					onClick={handleForward}
 					disabled={playButtonsDisabled}
 				>
-					<img src={forwardIcon} alt={'forward 5s'} className={styles.icon} />
+					<img src={forwardIcon} alt={"forward 5s"} className={styles.icon} />
 					<FocusRing />
 				</button>
 				<button
@@ -260,7 +250,7 @@ export const AudioControls = () => {
 					className={styles.buttons}
 					onClick={handleViewChange}
 				>
-					<img src={flipIcon} alt={'change view'} className={styles.icon} />
+					<img src={flipIcon} alt={"change view"} className={styles.icon} />
 					<FocusRing />
 				</button>
 			</div>

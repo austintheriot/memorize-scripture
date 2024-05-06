@@ -1,19 +1,20 @@
-import React, { useRef } from 'react';
-import styles from './Tools.module.scss';
+import React, { useRef } from "react";
+import styles from "./Tools.module.scss";
 
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 import {
 	condenseToolInputChanged,
 	condensedTextCopiedSuccess,
 	condensedTextCopiedFail,
-} from '../../store/textSlice';
-import { Footer } from '../../components/Footer/Footer';
+} from "../../store/textSlice";
+import { Footer } from "../../components/Footer/Footer";
 
-import * as clipboard from 'clipboard-polyfill/text';
-import { useAppSelector } from 'store/store';
+import * as clipboard from "clipboard-polyfill";
+import { useAppSelector } from "~/store/store";
 
-const Tools =  () => {
-	const { condenseToolOutput, copiedError, copied, condenseToolInput } = useAppSelector((state) => state.text);
+const Tools = () => {
+	const { condenseToolOutput, copiedError, copied, condenseToolInput } =
+		useAppSelector((state) => state.text);
 	const dispatch = useDispatch();
 	const textarea = useRef<HTMLTextAreaElement | null>(null);
 
@@ -22,14 +23,14 @@ const Tools =  () => {
 		const textareaValue = e.currentTarget.value;
 		dispatch(condenseToolInputChanged(textareaValue));
 		if (textarea) {
-			textarea!.current!.style.height = 'auto';
+			textarea!.current!.style.height = "auto";
 			textarea!.current!.style.height = `${textarea!.current!.scrollHeight}px`;
 		}
 	};
 
 	const copyToClipboard = async () => {
 		try {
-			await clipboard.writeText(condenseToolOutput.join('\n'))
+			await clipboard.writeText(condenseToolOutput.join("\n"));
 			dispatch(condensedTextCopiedSuccess());
 		} catch (err) {
 			console.log(err);
@@ -40,11 +41,11 @@ const Tools =  () => {
 	return (
 		<>
 			<h1 className={styles.h1}>Condense Texts:</h1>
-			<label htmlFor='input'>
+			<label htmlFor="input">
 				<h2 className={styles.label}>Input Text</h2>
 			</label>
 			<textarea
-				id='input'
+				id="input"
 				ref={textarea}
 				placeholder={`Enter full text here`}
 				value={condenseToolInput}
@@ -56,26 +57,27 @@ const Tools =  () => {
 			<div className={styles.condensedContainer}>
 				<div className={styles.copyButtonContainer}>
 					<button
-						disabled={condenseToolOutput[0] === '' ? true : false}
+						disabled={condenseToolOutput[0] === "" ? true : false}
 						onClick={copyToClipboard}
-						className={['button', styles.copyButton].join(' ')}>
+						className={["button", styles.copyButton].join(" ")}
+					>
 						{copiedError
 							? `Sorry, couldn't copy...`
 							: copied
-								? 'Copied!'
-								: 'Copy to Clipboard'}
+								? "Copied!"
+								: "Copy to Clipboard"}
 					</button>
 				</div>
 
-				{condenseToolOutput[0] === '' ? (
+				{condenseToolOutput[0] === "" ? (
 					<p className={styles.condensedPlaceholder}>
 						Your condensed text will appear here
 					</p>
 				) : (
-						<p className={styles.condensedText}>
-							{condenseToolOutput.join('\n')}
-						</p>
-					)}
+					<p className={styles.condensedText}>
+						{condenseToolOutput.join("\n")}
+					</p>
+				)}
 			</div>
 			<Footer />
 		</>

@@ -1,5 +1,5 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit';
-import { createAudioUrl } from 'utils/createAudioUrl';
+import { createAudioUrl } from "~/utils/createAudioUrl";
 import {
 	BibleBook,
 	bookTitlesAndChapters,

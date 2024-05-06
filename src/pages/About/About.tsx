@@ -1,36 +1,26 @@
-import React from 'react';
-import styles from './About.module.scss';
-import { animateScroll as scroll } from 'react-scroll';
-import { ErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary';
-import { ScrollLink } from '../../components/Links/ScrollLink';
-import { ExternalLink } from '../../components/Links/ExternalLink';
-import beginningIcon from 'icons/beginning.svg';
-import rewindIcon from 'icons/rewind.svg';
-import playIcon from 'icons/play.svg';
-import pauseIcon from 'icons/pause.svg';
-import forwardIcon from 'icons/forward.svg';
-import loadingIcon from 'icons/loading.svg';
-import errorIcon from 'icons/error.svg';
-import flipIcon from 'icons/flip.svg';
-import { Footer } from '../../components/Footer/Footer';
-import { useFirebaseContext } from 'hooks/useFirebaseContext';
-import FocusRing from 'components/FocusRing/FocusRing';
-import { InternalLink } from 'components/Links/InternalLink';
-import RecordingButton from 'images/record.png';
-import StopRecordingButton from 'images/stop-recording.png';
-import DeleteRecordingButton from 'images/delete-recording.png';
+import styles from "./About.module.scss";
+import { animateScroll as scroll } from "react-scroll";
+import { ErrorBoundary } from "../../components/ErrorBoundary/ErrorBoundary";
+import { ScrollLink } from "../../components/Links/ScrollLink";
+import { ExternalLink } from "../../components/Links/ExternalLink";
+import beginningIcon from "~/icons/beginning.svg";
+import rewindIcon from "~/icons/rewind.svg";
+import playIcon from "~/icons/play.svg";
+import pauseIcon from "~/icons/pause.svg";
+import forwardIcon from "~/icons/forward.svg";
+import loadingIcon from "~/icons/loading.svg";
+import errorIcon from "~/icons/error.svg";
+import flipIcon from "~/icons/flip.svg";
+import { Footer } from "../../components/Footer/Footer";
+import FocusRing from "~/components/FocusRing/FocusRing";
+import { InternalLink } from "~/components/Links/InternalLink";
+import RecordingButton from "images/record.png";
+import StopRecordingButton from "images/stop-recording.png";
+import DeleteRecordingButton from "images/delete-recording.png";
 
 export const About = () => {
-	const { analytics } = useFirebaseContext();
 	const scrollToTop = () => {
 		scroll.scrollToTop({ smooth: true, duration: 500 });
-		analytics.logEvent('back_to_top_button_pressed');
-	};
-
-	const handleNavLinkClick = (link: string) => {
-		analytics.logEvent('table_of_contents_link_clicked', {
-			link,
-		});
 	};
 
 	let listItemCounter = 1;
@@ -42,44 +32,31 @@ export const About = () => {
 				<nav className={styles.tableOfContents}>
 					<ul>
 						<li className={styles.tableOfContentsLI}>
-							<ScrollLink to="intro" onClick={handleNavLinkClick}>
-								Intro
-							</ScrollLink>
+							<ScrollLink to="intro">Intro</ScrollLink>
 						</li>
 						<li className={styles.tableOfContentsLI}>
-							<ScrollLink to="app-controls" onClick={handleNavLinkClick}>
-								App Controls
-							</ScrollLink>
+							<ScrollLink to="app-controls">App Controls</ScrollLink>
 						</li>
 						<li className={styles.tableOfContentsLI}>
-							<ScrollLink to="how-to-memorize" onClick={handleNavLinkClick}>
-								How to Memorize
-							</ScrollLink>
+							<ScrollLink to="how-to-memorize">How to Memorize</ScrollLink>
 						</li>
 						<li className={styles.tableOfContentsLI}>
-							<ScrollLink
-								to="how-this-technique-works"
-								onClick={handleNavLinkClick}
-							>
+							<ScrollLink to="how-this-technique-works">
 								How This Technique Works
 							</ScrollLink>
 						</li>
 						<li className={styles.tableOfContentsLI}>
-							<ScrollLink to="how-to-review" onClick={handleNavLinkClick}>
-								How To Review
-							</ScrollLink>
+							<ScrollLink to="how-to-review">How To Review</ScrollLink>
 						</li>
 						<li className={styles.tableOfContentsLI}>
-							<ScrollLink to="contact" onClick={handleNavLinkClick}>
-								Contact
-							</ScrollLink>
+							<ScrollLink to="contact">Contact</ScrollLink>
 						</li>
 					</ul>
 				</nav>
 
 				<button
 					onClick={scrollToTop}
-					className={['button', styles.button].join(' ')}
+					className={["button", styles.button].join(" ")}
 				>
 					Back to Top
 					<FocusRing />
@@ -107,15 +84,15 @@ export const About = () => {
 						filled with frustration and failure rather than success. For this
 						reason, many people give up when trying to memorize Bible verses or
 						stop after they've learned only a verse or two. But I don't think it
-						has to be this way. Most people have just never learned <em>how</em>{' '}
+						has to be this way. Most people have just never learned <em>how</em>{" "}
 						to learn.
 					</p>
 
 					<p>
-						I first stumbled on the idea of condensing a text to memorize it via{' '}
+						I first stumbled on the idea of condensing a text to memorize it via{" "}
 						<ExternalLink to="http://www.productivity501.com/how-to-memorize-verbatim-text/294/">
 							this article
-						</ExternalLink>{' '}
+						</ExternalLink>{" "}
 						by Mark Shead. After finding the article, I began implementing the
 						process in my own Bible memorization, and I have personally found
 						the process to be so much more quick and painless ever since then.
@@ -124,14 +101,14 @@ export const About = () => {
 						few other scripture memory softwares (
 						<ExternalLink to="https://www.memverse.com/">
 							memverse.com
-						</ExternalLink>{' '}
+						</ExternalLink>{" "}
 						for example), but I hope to offer a more mobile-friendly,
 						streamlined app here, one that is focused on extended memorization,
 						rather than collections of shorter verses.
 					</p>
 
 					<p>
-						This app has been created with the permission of the creators of the{' '}
+						This app has been created with the permission of the creators of the{" "}
 						<ExternalLink to="https://www.esv.org/">
 							English Standard Bible (ESV)
 						</ExternalLink>
@@ -142,12 +119,12 @@ export const About = () => {
 				<section id="app-controls">
 					<h2>App Controls</h2>
 					<p>
-						Here's quick rundown of the various buttons you can find on the{' '}
+						Here's quick rundown of the various buttons you can find on the{" "}
 						<InternalLink to="/">Memorize</InternalLink> page of the app.
 					</p>
 					<div className={styles.tipWrapper}>
 						<p>
-							Tip: You may click on any condensed line on the{' '}
+							Tip: You may click on any condensed line on the{" "}
 							<InternalLink to="/">Memorize</InternalLink> page of the app to
 							quickly reveal the full text.
 						</p>
@@ -155,115 +132,115 @@ export const About = () => {
 					<p>
 						<button
 							disabled={true}
-							className={['button', styles.appControls].join(' ')}
+							className={["button", styles.appControls].join(" ")}
 						>
 							<img
 								src={flipIcon}
-								alt={'example button: flip text view'}
+								alt={"example button: flip text view"}
 								className={styles.icon}
 							/>
-						</button>{' '}
+						</button>{" "}
 						Flip between condensed text and full text views.
 					</p>
 					<p>
 						<button
 							disabled={true}
-							className={['button', styles.appControls].join(' ')}
+							className={["button", styles.appControls].join(" ")}
 						>
 							<img
 								src={beginningIcon}
-								alt={'example button: go to beginning'}
+								alt={"example button: go to beginning"}
 								className={styles.icon}
 							/>
-						</button>{' '}
+						</button>{" "}
 						Skip to beginning in audio.
 					</p>
 					<p>
 						<button
 							disabled={true}
-							className={['button', styles.appControls].join(' ')}
+							className={["button", styles.appControls].join(" ")}
 						>
 							<img
 								src={rewindIcon}
-								alt={'example button: back 5 seconds'}
+								alt={"example button: back 5 seconds"}
 								className={styles.icon}
 							/>
-						</button>{' '}
+						</button>{" "}
 						Rewind audio 5 seconds.
 					</p>
 					<p>
 						<button
 							disabled={true}
-							className={['button', styles.appControls].join(' ')}
+							className={["button", styles.appControls].join(" ")}
 						>
 							<img
 								src={playIcon}
-								alt={'example button: play audio'}
+								alt={"example button: play audio"}
 								className={styles.icon}
 							/>
-						</button>{' '}
+						</button>{" "}
 						Play audio.
 					</p>
 					<p>
 						<button
 							disabled={true}
-							className={['button', styles.appControls].join(' ')}
+							className={["button", styles.appControls].join(" ")}
 						>
 							<img
 								src={pauseIcon}
-								alt={'example button: pause audio'}
+								alt={"example button: pause audio"}
 								className={styles.icon}
 							/>
-						</button>{' '}
+						</button>{" "}
 						Pause audio.
 					</p>
 					<p>
 						<button
 							disabled={true}
-							className={['button', styles.appControls].join(' ')}
+							className={["button", styles.appControls].join(" ")}
 						>
 							<img
 								src={loadingIcon}
-								alt={'example button: audio loading'}
+								alt={"example button: audio loading"}
 								className={styles.icon}
 							/>
-						</button>{' '}
+						</button>{" "}
 						Audio is loading
 					</p>
 					<p>
 						<button
 							disabled={true}
-							className={['button', styles.appControls].join(' ')}
+							className={["button", styles.appControls].join(" ")}
 						>
 							<img
 								src={errorIcon}
-								alt={'example button: audio error'}
+								alt={"example button: audio error"}
 								className={styles.icon}
 							/>
-						</button>{' '}
+						</button>{" "}
 						Error loading audio.
 					</p>
 					<p>
 						<button
 							disabled={true}
-							className={['button', styles.appControls].join(' ')}
+							className={["button", styles.appControls].join(" ")}
 						>
 							<img
 								src={forwardIcon}
-								alt={'example button: forward 5s'}
+								alt={"example button: forward 5s"}
 								className={styles.icon}
 							/>
-						</button>{' '}
+						</button>{" "}
 						Fast-forward audio 5 seconds.
 					</p>
 					<p>
-						You may record yourself by clicking the recording button{' '}
+						You may record yourself by clicking the recording button{" "}
 						<img
 							src={RecordingButton}
 							alt="recording button"
 							className={styles.RecordingButtonImages}
 						/>
-						. Stop recording by pressing the stop recording button{' '}
+						. Stop recording by pressing the stop recording button{" "}
 						<img
 							src={StopRecordingButton}
 							alt="stop recording button"
@@ -271,12 +248,12 @@ export const About = () => {
 						/>
 						. You can then listen to yourself and check your recitation accuracy
 						by using the same play/pause controls that you see above. Once
-						you're done, press the{' '}
+						you're done, press the{" "}
 						<img
 							src={DeleteRecordingButton}
 							alt="delete recording button"
 							className={styles.RecordingButtonImages}
-						/>{' '}
+						/>{" "}
 						button to delete your recording and return to listening to the Bible
 						audio.
 					</p>
@@ -293,13 +270,15 @@ export const About = () => {
 				<section id="how-to-memorize">
 					<h2>How to Memorize</h2>
 					<p>
-						First, I want to mention that there are very few "rules" about memorizing.
-						People learn best in many different ways, and whatever is effective for you
-						and faithful to God is the "best" way to memorize. As you memorize
-						more and more, you'll find easier ways of doing things that work best for you.
+						First, I want to mention that there are very few "rules" about
+						memorizing. People learn best in many different ways, and whatever
+						is effective for you and faithful to God is the "best" way to
+						memorize. As you memorize more and more, you'll find easier ways of
+						doing things that work best for you.
 					</p>
 					<p>
-						That being said, here's <em>one</em> method that I have found useful.
+						That being said, here's <em>one</em> method that I have found
+						useful.
 					</p>
 					<p>
 						If you've never tried to memorize an extended passage of scripture
@@ -307,8 +286,8 @@ export const About = () => {
 						with a short Psalm that you like.
 					</p>
 					<p>
-						In this example, we'll practice by using Psalm 117 &#40;the shortest one&#41;, but feel free to
-						use whatever text you prefer:
+						In this example, we'll practice by using Psalm 117 &#40;the shortest
+						one&#41;, but feel free to use whatever text you prefer:
 					</p>
 					<blockquote>
 						<p>Praise the LORD, all nations!</p>
@@ -337,30 +316,40 @@ export const About = () => {
 					<div className={styles.olWrapper}>
 						<ol>
 							<li value={listItemCounter}>
-								Speak the entire &#40;original&#41; text out loud a few times, or listen
-								to the audio version of the text a few times. Do this until you
-								feel like you have a sense of the overall meaning of the
-								passage as a whole.
+								Speak the entire &#40;original&#41; text out loud a few times,
+								or listen to the audio version of the text a few times. Do this
+								until you feel like you have a sense of the overall meaning of
+								the passage as a whole.
 							</li>
 							<li value={++listItemCounter}>
 								Look up any unfamiliar words or the meaning of particular verses
 								that you don't understand.
 							</li>
 							<aside className={styles.aside}>
-								While it is useful and spiritually beneficial to deeply study the passages
-								you memorize, don't get caught up on needing to understand "everything" about a
-								passage before you memorize it. As Christians, we spend all our whole life growing
-								to know and love God's Word more deeply, and that process doesn't <em>end</em> once you
-								memorize a verse or passage. In fact, it is really only the <em>beginning</em> of the
-								lifelong meditation you will continue do on the text—now with the words written on your heart.
-
-								For an excellent article on the topic, see
-								{' '}
+								While it is useful and spiritually beneficial to deeply study
+								the passages you memorize, don't get caught up on needing to
+								understand "everything" about a passage before you memorize it.
+								As Christians, we spend all our whole life growing to know and
+								love God's Word more deeply, and that process doesn't{" "}
+								<em>end</em> once you memorize a verse or passage. In fact, it
+								is really only the <em>beginning</em> of the lifelong meditation
+								you will continue do on the text—now with the words written on
+								your heart. For an excellent article on the topic, see{" "}
 								<a href="https://www.cc.lutherclassical.org/spring-2022/on-learning-by-heart/?utm_source=substack&utm_medium=email">
 									this article by Pastor Ryan Loeslie
-								</a>. He quotes the historian Heinrich von Treitschke,
+								</a>
+								. He quotes the historian Heinrich von Treitschke,
 								<blockquote>
-									Also the church-hostile press acts very clever when it constantly rails against `dull memorization.` They believe wrongly. This worldly darkness of knowledge thoroughly forgets that even the mature man only partly understands religious truths. Only when he has first made a self-concerted effort to learn them himself can these religious truths be grasped firmly. Likewise, the sublime sayings of biblical wisdom survive in a receptive memory, even when they are not engaged. Then suddenly come temptations and tragedies of life, and they prove to be a comforting and edifying power.
+									Also the church-hostile press acts very clever when it
+									constantly rails against `dull memorization.` They believe
+									wrongly. This worldly darkness of knowledge thoroughly forgets
+									that even the mature man only partly understands religious
+									truths. Only when he has first made a self-concerted effort to
+									learn them himself can these religious truths be grasped
+									firmly. Likewise, the sublime sayings of biblical wisdom
+									survive in a receptive memory, even when they are not engaged.
+									Then suddenly come temptations and tragedies of life, and they
+									prove to be a comforting and edifying power.
 								</blockquote>
 							</aside>
 							<li value={++listItemCounter}>
@@ -368,7 +357,7 @@ export const About = () => {
 							</li>
 							<li
 								style={{
-									listStyle: 'none',
+									listStyle: "none",
 								}}
 							>
 								<ul>
@@ -425,7 +414,7 @@ export const About = () => {
 					<h2>How This Technique Works</h2>
 					<p>
 						This process works well for most people because of a psychological
-						principle called{' '}
+						principle called{" "}
 						<ExternalLink to="https://en.wikipedia.org/wiki/Chunking_(psychology)">
 							"chunking"
 						</ExternalLink>
@@ -459,7 +448,7 @@ export const About = () => {
 					</p>
 					<p>
 						One of the most efficient ways that I have found to time my reviews
-						is by using a spaced repetition flash card system, such as{' '}
+						is by using a spaced repetition flash card system, such as{" "}
 						<ExternalLink to="https://apps.ankiweb.net/">Anki</ExternalLink> to
 						remind me when a passage is due for review. Although it's possible
 						to implement this type of system with pen-and-paper flashcards, Anki
@@ -479,19 +468,20 @@ export const About = () => {
 						I hope you find this app to be a blessing in your faith life. If you
 						are interested in contributing to this project, have questions,
 						comments, suggestions, bug reports, or if you're just interested in
-						chatting, please don't hesitate to contact me via the{' '}
+						chatting, please don't hesitate to contact me via the{" "}
 						<InternalLink to="/contact">Contact</InternalLink> page on this
-						website, and I'll get back to you shortly. Additionally, I can be reached by{' '}
+						website, and I'll get back to you shortly. Additionally, I can be
+						reached by{" "}
 						<ExternalLink to="mailto:austinmtheriot@gmail.com?subject=Scripture Memorization App">
 							emailing me directly
 						</ExternalLink>
 						.
 					</p>
 					<p>
-						Checkout out the{' '}
+						Checkout out the{" "}
 						<ExternalLink to="https://github.com/austintheriot/memorize-scripture">
 							GitHub repository
-						</ExternalLink>{' '}
+						</ExternalLink>{" "}
 						for this project.
 					</p>
 					<p>
@@ -505,7 +495,7 @@ export const About = () => {
 					<p>Originally published October 22, 2020.</p>
 					<p>Last updated August 13, 2022.</p>
 					<p>
-						{'Copyright '}&#169;
+						{"Copyright "}&#169;
 						{` ${new Date().getFullYear()}, Austin Theriot.`}
 					</p>
 					<p>All rights reserved.</p>

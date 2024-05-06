@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { createContext, ReactNode, } from 'react';
-import { ErrorBoundary } from 'components/ErrorBoundary/ErrorBoundary';
+import { ErrorBoundary } from "~/components/ErrorBoundary/ErrorBoundary";
 import useStateIfMounted from './useStateIfMounted';
 
 export type Theme = 'dark' | 'light';

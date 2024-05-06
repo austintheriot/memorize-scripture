@@ -8,8 +8,8 @@ import { MostRecent } from '../../components/MostRecent/MostRecent';
 import { TextCondensed } from './TextCondensed/TextCondensed';
 import { TextLoading } from '../../components/TextLoading/TextLoading';
 import { Copyright } from '../../components/Copyright/Copyright';
-import { useAppSelector } from 'store/store';
-import { AudioControls } from 'components/AudioControls/AudioControls';
+import { useAppSelector } from "~/store/store";
+import { AudioControls } from "~/components/AudioControls/AudioControls";
 
 
 const Memorize = () => {

@@ -4,8 +4,8 @@ import styles from './MenuButton.module.scss';
 //Menu State
 import { useDispatch } from 'react-redux';
 import { menuButtonClicked } from '../../store/appSlice';
-import { useAppSelector } from 'store/store';
-import FocusRing from 'components/FocusRing/FocusRing';
+import { useAppSelector } from "~/store/store";
+import FocusRing from "~/components/FocusRing/FocusRing";
 
 export const MenuButton = () => {
 	const dispatch = useDispatch();

@@ -1,42 +1,41 @@
-import React, { useRef } from 'react';
+import React, { useRef } from "react";
 
 //App State
-import { useDispatch } from 'react-redux';
-import { textMostRecentPassageClicked } from '../../store/textSlice';
+import { useDispatch } from "react-redux";
+import { textMostRecentPassageClicked } from "../../store/textSlice";
 
 //Styles
-import styles from './MostRecent.module.scss';
+import styles from "./MostRecent.module.scss";
 
 //Utilities
-import { addToTextArray, getTextArray, splitTitleIntoBookAndChapter, TextsObject } from '../../utils/storageUtils';
-import { useFirebaseContext } from 'hooks/useFirebaseContext';
-import FocusRing from 'components/FocusRing/FocusRing';
-import { setAudioUrl } from 'store/searchSlice';
+import {
+	addToTextArray,
+	getTextArray,
+	splitTitleIntoBookAndChapter,
+	TextsObject,
+} from "../../utils/storageUtils";
+import FocusRing from "~/components/FocusRing/FocusRing";
+import { setAudioUrl } from "~/store/searchSlice";
 
 export const MostRecent = () => {
-	const { analytics } = useFirebaseContext();
 	const dispatch = useDispatch();
 	const detailsRef = useRef<HTMLDetailsElement | null>(null);
 	const summaryRef = useRef<HTMLElement | null>(null);
 
 	const handleClickRecent = (
-		e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-		{ title, body }: TextsObject
+		_e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+		{ title, body }: TextsObject,
 	) => {
 		//Text State
 		dispatch(textMostRecentPassageClicked({ title, body }));
 		//Audio State
 		const { book, chapter } = splitTitleIntoBookAndChapter(title);
-		dispatch(setAudioUrl({book, chapter}));
-		
+		dispatch(setAudioUrl({ book, chapter }));
+
 		addToTextArray(title, body);
-		
+
 		summaryRef.current?.focus();
-		detailsRef.current?.removeAttribute('open');
-		analytics.logEvent('clicked_most_recent', {
-			title,
-			body,
-		});
+		detailsRef.current?.removeAttribute("open");
 	};
 
 	const mostRecent = getTextArray();
@@ -45,25 +44,27 @@ export const MostRecent = () => {
 		<details
 			className={styles.mostRecentContainer}
 			ref={detailsRef}
-			data-testid='most-recent-details'>
-			<summary data-testid='most-recent-summary' ref={summaryRef}>
+			data-testid="most-recent-details"
+		>
+			<summary data-testid="most-recent-summary" ref={summaryRef}>
 				Most Recent:
 				<FocusRing />
-				</summary>
+			</summary>
 			{mostRecent[0].title ? (
 				<ul className={styles.mostRecentList}>
-				{mostRecent.map((el) => (
-					<li key={el.title} className={styles.mostRecentListItem}>
-						<button
-							aria-label='recent passage'
-							className={['button', styles.listButton].join(' ')}
-							onClick={(e) => handleClickRecent(e, el)}>
-							{el.title}
-							<FocusRing />
-						</button>
-					</li>
-				))}
-			</ul>
+					{mostRecent.map((el) => (
+						<li key={el.title} className={styles.mostRecentListItem}>
+							<button
+								aria-label="recent passage"
+								className={["button", styles.listButton].join(" ")}
+								onClick={(e) => handleClickRecent(e, el)}
+							>
+								{el.title}
+								<FocusRing />
+							</button>
+						</li>
+					))}
+				</ul>
 			) : null}
 		</details>
 	);

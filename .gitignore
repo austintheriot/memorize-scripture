@@ -1,37 +1,48 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
 # dependencies
-/node_modules
-/.pnp
-.pnp.js
+node_modules
+dist
+dist-ssr
+*.local
 
 # testing
 /coverage
 
+
 # production
 /build
 
-# misc
+# editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
 .DS_Store
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-notes.txt
+# secrets
 config.ts
 
-#Cypress
-**/cypress/videos
-**/cypress/screenshots
-cypress.json
-
-#Firebase 
+# firebase 
 .firebase/
 *.log
 
-.vscode

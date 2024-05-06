@@ -1,24 +1,21 @@
-import React from 'react';
-import { useDispatch } from 'react-redux';
-import { splitTextClicked } from '../../../store/textSlice';
-import styles from './TextCondensed.module.scss';
-import { useAppSelector } from 'store/store';
-import { useFirebaseContext } from 'hooks/useFirebaseContext';
-import FocusRing from 'components/FocusRing/FocusRing';
-import { conditionalStyles } from 'utils/conditionalStyles';
+import React from "react";
+import { useDispatch } from "react-redux";
+import { splitTextClicked } from "../../../store/textSlice";
+import styles from "./TextCondensed.module.scss";
+import { useAppSelector } from "~/store/store";
+import FocusRing from "~/components/FocusRing/FocusRing";
+import { conditionalStyles } from "~/utils/conditionalStyles";
 
 export const TextCondensed = () => {
-	const { analytics } = useFirebaseContext();
 	const dispatch = useDispatch();
-	const { condensed, split, clickedLine } = useAppSelector((state) => state.text);
+	const { condensed, split, clickedLine } = useAppSelector(
+		(state) => state.text,
+	);
 
 	const handleSplitTextClick = (
-		e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-		i: number
+		_e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+		i: number,
 	) => {
-		analytics.logEvent('condensed_line_clicked', {
-			clickedLine: clickedLine === i ? -1 : clickedLine,
-		});
 		if (clickedLine === i) return dispatch(splitTextClicked(-1));
 		dispatch(splitTextClicked(i));
 	};
@@ -28,7 +25,7 @@ export const TextCondensed = () => {
 			{condensed.map((line, i) => {
 				return (
 					<button
-						data-testid='text-condensed'
+						data-testid="text-condensed"
 						key={line + i.toString()}
 						className={conditionalStyles([
 							styles.TextButton,
@@ -37,7 +34,8 @@ export const TextCondensed = () => {
 						])}
 						onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
 							handleSplitTextClick(e, i)
-						}>
+						}
+					>
 						{clickedLine === i ? split[i] : condensed[i]}
 						<FocusRing />
 					</button>

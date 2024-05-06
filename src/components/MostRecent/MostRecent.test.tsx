@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from 'utils/testUtils';
+import { render, screen } from "~/utils/testUtils";
 import { MostRecent } from './MostRecent';
 
 describe('<MostRecent/>', () => {

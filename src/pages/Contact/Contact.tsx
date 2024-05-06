@@ -2,15 +2,15 @@ import React, { useState, ChangeEvent } from 'react';
 import styles from './Contact.module.scss';
 
 //Material UI
-import Input from 'components/Input/Input';
+import Input from "~/components/Input/Input";
 
 import { emailAPIUrl } from '../../app/config';
 
 import { ErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary';
 import { Footer } from '../../components/Footer/Footer';
-import { validateEmail } from 'utils/validation';
-import FocusRing from 'components/FocusRing/FocusRing';
-import Textarea from 'components/Textarea/Textarea';
+import { validateEmail } from "~/utils/validation";
+import FocusRing from "~/components/FocusRing/FocusRing";
+import Textarea from "~/components/Textarea/Textarea";
 
 const Contact = () => {
 	const [email, setEmail] = useState('');

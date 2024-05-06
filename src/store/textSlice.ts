@@ -1,19 +1,18 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { Psalm23, Psalm23Split, Psalm23Condensed } from '../app/Psalm23';
-import { breakFullTextIntoLines, condenseText } from '../app/condense';
+import { createSlice } from "@reduxjs/toolkit";
+import { Psalm23, Psalm23Split, Psalm23Condensed } from "../app/Psalm23";
+import { breakFullTextIntoLines, condenseText } from "../app/condense";
 import {
 	splitTitleIntoBookAndChapter,
 	addToTextArray,
-} from '../utils/storageUtils';
+} from "../utils/storageUtils";
 
-import axios from 'axios';
-import { ESVApiKey } from '../app/config';
-import { AppDispatch } from './store';
-import { BibleBook, Chapter, Title } from 'pages/Memorize/bible';
-import { Analytics } from 'hooks/useFirebaseContext';
-import { setAudioUrl } from './searchSlice';
+import axios from "axios";
+import { ESVApiKey } from "../app/config";
+import { AppDispatch } from "./store";
+import { BibleBook, Chapter, Title } from "~/pages/Memorize/bible";
+import { setAudioUrl } from "./searchSlice";
 
-export type CondensedState = 'plain' | 'condensed' | 'hidden';
+export type CondensedState = "plain" | "condensed" | "hidden";
 
 export interface TextState {
 	loading: boolean;
@@ -35,16 +34,16 @@ export interface TextState {
 const initialState: TextState = {
 	loading: false,
 	error: false,
-	book: 'Psalms',
-	chapter: '23',
+	book: "Psalms",
+	chapter: "23",
 	body: Psalm23,
 	split: Psalm23Split,
 	condensed: Psalm23Condensed,
-	condensedState: 'plain',
+	condensedState: "plain",
 	clickedLine: -1,
-	reviewInput: '',
-	condenseToolInput: '',
-	condenseToolOutput: [''],
+	reviewInput: "",
+	condenseToolInput: "",
+	condenseToolOutput: [""],
 	copied: false,
 	copiedError: false,
 };
@@ -62,21 +61,24 @@ const updateTextState = (
 };
 
 export const textSlice = createSlice({
-	name: 'text',
+	name: "text",
 	initialState,
 	reducers: {
 		userEnteredReviewInput: (draft, action: { payload: string }) => {
 			draft.reviewInput = action.payload;
 		},
-		toggleCondensedTextView: (draft, action: { payload: CondensedState | undefined }) => {
+		toggleCondensedTextView: (
+			draft,
+			action: { payload: CondensedState | undefined },
+		) => {
 			if (action.payload !== undefined) {
 				draft.condensedState = action.payload;
-			} else if (draft.condensedState === 'plain') {
-				draft.condensedState = 'condensed';
-			} else if (draft.condensedState === 'condensed') {
-				draft.condensedState = 'hidden';
-			} else if (draft.condensedState === 'hidden') {
-				draft.condensedState = 'plain';
+			} else if (draft.condensedState === "plain") {
+				draft.condensedState = "condensed";
+			} else if (draft.condensedState === "condensed") {
+				draft.condensedState = "hidden";
+			} else if (draft.condensedState === "hidden") {
+				draft.condensedState = "plain";
 			}
 		},
 		textInitialized: (
@@ -128,9 +130,9 @@ export const textSlice = createSlice({
 		textFetchFailed: (draft) => {
 			draft.loading = false;
 			draft.error = true;
-			draft.body = '';
-			draft.split = [''];
-			draft.condensed = [''];
+			draft.body = "";
+			draft.split = [""];
+			draft.condensed = [""];
 		},
 		splitTextClicked: (draft, action) => {
 			draft.clickedLine = action.payload;
@@ -170,33 +172,25 @@ export const {
 } = textSlice.actions;
 
 export const fetchTextFromESVAPI =
-	(book: BibleBook, chapter: Chapter, analytics?: Analytics) =>
-	async (dispatch: AppDispatch) => {
+	(book: BibleBook, chapter: Chapter) => async (dispatch: AppDispatch) => {
 		console.log(dispatch(textBeingFetchedFromAPI()));
 
 		const title = `${book} ${chapter}` as Title;
 		console.log(`Fetching draft body file of ${title} from ESV API`);
-		if (analytics) {
-			analytics.logEvent('fetched_text_from_ESV_API', {
-				book,
-				chapter,
-				title,
-			});
-		}
 
 		const textURL =
-			'https://api.esv.org/v3/passage/text/?' +
+			"https://api.esv.org/v3/passage/text/?" +
 			`q=${title}` +
-			'&include-passage-references=false' +
-			'&include-verse-numbers=false' +
-			'&include-first-verse-numbers=false' +
-			'&include-footnotes=false' +
-			'&include-footnote-body=false' +
-			'&include-headings=false' +
-			'&include-selahs=false' +
-			'&indent-paragraphs=10' +
-			'&indent-poetry-lines=5' +
-			'&include-short-copyright=false';
+			"&include-passage-references=false" +
+			"&include-verse-numbers=false" +
+			"&include-first-verse-numbers=false" +
+			"&include-footnotes=false" +
+			"&include-footnote-body=false" +
+			"&include-headings=false" +
+			"&include-selahs=false" +
+			"&indent-paragraphs=10" +
+			"&indent-poetry-lines=5" +
+			"&include-short-copyright=false";
 
 		try {
 			const response = await axios.get(textURL, {

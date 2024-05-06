@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import store from '../store/store';
 import { MemoryRouter } from 'react-router-dom';
-import { FirebaseProvider } from 'hooks/useFirebaseContext';
+import { FirebaseProvider } from "~/hooks/useFirebaseContext";
 
 const AllTheProviders = ({ children }: any) => {
 	return (

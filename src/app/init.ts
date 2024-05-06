@@ -17,17 +17,17 @@ import {
 	setChapter,
 } from '../store/searchSlice';
 import {
-	getLocalStorage,
-	removeLocalStorage,
-	setLocalStorage,
-	localStorageVersion,
-	DEFAULT_CLICKED_LINE,
-	DEFAULT_CONDENSED_STATE,
-	DEFAULT_TEXTS,
-} from 'utils/storageUtils';
-import { AppDispatch } from 'store/store';
-import { BibleBook, Chapter, Title } from 'pages/Memorize/bible';
-import { validateBookAndChapter } from 'utils/validation';
+  getLocalStorage,
+  removeLocalStorage,
+  setLocalStorage,
+  localStorageVersion,
+  DEFAULT_CLICKED_LINE,
+  DEFAULT_CONDENSED_STATE,
+  DEFAULT_TEXTS,
+} from "~/utils/storageUtils";
+import { AppDispatch } from "~/store/store";
+import { BibleBook, Chapter, Title } from "~/pages/Memorize/bible";
+import { validateBookAndChapter } from "~/utils/validation";
 import { batch } from 'react-redux';
 
 /**

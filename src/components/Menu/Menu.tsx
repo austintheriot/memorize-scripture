@@ -4,10 +4,10 @@ import chiRho from '../../images/chirho-light.svg';
 import { useDispatch } from 'react-redux';
 import { navLinkClicked, outsideOfMenuClicked } from '../../store/appSlice';
 import { ExternalLink } from '../Links/ExternalLink';
-import { useAppSelector } from 'store/store';
-import useIsKeyboardUser from 'hooks/useIsKeyboardUser';
-import { InternalLink } from 'components/Links/InternalLink';
-import useDetectOutsideClick from 'hooks/useDetectOutsideClick';
+import { useAppSelector } from "~/store/store";
+import useIsKeyboardUser from "~/hooks/useIsKeyboardUser";
+import { InternalLink } from "~/components/Links/InternalLink";
+import useDetectOutsideClick from "~/hooks/useDetectOutsideClick";
 
 export const Menu = () => {
 	const dispatch = useDispatch();

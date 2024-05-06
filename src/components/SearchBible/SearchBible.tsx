@@ -1,14 +1,18 @@
-import React, { ChangeEvent, FormEvent, useCallback } from 'react';
-import styles from './SearchBible.module.scss';
-import { BibleBook, bookTitles, Chapter, Title } from '../../pages/Memorize/bible';
-import { getTextBody, addToTextArray } from '../../utils/storageUtils';
+import React, { ChangeEvent, FormEvent, useCallback } from "react";
+import styles from "./SearchBible.module.scss";
+import {
+	BibleBook,
+	bookTitles,
+	Chapter,
+	Title,
+} from "../../pages/Memorize/bible";
+import { getTextBody, addToTextArray } from "../../utils/storageUtils";
 import {
 	textRetrievedFromLocalStorage,
 	fetchTextFromESVAPI,
-} from '../../store/textSlice';
-import searchIcon from '../../icons/search.svg';
-import { useFirebaseContext } from 'hooks/useFirebaseContext';
-import { useAppDispatch, useAppSelector } from 'store/store';
+} from "../../store/textSlice";
+import searchIcon from "../../icons/search.svg";
+import { useAppDispatch, useAppSelector } from "~/store/store";
 import {
 	bookSelector,
 	chaptersArraySelector,
@@ -16,28 +20,27 @@ import {
 	setBook,
 	setChapter,
 	setAudioUrl,
-} from 'store/searchSlice';
-import useStateIfMounted from 'hooks/useStateIfMounted';
-import { validateBookAndChapter } from 'utils/validation';
-import Input from 'components/Input/Input';
-import FocusRing from 'components/FocusRing/FocusRing';
+} from "~/store/searchSlice";
+import useStateIfMounted from "~/hooks/useStateIfMounted";
+import { validateBookAndChapter } from "~/utils/validation";
+import Input from "~/components/Input/Input";
+import FocusRing from "~/components/FocusRing/FocusRing";
 
 export const SearchBible = () => {
 	const dispatch = useAppDispatch();
-	const { analytics } = useFirebaseContext();
 	const book = useAppSelector(bookSelector);
 	const chapter = useAppSelector(chapterSelector);
 	const chaptersArray = useAppSelector(chaptersArraySelector);
-	const [message, setMessage] = useStateIfMounted('');
+	const [message, setMessage] = useStateIfMounted("");
 
-	const clearError = () => setMessage('');
+	const clearError = () => setMessage("");
 
 	const handleSubmit = useCallback(
 		(e: FormEvent<HTMLFormElement | HTMLButtonElement>) => {
 			e.preventDefault();
 
 			if (validateBookAndChapter(book, chapter)) {
-				setMessage('Please provide a valid book and chapter.');
+				setMessage("Please provide a valid book and chapter.");
 				return;
 			}
 
@@ -48,7 +51,7 @@ export const SearchBible = () => {
 			const title = `${validBook} ${validChapter}` as Title;
 			console.log(`Checking local storage for ${title}`);
 			//try to retrieve text body from local storage
-			let body = getTextBody(title);
+			const body = getTextBody(title);
 			if (body) {
 				console.log(`Retrieved body of ${title} from local storage`);
 				dispatch(
@@ -60,19 +63,14 @@ export const SearchBible = () => {
 				);
 				dispatch(setAudioUrl({ book: validBook, chapter: validChapter }));
 				addToTextArray(title, body);
-				analytics.logEvent('fetched_text_from_local_storage', {
-					searchBook: validBook,
-					searchChapter: validChapter,
-					title: `${book} ${validChapter}`,
-				});
 			} else {
 				//If it does not exist in local storage, make an API call, and store the returned text
 				console.log(`${title} not found in local storage`);
-				console.log('Making a call to the ESV API');
-				dispatch(fetchTextFromESVAPI(validBook, validChapter, analytics));
+				console.log("Making a call to the ESV API");
+				dispatch(fetchTextFromESVAPI(validBook, validChapter));
 			}
 		},
-		[analytics, book, chapter, setMessage, dispatch],
+		[book, chapter, setMessage, dispatch],
 	);
 
 	return (
@@ -118,13 +116,13 @@ export const SearchBible = () => {
 			<button
 				className={styles.searchButton}
 				onClick={handleSubmit}
-				aria-label={'Search'}
+				aria-label={"Search"}
 				data-testid="search"
 			>
 				<img src={searchIcon} alt="search" className={styles.searchIcon} />
 				<FocusRing />
 			</button>
-		{!!message &&	<p className={styles.message}>{message}</p>}
+			{!!message && <p className={styles.message}>{message}</p>}
 		</form>
 	);
 };

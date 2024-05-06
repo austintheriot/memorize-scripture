@@ -1,28 +1,23 @@
-import React, {
-	MutableRefObject,
-	useCallback,
-	useContext,
-	useEffect,
-} from 'react';
-import { createContext, ReactNode, useRef, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import usePrevious from './usePrevious';
-import useStateIfMounted from './useStateIfMounted';
-import psalm23 from 'audio/Psalm23.mp3';
-import { useAppSelector } from 'store/store';
-import { ErrorBoundary } from 'components/ErrorBoundary/ErrorBoundary';
+import { MutableRefObject, useCallback, useContext, useEffect } from "react";
+import { createContext, ReactNode, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
+import usePrevious from "./usePrevious";
+import useStateIfMounted from "./useStateIfMounted";
+import psalm23 from "~/audio/Psalm23.mp3";
+import { useAppSelector } from "~/store/store";
+import { ErrorBoundary } from "~/components/ErrorBoundary/ErrorBoundary";
 
 const ERROR_UNSUPPORTED =
-	'Your browser does not support recording audio. ' +
-	'Try using the latest version of Chrome on a desktop computer.';
+	"Your browser does not support recording audio. " +
+	"Try using the latest version of Chrome on a desktop computer.";
 
-export type RecordingStates = MediaRecorder['state'];
+export type RecordingStates = MediaRecorder["state"];
 
-export type BrowserSupport = 'supported' | 'notSupported' | 'unknown';
+export type BrowserSupport = "supported" | "notSupported" | "unknown";
 
 interface AudioContextType {
 	url: string;
-	mimeType: MediaRecorderOptions['mimeType'] | undefined;
+	mimeType: MediaRecorderOptions["mimeType"] | undefined;
 	audioRef: MutableRefObject<HTMLAudioElement>;
 	recordingState: RecordingStates;
 	supported: BrowserSupport;
@@ -47,28 +42,28 @@ interface AudioContextType {
 
 // audio context value when no provider given
 export const AudioContext = createContext<AudioContextType>({
-	url: '',
-	mimeType: 'audio/mpeg',
+	url: "",
+	mimeType: "audio/mpeg",
 	audioRef: { current: new Audio(psalm23) },
-	recordingState: 'inactive',
-	supported: 'unknown',
+	recordingState: "inactive",
+	supported: "unknown",
 	hasError: false,
 	isReady: false,
 	isPlaying: false,
 	position: 0,
 	speed: 1,
 	usingRecordedAudio: false,
-	startRecording: () => {},
-	stopRecording: () => {},
-	deleteRecording: () => {},
-	togglePlayPause: () => {},
-	play: () => {},
-	pause: () => {},
-	rewind: () => {},
-	forward: () => {},
-	beginning: () => {},
-	setAudioPosition: () => {},
-	setAudioSpeed: () => {},
+	startRecording: () => { },
+	stopRecording: () => { },
+	deleteRecording: () => { },
+	togglePlayPause: () => { },
+	play: () => { },
+	pause: () => { },
+	rewind: () => { },
+	forward: () => { },
+	beginning: () => { },
+	setAudioPosition: () => { },
+	setAudioSpeed: () => { },
 });
 
 export const AudioProvider = ({ children }: { children: ReactNode }) => {
@@ -78,10 +73,10 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 	const mediaRecorder = useRef<MediaRecorder | undefined>();
 	const chunks = useRef<Blob[]>([]);
 	const stream = useRef<MediaStream | undefined>();
-	const [supported, setIsSupported] = useState<BrowserSupport>('unknown');
-	const [url, setUrl] = useState('');
+	const [supported, setIsSupported] = useState<BrowserSupport>("unknown");
+	const [url, setUrl] = useState("");
 	const [recordingState, setRecordingState] =
-		useState<RecordingState>('inactive');
+		useState<RecordingState>("inactive");
 	const [hasError, setHasError] = useStateIfMounted(false);
 	const [isReady, setIsReady] = useStateIfMounted(false);
 	const [isPlaying, setIsPlaying] = useStateIfMounted(false);
@@ -89,7 +84,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 	const [position, setPosition] = useStateIfMounted(0);
 	const [usingRecordedAudio, setUsingRecordedAudio] = useStateIfMounted(false);
 	const [mimeType, setMimeType] = useStateIfMounted<
-		MediaRecorderOptions['mimeType'] | undefined
+		MediaRecorderOptions["mimeType"] | undefined
 	>(undefined);
 	const audioRef = useRef(new Audio(psalm23));
 	const audio = audioRef.current;
@@ -102,28 +97,28 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 		try {
 			if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
 				alert(ERROR_UNSUPPORTED);
-				setIsSupported('notSupported');
+				setIsSupported("notSupported");
 			} else {
 				stream.current = await navigator.mediaDevices.getUserMedia({
 					audio: true,
 				});
-				setIsSupported('supported');
+				setIsSupported("supported");
 			}
 		} catch (error) {
 			console.log(error);
-			setIsSupported('notSupported');
+			setIsSupported("notSupported");
 			alert(ERROR_UNSUPPORTED);
 		}
 	};
 
 	const startRecording = async () => {
-		if (supported === 'notSupported') return alert(ERROR_UNSUPPORTED);
-		if (mediaRecorder.current?.state === 'recording') return;
+		if (supported === "notSupported") return alert(ERROR_UNSUPPORTED);
+		if (mediaRecorder.current?.state === "recording") return;
 
 		// set up audio stream (request microphone access)
 		if (!stream.current || !mediaRecorder.current) await initializeStream();
 		if (!stream.current) {
-			return alert('Could not get local stream from mic/camera');
+			return alert("Could not get local stream from mic/camera");
 		}
 
 		audio.pause();
@@ -134,63 +129,66 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 		chunks.current = [];
 
 		/* set up media recorder from stream */
-		console.log('Starting recording');
+		console.log("Starting recording");
 
 		/* Chrome does NOT want a mimeType specified -- it chooses a mimeType by default.
-		However, Safari WANTS a mimeType specified: typically "audio/mp4" */
+								However, Safari WANTS a mimeType specified: typically "audio/mp4" */
 		let options;
-		if (typeof MediaRecorder.isTypeSupported == 'function') {
-			if (MediaRecorder.isTypeSupported('audio/mp3')) {
-				options = { mimeType: 'audio/mp3' };
-			} else if (MediaRecorder.isTypeSupported('audio/mp4')) {
-				options = { mimeType: 'audio/mp4' };
-			} else if (MediaRecorder.isTypeSupported('audio/ogg')) {
-				options = { mimeType: 'audio/ogg' };
+		if (typeof MediaRecorder.isTypeSupported == "function") {
+			if (MediaRecorder.isTypeSupported("audio/mp3")) {
+				options = { mimeType: "audio/mp3" };
+			} else if (MediaRecorder.isTypeSupported("audio/mp4")) {
+				options = { mimeType: "audio/mp4" };
+			} else if (MediaRecorder.isTypeSupported("audio/ogg")) {
+				options = { mimeType: "audio/ogg" };
 			} else {
 				options = undefined;
 			}
-			console.log('MediaRecorder mimeType:', options?.mimeType || 'browser default');
+			console.log(
+				"MediaRecorder mimeType:",
+				options?.mimeType || "browser default",
+			);
 			setMimeType(options?.mimeType);
 			mediaRecorder.current = new MediaRecorder(stream.current, options);
 		} else {
 			console.log(
-				'isTypeSupported is not supported, using default mimeType for browser',
+				"isTypeSupported is not supported, using default mimeType for browser",
 			);
 			mediaRecorder.current = new MediaRecorder(stream.current);
 		}
 
 		mediaRecorder.current.ondataavailable = (e) => {
 			if (e.data.size > 0) {
-				console.log('Pushing chunks: ', e.data.size);
+				console.log("Pushing chunks: ", e.data.size);
 				chunks.current.push(e.data);
 			}
 		};
 
 		mediaRecorder.current.onerror = (e) => {
-			console.log('mediaRecorder.onerror: ' + e);
+			console.log("mediaRecorder.onerror: " + e);
 		};
 
-		mediaRecorder.current.onstart = function () {
-			setRecordingState(mediaRecorder.current?.state || 'inactive');
+		mediaRecorder.current.onstart = function() {
+			setRecordingState(mediaRecorder.current?.state || "inactive");
 		};
 
-		mediaRecorder.current.onstop = function () {
-			setRecordingState(mediaRecorder.current?.state || 'inactive');
+		mediaRecorder.current.onstop = function() {
+			setRecordingState(mediaRecorder.current?.state || "inactive");
 			const recording = new Blob(chunks.current, {
 				type: mediaRecorder.current?.mimeType,
 			});
-			console.log('Recording Blob created from chunks: ', recording);
+			console.log("Recording Blob created from chunks: ", recording);
 			const url = URL.createObjectURL(recording);
-			console.log('Setting new url: ', url);
+			console.log("Setting new url: ", url);
 			setUrl(url);
 		};
 
 		mediaRecorder.current.onpause = () => {
-			setRecordingState(mediaRecorder.current?.state || 'inactive');
+			setRecordingState(mediaRecorder.current?.state || "inactive");
 		};
 
 		mediaRecorder.current.onresume = () => {
-			setRecordingState(mediaRecorder.current?.state || 'inactive');
+			setRecordingState(mediaRecorder.current?.state || "inactive");
 		};
 
 		// records chunks in blobs of 1 second
@@ -198,10 +196,10 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 	};
 
 	const stopRecording = useCallback(() => {
-		if (supported === 'notSupported') return alert(ERROR_UNSUPPORTED);
+		if (supported === "notSupported") return alert(ERROR_UNSUPPORTED);
 		if (mediaRecorder.current) {
-			if (mediaRecorder.current.state === 'inactive') return;
-			console.log('Stopping recording');
+			if (mediaRecorder.current.state === "inactive") return;
+			console.log("Stopping recording");
 			mediaRecorder.current.stop();
 			setUsingRecordedAudio(true);
 			if (stream.current) {
@@ -213,7 +211,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 	}, [supported, setUsingRecordedAudio]);
 
 	const prepareAudioForPlayback = useCallback(() => {
-		console.log('Preparing audio for playback');
+		console.log("Preparing audio for playback");
 		audio.load(); // necessary on mobile
 		audio.pause();
 		audio.currentTime = 0;
@@ -224,43 +222,43 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 		audio.onpause = () => setIsPlaying(false);
 		audio.onplay = () => setIsPlaying(true);
 		audio.onstalled = (e) => {
-			console.warn('Audio stalled: ', e);
+			console.warn("Audio stalled: ", e);
 		};
 		audio.onerror = (e) => {
 			console.trace();
-			console.error('Audio experienced an error: ', e);
+			console.error("Audio experienced an error: ", e);
 			setHasError(true);
-			let errorString = '';
+			let errorString = "";
 			let audioError = audio.error;
 			console.log(
-				'Audio: ',
+				"Audio: ",
 				audio,
-				'Audio error: ',
+				"Audio error: ",
 				audio.error,
-				'Error code: ',
+				"Error code: ",
 				audioError?.code,
-				'Error message: ',
+				"Error message: ",
 				audioError?.message,
 			);
 			switch (audioError?.code) {
 				case MediaError.MEDIA_ERR_ABORTED:
-					errorString += 'The user canceled the audio.';
+					errorString += "The user canceled the audio.";
 					break;
 				case MediaError.MEDIA_ERR_NETWORK:
-					errorString += 'A network error occurred while fetching the audio.';
+					errorString += "A network error occurred while fetching the audio.";
 					break;
 				case MediaError.MEDIA_ERR_DECODE:
-					errorString += 'An error occurred while decoding the audio.';
+					errorString += "An error occurred while decoding the audio.";
 					break;
 				case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
 					errorString +=
-						'The audio is missing or is in a format not supported by your browser.';
+						"The audio is missing or is in a format not supported by your browser.";
 					break;
 				default:
-					errorString += 'An unknown error occurred.';
+					errorString += "An unknown error occurred.";
 					break;
 			}
-			console.log('Error String: ', errorString);
+			console.log("Error String: ", errorString);
 		};
 		//not enough data
 		audio.onwaiting = () => {
@@ -378,7 +376,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 		setIsPlaying(false);
 		setIsReady(false);
 		setHasError(false);
-		setMimeType('');
+		setMimeType("");
 		setPosition(0);
 		stopRecording();
 		chunks.current = [];
@@ -413,13 +411,13 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 
 	useEffect(() => {
 		if (location !== prevLocation) {
-			if (mediaRecorder.current?.state === 'recording') {
-				console.log('Location changed while recording. Stopping recording.');
+			if (mediaRecorder.current?.state === "recording") {
+				console.log("Location changed while recording. Stopping recording.");
 				stopRecording();
 			}
 			if (!audioRef.current?.paused) {
 				console.log(
-					'Location changed while playing audio. Pausing audio playback.',
+					"Location changed while playing audio. Pausing audio playback.",
 				);
 				pause();
 			}
