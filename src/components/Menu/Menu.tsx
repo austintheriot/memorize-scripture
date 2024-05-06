@@ -1,21 +1,28 @@
-import React, { useEffect, useRef } from 'react';
-import styles from './Menu.module.scss';
-import chiRho from '../../images/chirho-light.svg';
-import { useDispatch } from 'react-redux';
-import { navLinkClicked, outsideOfMenuClicked } from '../../store/appSlice';
-import { ExternalLink } from '../Links/ExternalLink';
+import { MutableRefObject, useEffect, useRef } from "react";
+import styles from "./Menu.module.scss";
+import chiRho from "../../images/chirho-light.svg";
+import { useDispatch } from "react-redux";
+import { navLinkClicked, outsideOfMenuClicked } from "../../store/appSlice";
+import { ExternalLink } from "../Links/ExternalLink";
 import { useAppSelector } from "~/store/store";
 import useIsKeyboardUser from "~/hooks/useIsKeyboardUser";
 import { InternalLink } from "~/components/Links/InternalLink";
 import useDetectOutsideClick from "~/hooks/useDetectOutsideClick";
 
-export const Menu = () => {
+export interface MenuProps {
+	menuButtonRef: MutableRefObject<HTMLButtonElement | null>;
+}
+
+export const Menu = ({ menuButtonRef }: MenuProps) => {
 	const dispatch = useDispatch();
 	const { menuIsOpen } = useAppSelector((state) => state.app);
 	const firstElementRef = useRef<HTMLElement | null>(null);
 	const previousRef = useRef<Element | null>(null);
 	const isKeyboardUser = useIsKeyboardUser();
-	const menuRef = useDetectOutsideClick<HTMLElement>(() => menuIsOpen && dispatch(outsideOfMenuClicked()));
+	const menuRef = useDetectOutsideClick<HTMLElement>(
+		() => menuIsOpen && dispatch(outsideOfMenuClicked()),
+		[menuButtonRef],
+	);
 
 	const closeMenu = () => {
 		dispatch(navLinkClicked());
@@ -30,8 +37,7 @@ export const Menu = () => {
 				(previousRef.current as HTMLElement)?.focus();
 			}
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [menuIsOpen]);
+	}, [isKeyboardUser, menuIsOpen]);
 
 	const tabbable = menuIsOpen ? 0 : -1;
 
@@ -40,7 +46,7 @@ export const Menu = () => {
 			ref={menuRef}
 			tabIndex={-1}
 			data-testid="menu"
-			className={[styles.nav, menuIsOpen ? styles.menuOpen : ''].join(' ')}
+			className={[styles.nav, menuIsOpen ? styles.menuOpen : ""].join(" ")}
 		>
 			<ExternalLink
 				to="https://memorizescripture.org"

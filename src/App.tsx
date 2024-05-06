@@ -26,10 +26,11 @@ const Contact = lazy(() => import("./pages/Contact/Contact"));
 const Tools = lazy(() => import("./pages/Tools/Tools"));
 
 function App() {
-  const { url, mimeType, audioRef } = useAudio();
+  const { url, handleAudioRef, mimeType } = useAudio();
   const dispatch = useDispatch();
   const location = useLocation();
   const { theme } = useTheme();
+  const menuButtonRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -58,11 +59,11 @@ function App() {
       <ErrorBoundary>
         <Transition>
           <Suspense fallback={Loading()}>
-            <MenuButton />
-            <Menu />
-            <audio ref={audioRef}>
+            <MenuButton ref={menuButtonRef} />
+            <Menu menuButtonRef={menuButtonRef} />
+            <audio ref={handleAudioRef}>
               {/* The <source /> element is required for Safari.
-							Only specify a mimeType for recordings */}
+		Only specify a mimeType for recordings */}
               <source {...(mimeType && { type: mimeType })} src={url} />
             </audio>
             <ServiceWorkerMessages />

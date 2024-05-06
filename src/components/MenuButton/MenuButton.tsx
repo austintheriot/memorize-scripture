@@ -1,13 +1,13 @@
-import React from 'react';
-import styles from './MenuButton.module.scss';
+import { forwardRef } from "react";
+import styles from "./MenuButton.module.scss";
 
 //Menu State
-import { useDispatch } from 'react-redux';
-import { menuButtonClicked } from '../../store/appSlice';
+import { useDispatch } from "react-redux";
+import { menuButtonClicked } from "../../store/appSlice";
 import { useAppSelector } from "~/store/store";
 import FocusRing from "~/components/FocusRing/FocusRing";
 
-export const MenuButton = () => {
+export const MenuButton = forwardRef<HTMLButtonElement>((_props, ref) => {
 	const dispatch = useDispatch();
 	const { menuIsOpen } = useAppSelector((state) => state.app);
 
@@ -17,25 +17,22 @@ export const MenuButton = () => {
 
 	return (
 		<button
-			aria-label='Open Menu'
-			data-testid='menu-button'
-			className={[styles.button, menuIsOpen ? styles.menuOpen : ''].join(
-				' '
-			)}
-			onClick={toggleMenuOpen}>
+			ref={ref}
+			aria-label="Open Menu"
+			data-testid="menu-button"
+			className={[styles.button, menuIsOpen ? styles.menuOpen : ""].join(" ")}
+			onClick={toggleMenuOpen}
+		>
 			<span
-				className={[styles.span1, menuIsOpen ? styles.span1Open : ''].join(
-					' '
-				)}></span>
+				className={[styles.span1, menuIsOpen ? styles.span1Open : ""].join(" ")}
+			></span>
 			<span
-				className={[styles.span2, menuIsOpen ? styles.span2Open : ''].join(
-					' '
-				)}></span>
+				className={[styles.span2, menuIsOpen ? styles.span2Open : ""].join(" ")}
+			></span>
 			<span
-				className={[styles.span3, menuIsOpen ? styles.span3Open : ''].join(
-					' '
-				)}></span>
+				className={[styles.span3, menuIsOpen ? styles.span3Open : ""].join(" ")}
+			></span>
 			<FocusRing />
 		</button>
 	);
-};
+});

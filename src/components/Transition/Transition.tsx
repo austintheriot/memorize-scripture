@@ -1,17 +1,21 @@
-import React from 'react';
-import styles from './Transition.module.scss';
+import { ReactNode } from "react";
+import styles from "./Transition.module.scss";
 import { useAppSelector } from "~/store/store";
 
-export const Transition = (props: any) => {
-	const { menuIsOpen } = useAppSelector(s => s.app);
+export interface TransitionProps {
+	children: ReactNode;
+}
+
+export const Transition = ({ children }: TransitionProps) => {
+	const { menuIsOpen } = useAppSelector((s) => s.app);
 
 	return (
 		<div
-			className={[
-				styles.Transition,
-				menuIsOpen ? styles.menuOpen : '',
-			].join(' ')}>
-			{props.children}
+			className={[styles.Transition, menuIsOpen ? styles.menuOpen : ""].join(
+				" ",
+			)}
+		>
+			{children}
 		</div>
 	);
 };

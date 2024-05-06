@@ -1,8 +1,7 @@
-import { MutableRefObject, useCallback, useContext, useEffect } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import { createContext, ReactNode, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import usePrevious from "./usePrevious";
-import psalm23 from "~/audio/Psalm23.mp3";
 import { useAppSelector } from "~/store/store";
 import { ErrorBoundary } from "~/components/ErrorBoundary/ErrorBoundary";
 
@@ -17,7 +16,6 @@ export type BrowserSupport = "supported" | "notSupported" | "unknown";
 interface AudioContextType {
 	url: string;
 	mimeType: MediaRecorderOptions["mimeType"] | undefined;
-	audioRef: MutableRefObject<HTMLAudioElement>;
 	recordingState: RecordingStates;
 	supported: BrowserSupport;
 	hasError: boolean;
@@ -37,33 +35,11 @@ interface AudioContextType {
 	beginning: () => void;
 	setAudioPosition: (targetTime: number) => void;
 	setAudioSpeed: (targetSpeed: number) => void;
+	handleAudioRef: (el: HTMLAudioElement | null) => void;
 }
 
 // audio context value when no provider given
-export const AudioContext = createContext<AudioContextType>({
-	url: "",
-	mimeType: "audio/mpeg",
-	audioRef: { current: new Audio(psalm23) },
-	recordingState: "inactive",
-	supported: "unknown",
-	hasError: false,
-	isReady: false,
-	isPlaying: false,
-	position: 0,
-	speed: 1,
-	usingRecordedAudio: false,
-	startRecording: () => { },
-	stopRecording: () => { },
-	deleteRecording: () => { },
-	togglePlayPause: () => { },
-	play: () => { },
-	pause: () => { },
-	rewind: () => { },
-	forward: () => { },
-	beginning: () => { },
-	setAudioPosition: () => { },
-	setAudioSpeed: () => { },
-});
+export const AudioContext = createContext<AudioContextType>(null as never);
 
 export const AudioProvider = ({ children }: { children: ReactNode }) => {
 	const bibleAudioUrl = useAppSelector((state) => state.search.audioUrl);
@@ -85,7 +61,22 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 	const [mimeType, setMimeType] = useState<
 		MediaRecorderOptions["mimeType"] | undefined
 	>(undefined);
-	const audioRef = useRef(new Audio(psalm23));
+	const audioRef = useRef<HTMLAudioElement | null>(null);
+	const handleAudioRef = useCallback(
+		(el: HTMLAudioElement | null) => {
+			audioRef.current = el;
+			if (el && url && el.src !== url) {
+				el.src = url;
+			}
+		},
+		[url],
+	);
+
+	useEffect(() => {
+		if (audioRef.current && url && audioRef.current.src !== url) {
+			audioRef.current.src = url;
+		}
+	}, [url]);
 
 	/**
 	 * Requests access to the user's audio device and creates an
@@ -120,8 +111,10 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 		}
 
 		const audio = audioRef.current;
-		audio.pause();
-		audio.currentTime = 0;
+		if (audio) {
+			audio.pause();
+			audio.currentTime = 0;
+		}
 		setHasError(false);
 		setIsReady(false);
 
@@ -174,6 +167,10 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 		};
 
 		mediaRecorder.current.onstop = function() {
+			if (chunks.current.length === 0) {
+				console.log("Recorded chunks have no length");
+				return;
+			}
 			setRecordingState(mediaRecorder.current?.state || "inactive");
 			const recording = new Blob(chunks.current, {
 				type: mediaRecorder.current?.mimeType,
@@ -211,9 +208,25 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 		}
 	}, [supported, setUsingRecordedAudio]);
 
-	const prepareAudioForPlayback = useCallback(() => {
+	const prepareAudioForPlayback = useCallback(async () => {
 		console.log("Preparing audio for playback");
-		const audio = audioRef.current;
+
+		// wait for audio element to be initialized
+		const audio = await new Promise<HTMLAudioElement>((res, rej) => {
+			let tries = 0;
+			const interval = setInterval(() => {
+				tries += 1;
+				if (tries > 20) {
+					rej("Couldn't find initialized audio element");
+				}
+				if (audioRef.current) {
+					clearInterval(interval);
+					res(audioRef.current);
+				}
+			}, 100);
+		});
+
+		if (!audio) return;
 		audio.load(); // necessary on mobile
 		audio.pause();
 		audio.currentTime = 0;
@@ -227,20 +240,19 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 			console.warn("Audio stalled: ", e);
 		};
 		audio.onerror = (e) => {
-			console.trace();
 			console.error("Audio experienced an error: ", e);
 			setHasError(true);
 			let errorString = "";
 			const audioError = audio.error;
 			console.log(
-				"Audio: ",
-				audio,
 				"Audio error: ",
-				audio.error,
+				audio?.error,
 				"Error code: ",
 				audioError?.code,
 				"Error message: ",
 				audioError?.message,
+				"Audio: ",
+				audio,
 			);
 			switch (audioError?.code) {
 				case MediaError.MEDIA_ERR_ABORTED:
@@ -290,6 +302,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 	 */
 	const togglePlayPause = useCallback(() => {
 		const audio = audioRef.current;
+		if (!audio) return;
 		if (audio.readyState < 2) return;
 		if (audio.paused) {
 			audio.play();
@@ -303,6 +316,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 	 */
 	const play = useCallback(() => {
 		const audio = audioRef.current;
+		if (!audio) return;
 		if (audio.readyState < 2) return;
 		if (audio.paused) audio.play();
 		setIsPlaying(true);
@@ -313,6 +327,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 	 */
 	const pause = useCallback(() => {
 		const audio = audioRef.current;
+		if (!audio) return;
 		if (audio.readyState < 2) return;
 		if (!audio.paused) audio.pause();
 		setIsPlaying(false);
@@ -323,6 +338,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 	 */
 	const rewind = useCallback(() => {
 		const audio = audioRef.current;
+		if (!audio) return;
 		if (audio.readyState < 2) return;
 		const targetTime = Math.max(audio.currentTime - 5, 0);
 		audio.currentTime = targetTime;
@@ -333,6 +349,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 	 */
 	const forward = useCallback(() => {
 		const audio = audioRef.current;
+		if (!audio) return;
 		if (audio.readyState < 2) return;
 		const targetTime = Math.min(audio.currentTime + 5, audio.duration - 0.01);
 		audio.currentTime = targetTime;
@@ -343,6 +360,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 	 */
 	const beginning = useCallback(() => {
 		const audio = audioRef.current;
+		if (!audio) return;
 		if (audio.readyState < 2) return;
 		audio.currentTime = 0;
 	}, []);
@@ -353,6 +371,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 	 */
 	const setAudioPosition = useCallback((targetTime: number) => {
 		const audio = audioRef.current;
+		if (!audio) return;
 		if (audio.readyState < 2) return;
 		audio.currentTime = audio.duration * targetTime;
 	}, []);
@@ -363,6 +382,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 	 */
 	const setAudioSpeed = useCallback((targetSpeed: number) => {
 		const audio = audioRef.current;
+		if (!audio) return;
 		if (audio.readyState < 2) return;
 		audio.playbackRate = targetSpeed;
 	}, []);
@@ -378,20 +398,13 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 		chunks.current = [];
 		setUrl(bibleAudioUrl ?? "");
 		setUsingRecordedAudio(false);
-	}, [
-		setPosition,
-		setMimeType,
-		stopRecording,
-		pause,
-		setUrl,
-		setIsPlaying,
-		bibleAudioUrl,
-		setIsReady,
-		setUsingRecordedAudio,
-		setHasError,
-	]);
+	}, [pause, stopRecording, bibleAudioUrl]);
 
+	const prevBibleAudioUrl = useRef<string | null>(null);
 	useEffect(() => {
+		if (bibleAudioUrl === prevBibleAudioUrl.current) return;
+		prevBibleAudioUrl.current = bibleAudioUrl;
+
 		if (bibleAudioUrl) {
 			pause();
 			stopRecording();
@@ -403,12 +416,6 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 
 	const prevUrlRef = useRef<string | null>(null);
 	useEffect(() => {
-		console.log(
-			`url = "${url}"`,
-			`prevUrlRef.current = "${prevUrlRef.current}"`,
-			"===",
-			url === prevUrlRef.current,
-		);
 		if (url === prevUrlRef.current) return;
 		prevUrlRef.current = url;
 
@@ -433,7 +440,6 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 	return (
 		<AudioContext.Provider
 			value={{
-				audioRef,
 				startRecording,
 				stopRecording,
 				deleteRecording,
@@ -455,6 +461,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 				beginning,
 				setAudioPosition,
 				setAudioSpeed,
+				handleAudioRef,
 			}}
 		>
 			<ErrorBoundary>{children}</ErrorBoundary>

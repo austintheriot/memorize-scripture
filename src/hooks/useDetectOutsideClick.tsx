@@ -1,25 +1,40 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { MutableRefObject, useCallback, useEffect, useRef } from "react";
 
 /**
  * Runs callback function if user clicks outside of the provided element.
  * This returns a ref: assign this ref to the element which you wish to listen for outside clicks on.
  */
-export default function useDetectOutsideClick<El extends HTMLElement | null>(
-	callback: (...args: any[]) => void,
+export default function useDetectOutsideClick<
+	El extends HTMLElement | null,
+	Exception extends HTMLElement | null | undefined = HTMLElement,
+>(
+	callback: (...args: unknown[]) => void,
+	exceptions: (
+		| Exception
+		| MutableRefObject<Exception | null | undefined>
+	)[] = [],
 ) {
 	const ref = useRef<El | null>(null);
 
 	const handleWindowClick = useCallback(
-		(e) => {
+		(e: MouseEvent) => {
 			const path = e.composedPath();
-			if (ref.current && !path.includes(ref.current)) callback();
+			const clickWasOutside = ref.current && !path.includes(ref.current);
+			const hitAnException = exceptions.find((exception) => {
+				if (!exception) return false;
+				const exceptionEl =
+					"current" in exception ? exception.current : exception;
+				if (!exceptionEl) return false;
+				return path.includes(exceptionEl);
+			});
+			if (clickWasOutside && !hitAnException) callback();
 		},
-		[callback],
+		[callback, exceptions],
 	);
 
 	useEffect(() => {
-		window.addEventListener('click', handleWindowClick);
-		return () => window.removeEventListener('click', handleWindowClick);
+		window.addEventListener("click", handleWindowClick);
+		return () => window.removeEventListener("click", handleWindowClick);
 	}, [handleWindowClick]);
 
 	return ref;

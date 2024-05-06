@@ -1,16 +1,21 @@
-import React, { ErrorInfo } from 'react';
-import styles from './ErrorBoundary.module.scss';
-import { ExternalLink } from '../Links/ExternalLink';
+import React, { ErrorInfo, ReactNode } from "react";
+import styles from "./ErrorBoundary.module.scss";
+import { ExternalLink } from "../Links/ExternalLink";
 
-interface Props {}
+interface ErrorBoundaryProps {
+	children?: ReactNode;
+}
 
-interface State {
+interface ErrorBoundaryState {
 	error: Error | null;
 	errorInfo: ErrorInfo | null;
 }
 
-export class ErrorBoundary extends React.Component<Props, State> {
-	constructor(props: any) {
+export class ErrorBoundary extends React.Component<
+	ErrorBoundaryProps,
+	ErrorBoundaryState
+> {
+	constructor(props: ErrorBoundaryProps) {
 		super(props);
 		this.state = {
 			error: null,
@@ -19,6 +24,11 @@ export class ErrorBoundary extends React.Component<Props, State> {
 	}
 
 	componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+		console.error(
+			"Error caught by ErrorBoundary component: ",
+			error,
+			errorInfo,
+		);
 		// Catch errors in any child components and re-renders with an error message
 		this.setState({
 			error: error,
@@ -35,8 +45,9 @@ export class ErrorBoundary extends React.Component<Props, State> {
 						<h2>Uh-oh! Something went wrong!</h2>
 						<p>
 							<ExternalLink
-								to='https://memorizescripture.org/contact'
-								className={styles.Link}>
+								to="https://memorizescripture.org/contact"
+								className={styles.Link}
+							>
 								Submit a bug report
 							</ExternalLink>
 							, and I'll get the issue fixed as soon as possible. Thanks!
