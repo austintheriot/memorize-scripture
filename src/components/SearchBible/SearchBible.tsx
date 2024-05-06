@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useCallback } from "react";
+import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 import styles from "./SearchBible.module.scss";
 import {
 	BibleBook,
@@ -21,7 +21,6 @@ import {
 	setChapter,
 	setAudioUrl,
 } from "~/store/searchSlice";
-import useStateIfMounted from "~/hooks/useStateIfMounted";
 import { validateBookAndChapter } from "~/utils/validation";
 import Input from "~/components/Input/Input";
 import FocusRing from "~/components/FocusRing/FocusRing";
@@ -31,7 +30,7 @@ export const SearchBible = () => {
 	const book = useAppSelector(bookSelector);
 	const chapter = useAppSelector(chapterSelector);
 	const chaptersArray = useAppSelector(chaptersArraySelector);
-	const [message, setMessage] = useStateIfMounted("");
+	const [message, setMessage] = useState("");
 
 	const clearError = () => setMessage("");
 

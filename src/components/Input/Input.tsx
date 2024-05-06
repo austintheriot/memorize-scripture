@@ -1,11 +1,11 @@
-import useStateIfMounted from "~/hooks/useStateIfMounted";
-import React, {
+import {
   useEffect,
   memo,
   FocusEvent,
   forwardRef,
   ReactNode,
   ComponentProps,
+  useState,
 } from "react";
 import { conditionalStyles } from "~/utils/conditionalStyles";
 import styles from "./Input.module.scss";
@@ -78,9 +78,9 @@ const Input = forwardRef<HTMLInputElement, Props>(
       validateOnChange,
       ...rest
     },
-    ref
+    ref,
   ) => {
-    const [error, setError] = useStateIfMounted("");
+    const [error, setError] = useState("");
 
     caption =
       maxLength && value.length === maxLength
@@ -166,7 +166,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
         {children}
       </div>
     );
-  }
+  },
 );
 
 export default memo(Input);

@@ -2,7 +2,6 @@ import { MutableRefObject, useCallback, useContext, useEffect } from "react";
 import { createContext, ReactNode, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import usePrevious from "./usePrevious";
-import useStateIfMounted from "./useStateIfMounted";
 import psalm23 from "~/audio/Psalm23.mp3";
 import { useAppSelector } from "~/store/store";
 import { ErrorBoundary } from "~/components/ErrorBoundary/ErrorBoundary";
@@ -77,23 +76,22 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 	const [url, setUrl] = useState("");
 	const [recordingState, setRecordingState] =
 		useState<RecordingState>("inactive");
-	const [hasError, setHasError] = useStateIfMounted(false);
-	const [isReady, setIsReady] = useStateIfMounted(false);
-	const [isPlaying, setIsPlaying] = useStateIfMounted(false);
-	const [speed, setSpeed] = useStateIfMounted(1);
-	const [position, setPosition] = useStateIfMounted(0);
-	const [usingRecordedAudio, setUsingRecordedAudio] = useStateIfMounted(false);
-	const [mimeType, setMimeType] = useStateIfMounted<
+	const [hasError, setHasError] = useState(false);
+	const [isReady, setIsReady] = useState(false);
+	const [isPlaying, setIsPlaying] = useState(false);
+	const [speed, setSpeed] = useState(1);
+	const [position, setPosition] = useState(0);
+	const [usingRecordedAudio, setUsingRecordedAudio] = useState(false);
+	const [mimeType, setMimeType] = useState<
 		MediaRecorderOptions["mimeType"] | undefined
 	>(undefined);
 	const audioRef = useRef(new Audio(psalm23));
-	const audio = audioRef.current;
 
 	/**
 	 * Requests access to the user's audio device and creates an
 	 * audio stream if the user grants access.
 	 */
-	const initializeStream = async () => {
+	const initializeStream = useCallback(async () => {
 		try {
 			if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
 				alert(ERROR_UNSUPPORTED);
@@ -109,9 +107,9 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 			setIsSupported("notSupported");
 			alert(ERROR_UNSUPPORTED);
 		}
-	};
+	}, []);
 
-	const startRecording = async () => {
+	const startRecording = useCallback(async () => {
 		if (supported === "notSupported") return alert(ERROR_UNSUPPORTED);
 		if (mediaRecorder.current?.state === "recording") return;
 
@@ -121,6 +119,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 			return alert("Could not get local stream from mic/camera");
 		}
 
+		const audio = audioRef.current;
 		audio.pause();
 		audio.currentTime = 0;
 		setHasError(false);
@@ -131,8 +130,10 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 		/* set up media recorder from stream */
 		console.log("Starting recording");
 
-		/* Chrome does NOT want a mimeType specified -- it chooses a mimeType by default.
-								However, Safari WANTS a mimeType specified: typically "audio/mp4" */
+		/*
+		 * Chrome does NOT want a mimeType specified -- it chooses a mimeType by default.
+		 * However, Safari WANTS a mimeType specified: typically "audio/mp4"
+		 */
 		let options;
 		if (typeof MediaRecorder.isTypeSupported == "function") {
 			if (MediaRecorder.isTypeSupported("audio/mp3")) {
@@ -193,7 +194,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 
 		// records chunks in blobs of 1 second
 		mediaRecorder.current.start(1000);
-	};
+	}, [initializeStream, setHasError, setIsReady, setMimeType, supported]);
 
 	const stopRecording = useCallback(() => {
 		if (supported === "notSupported") return alert(ERROR_UNSUPPORTED);
@@ -212,13 +213,17 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 
 	const prepareAudioForPlayback = useCallback(() => {
 		console.log("Preparing audio for playback");
+		const audio = audioRef.current;
 		audio.load(); // necessary on mobile
 		audio.pause();
 		audio.currentTime = 0;
 		audio.playbackRate = speed;
 
 		//loaded enough to play
-		audio.oncanplay = () => setIsReady(true);
+		audio.oncanplay = (e) => {
+			console.log("oncanplay", e);
+			setIsReady(true);
+		};
 		audio.onpause = () => setIsPlaying(false);
 		audio.onplay = () => setIsPlaying(true);
 		audio.onstalled = (e) => {
@@ -229,7 +234,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 			console.error("Audio experienced an error: ", e);
 			setHasError(true);
 			let errorString = "";
-			let audioError = audio.error;
+			const audioError = audio.error;
 			console.log(
 				"Audio: ",
 				audio,
@@ -273,103 +278,97 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 			audio.currentTime = 0;
 		};
 		//as time is updated
-		audio.ontimeupdate = (e) => {
+		audio.ontimeupdate = (_e) => {
 			const targetPosition = audio.currentTime / audio.duration;
 			if (isNaN(targetPosition)) return;
 			setPosition(targetPosition);
 		};
 		//when speed is changed
 		audio.onratechange = () => setSpeed(audio.playbackRate);
-	}, [
-		audio,
-		setHasError,
-		setIsReady,
-		setIsPlaying,
-		setPosition,
-		setSpeed,
-		speed,
-	]);
+	}, [setHasError, setIsReady, setIsPlaying, setPosition, setSpeed, speed]);
 
 	/**
 	 * Plays audio if audio is paused.
 	 * Pauses audio if audio is playing.
 	 */
 	const togglePlayPause = useCallback(() => {
+		const audio = audioRef.current;
 		if (audio.readyState < 2) return;
 		if (audio.paused) {
 			audio.play();
 		} else {
 			audio.pause();
 		}
-	}, [audio]);
+	}, []);
 
 	/**
 	 * Plays audio if audio is ready to be interacted with.
 	 */
 	const play = useCallback(() => {
+		const audio = audioRef.current;
 		if (audio.readyState < 2) return;
 		if (audio.paused) audio.play();
 		setIsPlaying(true);
-	}, [audio, setIsPlaying]);
+	}, [setIsPlaying]);
 
 	/**
 	 * Pauses audio if audio is ready to be interacted with.
 	 */
 	const pause = useCallback(() => {
+		const audio = audioRef.current;
 		if (audio.readyState < 2) return;
 		if (!audio.paused) audio.pause();
 		setIsPlaying(false);
-	}, [audio, setIsPlaying]);
+	}, [setIsPlaying]);
 
 	/**
 	 * Rewinds audio if audio is ready to be interacted with.
 	 */
 	const rewind = useCallback(() => {
+		const audio = audioRef.current;
 		if (audio.readyState < 2) return;
 		const targetTime = Math.max(audio.currentTime - 5, 0);
 		audio.currentTime = targetTime;
-	}, [audio]);
+	}, []);
 
 	/**
 	 * Moves audio forward if audio is ready to be interacted with.
 	 */
 	const forward = useCallback(() => {
+		const audio = audioRef.current;
 		if (audio.readyState < 2) return;
 		const targetTime = Math.min(audio.currentTime + 5, audio.duration - 0.01);
 		audio.currentTime = targetTime;
-	}, [audio]);
+	}, []);
 
 	/**
 	 * Sends current position of audio to the beginning.
 	 */
 	const beginning = useCallback(() => {
+		const audio = audioRef.current;
 		if (audio.readyState < 2) return;
 		audio.currentTime = 0;
-	}, [audio]);
+	}, []);
 
 	/**
 	 * Moves current audio position to a designated time between 0 and 1
 	 * if audio is ready to be interacted with.
 	 */
-	const setAudioPosition = useCallback(
-		(targetTime: number) => {
-			if (audio.readyState < 2) return;
-			audio.currentTime = audio.duration * targetTime;
-		},
-		[audio],
-	);
+	const setAudioPosition = useCallback((targetTime: number) => {
+		const audio = audioRef.current;
+		if (audio.readyState < 2) return;
+		audio.currentTime = audio.duration * targetTime;
+	}, []);
 
 	/**
 	 * Changes the current audio speed to the designated speed if audio
 	 * is ready to be interacted with.
 	 */
-	const setAudioSpeed = useCallback(
-		(targetSpeed: number) => {
-			if (audio.readyState < 2) return;
-			audio.playbackRate = targetSpeed;
-		},
-		[audio],
-	);
+	const setAudioSpeed = useCallback((targetSpeed: number) => {
+		const audio = audioRef.current;
+		if (audio.readyState < 2) return;
+		audio.playbackRate = targetSpeed;
+	}, []);
 
 	const deleteRecording = useCallback(() => {
 		pause();
@@ -380,7 +379,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 		setPosition(0);
 		stopRecording();
 		chunks.current = [];
-		setUrl(bibleAudioUrl);
+		setUrl(bibleAudioUrl ?? "");
 		setUsingRecordedAudio(false);
 	}, [
 		setPosition,
@@ -396,18 +395,28 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 	]);
 
 	useEffect(() => {
-		pause();
-		stopRecording();
-		setUrl(bibleAudioUrl);
-		setIsPlaying(false);
-		setPosition(0);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [bibleAudioUrl]);
+		if (bibleAudioUrl) {
+			pause();
+			stopRecording();
+			setUrl(bibleAudioUrl);
+			setIsPlaying(false);
+			setPosition(0);
+		}
+	}, [bibleAudioUrl, pause, setIsPlaying, setPosition, stopRecording]);
 
+	const prevUrlRef = useRef<string | null>(null);
 	useEffect(() => {
+		console.log(
+			`url = "${url}"`,
+			`prevUrlRef.current = "${prevUrlRef.current}"`,
+			"===",
+			url === prevUrlRef.current,
+		);
+		if (url === prevUrlRef.current) return;
+		prevUrlRef.current = url;
+
 		prepareAudioForPlayback();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [url]);
+	}, [prepareAudioForPlayback, url]);
 
 	useEffect(() => {
 		if (location !== prevLocation) {
@@ -422,8 +431,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 				pause();
 			}
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [location, prevLocation]);
+	}, [location, pause, prevLocation, stopRecording]);
 
 	return (
 		<AudioContext.Provider

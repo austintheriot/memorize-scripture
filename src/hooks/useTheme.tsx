@@ -1,22 +1,21 @@
-import React, { useContext } from 'react';
-import { createContext, ReactNode, } from 'react';
+import { useContext, useState } from "react";
+import { createContext, ReactNode } from "react";
 import { ErrorBoundary } from "~/components/ErrorBoundary/ErrorBoundary";
-import useStateIfMounted from './useStateIfMounted';
 
-export type Theme = 'dark' | 'light';
+export type Theme = "dark" | "light";
 
 interface ThemeContextType {
 	theme: Theme;
-	setTheme: (theme: Theme) => void,
+	setTheme: (theme: Theme) => void;
 }
 
 export const ThemContext = createContext<ThemeContextType>({
-	theme: 'dark',
+	theme: "dark",
 	setTheme: () => { },
 });
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-	const [theme, setTheme] = useStateIfMounted<Theme>('dark');
+	const [theme, setTheme] = useState<Theme>("dark");
 
 	return (
 		<ThemContext.Provider
@@ -25,9 +24,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 				setTheme,
 			}}
 		>
-			<ErrorBoundary>
-				{children}
-			</ErrorBoundary>
+			<ErrorBoundary>{children}</ErrorBoundary>
 		</ThemContext.Provider>
 	);
 };

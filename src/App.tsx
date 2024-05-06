@@ -1,4 +1,4 @@
-import { useEffect, lazy, Suspense } from "react";
+import { useEffect, lazy, Suspense, useRef } from "react";
 import * as serviceWorker from "./serviceWorker";
 import "./App.scss";
 import { useDispatch } from "react-redux";
@@ -35,7 +35,12 @@ function App() {
     window.scrollTo(0, 0);
   }, [location]);
 
+  const appInitializedRef = useRef(false);
+
   useEffect(() => {
+    if (appInitializedRef.current) return;
+    appInitializedRef.current = true;
+
     serviceWorker.unregister();
     dispatch(initializeApp());
     // eslint-disable-next-line react-hooks/exhaustive-deps

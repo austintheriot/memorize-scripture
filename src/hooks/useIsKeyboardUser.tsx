@@ -1,7 +1,11 @@
-import React, {
-  useEffect, createContext, useContext, ReactNode, useCallback,
-} from 'react';
-import useStateIfMounted from './useStateIfMounted';
+import {
+  useEffect,
+  createContext,
+  useContext,
+  ReactNode,
+  useCallback,
+  useState,
+} from "react";
 
 const KeyboardUserContext = createContext(false);
 
@@ -10,18 +14,21 @@ interface Props {
 }
 
 function IsKeyboardUserContextProvider({ children }: Props) {
-  const [isKeyboardUser, setIsKeyboardUser] = useStateIfMounted(false);
+  const [isKeyboardUser, setIsKeyboardUser] = useState(false);
 
-  const setIsKeyboardUserHandler = useCallback((e: KeyboardEvent) => {
-    if (e.key === 'Tab') {
-      setIsKeyboardUser(true);
-      window.removeEventListener('keyup', setIsKeyboardUserHandler);
-    }
-  }, [setIsKeyboardUser]);
+  const setIsKeyboardUserHandler = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "Tab") {
+        setIsKeyboardUser(true);
+        window.removeEventListener("keyup", setIsKeyboardUserHandler);
+      }
+    },
+    [setIsKeyboardUser],
+  );
 
   useEffect(() => {
-    window.addEventListener('keyup', setIsKeyboardUserHandler);
-    return () => window.removeEventListener('keyup', setIsKeyboardUserHandler);
+    window.addEventListener("keyup", setIsKeyboardUserHandler);
+    return () => window.removeEventListener("keyup", setIsKeyboardUserHandler);
   });
 
   return (

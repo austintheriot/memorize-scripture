@@ -1,28 +1,28 @@
-import { createSelector, createSlice } from '@reduxjs/toolkit';
+import { createSelector, createSlice } from "@reduxjs/toolkit";
 import { createAudioUrl } from "~/utils/createAudioUrl";
 import {
 	BibleBook,
 	bookTitlesAndChapters,
 	Chapter,
-} from '../pages/Memorize/bible';
-import { RootState } from './store';
+} from "../pages/Memorize/bible";
+import { RootState } from "./store";
 
 export interface SearchState {
 	book: string;
 	chapter: string;
 	numberOfChapters: number;
-	audioUrl: string;
+	audioUrl: string | null;
 }
 
 const initialState: SearchState = {
-	book: 'Psalms',
-	chapter: '23',
+	book: "Psalms",
+	chapter: "23",
 	numberOfChapters: 150,
-	audioUrl: 'https://audio.esv.org/hw/mq/Psalms 23.mp3',
+	audioUrl: null,
 };
 
 export const searchSlice = createSlice({
-	name: 'search',
+	name: "search",
 	initialState,
 	reducers: {
 		searchInitialized: (
@@ -39,7 +39,10 @@ export const searchSlice = createSlice({
 		setChapter: (draft, action: { payload: string }) => {
 			draft.chapter = action.payload;
 		},
-		setAudioUrl: (draft, action: { payload: { book: BibleBook, chapter: Chapter } }) => {
+		setAudioUrl: (
+			draft,
+			action: { payload: { book: BibleBook; chapter: Chapter } },
+		) => {
 			const url = createAudioUrl(action.payload.book, action.payload.chapter);
 			draft.audioUrl = url;
 		},
@@ -64,6 +67,7 @@ export const chaptersArraySelector = createSelector(
 			.map((el, i) => `${i + 1}`) as Chapter[],
 );
 
-export const { searchInitialized, setBook, setChapter, setAudioUrl } = searchSlice.actions;
+export const { searchInitialized, setBook, setChapter, setAudioUrl } =
+	searchSlice.actions;
 
 export default searchSlice.reducer;
