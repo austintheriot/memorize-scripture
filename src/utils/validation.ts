@@ -8,7 +8,7 @@ export const validateEmail = (email: unknown): string => {
     typeof email !== "string" ||
     !email.match(
       // eslint-disable-next-line no-control-regex
-      /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
+      /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/,
     )
   )
     return EMAIL_ERROR_GENERIC;
@@ -19,7 +19,7 @@ const CHAPTER_ERROR_GENERIC = "Please provide a valid chapter number";
 
 export const validateBook = (book: unknown) => {
   if (typeof book !== "string") {
-    console.log("Book Validation Error: book input is not a string.");
+    console.log("Book Validation Error: book input is not a string.", { book });
     return "Please provide a valid string input.";
   }
   if (!(book in bookTitlesAndChapters)) {
@@ -33,7 +33,7 @@ export const validateBook = (book: unknown) => {
  */
 export const validateBookAndChapter = (
   book: unknown,
-  chapter: unknown
+  chapter: unknown,
 ): string => {
   const bookValidation = validateBook(book);
   if (bookValidation) return bookValidation;
@@ -55,7 +55,7 @@ export const validateBookAndChapter = (
     chapterNumber > numberOfChapters
   ) {
     console.log(
-      "Chapter Validation Error: chapter is not a valid chapter, based on the selected book."
+      "Chapter Validation Error: chapter is not a valid chapter, based on the selected book.",
     );
     return CHAPTER_ERROR_GENERIC;
   }
