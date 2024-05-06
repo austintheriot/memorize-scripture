@@ -220,10 +220,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 		audio.playbackRate = speed;
 
 		//loaded enough to play
-		audio.oncanplay = (e) => {
-			console.log("oncanplay", e);
-			setIsReady(true);
-		};
+		audio.oncanplay = () => setIsReady(true);
 		audio.onpause = () => setIsPlaying(false);
 		audio.onplay = () => setIsPlaying(true);
 		audio.onstalled = (e) => {
