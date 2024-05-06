@@ -14,9 +14,9 @@ import flipIcon from "~/icons/flip.svg";
 import { Footer } from "../../components/Footer/Footer";
 import FocusRing from "~/components/FocusRing/FocusRing";
 import { InternalLink } from "~/components/Links/InternalLink";
-import RecordingButton from "images/record.png";
-import StopRecordingButton from "images/stop-recording.png";
-import DeleteRecordingButton from "images/delete-recording.png";
+import RecordingButton from "~/images/record.png";
+import StopRecordingButton from "~/images/stop-recording.png";
+import DeleteRecordingButton from "~/images/delete-recording.png";
 
 export const About = () => {
 	const scrollToTop = () => {
