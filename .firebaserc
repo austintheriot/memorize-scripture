@@ -1,6 +1,0 @@
-{
-  "projects": {
-    "default": "bible-memorization-app",
-    "staging": "bible-memorization-app-staging"
-  }
-}
