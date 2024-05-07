@@ -793,6 +793,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sveltejs/adapter-static@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "@sveltejs/adapter-static@npm:3.0.1"
+  peerDependencies:
+    "@sveltejs/kit": ^2.0.0
+  checksum: 10c0/975c8a2cda9ccc07766bee4cee0ad8e3a5067734394e783ed7a54731406ea3319f6bb4fa691340b044eefd3512b3697bf00a0fa76975919d5f3a766505ca123e
+  languageName: node
+  linkType: hard
+
 "@sveltejs/kit@npm:^2.0.0":
   version: 2.5.7
   resolution: "@sveltejs/kit@npm:2.5.7"
@@ -3876,6 +3885,7 @@ __metadata:
     "@fontsource/fira-mono": "npm:^4.5.10"
     "@neoconfetti/svelte": "npm:^1.0.0"
     "@sveltejs/adapter-auto": "npm:^3.0.0"
+    "@sveltejs/adapter-static": "npm:^3.0.1"
     "@sveltejs/kit": "npm:^2.0.0"
     "@sveltejs/vite-plugin-svelte": "npm:^3.0.0"
     "@types/eslint": "npm:^8.56.0"
