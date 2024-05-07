@@ -1,5 +1,7 @@
 <script>
 	import Header from './Header.svelte';
+	import * as Test from "memorize-scripture-common";
+	console.log(Test)
 	import './styles.css';
 </script>
 

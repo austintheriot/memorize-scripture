@@ -11,6 +11,9 @@
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write ."
 	},
+	"dependencies": {
+		"memorize-scripture-common": "workspace:^"
+	},
 	"devDependencies": {
 		"@fontsource/fira-mono": "^4.5.10",
 		"@neoconfetti/svelte": "^1.0.0",
@@ -30,8 +33,14 @@
 		"svelte-check": "^3.6.0",
 		"tslib": "^2.4.1",
 		"typescript": "^5.0.0",
+		"typescript-svelte-plugin": "^0.3.38",
 		"vite": "^5.0.3",
 		"vitest": "^1.2.0"
 	},
-	"type": "module"
+	"type": "module",
+	"references": [
+		{
+			"path": "../memorize-scripture-common/"
+		}
+	]
 }
