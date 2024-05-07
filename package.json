@@ -1,0 +1,7 @@
+{
+  "name": "memorize-scripture-v3",
+  "packageManager": "yarn@4.2.1",
+  "workspaces": [
+    "packages/*"
+  ]
+}
