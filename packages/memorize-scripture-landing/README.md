@@ -69,3 +69,9 @@ yarn build # or `yarn build`
 ```shell
 yarn build.server
 ```
+
+## Static Site Generator (Node.js)
+
+```shell
+yarn build.server
+```
