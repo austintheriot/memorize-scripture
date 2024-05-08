@@ -1,3 +1,1 @@
-// export { MyElement } from "./my-element";
-
-export const TEST = "Hello, world!";
+export { MSButton } from "./m-s-button";
