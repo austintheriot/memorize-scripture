@@ -1,13 +1,17 @@
 import { LitElement, css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
+export const M_S_BUTTON_NAME = "m-s-button" as const;
+
+export type MSButtonName = typeof M_S_BUTTON_NAME;
+
 /**
  * An example element.
  *
  * @slot - This element has a slot
  * @csspart button - The button
  */
-@customElement("my-element")
+@customElement(M_S_BUTTON_NAME)
 export class MyElement extends LitElement {
   /**
    * Copy for the read the docs hint.
@@ -115,7 +119,11 @@ export class MyElement extends LitElement {
 }
 
 declare global {
-  interface HTMLElementTagNameMap {
-    "my-element": MyElement;
-  }
+  // keep types in sync with actual runtime value
+  type MSButtonMap = {
+    [K in MSButtonName]: MyElement;
+  };
+
+  // provide types for document.createElement()
+  interface HTMLElementTagNameMap extends MSButtonMap { }
 }
