@@ -1,8 +1,7 @@
 <script lang="ts">
   import svelteLogo from './assets/svelte.svg'
   import viteLogo from '/vite.svg'
-  import * as Test from "memorize-scripture-common";
-  console.log(Test)
+  import  "memorize-scripture-common";
 </script>
 
 <main>
@@ -17,7 +16,7 @@
   <h1>Vite + Svelte</h1>
 
   <div class="card">
-    <m-s-button buttonCopy="m-s-button example" />
+    <my-element buttonCopy="m-s-button example"/>
   </div>
 
   <p>
