@@ -1,8 +1,11 @@
-import { LitElement, css, html } from 'lit'
+import { css, html } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
 import litLogo from './assets/lit.svg'
 import viteLogo from '/vite.svg'
-
+import { provide } from '@lit/context';
+import { msStateContext, msState } from './m-s-state';
+import { MobxLitElement } from '@adobe/lit-mobx';
+import { Counter } from './counter';
 
 export const M_S_APP_NAME = "m-s-app" as const;
 
@@ -15,18 +18,9 @@ export type MSAppName = typeof M_S_APP_NAME;
  * @csspart button - The button
  */
 @customElement(M_S_APP_NAME)
-export class MSApp extends LitElement {
-  /**
-   * Copy for the read the docs hint.
-   */
-  @property()
-  docsHint = 'Click on the Vite and Lit logos to learn more'
-
-  /**
-   * The number of times the button has been clicked.
-   */
-  @property({ type: Number })
-  count = 0
+export class MSApp extends MobxLitElement {
+  @property({ attribute: false })
+  public counter = new Counter()
 
   render() {
     return html`
@@ -41,15 +35,15 @@ export class MSApp extends LitElement {
       <slot></slot>
       <div class="card">
         <button @click=${this._onClick} part="button">
-          count is ${this.count}
+           count is ${this.counter?.count}
         </button>
       </div>
-      <p class="read-the-docs">${this.docsHint}</p>
     `
   }
 
   private _onClick() {
-    this.count++
+    // this.count++
+    this.counter.increment()
   }
 
   static styles = css`
