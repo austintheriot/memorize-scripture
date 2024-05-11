@@ -2,9 +2,9 @@ import { LitElement, html } from 'lit'
 import { customElement } from 'lit/decorators.js'
 import { SignalWatcher } from '@lit-labs/preact-signals';
 import { a, b, bothAreEven } from './m-s-state';
-import kjv from './texts/kjv.json'
+import { textManager } from './utils/TextManager';
 
-export const M_S_APP_NAME = "m-s-app" as const;
+export const M_S_APP_NAME = "m-s-app";
 
 export type MSAppName = typeof M_S_APP_NAME;
 
@@ -23,7 +23,7 @@ export class MSApp extends SignalWatcher(LitElement) {
       <p>Both are even: ${bothAreEven.value.toString().toUpperCase()}</p>
       <button @click=${this._onClick}>Increment<button></button></button>
       <div>
-        ${kjv.books[0].chapters[0].verses[0].text}
+        ${textManager.getChapter("Genesis", 1, "kjv")}
       </div>
     `;
   }

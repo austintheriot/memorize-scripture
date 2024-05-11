@@ -69,6 +69,11 @@ export const booksAndTitles = [
 
 export type BooksAndTitlesMap = typeof booksAndTitles;
 export const allBookTitles = booksAndTitles.map((map) => map[0]);
-export type BibleBook = BooksAndTitlesMap[number][0]
-export type Chapter = number | `${number}`;
-export type Title = `${BibleBook} ${number}`
+export type BookTitle = BooksAndTitlesMap[number][0]
+export type ChapterNumber = number | `${number}`;
+
+export const translations = [
+  "kjv",
+] as const;
+
+export type Translation = (typeof translations)[number];
