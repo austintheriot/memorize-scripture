@@ -1,11 +1,7 @@
-import { css, html } from 'lit'
-import { customElement, property } from 'lit/decorators.js'
-import litLogo from './assets/lit.svg'
-import viteLogo from '/vite.svg'
-import { provide } from '@lit/context';
-import { msStateContext, msState } from './m-s-state';
-import { MobxLitElement } from '@adobe/lit-mobx';
-import { Counter } from './counter';
+import { LitElement, css, html } from 'lit'
+import { customElement } from 'lit/decorators.js'
+import { SignalWatcher } from '@lit-labs/preact-signals';
+import { a, b, bothAreEven } from './m-s-state';
 
 export const M_S_APP_NAME = "m-s-app" as const;
 
@@ -18,32 +14,18 @@ export type MSAppName = typeof M_S_APP_NAME;
  * @csspart button - The button
  */
 @customElement(M_S_APP_NAME)
-export class MSApp extends MobxLitElement {
-  @property({ attribute: false })
-  public counter = new Counter()
-
+export class MSApp extends SignalWatcher(LitElement) {
   render() {
     return html`
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src=${viteLogo} class="logo" alt="Vite logo" />
-        </a>
-        <a href="https://lit.dev" target="_blank">
-          <img src=${litLogo} class="logo lit" alt="Lit logo" />
-        </a>
-      </div>
-      <slot></slot>
-      <div class="card">
-        <button @click=${this._onClick} part="button">
-           count is ${this.counter?.count}
-        </button>
-      </div>
-    `
+      <p>A is ${a.value}</p>
+      <p>B is ${b.value}</p>
+      <p>Both are even: ${bothAreEven.value.toString().toUpperCase()}</p>
+      <button @click=${this._onClick}>Increment<button></button></button>
+    `;
   }
 
   private _onClick() {
-    // this.count++
-    this.counter.increment()
+    a.value = a.value + 1;
   }
 
   static styles = css`

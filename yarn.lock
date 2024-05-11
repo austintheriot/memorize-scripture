@@ -522,6 +522,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@lit-labs/preact-signals@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "@lit-labs/preact-signals@npm:1.0.2"
+  dependencies:
+    "@preact/signals-core": "npm:^1.3.0"
+    lit: "npm:^3.1.2"
+  checksum: 10c0/bb27f24388d363c751ec5e50f09a58ed5d274c59635e679f425ba8c2cbe1e30342a2f19d4f29fae4c065a854f0f28ce53dd16e48df1f560161b6a9215207bb86
+  languageName: node
+  linkType: hard
+
 "@lit-labs/ssr-dom-shim@npm:^1.2.0":
   version: 1.2.0
   resolution: "@lit-labs/ssr-dom-shim@npm:1.2.0"
@@ -684,6 +694,13 @@ __metadata:
   version: 0.11.0
   resolution: "@pkgjs/parseargs@npm:0.11.0"
   checksum: 10c0/5bd7576bb1b38a47a7fc7b51ac9f38748e772beebc56200450c4a817d712232b8f1d3ef70532c80840243c657d491cf6a6be1e3a214cff907645819fdc34aadd
+  languageName: node
+  linkType: hard
+
+"@preact/signals-core@npm:^1.3.0":
+  version: 1.6.0
+  resolution: "@preact/signals-core@npm:1.6.0"
+  checksum: 10c0/5e32a98ab248a15e1950ac23dae9cb985c9bdc0ff2f24dbdcccc235eeacd175170852107f5d1e4a7250805eb90cb642510855acd91788ebe95ff9b24bf88689d
   languageName: node
   linkType: hard
 
@@ -3840,6 +3857,7 @@ __metadata:
   resolution: "memorize-scripture-app@workspace:packages/memorize-scripture-app"
   dependencies:
     "@adobe/lit-mobx": "npm:^2.2.2"
+    "@lit-labs/preact-signals": "npm:^1.0.2"
     "@lit/context": "npm:^1.1.1"
     lit: "npm:^3.1.2"
     memorize-scripture-common: "workspace:^"
