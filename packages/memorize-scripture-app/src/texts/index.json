@@ -1,0 +1,142 @@
+{
+  "translations": {
+    "aleppo": {
+      "translation": "Aleppo Codex",
+      "abbreviation": "aleppo",
+      "lang": "he",
+      "language": "Hebrew",
+      "direction": "RTL",
+      "encoding": "UTF-8",
+      "distribution_version": "2.0",
+      "distribution_version_date": "2008-11-07",
+      "distribution_about": "The Aleppo Codex without Vowel Points or Punctuation\\par Based on the electronic edition at http://www.mechon-mamre.org",
+      "distribution_license": "Public Domain",
+      "distribution_source": "http://www.mechon-mamre.org/",
+      "distribution_history": {
+        "history_2.0": "Changed to native versification (MT)",
+        "history_1.1": "Converted to OSIS, removed prepended Hebrew verse numbers, removed extraneous copies of verses"
+      },
+      "url": "https://jsonbible.github.io/aleppo.json"
+    },
+    "codex": {
+      "translation": "OT Westminster Leningrad Codex",
+      "abbreviation": "codex",
+      "lang": "he",
+      "language": "Hebrew",
+      "direction": "RTL",
+      "encoding": "UTF-8",
+      "distribution_version": "1.9",
+      "distribution_version_date": "2013-10-11",
+      "distribution_about": "This text began as an electronic transcription by Whitaker and Parunak of the 1983 printed edition of Biblia Hebraica Stuttgartensia (BHS). The transcription is called the Michigan-Claremont electronic text and was archived at the Oxford Text Archive (OTA) in 1987. Since that time, the text has been modified to conform to the photo-facsimile of the Leningrad Codex, Firkovich B19A, residing at the Russian National Library, St. Petersberg; hence the change of name. This version contains all 6 of the textual elements of the OTA document: consonants, vowels, cantillation marks, \"paragraph\" (pe, samekh) markers, and ketiv-qere variants. Morphological divisions have been added.\\par\\par The BHS so-called \"paragraph\" markers (pe and samekh) do not actually occur in the Leningrad Codex. The editors of BHS use them to indicate open space deliberately left blank by the scribe. Pe (\"open\" paragraph) represents a space between verses, where the new verse begins on a new column line. This represents a major section of the text. Samekh (\"closed\" paragraph) represents a space of less than a line between verses. This is understood to be a subdivision of the corresponding \"open\" section. Since these markers represent an actual physical feature of the text, they have been retained.\\par\\par The WLC is maintained by the Westminster Hebrew Institute, Philadelphia, PA (http://whi.wts.edu/WHI). This edition is based on Christopher V. Kimball's edition (http://www.tanach.us/Tanach.xml), which also adds textual source assignment based in the Pentateuch on the documentary hypothesis.",
+      "distribution_license": "Public Domain",
+      "distribution_source": "http://whi.wts.edu/WHI, http://www.tanach.us/Tanach.xml",
+      "distribution_history": {
+        "history_1.9": "Updated to WLC 4.18 (2013-10-11)",
+        "history_1.8": "Added pe & samekh 'paragraph' marks to text (2012-04-17)",
+        "history_1.7": "Updated to WLC 4.14, corrected some spurious markup (2012-04-14)",
+        "history_1.6": "Updated source attribution, undid NFC normalization, placed DH identification notes inline, fixed spacing problem (2009-05-26)",
+        "history_1.5": "Updated to WLC 4.10 with additions from www.tanach.us, using native versification",
+        "history_1.4": "Corrected internal markup to conform to OSIS 2.1.1 schema, changed About markup to RTF (2008-07-02)",
+        "history_1.3": "Fixed the conf",
+        "history_1.2": "Bugfix for textual errors. Re-added setumot and paraschot, even though their presence in L is not verified, according to Kirk Lowery. Fixed transcription note values. Included morphological segmentation in preliminary markup. Added xml:lang=\"en\" to notes. Update to newer version (wlc-4.4).",
+        "history_1.1": "Update to newer version (wlc43-20050319) of the WLC from WHI; Bugfixes in the conversion program that caused textual errors (thanks to Chris Kimball); Fixed one footnote text template.",
+        "history_1.0": "First public version."
+      },
+      "url": "https://jsonbible.github.io/wlc.json"
+    },
+    "textusreceptus": {
+      "translation": "NT Textus Receptus (1550 1894) Parsed",
+      "abbreviation": "textusreceptus",
+      "lang": "grc",
+      "language": "Greek",
+      "direction": "LTR",
+      "encoding": "UTF-8",
+      "distribution_version": "2.4",
+      "distribution_version_date": "2014-04-13",
+      "distribution_about": "The Textus Receptus with complete parsing information for all Greek words; base text is Stephens 1550, with variants of Scrivener 1894.",
+      "distribution_license": "Creative Commons: by-nc-sa",
+      "distribution_source": "https://sites.google.com/a/wmail.fi/greeknt/home/greeknt",
+      "distribution_history": {
+        "history_2.4": "Corrected theta and psi encoding (2014-04-13)",
+        "history_2.3": "Corrected spacing errors, morphology encoding (2014-02-22)",
+        "history_2.2.1": "Added NoParagraphs feature (2014-01-18)",
+        "history_2.2": "Updated to February 3, 2013 edition (2014-01-16)",
+        "history_2.1": "Updated to March 15, 2011 edition (2011-03-28)",
+        "history_2.0": "Created new OSIS edition from July 17, 2007 edition (2009-11-01)",
+        "history_1.2": "Changed TextSource",
+        "history_1.1": "corrected Strong's numbers & variants"
+      },
+      "url": "https://jsonbible.github.io/tr.json"
+    },
+    "moderngreek": {
+      "translation": "Greek Modern",
+      "abbreviation": "moderngreek",
+      "lang": "el",
+      "language": "Greek Modern",
+      "direction": "LTR",
+      "encoding": "UTF-8",
+      "distribution_version": "1.0.2",
+      "distribution_version_date": "2012-07-12",
+      "distribution_about": "This translation started in 1831 and was published in 1850 by the Orthodox Archimandrite and professor of the National University of Athens, Neophytos Vamvas with the help of other researchers. Considering that the Greek Orthodox Church wouldn't support him, he collaborated with the British and Foreign Bible Society to publish this translation.\\par The text is written in \"kathareuousa\", a form of greek that is not spoken today in Greece. It is closer to spoken greek though, than the Septuagint (also known \"translation of the seventy\").",
+      "distribution_license": "Public Domain",
+      "distribution_source": "www.theword.gr",
+      "distribution_history": {
+        "history_1.0": "Initial release (2008-07-23)",
+        "history_1.0.1": "Added trailing '/' in .conf (2012-07-12)",
+        "history_1.0.2": "Added entries re license and obsoletion  to conf file (2014-12-27)"
+      },
+      "url": "https://jsonbible.github.io/mnb.json"
+    },
+    "synodal": {
+      "translation": "Synodal Translation (1876)",
+      "abbreviation": "synodal",
+      "lang": "ru",
+      "language": "Russian",
+      "direction": "LTR",
+      "encoding": "UTF-8",
+      "distribution_version": "1.8.1",
+      "distribution_version_date": "2010-11-06",
+      "distribution_about": "1876 Russian Synodal Bible\\par The electronic edition comes from bibles.org.uk",
+      "distribution_license": "Public Domain",
+      "distribution_source": "bibles.org.uk",
+      "distribution_history": {
+        "history_1.8.1": "Corrected MinimumVersion (2011-08-17)",
+        "history_1.8": "Updated to reflect new versification (2010-11-06)",
+        "history_1.5": "Changed to bibles.org.uk's source",
+        "history_1.0": "Regenerated from cleaner source, including deuterocanonicals"
+      },
+      "url": "https://jsonbible.github.io/rst.json"
+    },
+    "kjv": {
+      "translation": "King James Version",
+      "abbreviation": "kjv",
+      "lang": "en",
+      "language": "English",
+      "direction": "LTR",
+      "encoding": "UTF-8",
+      "distribution_version": "2.9",
+      "distribution_version_date": "2016-01-21",
+      "distribution_about": "This is the King James Version of the Holy Bible (also known as the Authorized Version) with embedded Strong's Numbers.  The rights to the base text are held by the Crown of England.  The Strong's numbers in the OT were obtained from The Bible Foundation: http://www.bf.org.  The NT Strong's data was obtained from The KJV2003 Project at CrossWire: http://www.crosswire.org.  These mechanisms provide a useful means for looking up the exact original language word in a lexicon that is keyed to Strong's numbers.\\par\\par Special thanks to the volunteers at Bible Foundation for keying the Hebrew/English data and of Project KJV2003 for working toward the completion of synchronizing the English phrases to the Stephanas Textus Receptus, and to Dr. Maurice Robinson for providing the base Greek text with Strong's and Morphology.  We are also appreciative of formatting markup that was provided by Michael Paul Johnson at http://www.ebible.org.  Their time and generosity to contribute such for the free use of the Body of Christ is a great blessing and this derivitive work could not have been possible without these efforts of so many individuals.  It is in this spirit that we in turn offer the KJV2003 Project text freely for any purpose.  Any copyright that might be obtained for this effort is held by CrossWire Bible Society (c) 2003-2016 and CrossWire Bible Society hereby grants a general public license to use this text for any purpose.\\par Inquiries and comments may be directed to:\\par\\par CrossWire Bible Society\\par kjv2003@crosswire.org\\par http://www.crosswire.org",
+      "distribution_license": "General public license for distribution for any purpose",
+      "distribution_source": "bf.org, eBible.org, https://sites.google.com/a/wmail.fi/greeknt/home/greeknt, crosswire.org",
+      "distribution_history": {
+        "history_2.9": "Added markup to notes. Improved markup of Selah. (2016-01-21)",
+        "history_2.8": "Moved Ps 119 acrostic titles before verse number. Added Feature for no paragraphs. (2015-12-20)",
+        "history_2.7": "Fixed bugs preventing the display of some Strong's Numbers.",
+        "history_2.6.1": "Added GlobalOptionFilter for OSISLemma",
+        "history_2.6": "Fixed bugs. Added Greek from TR.",
+        "history_2.5": "Fixed bugs.",
+        "history_2.4": "Fixed bugs.",
+        "history_2.3": "Fixed bugs.",
+        "history_2.2": "Updated to 20040121 snapshot of KJV2003.",
+        "history_2.1": "Changed Old Testament to use OSIS tags, removing the last of the GBF markup.  Also updated to 20030624 snapshot of KJV2003.  Compressed.",
+        "history_2.0": "Changed New Testament to use a snapshot of the KJV2003 Project",
+        "history_1.4": "Fixed Psalm Titles to use correct GBF tags HT and Ht",
+        "history_1.3": "Added Morph option",
+        "history_1.2": "Added Feature StrongsNumbers to configuration",
+        "history_1.1": "Fixed .conf file GlobalOptionFilters"
+      },
+      "url": "https://jsonbible.github.io/kjv.json"
+    }
+  }
+}
