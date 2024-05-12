@@ -75,7 +75,7 @@ export type BookTitle = BooksAndTitlesMap[number][0];
 
 export type ChapterNumber = number | `${number}`;
 
-export const translations = ["kjv"] as const;
+export const translations = ["esv"] as const;
 
 export type Translation = (typeof translations)[number];
 

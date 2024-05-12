@@ -19,7 +19,17 @@ export class TextManager {
   ): Promise<string | null> {
     if (textAppearance === "hidden") return null;
 
-    const text = await this._fetchTranslation(translation);
+    // const text = await this._fetchTranslation(translation);
+    const res = await fetch("api.scripture.api.bible/v1/bibles", {
+      headers: {
+        "api-key": import.meta.env.VITE_API_BIBLE_KEY,
+      }
+    })
+
+    console.log(res);
+    return
+
+
     const bookIndex = this._getBookTitleIndex(bookTitle)
 
     if (bookIndex === null) return null;
@@ -52,7 +62,7 @@ export class TextManager {
     if (!this._translationCache.has(translation)) {
       let text: TextJson;
       switch (translation) {
-        case "kjv":
+        case "esv":
           text = (await import("../texts/kjv.json")) as unknown as TextJson;
           break;
       }
