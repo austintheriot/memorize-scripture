@@ -1,8 +1,7 @@
 import { LitElement, html } from 'lit'
 import { customElement } from 'lit/decorators.js'
 import { SignalWatcher } from '@lit-labs/preact-signals';
-import { a, b, bothAreEven } from './m-s-state';
-import { textManager } from './utils/TextManager';
+import { currentText, textIsLoading, currentChapterNumber, currentBookTitle, currentTextAppearance } from './m-s-state';
 
 export const M_S_APP_NAME = "m-s-app";
 
@@ -18,18 +17,26 @@ export type MSAppName = typeof M_S_APP_NAME;
 export class MSApp extends SignalWatcher(LitElement) {
   render() {
     return html`
-      <p>A is ${a.value}</p>
-      <p>B is ${b.value}</p>
-      <p>Both are even: ${bothAreEven.value.toString().toUpperCase()}</p>
-      <button @click=${this._onClick}>Increment<button></button></button>
+      <h1>${currentBookTitle.value} ${currentChapterNumber.value}</h1>
+      <button @click=${this._handleIncrementChapter}>Increment Chapter</button>
+      <button @click=${this._handleChangeApperance}>Change appearancd</button>
+${textIsLoading.value ? html`Loading...` : html`
       <div>
-        ${textManager.getChapter("Genesis", 1, "kjv")}
+        ${currentText}
       </div>
+`}
     `;
   }
 
-  private _onClick() {
-    a.value = a.value + 1;
+  private _handleIncrementChapter() {
+    currentChapterNumber.value = currentChapterNumber.value + 1;
+  }
+
+  private _handleChangeApperance() {
+    switch (currentTextAppearance.value) {
+      case "full":
+        break;
+    }
   }
 }
 
