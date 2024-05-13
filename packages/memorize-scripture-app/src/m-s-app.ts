@@ -1,7 +1,14 @@
-import { LitElement, html } from 'lit'
-import { customElement } from 'lit/decorators.js'
-import { SignalWatcher } from '@lit-labs/preact-signals';
-import { currentText, textIsLoading, currentChapterNumber, currentBookTitle, currentTextAppearance } from './m-s-state';
+import { LitElement, html } from "lit";
+import { customElement } from "lit/decorators.js";
+import { SignalWatcher } from "@lit-labs/preact-signals";
+import {
+  currentChapterNumber,
+  currentBookTitle,
+  bibleSummaries,
+  bibleSummariesLoading,
+  bibleSummariesError,
+} from "./m-s-state";
+import { BibleSummary } from "./api/ApiBible";
 
 export const M_S_APP_NAME = "m-s-app";
 
@@ -18,34 +25,35 @@ export class MSApp extends SignalWatcher(LitElement) {
   render() {
     return html`
       <h1>${currentBookTitle.value} ${currentChapterNumber.value}</h1>
-      <button @click=${this._handleIncrementChapter}>Increment Chapter</button>
-      <button @click=${this._handleChangeApperance}>Change appearancd</button>
-${textIsLoading.value ? html`Loading...` : html`
-      <div>
-        ${currentText}
-      </div>
-`}
+      ${bibleSummariesError.value
+        ? "Error loading Bible summaries"
+        : bibleSummariesLoading.value
+          ? "Loading Bible summaries"
+          : html`
+              <ul>
+                ${bibleSummaries.value?.map(
+            (bible) =>
+              html`<li @click=${this._makeHandleBibleClick(bible.id)}>
+                      ${bible.name}
+                    </li>`,
+          )}
+              </ul>
+            `}
     `;
   }
 
-  private _handleIncrementChapter() {
-    currentChapterNumber.value = currentChapterNumber.value + 1;
-  }
-
-  private _handleChangeApperance() {
-    switch (currentTextAppearance.value) {
-      case "full":
-        break;
-    }
+  private _makeHandleBibleClick(id: BibleSummary["id"]) {
+    const callback = () => {
+      console.log("clicked!", id);
+    };
+    return callback.bind(this);
   }
 }
 
 declare global {
-
   type MSAppNameMap = {
-    [K in MSAppName]: MSApp
-  }
+    [K in MSAppName]: MSApp;
+  };
 
   interface HTMLElementTagNameMap extends MSAppNameMap { }
 }
-
