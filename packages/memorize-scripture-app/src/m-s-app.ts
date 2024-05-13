@@ -7,6 +7,7 @@ import {
   bibleSummaries,
   bibleSummariesLoading,
   bibleSummariesError,
+  fetchChapter,
 } from "./m-s-state";
 import { BibleSummary } from "./api/ApiBible";
 
@@ -44,6 +45,7 @@ export class MSApp extends SignalWatcher(LitElement) {
 
   private _makeHandleBibleClick(id: BibleSummary["id"]) {
     const callback = () => {
+      fetchChapter(id);
       console.log("clicked!", id);
     };
     return callback.bind(this);

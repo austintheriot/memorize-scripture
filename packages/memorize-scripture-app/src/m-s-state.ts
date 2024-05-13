@@ -1,7 +1,8 @@
 import { signal, effect } from "@lit-labs/preact-signals";
 import { BookTitle, TextAppearance, Translation } from "./types/textTypes";
 import { textManager } from "./utils/TextManager";
-import { ApiBible, apiBible } from "./api";
+import { apiBible } from "./api";
+import { BibleSummary, Chapter } from "./api/ApiBible";
 
 interface UntrackedValue<T> {
   value: T;
@@ -29,11 +30,16 @@ export const currentTextAppearance = signal<TextAppearance>("full");
 export const currentText = signal<string | null>(null);
 const textRequestManager = new RequestManager();
 export const textIsLoading = signal<boolean>(false);
-export const bibleSummaries = signal<ApiBible.BibleSummary[] | null>(null);
+
+export const bibleSummaries = signal<BibleSummary[] | null>(null);
 export const bibleSummariesLoading = signal<boolean>(false);
 export const bibleSummariesError = signal<boolean>(false);
 
-const fetchBibles = async () => {
+export const bibleChapter = signal<Chapter[] | null>(null);
+export const bibleChapterLoading = signal<boolean>(false);
+export const bibleChapterError = signal<boolean>(false);
+
+const fetchAllBibles = async () => {
   bibleSummariesLoading.value = true;
   bibleSummariesError.value = false;
   console.log(import.meta.env.VITE_API_BIBLE_KEY);
@@ -46,7 +52,7 @@ const fetchBibles = async () => {
         },
       },
     );
-    const data = (await response.json()).data as ApiBible.BibleSummary[];
+    const data = (await response.json()).data as BibleSummary[];
     console.log(data);
     bibleSummaries.value = data;
   } catch (e) {
@@ -56,24 +62,30 @@ const fetchBibles = async () => {
   bibleSummariesLoading.value = false;
 };
 
-void fetchBibles();
+void fetchAllBibles();
 
-export const fetchNewNext = effect(async () => {
-  console.log("running fetch next");
-  const id = textRequestManager.getNewId();
-  textIsLoading.value = true;
+export const fetchChapter = async (bibleId: BibleSummary["id"]) => {
+  const searchResponse = apiBible.v1
+    .getBooks(bibleId)
+    .then((res) => res.json());
+  console.log(searchResponse);
+};
 
-  const newText = await textManager.getChapter(
-    currentBookTitle.value,
-    currentChapterNumber.value,
-    currentTranslation.value,
-    currentTextAppearance.value,
-  );
-
-  console.log({ newText });
-
-  if (textRequestManager.isMostRecentRequest(id)) {
-    currentText.value = newText;
-    textIsLoading.value = false;
-  }
-});
+// export const fetchNewNext = effect(async () => {
+//   console.log("running fetch next");
+//   const id = textRequestManager.getNewId();
+//   textIsLoading.value = true;
+//
+//   const newText = await textManager.getChapter(
+//     currentBookTitle.value,
+//     currentChapterNumber.value,
+//     currentTranslation.value,
+//   );
+//
+//   console.log({ newText });
+//
+//   if (textRequestManager.isMostRecentRequest(id)) {
+//     currentText.value = newText;
+//     textIsLoading.value = false;
+//   }
+// });
