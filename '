@@ -1,21 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
-class RequestManager {
-  private _id = 0;
-
-  public getNewId(): number {
-    this._id += 1;
-    return this._id;
-  }
-
-  public isMostRecentRequest(id: number): boolean {
-    return this._id === id;
-  }
-}
-
-
-
 export interface TextState {
   bibleSummaries: BibleSummary[] | null,
   bibleSummariesLoading: boolean,
@@ -35,12 +20,18 @@ export const textSlice = createSlice({
     setBibleSummaries: (state, action: PayloadAction<BibleSummary[]>) => {
       state.bibleSummaries = action.payload
     },
+    setBibleSummariesLoading: (state, action: PayloadAction<boolean>) => {
+      state.bibleSummariesLoading = action.payload
+    },
+    setBibleSummariesError: (state, action: PayloadAction<boolean>) => {
+      state.bibleSummariesError = action.payload
+    },
   },
 })
 
 const fetchAllBibles = async () => {
-  bibleSummariesLoading.value = true;
-  bibleSummariesError.value = false;
+  store.dispatch(setBibleSummariesLoading(true))
+  store.dispatch(setBibleSummariesError(false))
   console.log(import.meta.env.VITE_API_BIBLE_KEY);
   try {
     const response = await apiBible.v1.getBibles(
@@ -58,14 +49,14 @@ const fetchAllBibles = async () => {
     console.error("Error fetching Bible summaries", e);
     bibleSummariesError.value = true;
   }
-  bibleSummariesLoading.value = false;
+  store.dispatch(setBibleSummariesLoading(true))
 };
 
 void fetchAllBibles();
 
 
 // Action creators are generated for each case reducer function
-export const { setBibleSummaries } = textSlice.actions
+export const { setBibleSummaries, setBibleSummariesError, setBibleSummariesLoading } = textSlice.actions
 
 export const counterReducer = textSlice.reducer;
 
@@ -74,6 +65,7 @@ import { BookTitle, TextAppearance, Translation } from "./types/textTypes";
 import { textManager } from "./utils/TextManager";
 import { apiBible } from "./api";
 import { BibleSummary, Chapter } from "./api/ApiBible";
+import { store } from '.'
 
 interface UntrackedValue<T> {
   value: T;
