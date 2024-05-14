@@ -2,12 +2,67 @@
 <html lang="en">
 
 <head>
+  <!-- Meta Data -->
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Memorize Scripture</title>
+  <link rel="preconnect" href="https://api.esv.org" />
+  <link rel="preconnect" href="https://www.googletagmanager.com" />
+  <link rel="preconnect" href="https://audio.esv.org" />
+
+  <!-- Main App Files -->
   <link rel="stylesheet" href="./src/index.css" />
   <script type="module" src="/src/index.ts"></script>
+
+  <!-- Site Title & Description -->
+  <title>Memorize Scripture</title>
+  <meta name="description"
+    content="A free, mobile-friendly web app for helping you memorize extended portions of God's Word." />
+  <meta name="keywords"
+    content="Scripture, Bible, Verse, memorization, memory, flash cards, learning, by heart, reciting, recitation, Austin Theriot, Bible Study, English Standard Version, first letter only, mnemonics" />
+  <meta name="author" content="Austin Theriot" />
+
+
+  <!-- Favicon info -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#333533" />
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+  <meta name="msapplication-TileColor" content="#2b5797" />
+  <meta name="theme-color" content="#333533" />
+  <link rel="icon" href="/favicon.ico" />
+
+
+  <!-- Social Media Meta Data -->
+  <meta property="og:image" content="/og_image.png" />
+  <meta property="og:title" content="Memorize Scripture" />
+  <meta property="og:url" content="https://memorizescripture.org/" />
+  <meta property="og:description"
+    content="A free, mobile-friendly web app for helping you memorize extended portions of God's Word." />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Memorize Scripture" />
+  <meta name="twitter:title" content="Memorize Scripture" />
+  <meta name="twitter:description"
+    content="A free, mobile-friendly web app for helping you memorize extended portions of God's Word." />
+  <meta name="twitter:image" content="/og_image_smaller.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:image:alt"
+    content="Chi Rho Scripture Memorization: A free, mobile-friendly web app for helping you memorize extended portions of God's Word." />
+
+  <!-- Loading animation styles -->
+  <style>
+    @keyframes spin {
+      0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+      }
+
+      100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+      }
+    }
+  </style>
 </head>
 
 <body>
