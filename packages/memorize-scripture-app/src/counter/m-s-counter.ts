@@ -1,6 +1,6 @@
 import { LitElement, html } from "lit";
 import { customElement } from "lit/decorators.js";
-import { SelectorController } from "../store/SelectorController";
+import { SelectorController } from "@/controllers/SelectorController";
 import { store } from "../store";
 import { increment } from "../store/counter";
 

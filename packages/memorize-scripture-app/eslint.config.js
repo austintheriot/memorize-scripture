@@ -6,7 +6,7 @@ export default tseslint.config(
   ...tseslint.configs.strictTypeChecked,
   {
     // acts as global ignore
-    ignores: ["dist/*", "build/*", "eslint.config.js"],
+    ignores: ["dist/*", "build/*", "eslint.config.js", "vite.config.ts"],
   },
   {
     languageOptions: {
