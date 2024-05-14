@@ -7,9 +7,10 @@ import {
   bibleSummaries,
   bibleSummariesLoading,
   bibleSummariesError,
-  fetchChapter,
+  // fetchChapter,
 } from "./m-s-state";
 import { BibleSummary } from "./api/ApiBible";
+import "./counter/m-s-counter";
 
 export const M_S_APP_NAME = "m-s-app";
 
@@ -39,13 +40,15 @@ export class MSApp extends SignalWatcher(LitElement) {
                     </li>`,
           )}
               </ul>
+
+<m-s-counter></m-s-counter>
             `}
     `;
   }
 
   private _makeHandleBibleClick(id: BibleSummary["id"]) {
     const callback = () => {
-      fetchChapter(id);
+      // fetchChapter(id);
       console.log("clicked!", id);
     };
     return callback.bind(this);
