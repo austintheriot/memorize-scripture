@@ -19,7 +19,9 @@ void fetchAllBibles();
 @customElement(M_S_APP_NAME)
 export class MSApp extends LitElement {
   protected render() {
-    return html`<m-s-bible-list></m-s-bible-list>`;
+    return html`
+<slot></slot>
+<m-s-bible-list></m-s-bible-list>`;
   }
 }
 
