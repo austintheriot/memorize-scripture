@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "lint": "yarn eslint .",
+    "lint:types": "tsc --noEmit",
+    "lint:eslint": "yarn eslint .",
+    "lint": "yarn lint:types && yarn lint:eslint",
     "test": "vitest",
     "type-gen": "ts-node --transpileOnly --esm ./scripts/typeGen.ts"
   },
