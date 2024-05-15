@@ -11,7 +11,7 @@
 
   <!-- Main App Files -->
   <link rel="stylesheet" href="./src/index.css" />
-  <script type="module" src="/src/index.ts"></script>
+  <script type="module" src="./src/index.ts"></script>
 
   <!-- Site Title & Description -->
   <title>Memorize Scripture</title>
@@ -20,7 +20,6 @@
   <meta name="keywords"
     content="Scripture, Bible, Verse, memorization, memory, flash cards, learning, by heart, reciting, recitation, Austin Theriot, Bible Study, English Standard Version, first letter only, mnemonics" />
   <meta name="author" content="Austin Theriot" />
-
 
   <!-- Favicon info -->
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
@@ -69,11 +68,20 @@
 
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <m-s-app>
-    <div
-      style=" position: absolute; top: 0; left: 0; height: 100vh; width: 100vw; display: flex; flex: none; justify-content: center; align-items: center; ">
-      <div style="width: 100px; height: 100px; position: relative">
+    <!-- Display loader while waiting for custom element to be defined in the window -->
+    <div class="loading-indicator"
+      style="position: absolute; top: 0; left: 0; height: 100vh; width: 100vw; display: flex; flex: none; justify-content: center; align-items: center;">
+      <div
+        style="width: 100px; height: 100px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <svg width="100" height="100">
+          <image xlink:href="./src/assets/loading-logo-min.svg" width="100" height="100" />
+        </svg>
+        <svg width="115" height="115"
+          style="position: absolute; top: 50%; left: 50%; animation: spin 4s linear infinite;">
+          <image xlink:href="./src/assets/loading-spinner-min.svg" width="115" height="115" />
+        </svg>
         <p
-          style=" font-family: Open Sans, sans-serif; color: #d9d9d9; position: absolute; left: 50%; transform: translateX(-50%); top: 100%; ">
+          style="font-family: Open Sans, sans-serif; color: #d9d9d9; position: absolute; left: 50%; transform: translateX(-50%); top: 100%;">
           Loading...
         </p>
       </div>

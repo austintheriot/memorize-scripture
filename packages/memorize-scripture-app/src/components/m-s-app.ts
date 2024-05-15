@@ -1,4 +1,4 @@
-import { LitElement, html } from "lit";
+import { LitElement, css, html } from "lit";
 import { customElement } from "lit/decorators.js";
 import { fetchAllBibles } from "@/store/text";
 
@@ -23,6 +23,12 @@ export class MSApp extends LitElement {
 <slot></slot>
 <m-s-bible-list></m-s-bible-list>`;
   }
+
+  public static styles = css`
+:defined .loading-indicator {
+  display: none;
+}
+`
 }
 
 declare global {
