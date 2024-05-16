@@ -1,8 +1,7 @@
-import { LitElement, css, html } from "lit";
+import { LitElement, html } from "lit";
 import { customElement } from "lit/decorators.js";
 import { fetchAllBibles } from "@/store/text";
-
-import("@/components/m-s-bible-list");
+import "@/components/m-s-bible-list";
 
 export const M_S_APP_NAME = "m-s-app";
 
@@ -18,17 +17,17 @@ void fetchAllBibles();
  */
 @customElement(M_S_APP_NAME)
 export class MSApp extends LitElement {
-  protected render() {
-    return html`
-<slot></slot>
-<m-s-bible-list></m-s-bible-list>`;
+  public connectedCallback(): void {
+    super.connectedCallback();
+    const loadingIndicator = document.querySelector(
+      ".loading-indicator",
+    ) as HTMLDivElement;
+    loadingIndicator.style.display = "none";
   }
 
-  public static styles = css`
-:defined .loading-indicator {
-  display: none;
-}
-`
+  protected render() {
+    return html`<m-s-bible-list></m-s-bible-list>`;
+  }
 }
 
 declare global {
