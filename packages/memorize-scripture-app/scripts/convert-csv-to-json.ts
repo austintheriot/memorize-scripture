@@ -1,6 +1,14 @@
 import * as fs from "fs";
 import * as path from "path";
 import { parse } from "csv-parse";
+import {
+	BookTitle,
+	BookTitleFileName,
+	ChapterNumber,
+	bookTitleFileNameMap,
+	bookTitleFileNameToBookTitle,
+	isBookTitleFileName,
+} from "@/types/textTypes";
 
 // Function to rename files based on their existing name
 const renameFile = (filePath: string) => {
@@ -23,13 +31,39 @@ const renameFile = (filePath: string) => {
 	});
 };
 
+interface ByzantineJsonVerse {
+	bookTitle: BookTitle;
+	chapterNumber: number;
+	verseNumber: number;
+	text: string;
+}
+
+interface ByzantineJsonChapter {
+	bookTitle: BookTitle;
+	chapterNumber: ChapterNumber;
+	verses: ByzantineJsonVerse[];
+}
+
 // Function to convert CSV to JSON
 const convertCsvToJson = (csvFilePath: string) => {
 	const dir = path.dirname(csvFilePath);
 	const ext = path.extname(csvFilePath);
-	const fileName = path.basename(csvFilePath, ext);
-	const jsonDirPath = path.resolve(dir, `${dir}/../by-chapter/${fileName}`);
-	console.log(dir, fileName, ext, jsonDirPath);
+	const bookTitleFileName = path.basename(csvFilePath, ext);
+
+	if (!isBookTitleFileName(bookTitleFileName)) {
+		throw new Error(`${bookTitleFileName} is not a vaild book title file name`);
+	}
+
+	const bookTitle = bookTitleFileNameToBookTitle(bookTitleFileName);
+
+	if (!bookTitle) {
+		throw new Error(`Error parsing valid bookTitle for ${bookTitleFileName}`);
+	}
+
+	const jsonDirPath = path.resolve(
+		dir,
+		`${dir}/../by-chapter/${bookTitleFileName}`,
+	);
 
 	const parser = fs
 		.createReadStream(csvFilePath)
@@ -47,31 +81,80 @@ const convertCsvToJson = (csvFilePath: string) => {
 		records.push(record);
 	});
 
-	const chapters: Array<Array<ParsedCsvValue>> = [];
+	interface SortedCsvValue {
+		chapterNumber: number;
+		verseNumber: number;
+		text: string;
+	}
+
+	const sortedRecords: Array<Array<SortedCsvValue>> = [];
+
+	const organizedChapters: Partial<
+		Record<BookTitleFileName, ByzantineJsonChapter[]>
+	> = {};
 
 	parser.on("end", () => {
 		// sort by chapter number/verse
 		records.forEach((record) => {
 			const chapterNumber = parseInt(record.chapter, 10);
 			const verseNumber = parseInt(record.verse, 10);
-			chapters[chapterNumber] ??= [];
-			chapters[chapterNumber][verseNumber] = record;
-		});
 
-		// make chapters and verses 0-indexed
-		chapters.forEach((chapter) => {
-			chapter.shift();
-		});
-		chapters.shift();
-
-		console.log(fileName, chapters[0]?.[0]);
-
-		fs.writeFile(jsonDirPath, JSON.stringify(records, null, 2), (err) => {
-			if (err) {
-				console.error(`Error writing JSON file ${jsonDirPath}:`, err);
-			} else {
-				console.log(`Successfully converted ${csvFilePath} to ${jsonDirPath}`);
+			if (!Number.isInteger(chapterNumber)) {
+				throw new Error(
+					`Couldn't parse chapter number ${chapterNumber} for book ${bookTitle}`,
+				);
 			}
+
+			if (!Number.isInteger(verseNumber)) {
+				throw new Error(
+					`Couldn't parse verse numbes ${chapterNumber} for book ${bookTitle}`,
+				);
+			}
+
+			sortedRecords[chapterNumber] ??= [];
+			sortedRecords[chapterNumber][verseNumber] = {
+				text: record.text,
+				chapterNumber,
+				verseNumber,
+			};
+		});
+
+		sortedRecords.forEach((record, chapterNumber) => {
+			const chapter: ByzantineJsonChapter = {
+				chapterNumber: chapterNumber,
+				bookTitle,
+				verses: record.map(
+					(verse, verseNumber) =>
+						({
+							bookTitle,
+							chapterNumber: chapterNumber,
+							verseNumber: verseNumber,
+							text: verse.text,
+						}) satisfies ByzantineJsonVerse,
+				),
+			};
+
+			organizedChapters[bookTitleFileName] ??= [];
+			(organizedChapters as Record<BookTitleFileName, ByzantineJsonChapter[]>)[
+				bookTitleFileName
+			][chapterNumber - 1] = chapter;
+		});
+
+		console.log(bookTitle, jsonDirPath, sortedRecords[1][1]);
+
+		Object.values(organizedChapters).forEach((chapterList) => {
+			chapterList.forEach((chapter) => {
+				const jsonFilePath = `${jsonDirPath}/${chapter.chapterNumber}.json`;
+				fs.writeFile(jsonFilePath, JSON.stringify(chapter, null, 2), (err) => {
+					if (err) {
+						console.error(`Error writing JSON file ${jsonFilePath}:`, err);
+					} else {
+						console.log(
+							`Successfully converted ${csvFilePath} to ${jsonFilePath}`,
+						);
+					}
+				});
+			});
 		});
 	});
 
