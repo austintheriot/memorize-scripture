@@ -2,47 +2,12 @@ import * as fs from "fs";
 import * as path from "path";
 import { parse } from "csv-parse";
 import {
-	BookTitle,
 	BookTitleFileName,
-	ChapterNumber,
-	bookTitleFileNameMap,
+	CustomJsonChapter,
+	CustomJsonVerse,
 	bookTitleFileNameToBookTitle,
 	isBookTitleFileName,
 } from "@/types/textTypes";
-
-// Function to rename files based on their existing name
-const renameFile = (filePath: string) => {
-	const dir = path.dirname(filePath);
-	const ext = path.extname(filePath);
-	const baseName = path.basename(filePath, ext);
-	if (baseName.startsWith(".")) {
-		return;
-	}
-	const splitName = baseName.split("_");
-	const newName = `${splitName[splitName.length - 1]}.mp3`;
-	const newFilePath = path.join(dir, newName);
-
-	fs.rename(filePath, newFilePath, (err) => {
-		if (err) {
-			console.error(`Error renaming file ${filePath}:`, err);
-		} else {
-			console.log(`Renamed: ${filePath} -> ${newFilePath}`);
-		}
-	});
-};
-
-interface ByzantineJsonVerse {
-	bookTitle: BookTitle;
-	chapterNumber: number;
-	verseNumber: number;
-	text: string;
-}
-
-interface ByzantineJsonChapter {
-	bookTitle: BookTitle;
-	chapterNumber: ChapterNumber;
-	verses: ByzantineJsonVerse[];
-}
 
 // Function to convert CSV to JSON
 const convertCsvToJson = (csvFilePath: string) => {
@@ -91,7 +56,7 @@ const convertCsvToJson = (csvFilePath: string) => {
 	const sortedRecords: Array<Array<SortedCsvValue>> = [];
 
 	const organizedChapters: Partial<
-		Record<BookTitleFileName, ByzantineJsonChapter[]>
+		Record<BookTitleFileName, CustomJsonChapter[]>
 	> = {};
 
 	parser.on("end", () => {
@@ -128,7 +93,7 @@ const convertCsvToJson = (csvFilePath: string) => {
 
 		sortedRecords.forEach((record) => {
 			const chapterNumber = record[0].chapterNumber;
-			const chapter: ByzantineJsonChapter = {
+			const chapter: CustomJsonChapter = {
 				chapterNumber,
 				bookTitle,
 				verses: record.map(
@@ -138,12 +103,12 @@ const convertCsvToJson = (csvFilePath: string) => {
 							chapterNumber,
 							verseNumber: verse.verseNumber,
 							text: verse.text,
-						}) satisfies ByzantineJsonVerse,
+						}) satisfies CustomJsonVerse,
 				),
 			};
 
 			organizedChapters[bookTitleFileName] ??= [];
-			(organizedChapters as Record<BookTitleFileName, ByzantineJsonChapter[]>)[
+			(organizedChapters as Record<BookTitleFileName, CustomJsonChapter[]>)[
 				bookTitleFileName
 			][chapterNumber - 1] = chapter;
 		});

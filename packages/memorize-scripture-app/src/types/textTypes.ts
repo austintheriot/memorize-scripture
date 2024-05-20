@@ -233,3 +233,16 @@ export interface TextJson {
 }
 
 export type TextAppearance = "full" | "condensed" | "hidden";
+
+export interface CustomJsonVerse {
+  bookTitle: BookTitle;
+  chapterNumber: number;
+  verseNumber: number;
+  text: string;
+}
+
+export interface CustomJsonChapter {
+  bookTitle: BookTitle;
+  chapterNumber: ChapterNumber;
+  verses: CustomJsonVerse[];
+}
