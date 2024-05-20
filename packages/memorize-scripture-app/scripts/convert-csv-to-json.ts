@@ -60,10 +60,11 @@ const convertCsvToJson = (csvFilePath: string) => {
 		throw new Error(`Error parsing valid bookTitle for ${bookTitleFileName}`);
 	}
 
-	const jsonDirPath = path.resolve(
-		dir,
-		`${dir}/../by-chapter/${bookTitleFileName}`,
-	);
+	const jsonDirPath = path.resolve(dir, `../by-chapter/${bookTitleFileName}`);
+
+	if (!fs.existsSync(jsonDirPath)) {
+		fs.mkdirSync(jsonDirPath, { recursive: true });
+	}
 
 	const parser = fs
 		.createReadStream(csvFilePath)
@@ -119,16 +120,23 @@ const convertCsvToJson = (csvFilePath: string) => {
 			};
 		});
 
-		sortedRecords.forEach((record, chapterNumber) => {
+		// make 0-indexed
+		sortedRecords.shift();
+		sortedRecords.forEach((chapter) => {
+			chapter.shift();
+		});
+
+		sortedRecords.forEach((record) => {
+			const chapterNumber = record[0].chapterNumber;
 			const chapter: ByzantineJsonChapter = {
-				chapterNumber: chapterNumber,
+				chapterNumber,
 				bookTitle,
 				verses: record.map(
-					(verse, verseNumber) =>
+					(verse) =>
 						({
 							bookTitle,
-							chapterNumber: chapterNumber,
-							verseNumber: verseNumber,
+							chapterNumber,
+							verseNumber: verse.verseNumber,
 							text: verse.text,
 						}) satisfies ByzantineJsonVerse,
 				),
@@ -140,7 +148,7 @@ const convertCsvToJson = (csvFilePath: string) => {
 			][chapterNumber - 1] = chapter;
 		});
 
-		console.log(bookTitle, jsonDirPath, sortedRecords[1][1]);
+		console.log(bookTitle, jsonDirPath, sortedRecords[0][0]);
 
 		Object.values(organizedChapters).forEach((chapterList) => {
 			chapterList.forEach((chapter) => {
