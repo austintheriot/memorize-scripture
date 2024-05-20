@@ -1,3 +1,110 @@
+export const bookTitleFileNameMap = [
+  ["Genesis", "00-genesis"],
+  ["Exodus", "01-exodus"],
+  ["Leviticus", "02-leviticus"],
+  ["Numbers", "03-numbers"],
+  ["Deuteronomy", "04-deuteronomy"],
+  ["Joshua", "05-joshua"],
+  ["Judges", "06-judges"],
+  ["Ruth", "07-ruth"],
+  ["1 Samuel", "08-1samuel"],
+  ["2 Samuel", "09-2samuel"],
+  ["1 Kings", "10-1kings"],
+  ["2 Kings", "11-2kings"],
+  ["1 Chronicles", "12-1chronicles"],
+  ["2 Chronicles", "13-2chronicles"],
+  ["Ezra", "14-ezra"],
+  ["Nehemiah", "15-nehemiah"],
+  ["Esther", "16-esther"],
+  ["Job", "17-job"],
+  ["Psalms", "18-psalms"],
+  ["Proverbs", "19-proverbs"],
+  ["Ecclesiastes", "20-ecclesiastes"],
+  ["Song of Solomon", "21-songofsolomon"],
+  ["Isaiah", "22-isaiah"],
+  ["Jeremiah", "23-jeremiah"],
+  ["Lamentations", "24-lamentations"],
+  ["Ezekiel", "25-ezekiel"],
+  ["Daniel", "26-daniel"],
+  ["Hosea", "27-hosea"],
+  ["Joel", "28-joel"],
+  ["Amos", "29-amos"],
+  ["Obadiah", "30-obadiah"],
+  ["Jonah", "31-jonah"],
+  ["Micah", "32-micah"],
+  ["Nahum", "33-nahum"],
+  ["Habakkuk", "34-habakkuk"],
+  ["Zephaniah", "35-zephaniah"],
+  ["Haggai", "36-haggai"],
+  ["Zechariah", "37-zechariah"],
+  ["Malachi", "38-malachi"],
+  ["Matthew", "39-matthew"],
+  ["Mark", "40-mark"],
+  ["Luke", "41-luke"],
+  ["John", "42-john"],
+  ["Acts", "43-acts"],
+  ["Romans", "44-romans"],
+  ["1 Corinthians", "45-1corinthians"],
+  ["2 Corinthians", "46-2corinthians"],
+  ["Galatians", "47-galatians"],
+  ["Ephesians", "48-ephesians"],
+  ["Philippians", "49-philippians"],
+  ["Colossians", "50-colossians"],
+  ["1 Thessalonians", "51-1thessalonians"],
+  ["2 Thessalonians", "52-2thessalonians"],
+  ["1 Timothy", "53-1timothy"],
+  ["2 Timothy", "54-2timothy"],
+  ["Titus", "55-titus"],
+  ["Philemon", "56-philemon"],
+  ["Hebrews", "57-hebrews"],
+  ["James", "58-james"],
+  ["1 Peter", "59-1peter"],
+  ["2 Peter", "60-2peter"],
+  ["1 John", "61-1john"],
+  ["2 John", "62-2john"],
+  ["3 John", "63-3john"],
+  ["Jude", "64-jude"],
+  ["Revelation", "65-revelation"],
+] as const;
+
+export type BookTitleFileNameMap = typeof bookTitleFileNameMap;
+
+export type BookTitleFileName = BookTitleFileNameMap[number][1];
+
+export const isBookTitle = (s: unknown): s is BookTitle => {
+  if (typeof s !== "string") return false;
+  return !!bookTitleFileNameMap.find((mapping) => s === mapping[0]);
+};
+
+export const isBookTitleFileName = (s: unknown): s is BookTitleFileName => {
+  if (typeof s !== "string") return false;
+  return !!bookTitleFileNameMap.find((mapping) => s === mapping[1]);
+};
+
+export const bookTitleFileNameToBookTitle = (
+  bookTitleFileName: BookTitleFileName,
+): BookTitle | null => {
+  const mapping = bookTitleFileNameMap.find(
+    (mapping) => mapping[1] === bookTitleFileName,
+  );
+
+  if (!mapping) return null;
+
+  return mapping[0];
+};
+
+export const bookTitleToBookTitleFileName = (
+  bookTitle: BookTitle,
+): BookTitleFileName | null => {
+  const mapping = bookTitleFileNameMap.find(
+    (mapping) => mapping[0] === bookTitle,
+  );
+
+  if (!mapping) return null;
+
+  return mapping[1];
+};
+
 export const booksAndTitlesArray = [
   ["Genesis", 50],
   ["Exodus", 40],
@@ -67,9 +174,25 @@ export const booksAndTitlesArray = [
   ["Revelation", 22],
 ] as const;
 
-export type BooksAndTitlesMap = typeof booksAndTitlesArray;
+export type BooksAndTitlesMap = typeof bookTitleFileNameMap;
 
-export const allBookTitles = booksAndTitlesArray.map((map) => map[0]);
+export const isValidChapterNumber = (
+  bookTitle: BookTitle,
+  chapterNumber: number,
+): boolean => {
+  if (!Number.isInteger(chapterNumber)) return false;
+
+  if (chapterNumber <= 0) return false;
+
+  const mapping = booksAndTitlesArray.find(
+    (mapping) => mapping[0] === bookTitle,
+  );
+  if (!mapping) return false;
+
+  return chapterNumber <= mapping[1];
+};
+
+export const allBookTitles = bookTitleFileNameMap.map((map) => map[0]);
 
 export type BookTitle = BooksAndTitlesMap[number][0];
 
@@ -109,4 +232,4 @@ export interface TextJson {
   books: BookJson[];
 }
 
-export type TextAppearance = "full" | "condensed" | "hidden"
+export type TextAppearance = "full" | "condensed" | "hidden";

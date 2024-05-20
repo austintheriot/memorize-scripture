@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.2.0",
+    "csv-parse": "^5.5.6",
     "eslint": "^9.2.0",
     "swagger-typescript-api": "^13.0.3",
     "tsx": "^4.10.2",

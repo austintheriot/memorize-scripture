@@ -2077,6 +2077,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"csv-parse@npm:^5.5.6":
+  version: 5.5.6
+  resolution: "csv-parse@npm:5.5.6"
+  checksum: 10c0/b4f6e9b885e4488829356455157bd009f3fed4119c5fbaadab1a879e85f0a9a1b62cd01e6de68ff77a50f820a6261722bce1b799da1ace2e2126e0b7c8d86760
+  languageName: node
+  linkType: hard
+
 "data-uri-to-buffer@npm:^4.0.0":
   version: 4.0.1
   resolution: "data-uri-to-buffer@npm:4.0.1"
@@ -4256,6 +4263,7 @@ __metadata:
   dependencies:
     "@eslint/js": "npm:^9.2.0"
     "@reduxjs/toolkit": "npm:^2.2.4"
+    csv-parse: "npm:^5.5.6"
     eslint: "npm:^9.2.0"
     lit: "npm:^3.1.2"
     memorize-scripture-common: "workspace:^"
