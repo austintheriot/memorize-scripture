@@ -7,6 +7,7 @@ import {
   selectChapterTextLoading,
 } from "@/store/text";
 import "@/components/m-s-bible-list";
+import "@/components/m-s-text-picker";
 import { SelectorController } from "@/controllers/SelectorController";
 import { store } from "@/store";
 
@@ -46,7 +47,9 @@ export class MSApp extends LitElement {
 
   // prettier-ignore
   protected render() {
-    return html` <span>
+    return html`
+<m-s-text-picker></m-s-text-picker>
+<span>
 ${this._chapterTextLoading.value
         ? "Loading"
         : this._chapterTextError.value
