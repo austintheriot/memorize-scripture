@@ -1,5 +1,5 @@
-import type { Store, Action as RAction } from '@reduxjs/toolkit';
-import { ReactiveController, ReactiveControllerHost } from 'lit';
+import type { Store, Action as RAction } from "@reduxjs/toolkit";
+import { ReactiveController, ReactiveControllerHost } from "lit";
 
 export type Selector<State, Result> = (state: State) => Result;
 
@@ -11,24 +11,22 @@ export function isEqualDefault<Result>(prev: Result, next: Result) {
 
 /**
  * Enables providing reusable selectors to Lit elements
- * @see https://pr1283-b46091e---lit-dev-5ftespv5na-uc.a.run.app/articles/redux-reactive-controllers/ 
+ * @see https://pr1283-b46091e---lit-dev-5ftespv5na-uc.a.run.app/articles/redux-reactive-controllers/
  */
-export class SelectorController<
-  State,
-  Action extends RAction,
-  Result = unknown
-> implements ReactiveController {
+export class SelectorController<State, Action extends RAction, Result = State>
+  implements ReactiveController
+{
   private _host: ReactiveControllerHost;
   private _store: Store<State, Action>;
   private _selector: Selector<State, Result>;
   private _value: Result;
-  private _unsubscribe: () => void = () => { };
-  private _isEqual: IsEqual<Result> = isEqualDefault<Result>
+  private _unsubscribe: () => void = () => {};
+  private _isEqual: IsEqual<Result> = isEqualDefault<Result>;
 
   constructor(
     host: ReactiveControllerHost,
     store: Store<State, Action>,
-    selector: Selector<State, Result>,
+    selector: Selector<State, Result> = (state) => state,
     isEqual: IsEqual<Result> = isEqualDefault,
   ) {
     this._host = host;
@@ -40,13 +38,13 @@ export class SelectorController<
   }
 
   public get value(): Result {
-    return this._value
+    return this._value;
   }
 
   public hostConnected() {
     this._unsubscribe = this._store.subscribe(() => {
       const selected = this._selector(this._store.getState());
-      if (!(this._isEqual(selected, this._value))) {
+      if (!this._isEqual(selected, this._value)) {
         this._value = selected;
         this._host.requestUpdate();
       }

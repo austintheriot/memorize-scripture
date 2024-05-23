@@ -1,7 +1,14 @@
-import { LitElement, html } from "lit";
+import { LitElement, css, html } from "lit";
 import { customElement } from "lit/decorators.js";
-import { fetchAllBibles } from "@/store/text";
+import {
+  fetchAllBibles,
+  selectChapterText,
+  selectChapterTextError,
+  selectChapterTextLoading,
+} from "@/store/text";
 import "@/components/m-s-bible-list";
+import { SelectorController } from "@/controllers/SelectorController";
+import { store } from "@/store";
 
 export const M_S_APP_NAME = "m-s-app";
 
@@ -17,6 +24,18 @@ void fetchAllBibles();
  */
 @customElement(M_S_APP_NAME)
 export class MSApp extends LitElement {
+  private _chapterText = new SelectorController(this, store, selectChapterText);
+  private _chapterTextLoading = new SelectorController(
+    this,
+    store,
+    selectChapterTextLoading,
+  );
+  private _chapterTextError = new SelectorController(
+    this,
+    store,
+    selectChapterTextError,
+  );
+
   public connectedCallback(): void {
     super.connectedCallback();
     const loadingIndicator = document.querySelector(
@@ -25,9 +44,22 @@ export class MSApp extends LitElement {
     loadingIndicator.style.display = "none";
   }
 
+  // prettier-ignore
   protected render() {
-    return html`<m-s-bible-list></m-s-bible-list>`;
+    return html` <span>
+${this._chapterTextLoading.value
+        ? "Loading"
+        : this._chapterTextError.value
+          ? "Error"
+          : this._chapterText.value}
+</span>`;
   }
+
+  public static styles = css`
+    span {
+      white-space: pre-wrap;
+    }
+  `;
 }
 
 declare global {
