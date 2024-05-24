@@ -1,10 +1,6 @@
 import { LitElement, html } from "lit";
 import { customElement } from "lit/decorators.js";
-import { SelectorController } from "@/controllers/SelectorController";
-import { store } from "../store";
-import { selectBibleSummaries } from "@/store/text";
-import { BibleSummary } from "@/api/ApiBible";
-import { BookTitle, booksAndTitlesArray } from "@/types/textTypes";
+import { type BookTitle, booksAndTitlesArray } from "@/types/textTypes";
 
 export const M_S_TEXT_PICKER_NAME = "m-s-text-picker";
 

@@ -1,4 +1,4 @@
-import { RootState } from "..";
+import { type RootState } from "..";
 
 export const selectChapterText = (s: RootState) => s.text.chapterText;
 

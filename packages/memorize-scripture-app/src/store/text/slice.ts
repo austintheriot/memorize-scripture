@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { BibleSummary } from "@/api/ApiBible";
+import { type BibleSummary } from "@/api/ApiBible";
 import { wrapActionsWithDispatch } from "@/store/utils";
 
 export interface TextState {

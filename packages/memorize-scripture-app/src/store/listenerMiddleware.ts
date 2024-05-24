@@ -23,7 +23,7 @@ startAppListening({
 		) as HTMLDivElement;
 		loadingIndicator.style.display = "none";
 
-		setAppInitialized();
+		void setAppInitialized();
 		console.log("App initialized");
 	},
 });
