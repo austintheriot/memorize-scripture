@@ -1,21 +1,18 @@
 import { LitElement, css, html } from "lit";
 import { customElement } from "lit/decorators.js";
 import {
-  fetchAllBibles,
   selectChapterText,
   selectChapterTextError,
   selectChapterTextLoading,
 } from "@/store/text";
-import "@/components/m-s-bible-list";
 import "@/components/m-s-text-picker";
 import { SelectorController } from "@/controllers/SelectorController";
 import { store } from "@/store";
+import { selectAppIsInitialized } from "@/store/init";
 
 export const M_S_APP_NAME = "m-s-app";
 
 export type MSAppName = typeof M_S_APP_NAME;
-
-void fetchAllBibles();
 
 /**
  * An example element.
@@ -25,6 +22,11 @@ void fetchAllBibles();
  */
 @customElement(M_S_APP_NAME)
 export class MSApp extends LitElement {
+  private _appIsInitialized = new SelectorController(
+    this,
+    store,
+    selectAppIsInitialized,
+  );
   private _chapterText = new SelectorController(this, store, selectChapterText);
   private _chapterTextLoading = new SelectorController(
     this,
@@ -37,16 +39,10 @@ export class MSApp extends LitElement {
     selectChapterTextError,
   );
 
-  public connectedCallback(): void {
-    super.connectedCallback();
-    const loadingIndicator = document.querySelector(
-      ".loading-indicator",
-    ) as HTMLDivElement;
-    loadingIndicator.style.display = "none";
-  }
-
   // prettier-ignore
   protected render() {
+    if (!this._appIsInitialized.value) return null
+
     return html`
 <m-s-text-picker></m-s-text-picker>
 <span>
