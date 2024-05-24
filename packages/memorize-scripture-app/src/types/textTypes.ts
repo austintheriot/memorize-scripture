@@ -174,6 +174,18 @@ export const booksAndTitlesArray = [
   ["Revelation", 22],
 ] as const;
 
+export const bookTitleToFinalChapterNumber = (bookTitle: BookTitle) => {
+  const mapping = booksAndTitlesArray.find(
+    (mapping) => mapping[0] === bookTitle,
+  );
+  if (!mapping)
+    throw new Error(
+      `Couldn't find associated chapter numbers for book title ${bookTitle}`,
+    );
+
+  return mapping[1];
+};
+
 export type BooksAndTitlesMap = typeof bookTitleFileNameMap;
 
 export const isValidChapterNumber = (
@@ -198,7 +210,11 @@ export type BookTitle = BooksAndTitlesMap[number][0];
 
 export type ChapterNumber = number | `${number}`;
 
-export const translations = ["esv"] as const;
+export const translations = ["esv", "byzantine"] as const;
+
+export const textViews = ["full", "condensed", "hidden"] as const;
+
+export type TextView = (typeof textViews)[number];
 
 export type Translation = (typeof translations)[number];
 

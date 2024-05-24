@@ -1,14 +1,10 @@
-import { LitElement, css, html } from "lit";
+import { LitElement, html } from "lit";
 import { customElement } from "lit/decorators.js";
-import {
-  selectChapterText,
-  selectChapterTextError,
-  selectChapterTextLoading,
-} from "@/store/text";
-import "@/components/m-s-text-picker";
 import { SC } from "@/controllers/SelectorController";
 import { store } from "@/store";
 import { selectAppIsInitialized } from "@/store/init";
+import "./m-s-text-view";
+import "./m-s-text-picker";
 
 export const M_S_APP_NAME = "m-s-app";
 
@@ -22,32 +18,23 @@ export type MSAppName = typeof M_S_APP_NAME;
  */
 @customElement(M_S_APP_NAME)
 export class MSApp extends LitElement {
+  protected createRenderRoot() {
+    return this;
+  }
+
   private _appIsInitialized = new SC(this, store, selectAppIsInitialized);
-  private _chapterText = new SC(this, store, selectChapterText);
-  private _chapterTextLoading = new SC(this, store, selectChapterTextLoading);
-  private _chapterTextError = new SC(this, store, selectChapterTextError);
 
   // prettier-ignore
   protected render() {
-    console.log("init", this._appIsInitialized.value, "prev", this._appIsInitialized.preValue)
-    if (!this._appIsInitialized.value) return null
+    if (!this._appIsInitialized.value) {
+      return null
+    }
 
     return html`
 <m-s-text-picker></m-s-text-picker>
-<span>
-${this._chapterTextLoading.value
-        ? "Loading"
-        : this._chapterTextError.value
-          ? "Error"
-          : this._chapterText.value}
-</span>`;
+<m-s-text-view></m-s-text-view>
+`;
   }
-
-  public static styles = css`
-    span {
-      white-space: pre-wrap;
-    }
-  `;
 }
 
 declare global {

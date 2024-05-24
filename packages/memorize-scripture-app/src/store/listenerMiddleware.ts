@@ -1,7 +1,13 @@
 import { createListenerMiddleware } from "@reduxjs/toolkit";
 import type { RootState, AppDispatch } from "./store";
 import { initApp, setAppInitialized } from "./init/slice";
-import { fetchByzantineText } from "./utils/byzantineText";
+import {
+	fetchByzantineText,
+	selectSelectedBookTitle,
+	selectSelectedChapterNumber,
+	selectSelectedTranslation,
+} from "@/store/text";
+import { selectAppIsInitialized } from "./init";
 
 export const listenerMiddleware = createListenerMiddleware();
 
@@ -11,19 +17,35 @@ export const startAppListening = listenerMiddleware.startListening.withTypes<
 >();
 
 startAppListening({
-	actionCreator: initApp,
-	effect: async (_action, _listenerApi) => {
-		console.log("Initializing app");
+	predicate: (action, currentState, previousState) =>
+		initApp.match(action) ||
+		selectSelectedTranslation(currentState) !==
+		selectSelectedTranslation(previousState) ||
+		selectSelectedChapterNumber(currentState) !==
+		selectSelectedChapterNumber(previousState) ||
+		selectSelectedBookTitle(currentState) !==
+		selectSelectedBookTitle(previousState),
+	effect: async (_action, listenerApi) => {
+		console.log("fetching new text");
 
-		await fetchByzantineText();
+		const state = listenerApi.getState();
 
-		// remove app loading indicator
-		const loadingIndicator = document.querySelector(
-			".loading-indicator",
-		) as HTMLDivElement;
-		loadingIndicator.style.display = "none";
+		const appIsInitialized = selectAppIsInitialized(state);
+		const translation = selectSelectedTranslation(state);
+		const bookTitle = selectSelectedBookTitle(state);
+		const chapterNumber = selectSelectedChapterNumber(state);
+		await fetchByzantineText(translation, bookTitle, chapterNumber);
 
-		void setAppInitialized();
-		console.log("App initialized");
+		if (!appIsInitialized) {
+			void setAppInitialized();
+
+			// remove app loading indicator
+			const loadingIndicator = document.querySelector(
+				".loading-indicator",
+			) as HTMLDivElement;
+			loadingIndicator.style.display = "none";
+		}
+
+		console.log("done fetching new text");
 	},
 });

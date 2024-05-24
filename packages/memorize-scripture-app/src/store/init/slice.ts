@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { createSlice } from "@reduxjs/toolkit";
-import { wrapActionsWithDispatch } from "@/store/utils";
+import { wrapActionsWithDispatch } from "@/store/wrapActionsWithDispatch";
 
 export interface InitState {
 	appInitialized: boolean;

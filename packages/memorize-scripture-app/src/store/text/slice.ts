@@ -1,58 +1,76 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { type BibleSummary } from "@/api/ApiBible";
-import { wrapActionsWithDispatch } from "@/store/utils";
+import { wrapActionsWithDispatch } from "@/store/wrapActionsWithDispatch";
+import {
+  BookTitle,
+  ChapterNumber,
+  CustomJsonChapter,
+  TextView,
+  Translation,
+} from "@/types/textTypes";
 
 export interface TextState {
-  bibleSummaries: BibleSummary[] | null;
-  bibleSummariesLoading: boolean;
-  bibleSummariesError: boolean;
-  chapterText: string | null;
-  chapterTextLoading: boolean;
-  chapterTextError: boolean;
+  selectedTranslation: Translation;
+  selectedBookTitle: BookTitle;
+  selectedChapterNumber: ChapterNumber;
+  currentChapter: CustomJsonChapter | null;
+  currentChapterLoading: boolean;
+  currentChapterError: boolean;
+  textView: TextView;
 }
 
 const initialState: TextState = {
-  bibleSummaries: null,
-  bibleSummariesLoading: false,
-  bibleSummariesError: false,
-  chapterText: null,
-  chapterTextLoading: false,
-  chapterTextError: false,
+  selectedBookTitle: "Matthew",
+  selectedChapterNumber: 1,
+  selectedTranslation: "byzantine",
+  currentChapter: null,
+  currentChapterLoading: false,
+  currentChapterError: false,
+  textView: "full",
 };
 
 export const textSlice = createSlice({
   name: "text",
   initialState,
   reducers: {
-    _setBibleSummaries: (state, action: PayloadAction<BibleSummary[]>) => {
-      state.bibleSummaries = action.payload;
+    _setCurrentChapter: (
+      state,
+      action: PayloadAction<CustomJsonChapter | null>,
+    ) => {
+      state.currentChapter = action.payload;
     },
-    _setBibleSummariesLoading: (state, action: PayloadAction<boolean>) => {
-      state.bibleSummariesLoading = action.payload;
+    _setCurrentChapterLoading: (state, action: PayloadAction<boolean>) => {
+      state.currentChapterLoading = action.payload;
     },
-    _setBibleSummariesError: (state, action: PayloadAction<boolean>) => {
-      state.bibleSummariesError = action.payload;
+    _setCurrentChapterError: (state, action: PayloadAction<boolean>) => {
+      state.currentChapterError = action.payload;
     },
-    _setChapterText: (state, action: PayloadAction<string | null>) => {
-      state.chapterText = action.payload;
+    _setSelectedTranslation: (state, action: PayloadAction<Translation>) => {
+      state.selectedTranslation = action.payload;
     },
-    _setChapterTextLoading: (state, action: PayloadAction<boolean>) => {
-      state.chapterTextLoading = action.payload;
+    _setSelectedBookTitle: (state, action: PayloadAction<BookTitle>) => {
+      state.selectedBookTitle = action.payload;
     },
-    _setChapterTextError: (state, action: PayloadAction<boolean>) => {
-      state.chapterTextError = action.payload;
+    _setSelectedChapterNumber: (
+      state,
+      action: PayloadAction<ChapterNumber>,
+    ) => {
+      state.selectedChapterNumber = action.payload;
+    },
+    _setTextView: (state, action: PayloadAction<TextView>) => {
+      state.textView = action.payload;
     },
   },
 });
 
 export const {
-  setBibleSummariesError,
-  setBibleSummaries,
-  setBibleSummariesLoading,
-  setChapterText,
-  setChapterTextError,
-  setChapterTextLoading,
+  setCurrentChapter,
+  setCurrentChapterError,
+  setCurrentChapterLoading,
+  setSelectedTranslation,
+  setTextView,
+  setSelectedBookTitle,
+  setSelectedChapterNumber,
 } = wrapActionsWithDispatch(textSlice.actions);
 
 export const textReducer = textSlice.reducer;
