@@ -309,7 +309,6 @@ export const customJsonVerseToString = (verse: CustomJsonVerse): string =>
 export const customJsonChapterToString = (
 	chapter: CustomJsonChapter,
 ): string => {
-	console.log("raw chapter: ", chapter);
 	return (
 		" ".repeat(5) +
 		"[1] " +

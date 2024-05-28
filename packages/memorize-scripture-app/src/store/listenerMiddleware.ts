@@ -26,10 +26,7 @@ startAppListening({
 		selectSelectedBookTitle(currentState) !==
 		selectSelectedBookTitle(previousState),
 	effect: async (_action, listenerApi) => {
-		console.log("fetching new text");
-
 		const state = listenerApi.getState();
-
 		const appIsInitialized = selectAppIsInitialized(state);
 		const translation = selectSelectedTranslation(state);
 		const bookTitle = selectSelectedBookTitle(state);
@@ -46,7 +43,5 @@ startAppListening({
 			) as HTMLDivElement;
 			loadingIndicator.style.display = "none";
 		}
-
-		console.log("done fetching new text");
 	},
 });
