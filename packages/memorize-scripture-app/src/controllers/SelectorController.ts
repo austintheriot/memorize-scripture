@@ -37,7 +37,7 @@ export class SelectorController<State, Action extends RAction, Result = unknown>
     this._isEqual = isEqual;
   }
 
-  public get preValue(): Result | null {
+  public get prevValue(): Result | null {
     return this._prevValue;
   }
 

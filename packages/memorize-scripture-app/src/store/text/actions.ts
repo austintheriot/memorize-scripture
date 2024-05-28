@@ -4,7 +4,7 @@ import {
 	CustomJsonChapter,
 	Translation,
 	bookTitleToBookTitleFileName,
-} from "@/types/textTypes";
+} from "@/utils/textUtils";
 import {
 	setCurrentChapter,
 	setCurrentChapterError,

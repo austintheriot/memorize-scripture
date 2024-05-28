@@ -4,7 +4,8 @@ import {
   CustomJsonChapter,
   CustomJsonVerse,
   bookTitleToFinalChapterNumber,
-} from "@/types/textTypes";
+  translationToBookTitles,
+} from "@/utils/textUtils";
 
 export const selectCurrentChapter = (s: RootState) => s.text.currentChapter;
 
@@ -52,11 +53,9 @@ export const selectFinalChapterNumberForBookTitle = createSelector(
   bookTitleToFinalChapterNumber,
 );
 
-export const selectChapterNumberForBookTitle = createSelector(
-  selectFinalChapterNumberForBookTitle,
-  (finalChapterNumber) => {
-    return Array.from({ length: finalChapterNumber }, (_, i) => i + 1);
-  },
+export const selectBookTitlesForTranslation = createSelector(
+  selectSelectedTranslation,
+  (translation) => translationToBookTitles(translation),
 );
 
 export const selectSelectedChapterNumber = (s: RootState) =>

@@ -7,7 +7,7 @@ import {
 	type CustomJsonVerse,
 	bookTitleFileNameToBookTitle,
 	isBookTitleFileName,
-} from "@/types/textTypes";
+} from "@/utils/textUtils";
 
 // Function to convert CSV to JSON
 const convertCsvToJson = (csvFilePath: string) => {

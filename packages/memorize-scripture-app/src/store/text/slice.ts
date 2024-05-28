@@ -7,7 +7,7 @@ import {
   CustomJsonChapter,
   TextView,
   Translation,
-} from "@/types/textTypes";
+} from "@/utils/textUtils";
 
 export interface TextState {
   selectedTranslation: Translation;

@@ -1,20 +1,21 @@
 import { LitElement, html } from "lit";
-import { customElement } from "lit/decorators.js";
+import { customElement, state } from "lit/decorators.js";
 import {
   type BookTitle,
-  booksAndTitlesArray,
   translations,
   Translation,
   ChapterNumber,
-} from "@/types/textTypes";
+  bookTitleToChapterNumberArray,
+  translationToBookTitles,
+} from "@/utils/textUtils";
 import {
-  selectChapterNumberForBookTitle,
+  selectSelectedTranslation,
   setSelectedBookTitle,
   setSelectedChapterNumber,
   setSelectedTranslation,
 } from "@/store/text";
-import { SC } from "@/controllers/SelectorController";
 import { store } from "@/store";
+import { MC } from "@/controllers/MemoizeController";
 
 export const M_S_TEXT_PICKER_NAME = "m-s-text-picker";
 
@@ -26,11 +27,26 @@ export class MSTextPicker extends LitElement {
     return this;
   }
 
-  private _chapterNumbersForBookTitle = new SC(
-    this,
-    store,
-    selectChapterNumberForBookTitle,
+  @state()
+  private _localTranslation: Translation | null = selectSelectedTranslation(
+    store.getState(),
   );
+
+  private _bookTitlesForTranslation = new MC(
+    this,
+    () => this._localTranslation,
+    (translation) => translation && translationToBookTitles(translation),
+  );
+
+  @state()
+  private _localBookTitle: BookTitle | null = null;
+
+  private _chapterNumbersForBookTitle = new MC(
+    this,
+    () => this._localBookTitle,
+    (bookTitle) => bookTitle && bookTitleToChapterNumberArray(bookTitle),
+  );
+
   private _renderTranslations() {
     return html`<ul>
       ${translations.map(
@@ -44,9 +60,11 @@ export class MSTextPicker extends LitElement {
   }
 
   private _renderBookTitles() {
+    if (!this._bookTitlesForTranslation.value) return;
+
     return html`<ul>
-      ${booksAndTitlesArray.map(
-      ([title]) => html`
+      ${this._bookTitlesForTranslation.value.map(
+      (title) => html`
           <button @click=${this._makeHandleBookClick(title)}>${title}</button>
         `,
     )}
@@ -54,6 +72,9 @@ export class MSTextPicker extends LitElement {
   }
 
   private _renderChapterNumbers() {
+    if (!this._localBookTitle || !this._chapterNumbersForBookTitle.value)
+      return null;
+
     return html`<ul>
       ${this._chapterNumbersForBookTitle.value.map(
       (n) => html`
@@ -74,21 +95,33 @@ ${this._renderChapterNumbers()}
 
   private _makeHandleTranslationClick(translation: Translation) {
     const callback = () => {
-      setSelectedTranslation(translation);
-    };
-    return callback.bind(this);
-  }
-
-  private _makeHandleChapterNumberClick(chapterNumber: ChapterNumber) {
-    const callback = () => {
-      setSelectedChapterNumber(chapterNumber);
+      this._localTranslation = translation;
+      this._localBookTitle = null;
     };
     return callback.bind(this);
   }
 
   private _makeHandleBookClick(bookTitle: BookTitle) {
     const callback = () => {
-      setSelectedBookTitle(bookTitle);
+      this._localBookTitle = bookTitle;
+    };
+    return callback.bind(this);
+  }
+
+  // only "commit" local selections to Redux once a chapter number has been chosen
+  private _makeHandleChapterNumberClick(chapterNumber: ChapterNumber) {
+    const callback = () => {
+      if (!this._localTranslation) {
+        throw new Error("Translation should be locally defined");
+      }
+
+      if (!this._localBookTitle) {
+        throw new Error("Book title should be locally defined");
+      }
+
+      setSelectedTranslation(this._localTranslation);
+      setSelectedBookTitle(this._localBookTitle);
+      setSelectedChapterNumber(chapterNumber);
     };
     return callback.bind(this);
   }
