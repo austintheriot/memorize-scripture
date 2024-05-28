@@ -13,8 +13,28 @@ export const fetchEsvText = async (
   bookTitle: BookTitle,
   chapterNumber: ChapterNumber,
 ): Promise<string> => {
-  await new Promise((res) => setTimeout(res, Math.random() * 5_000));
-  return `TODO: ${makeChapterHash(bookTitle, chapterNumber)}`;
+  const title = `${bookTitle} ${chapterNumber}`;
+  const textURL =
+    "https://api.esv.org/v3/passage/text/?" +
+    `q=${title}` +
+    "&include-passage-references=false" +
+    // "&include-verse-numbers=false" +
+    "&include-first-verse-numbers=false" +
+    "&include-footnotes=false" +
+    "&include-footnote-body=false" +
+    "&include-headings=false" +
+    "&include-selahs=false" +
+    // "&indent-paragraphs=10" +
+    // "&indent-poetry-lines=5" +
+    "&include-short-copyright=false";
+
+  const res = await fetch(textURL, {
+    headers: {
+      Authorization: import.meta.env.VITE_ESV_API_KEY,
+    },
+  }).then((res) => res.json());
+
+  return res.passages[0];
 };
 
 export const fetchCustomText = async (

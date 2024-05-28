@@ -35,8 +35,6 @@ export class MSTextView extends LitElement {
   }
 
   public render(): TemplateResult {
-    console.log(this._textView.value);
-    console.log(this._fullText.value);
     switch (this._textView.value) {
       case "hidden":
         return this._renderHiddenTextView();
@@ -45,7 +43,6 @@ export class MSTextView extends LitElement {
       case "full":
       default:
         const value = this._renderFullTextView();
-        console.log("rendering full text view", value);
         return value;
     }
   }
