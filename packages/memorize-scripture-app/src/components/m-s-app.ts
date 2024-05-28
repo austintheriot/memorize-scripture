@@ -1,6 +1,6 @@
 import { LitElement, html } from "lit";
 import { customElement } from "lit/decorators.js";
-import { SC } from "@/controllers/SelectorController";
+import { Select } from "@/controllers/SelectorController";
 import { store } from "@/store";
 import { selectAppIsInitialized } from "@/store/init";
 import "./m-s-text-view";
@@ -22,7 +22,7 @@ export class MSApp extends LitElement {
     return this;
   }
 
-  private _appIsInitialized = new SC(this, store, selectAppIsInitialized);
+  private _appIsInitialized = new Select(this, store, selectAppIsInitialized);
 
   // prettier-ignore
   protected render() {

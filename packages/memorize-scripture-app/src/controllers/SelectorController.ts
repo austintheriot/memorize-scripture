@@ -1,13 +1,8 @@
 import type { Store, Action as RAction } from "@reduxjs/toolkit";
 import { type ReactiveController, type ReactiveControllerHost } from "lit";
+import { type IsEqual, isEqualDefault } from "./common";
 
 export type Selector<State, Result> = (state: State) => Result;
-
-export type IsEqual<Result> = (prev: Result, next: Result) => boolean;
-
-export function isEqualDefault<Result>(prev: Result, next: Result) {
-  return prev === next;
-}
 
 /**
  * Enables providing reusable selectors to Lit elements
@@ -61,5 +56,4 @@ export class SelectorController<State, Action extends RAction, Result = unknown>
   }
 }
 
-// for brevity
-export const SC = SelectorController;
+export const Select = SelectorController;

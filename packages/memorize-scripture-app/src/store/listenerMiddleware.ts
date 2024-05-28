@@ -1,12 +1,12 @@
 import { createListenerMiddleware } from "@reduxjs/toolkit";
-import type { RootState, AppDispatch } from "./store";
-import { initApp, setAppInitialized } from "./init/slice";
 import {
 	fetchBibleChapter,
 	selectSelectedBookTitle,
 	selectSelectedChapterNumber,
 	selectSelectedTranslation,
 } from "@/store/text";
+import type { RootState, AppDispatch } from "./store";
+import { initApp, setAppInitialized } from "./init/slice";
 import { selectAppIsInitialized } from "./init";
 
 export const listenerMiddleware = createListenerMiddleware();

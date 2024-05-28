@@ -2,10 +2,10 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { wrapActionsWithDispatch } from "@/store/wrapActionsWithDispatch";
 import {
-  BookTitle,
-  ChapterNumber,
-  TextView,
-  Translation,
+  type BookTitle,
+  type ChapterNumber,
+  type TextView,
+  type Translation,
 } from "@/utils/textUtils";
 
 export interface TextState {

@@ -1,9 +1,5 @@
-import { ReactiveController, ReactiveControllerHost } from "lit";
-import { IsEqual } from "./SelectorController";
-
-export function isEqualDefault<Result>(prev: Result, next: Result) {
-  return prev === next;
-}
+import { type ReactiveController, type ReactiveControllerHost } from "lit";
+import { type IsEqual, isEqualDefault } from "./common";
 
 /**
  * Enables getting derived state from some local state variable.
@@ -46,4 +42,4 @@ export class MemoizeController<State, DerivedState = unknown>
   }
 }
 
-export const MC = MemoizeController;
+export const Memo = MemoizeController;

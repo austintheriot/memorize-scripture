@@ -88,6 +88,12 @@ export default tseslint.config(
       ],
 
       // type lints ############################################
+      "@typescript-eslint/restrict-template-expressions": [
+        "error",
+        {
+          allowNumber: true,
+        },
+      ],
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-unsafe-member-access": "off",
       // allow calling class methods in callback

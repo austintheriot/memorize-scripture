@@ -1,11 +1,11 @@
-import { BookTitle, ChapterNumber, Translation } from "@/utils/textUtils";
+import { type BookTitle, type ChapterNumber, type Translation } from "@/utils/textUtils";
+import { RequestManager } from "@/utils/RequestManager";
+import { TextManager } from "@/utils/TextManager";
 import {
 	setCurrentChapter,
 	setCurrentChapterError,
 	setCurrentChapterLoading,
 } from "./slice";
-import { RequestManager } from "@/utils/RequestManager";
-import { TextManager } from "@/utils/TextManager";
 
 const textFetchRequestManager = new RequestManager();
 const textManager = new TextManager();

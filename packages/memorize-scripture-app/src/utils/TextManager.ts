@@ -1,8 +1,8 @@
 import {
-  BookTitle,
-  ChapterNumber,
-  CustomJsonChapter,
-  Translation,
+  type BookTitle,
+  type ChapterNumber,
+  type CustomJsonChapter,
+  type Translation,
   bookTitleToBookTitleFileName,
   customJsonChapterToString,
   isValidBookForTranslation,
@@ -28,11 +28,11 @@ export const fetchEsvText = async (
     // "&indent-poetry-lines=5" +
     "&include-short-copyright=false";
 
-  const res = await fetch(textURL, {
+  const res = (await fetch(textURL, {
     headers: {
       Authorization: import.meta.env.VITE_ESV_API_KEY,
     },
-  }).then((res) => res.json());
+  }).then((res) => res.json())) as { passages: string[] };
 
   return res.passages[0];
 };
@@ -79,12 +79,13 @@ export class TextManager {
 
     const chapterHash = makeChapterHash(bookTitle, chapterNumber);
     switch (translation) {
-      case "esv":
+      case "esv": {
         const cached = this._esvChapterCache.get(chapterHash);
         if (cached) return cached;
         const text = await fetchEsvText(bookTitle, chapterNumber);
         this._esvChapterCache.set(chapterHash, text);
         return text;
+      }
       case "byzantine": {
         const cached = this._byzantineChapterCache.get(chapterHash);
         if (cached) return cached;

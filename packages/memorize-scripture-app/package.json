@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "lint:types": "tsc --noEmit",
     "lint:eslint": "yarn eslint .",
+    "lint:fix": "yarn eslint . --fix",
     "lint": "yarn lint:types && yarn lint:eslint",
     "test": "vitest",
     "gen": "tsx ./scripts/generate-api-bible-types.ts"

@@ -1,6 +1,6 @@
-import { LitElement, TemplateResult, css, html } from "lit";
+import { LitElement, type TemplateResult, css, html } from "lit";
 import { customElement } from "lit/decorators.js";
-import { SC } from "@/controllers/SelectorController";
+import { Select } from "@/controllers/SelectorController";
 import { store } from "@/store";
 import {
   selectCondensedChapterString,
@@ -18,9 +18,13 @@ export class MSTextView extends LitElement {
     return this;
   }
 
-  private _fullText = new SC(this, store, selectCurrentChapter);
-  private _condensedText = new SC(this, store, selectCondensedChapterString);
-  private _textView = new SC(this, store, selectTextView);
+  private _fullText = new Select(this, store, selectCurrentChapter);
+  private _condensedText = new Select(
+    this,
+    store,
+    selectCondensedChapterString,
+  );
+  private _textView = new Select(this, store, selectTextView);
 
   private _renderFullTextView(): TemplateResult {
     return html`<span>${this._fullText.value}</span>`;
@@ -42,8 +46,7 @@ export class MSTextView extends LitElement {
         return this._renderCondensedTextView();
       case "full":
       default:
-        const value = this._renderFullTextView();
-        return value;
+        return this._renderFullTextView();
     }
   }
 

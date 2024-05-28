@@ -1,9 +1,9 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { type RootState } from "..";
 import {
   bookTitleToFinalChapterNumber,
   translationToBookTitles,
 } from "@/utils/textUtils";
+import { type RootState } from "..";
 
 export const selectCurrentChapter = (s: RootState) => s.text.currentChapter;
 

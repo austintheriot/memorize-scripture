@@ -98,9 +98,7 @@ export const bookTitleToBookTitleFileName = (
 ): BookTitleFileName | null => {
 	const mapping = bookTitleFileNameMap.find(
 		(mapping) => mapping[0] === bookTitle,
-	);
-
-	if (!mapping) return null;
+	) as BookTitleFileNameMap[number];
 
 	return mapping[1];
 };
