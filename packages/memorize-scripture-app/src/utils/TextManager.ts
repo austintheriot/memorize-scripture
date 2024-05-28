@@ -1,79 +1,83 @@
-// import { BookTitle, ChapterNumber, TextJson, Translation } from "@/types/textTypes";
+import {
+  BookTitle,
+  ChapterNumber,
+  CustomJsonChapter,
+  Translation,
+  bookTitleToBookTitleFileName,
+  customJsonChapterToString,
+  isValidBookForTranslation,
+  isValidChapterNumber,
+} from "./textUtils";
 
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class
+export const fetchEsvText = async (
+  bookTitle: BookTitle,
+  chapterNumber: ChapterNumber,
+): Promise<string> => {
+  await new Promise((res) => setTimeout(res, Math.random() * 5_000));
+  return `TODO: ${makeChapterHash(bookTitle, chapterNumber)}`;
+};
+
+export const fetchCustomText = async (
+  translation: Translation,
+  bookTitle: BookTitle,
+  chapterNumber: ChapterNumber,
+): Promise<string> => {
+  const bookTitleFile = bookTitleToBookTitleFileName(bookTitle);
+  const customJsonChapter = await fetch(
+    `/bible/${translation}/text/by-chapter/${bookTitleFile}/${chapterNumber}.json`,
+  ).then((request) => request.json() as Promise<CustomJsonChapter>);
+  return customJsonChapterToString(customJsonChapter);
+};
+
+type ChapterHash = `${BookTitle},${ChapterNumber}`;
+
+const makeChapterHash = (
+  bookTitle: BookTitle,
+  chapterNumber: ChapterNumber,
+): ChapterHash => `${bookTitle},${chapterNumber}` as const;
+
 export class TextManager {
-  // private _translationCache = new Map<Translation, TextJson>();
+  private _esvChapterCache = new Map<ChapterHash, string>();
+  private _byzantineChapterCache = new Map<ChapterHash, string>();
 
-  // public async getChapter(
-  //   bookTitle: BookTitle,
-  //   _chapterNumber: ChapterNumber,
-  //   _translation: Translation,
-  // ): Promise<string | null> {
-  //   if (textAppearance === "hidden") return null;
+  public async getChapter(
+    translation: Translation,
+    bookTitle: BookTitle,
+    chapterNumber: ChapterNumber,
+  ): Promise<string> {
+    if (!isValidBookForTranslation(translation, bookTitle)) {
+      throw new Error(
+        `Invalid book ${bookTitle} for translation ${translation}`,
+      );
+    }
 
-  // // const text = await this._fetchTranslation(translation);
-  // const res = await fetch("api.scripture.api.bible/v1/bibles", {
-  //   headers: {
-  //     "api-key": import.meta.env.VITE_API_BIBLE_KEY,
-  //   }
-  // })
-  //
-  // console.log(res);
-  // return
+    if (!isValidChapterNumber(bookTitle, chapterNumber)) {
+      throw new Error(
+        `Invalid chapter number ${chapterNumber} for book ${bookTitle}`,
+      );
+    }
 
-  //  const bookIndex = this._getBookTitleIndex(bookTitle);
-  //
-  // if (bookIndex === null) return null;
-  //
-  // // todo: sanitize chapter number here
-  //
-  // const chapter = text.books[bookIndex]?.chapters[chapterNumber];
-  //
-  // if (!chapter) return null;
-  //
-  // if (textAppearance === "full") {
-  //   return chapter.verses
-  //     .map((verse, i) => `[${i + 1}] ${verse.text}\n`)
-  //     .join("");
-  // }
-  //
-  // // todo: provide actual condensation logic here
-  // return chapter.verses
-  //   .map((verse) => {
-  //     return verse.text
-  //       .split(" ")
-  //       .map((word) => word[0])
-  //       .join(" ");
-  //   })
-  //   .join("");
-
-  // return null;
-  // }
-
-  // private _getBookTitleIndex(bookTitle: BookTitle): number | null {
-  //   const index = booksAndTitlesArray.findIndex(
-  //     ([title]) => title === bookTitle,
-  //   );
-  //
-  //   if (index < 0) return null;
-  //
-  //   return index;
-  // }
-  //
-  // private async _fetchTranslation(translation: Translation): Promise<TextJson> {
-  //   if (!this._translationCache.has(translation)) {
-  //     let text: TextJson;
-  //     switch (translation) {
-  //       case "esv":
-  //         text = (await import("../texts/kjv.json")) as unknown as TextJson;
-  //         break;
-  //     }
-  //
-  //     this._translationCache.set(translation, text);
-  //   }
-  //
-  //   return this._translationCache.get(translation) as TextJson;
-  // }
+    const chapterHash = makeChapterHash(bookTitle, chapterNumber);
+    switch (translation) {
+      case "esv":
+        const cached = this._esvChapterCache.get(chapterHash);
+        if (cached) return cached;
+        const text = await fetchEsvText(bookTitle, chapterNumber);
+        this._esvChapterCache.set(chapterHash, text);
+        return text;
+      case "byzantine": {
+        const cached = this._byzantineChapterCache.get(chapterHash);
+        if (cached) return cached;
+        const text = await fetchCustomText(
+          translation,
+          bookTitle,
+          chapterNumber,
+        );
+        this._byzantineChapterCache.set(chapterHash, text);
+        return text;
+      }
+    }
+  }
 }
 
 export const textManager = new TextManager();

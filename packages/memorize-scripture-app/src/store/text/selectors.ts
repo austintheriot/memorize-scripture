@@ -1,8 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { type RootState } from "..";
 import {
-  CustomJsonChapter,
-  CustomJsonVerse,
   bookTitleToFinalChapterNumber,
   translationToBookTitles,
 } from "@/utils/textUtils";
@@ -15,27 +13,10 @@ export const selectCurrentChapterLoading = (s: RootState) =>
 export const selectCurrentChapterError = (s: RootState) =>
   s.text.currentChapterError;
 
-const customJsonVerseToString = (verse: CustomJsonVerse): string =>
-  verse.text.replace(/\n/g, `\n\n     [${verse.verseNumber.toString()}] `);
-
-const customJsonChapterToString = (chapter: CustomJsonChapter): string => {
-  console.log("raw chapter: ", chapter);
-  return (
-    " ".repeat(5) +
-    "[1] " +
-    chapter.verses.map(customJsonVerseToString).join(" ")
-  );
-};
-
-export const selectCurrentChapterString = createSelector(
-  selectCurrentChapter,
-  (chapter) => (chapter ? customJsonChapterToString(chapter) : null),
-);
-
 const condenseChapterString = (s: string): string => s[0];
 
 export const selectCondensedChapterString = createSelector(
-  selectCurrentChapterString,
+  selectCurrentChapter,
   (chapterString) =>
     chapterString ? condenseChapterString(chapterString) : null,
 );

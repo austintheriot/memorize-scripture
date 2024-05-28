@@ -4,7 +4,7 @@ import { SC } from "@/controllers/SelectorController";
 import { store } from "@/store";
 import {
   selectCondensedChapterString,
-  selectCurrentChapterString,
+  selectCurrentChapter,
   selectTextView,
 } from "@/store/text";
 
@@ -18,7 +18,7 @@ export class MSTextView extends LitElement {
     return this;
   }
 
-  private _fullText = new SC(this, store, selectCurrentChapterString);
+  private _fullText = new SC(this, store, selectCurrentChapter);
   private _condensedText = new SC(this, store, selectCondensedChapterString);
   private _textView = new SC(this, store, selectTextView);
 

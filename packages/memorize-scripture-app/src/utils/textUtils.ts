@@ -228,9 +228,16 @@ export const oldTestamentBookTitles = booksAndTitlesArray
 	.slice(0, NEW_TESTAMENT_BOOK_TITLE_INDEX)
 	.map((mapping) => mapping[0]) satisfies BookTitle[];
 
+export const isValidBookForTranslation = (
+	translation: Translation,
+	bookTitle: BookTitle,
+) => {
+	return translationToBookTitles(translation).includes(bookTitle);
+};
+
 export type BookTitle = BooksAndTitlesMap[number][0];
 
-export type ChapterNumber = number | `${number}`;
+export type ChapterNumber = number;
 
 export const translations = ["esv", "byzantine"] as const;
 
@@ -297,3 +304,17 @@ export interface CustomJsonChapter {
 	chapterNumber: ChapterNumber;
 	verses: CustomJsonVerse[];
 }
+
+export const customJsonVerseToString = (verse: CustomJsonVerse): string =>
+	verse.text.replace(/\n/g, `\n\n     [${verse.verseNumber.toString()}] `);
+
+export const customJsonChapterToString = (
+	chapter: CustomJsonChapter,
+): string => {
+	console.log("raw chapter: ", chapter);
+	return (
+		" ".repeat(5) +
+		"[1] " +
+		chapter.verses.map(customJsonVerseToString).join(" ")
+	);
+};

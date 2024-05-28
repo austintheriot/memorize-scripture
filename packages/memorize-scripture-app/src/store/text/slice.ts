@@ -4,7 +4,6 @@ import { wrapActionsWithDispatch } from "@/store/wrapActionsWithDispatch";
 import {
   BookTitle,
   ChapterNumber,
-  CustomJsonChapter,
   TextView,
   Translation,
 } from "@/utils/textUtils";
@@ -13,7 +12,7 @@ export interface TextState {
   selectedTranslation: Translation;
   selectedBookTitle: BookTitle;
   selectedChapterNumber: ChapterNumber;
-  currentChapter: CustomJsonChapter | null;
+  currentChapter: string | null;
   currentChapterLoading: boolean;
   currentChapterError: boolean;
   textView: TextView;
@@ -33,10 +32,7 @@ export const textSlice = createSlice({
   name: "text",
   initialState,
   reducers: {
-    _setCurrentChapter: (
-      state,
-      action: PayloadAction<CustomJsonChapter | null>,
-    ) => {
+    _setCurrentChapter: (state, action: PayloadAction<string | null>) => {
       state.currentChapter = action.payload;
     },
     _setCurrentChapterLoading: (state, action: PayloadAction<boolean>) => {

@@ -2,7 +2,7 @@ import { createListenerMiddleware } from "@reduxjs/toolkit";
 import type { RootState, AppDispatch } from "./store";
 import { initApp, setAppInitialized } from "./init/slice";
 import {
-	fetchByzantineText,
+	fetchBibleChapter,
 	selectSelectedBookTitle,
 	selectSelectedChapterNumber,
 	selectSelectedTranslation,
@@ -34,7 +34,8 @@ startAppListening({
 		const translation = selectSelectedTranslation(state);
 		const bookTitle = selectSelectedBookTitle(state);
 		const chapterNumber = selectSelectedChapterNumber(state);
-		await fetchByzantineText(translation, bookTitle, chapterNumber);
+
+		await fetchBibleChapter(translation, bookTitle, chapterNumber);
 
 		if (!appIsInitialized) {
 			void setAppInitialized();
