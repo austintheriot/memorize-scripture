@@ -26,10 +26,6 @@ export type MSTextPickerName = typeof M_S_TEXT_PICKER_NAME;
 
 @customElement(M_S_TEXT_PICKER_NAME)
 export class MSTextPicker extends LitElement {
-  protected createRenderRoot() {
-    return this;
-  }
-
   @state()
   private _localTranslation: Translation | null = selectSelectedTranslation(
     store.getState(),

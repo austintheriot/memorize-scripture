@@ -14,10 +14,6 @@ export type MSTextViewName = typeof M_S_TEXT_VIEW_NAME;
 
 @customElement(M_S_TEXT_VIEW_NAME)
 export class MSTextView extends LitElement {
-  protected createRenderRoot() {
-    return this;
-  }
-
   private _fullText = new Select(this, store, selectCurrentChapter);
   private _condensedText = new Select(
     this,
