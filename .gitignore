@@ -15,3 +15,11 @@
 node_modules
 tsconfig.tsbuildinfo
 .DS_Store
+
+
+**/.DS_Store
+**/target
+**/node_modules
+**/dist
+**/test
+**/pkg

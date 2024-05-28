@@ -1,0 +1,184 @@
+[config]
+skip_core_tasks = true
+
+[env]
+CARGO_MAKE_EXTEND_WORKSPACE_MAKEFILE = true
+PATH_TO_TARGET_DIR = "../../target/wasm32-unknown-unknown"
+PATH_TO_OUTPUT_DIR = "../../packages/memorize-scripture-app/src/compiled"
+GECKODRIVER = "geckodriver"
+
+[tasks.clean]
+command = "cargo"
+args = ["clean"]
+
+# TEXT CONDENSE ##############################################
+
+# COMPILING ##########
+[tasks.compile-text-condense-release]
+command = "cargo"
+args = [
+	"build",
+	"--package=text-condense",
+	"--profile=release",
+	"--target=wasm32-unknown-unknown",
+]
+
+
+[tasks.compile-text-condense-dev]
+command = "cargo"
+args = [
+	"build",
+	"--package=text-condense",
+	"--profile=dev",
+	"--target=wasm32-unknown-unknown",
+]
+
+# BUILDING ##########
+[tasks.build-text-condense-release]
+command = "wasm-bindgen"
+args = [
+	"--out-dir",
+	# put into source tree  for web app imports
+	"${PATH_TO_OUTPUT_DIR}",
+	"--target",
+	"web",
+	"${PATH_TO_TARGET_DIR}/release/text_condense.wasm",
+]
+dependencies = ["compile-text-condense-release"]
+
+[tasks.build-text-condense-dev]
+command = "wasm-bindgen"
+args = [
+	"--out-dir",
+	# put into source tree of codex-web for web app imports
+	"${PATH_TO_OUTPUT_DIR}",
+	"--target",
+	"web",
+	# enable debug symbols (?)
+	"--debug",
+	"${PATH_TO_TARGET_DIR}/debug/text_condense.wasm",
+]
+dependencies = ["compile-text-condense-dev"]
+
+
+# RENAME UNOPTIMIZED WASM ##########
+[tasks.copy-unoptimized-app-wasm]
+command = "mv"
+args = [
+	"${PATH_TO_OUTPUT_DIR}/text_condense_bg.wasm",
+	"${PATH_TO_OUTPUT_DIR}/text_condense_unoptimized.wasm",
+]
+
+# OPTIMIZING ##########
+[tasks.opt-text-condense]
+command = "wasm-opt"
+args = [
+	"${PATH_TO_OUTPUT_DIR}/text_condense_unoptimized.wasm",
+	"--output",
+	"${PATH_TO_OUTPUT_DIR}/text_condense_bg.wasm",
+	"-O2",
+]
+dependencies = ["build-text-condense-release", "copy-unoptimized-app-wasm"]
+
+# CODEX FS ##############################################
+# COMPILING ##########
+[tasks.compile-text-diff-release]
+command = "cargo"
+args = [
+	"build",
+	"--package=text-diff",
+	"--profile=release",
+	"--target=wasm32-unknown-unknown",
+]
+
+
+[tasks.compile-text-diff-dev]
+command = "cargo"
+args = [
+	"build",
+	"--package=text-diff",
+	"--profile=dev",
+	"--target=wasm32-unknown-unknown",
+]
+
+
+# BUILDING ##########
+[tasks.build-text-diff-release]
+command = "wasm-bindgen"
+args = [
+	"--out-dir",
+	# put into source tree of codex-web for web app imports
+	"${PATH_TO_OUTPUT_DIR}",
+	"--target",
+	"web",
+	"${PATH_TO_TARGET_DIR}/release/text_diff.wasm",
+]
+dependencies = ["compile-text-diff-release"]
+
+
+[tasks.build-text-diff-dev]
+command = "wasm-bindgen"
+args = [
+	"--out-dir",
+	# put into source tree of codex-web for web app imports
+	"${PATH_TO_OUTPUT_DIR}",
+	# enable debug symbols (?)
+	"--debug",
+	"--target",
+	"web",
+	"${PATH_TO_TARGET_DIR}/debug/text_diff.wasm",
+]
+dependencies = ["compile-text-diff-dev"]
+
+# RENAME UNOPTIMIZED WASM ##########
+[tasks.copy-unoptimized-fs-wasm]
+command = "mv"
+args = [
+	"${PATH_TO_OUTPUT_DIR}/text_diff_bg.wasm",
+	"${PATH_TO_OUTPUT_DIR}/text_diff_unoptimized.wasm",
+]
+
+# OPTIMIZING ##########
+[tasks.opt-text-diff]
+command = "wasm-opt"
+args = [
+	"${PATH_TO_OUTPUT_DIR}/text_diff_unoptimized.wasm",
+	"--output",
+	"${PATH_TO_OUTPUT_DIR}/text_diff_bg.wasm",
+	"-O2",
+]
+dependencies = ["build-text-diff-release", "copy-unoptimized-fs-wasm"]
+
+# Builds all Rust libraries in parallel
+# Outputs the result into the ./packages/codex-web/
+# directory for use as a direct import by Vite
+
+[tasks.build-dev]
+run_task = { name = [
+	"build-text-condense-dev",
+	"build-text-diff-dev",
+], parallel = true }
+
+
+[tasks.build-release]
+run_task = { name = ["opt-text-condense", "opt-text-diff"], parallel = true }
+
+[tasks.watch-dev]
+command = "cargo"
+args = ["watch", "-x", "check", "-s", "cargo make build-dev"]
+
+[tasks.watch-release]
+command = "cargo"
+args = ["watch", "-x", "check", "-s", "cargo make build-release"]
+
+# [tasks.test-custom-elements]
+# command = "cargo"
+# args = [
+# 	"test",
+# 	# enables running tests in headless browser via wasm-bindgen-test-runner
+# 	"--config",
+# 	"target.wasm32-unknown-unknown.runner = 'wasm-bindgen-test-runner'",
+# 	# target only the package we care about
+# 	"--package=codex-custom-elements",
+# 	"--target=wasm32-unknown-unknown",
+# ]

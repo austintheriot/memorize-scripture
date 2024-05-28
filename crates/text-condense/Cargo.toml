@@ -1,0 +1,18 @@
+[package]
+name = "text-condense"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+js-sys = "0.3.69"
+web-sys = { version = "0.3.68", features = [] }
+wasm-bindgen-futures = "0.4.41"
+wasm-bindgen = { workspace = true }
+
+# logging
+log = "0.4"
+wasm-logger = "0.2.0"
+console_error_panic_hook = "0.1.5"

@@ -1,6 +1,11 @@
-import { it, describe } from "vitest";
+import { it, describe, expect } from "vitest";
+import init, { Condenser } from "@/compiled/text_condense";
 
-describe("numLineBreaks", () => {
-  it("0: it deletes all line breaks");
-  it("1: it preserves all line breaks");
+init().then(() => {
+  describe("numLineBreaks", () => {
+    it("it should have truthy exports", () => {
+      expect(new Condenser()).toBeTruthy();
+    });
+    it("1: it preserves all line breaks");
+  });
 });
