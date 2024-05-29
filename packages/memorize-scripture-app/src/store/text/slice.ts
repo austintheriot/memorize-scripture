@@ -7,6 +7,7 @@ import {
   type TextView,
   type Translation,
 } from "@/utils/textUtils";
+import { Condenser, type CondenserOptions } from "@/compiled/text_condense";
 
 export interface TextState {
   selectedTranslation: Translation;
@@ -16,7 +17,13 @@ export interface TextState {
   currentChapterLoading: boolean;
   currentChapterError: boolean;
   textView: TextView;
+  condenser: Condenser;
+  condenserOptions: CondenserOptions;
 }
+
+export const CONDENSER_OPTIONS_DEFAULT: CondenserOptions = Object.freeze({
+  numSpacesBetweenLetters: 0,
+});
 
 const initialState: TextState = {
   selectedBookTitle: "Matthew",
@@ -25,7 +32,9 @@ const initialState: TextState = {
   currentChapter: null,
   currentChapterLoading: false,
   currentChapterError: false,
-  textView: "full",
+  textView: "condensed",
+  condenser: new Condenser(),
+  condenserOptions: CONDENSER_OPTIONS_DEFAULT,
 };
 
 export const textSlice = createSlice({

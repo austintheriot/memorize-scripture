@@ -13,14 +13,6 @@ export const selectCurrentChapterLoading = (s: RootState) =>
 export const selectCurrentChapterError = (s: RootState) =>
   s.text.currentChapterError;
 
-const condenseChapterString = (s: string): string => s[0];
-
-export const selectCondensedChapterString = createSelector(
-  selectCurrentChapter,
-  (chapterString) =>
-    chapterString ? condenseChapterString(chapterString) : null,
-);
-
 export const selectSelectedTranslation = (s: RootState) =>
   s.text.selectedTranslation;
 
@@ -41,3 +33,17 @@ export const selectBookTitlesForTranslation = createSelector(
 
 export const selectSelectedChapterNumber = (s: RootState) =>
   s.text.selectedChapterNumber;
+
+export const selectCondenserOptions = (s: RootState) => s.text.condenserOptions;
+
+export const selectCondenser = (s: RootState) => s.text.condenser;
+
+export const selectCondensedChapterString = createSelector(
+  selectCondenser,
+  selectCondenserOptions,
+  selectCurrentChapter,
+  (condenser, condenserOptions, chapterString) =>
+    chapterString
+      ? condenser.condenseWithOptions(chapterString, condenserOptions)
+      : null,
+);

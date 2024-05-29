@@ -1,20 +1,12 @@
-import { createListenerMiddleware } from "@reduxjs/toolkit";
 import {
 	fetchBibleChapter,
 	selectSelectedBookTitle,
 	selectSelectedChapterNumber,
 	selectSelectedTranslation,
 } from "@/store/text";
-import type { RootState, AppDispatch } from "./store";
-import { initApp, setAppInitialized } from "./init/slice";
-import { selectAppIsInitialized } from "./init";
-
-export const listenerMiddleware = createListenerMiddleware();
-
-export const startAppListening = listenerMiddleware.startListening.withTypes<
-	RootState,
-	AppDispatch
->();
+import { initApp, setAppInitialized } from "@/store/init/slice";
+import { selectAppIsInitialized } from "@/store/init";
+import { startAppListening } from "./listenerMiddleware";
 
 startAppListening({
 	predicate: (action, currentState, previousState) =>

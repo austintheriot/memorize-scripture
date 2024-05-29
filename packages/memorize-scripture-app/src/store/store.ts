@@ -1,7 +1,7 @@
 import { __DO_NOT_USE__ActionTypes, configureStore } from "@reduxjs/toolkit";
 import { textReducer } from "@/store/text/slice";
 import { initApp, initReducer } from "@/store/init/slice";
-import { listenerMiddleware } from "./listenerMiddleware";
+import { listenerMiddleware } from "./listeners";
 
 export const store = configureStore({
   reducer: {
@@ -12,7 +12,9 @@ export const store = configureStore({
   // NOTE: Since this can receive actions with functions inside,
   // it should go before the serializability check middleware
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().prepend(listenerMiddleware.middleware),
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }).prepend(listenerMiddleware.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
