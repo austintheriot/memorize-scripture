@@ -4393,6 +4393,7 @@ __metadata:
     typescript: "npm:^5.4.5"
     typescript-eslint: "npm:^7.8.0"
     vite: "npm:^5.2.0"
+    vite-tsconfig-paths: "npm:^4.3.2"
     vitest: "npm:^1.6.0"
   languageName: unknown
   linkType: soft
@@ -6935,7 +6936,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-tsconfig-paths@npm:^4.2.1":
+"vite-tsconfig-paths@npm:^4.2.1, vite-tsconfig-paths@npm:^4.3.2":
   version: 4.3.2
   resolution: "vite-tsconfig-paths@npm:4.3.2"
   dependencies:
