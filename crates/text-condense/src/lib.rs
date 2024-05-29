@@ -7,18 +7,8 @@ fn start() {
     wasm_logger::init(wasm_logger::Config::default());
 }
 
-#[wasm_bindgen]
-pub struct Condenser;
+mod condenser;
+mod condenser_options;
 
-#[wasm_bindgen]
-impl Condenser {
-    #[wasm_bindgen(constructor)]
-    pub fn new() -> Self {
-        Self
-    }
-
-    #[wasm_bindgen]
-    pub fn run(&self) {
-        log::info!("Hello world!");
-    }
-}
+pub use condenser::*;
+pub use condenser_options::*;
