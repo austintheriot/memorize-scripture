@@ -11,8 +11,7 @@ GECKODRIVER = "geckodriver"
 command = "cargo"
 args = ["clean"]
 
-# TEXT CONDENSE ##############################################
-
+# TEXT CONDENSING ##############################################
 # COMPILING ##########
 [tasks.compile-text-condense-release]
 command = "cargo"
@@ -80,7 +79,7 @@ args = [
 ]
 dependencies = ["build-text-condense-release", "copy-unoptimized-app-wasm"]
 
-# CODEX FS ##############################################
+# TEXT DIFFING ##############################################
 # COMPILING ##########
 [tasks.compile-text-diff-release]
 command = "cargo"
